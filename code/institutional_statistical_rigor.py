@@ -472,7 +472,7 @@ class BootstrapAnalyzer:
         elif ci_lower > DOJProsecutionThresholds.INVESTIGATION_WORTHY:
             parts.append("CI ENTIRELY ABOVE 75% - Minimum prosecution precedent exceeded")
         elif ci_lower > 0:
-            parts.append(f"Markup positive but CI includes values below prosecution threshold")
+            parts.append("Markup positive but CI includes values below prosecution threshold")
         else:
             parts.append("CI includes zero or negative markup - NOT statistically significant")
 
@@ -1170,7 +1170,7 @@ class InstitutionalStatisticalEngine:
         gray_flags = [e for e in evidence_packages if e.tier == FraudTier.GRAY]
 
         # Print summary
-        print(f"\nRESULTS SUMMARY:")
+        print("\nRESULTS SUMMARY:")
         print(f"  🔴 RED (Prosecution-ready):    {len(red_flags)}")
         print(f"  🟡 YELLOW (Investigation):     {len(yellow_flags)}")
         print(f"  🟢 GREEN (Normal):             {len(green_flags)}")

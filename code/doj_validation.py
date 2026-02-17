@@ -489,8 +489,11 @@ if __name__ == "__main__":
     parser.add_argument('--clean', type=int, default=50)
     parser.add_argument('--out-json', default='reports/validation_report.json')
     parser.add_argument('--out-md', default='reports/validation_report.md')
+    parser.add_argument('--ci', action='store_true',
+                        help='CI mode: resolve paths relative to repo root, exit 1 if recall < 90%%')
     args = parser.parse_args()
 
+    # Resolve paths — when run from code/ dir, look up one level
     db = args.db
     if not os.path.exists(db):
         db = '../data/sunlight.db'
@@ -498,10 +501,19 @@ if __name__ == "__main__":
     if not os.path.exists(cases):
         cases = '../prosecuted_cases.json'
 
+    # In CI mode, ensure output goes to repo root reports/
+    out_json = args.out_json
+    out_md = args.out_md
+    if args.ci:
+        repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        out_json = os.path.join(repo_root, 'reports', 'validation_report.json')
+        out_md = os.path.join(repo_root, 'reports', 'validation_report.md')
+        os.makedirs(os.path.join(repo_root, 'reports'), exist_ok=True)
+
     report = run_validation(db, cases, run_seed=args.seed,
                             n_bootstrap=args.bootstrap, n_clean=args.clean)
-    write_json_report(report, args.out_json)
-    write_markdown_report(report, args.out_md)
+    write_json_report(report, out_json)
+    write_markdown_report(report, out_md)
 
     # Print summary to stdout
     m = report['classification_metrics']
@@ -517,4 +529,9 @@ if __name__ == "__main__":
           f"FP={cm['false_positive']}  TN={cm['true_negative']}")
     print(f"\n  Value Recall: {report['value_weighted_metrics']['value_recall']:.1%}")
     print("=" * 60)
-    print(f"\nReports: {args.out_json}, {args.out_md}")
+    print(f"\nReports: {out_json}, {out_md}")
+
+    # CI accuracy gate
+    if args.ci and m['recall'] < 0.90:
+        print(f"\nCI FAIL: Recall {m['recall']:.1%} is below 90% threshold")
+        sys.exit(1)

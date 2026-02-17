@@ -610,148 +610,148 @@ def render_markdown(report: Dict) -> str:
     # Header
     c = report['contract']
     a = report['assessment']
-    lines.append(f"# SUNLIGHT Detection Report")
-    lines.append(f"")
+    lines.append("# SUNLIGHT Detection Report")
+    lines.append("")
     lines.append(f"**Contract:** {c['contract_id']}")
     lines.append(f"**Vendor:** {c['vendor_name']}")
     lines.append(f"**Agency:** {c['agency_name']}")
     lines.append(f"**Award Amount:** ${c['award_amount']:,.0f}")
     lines.append(f"**Generated:** {report['generated_at'][:10]}")
-    lines.append(f"")
+    lines.append("")
 
     # Assessment box
-    lines.append(f"---")
-    lines.append(f"")
+    lines.append("---")
+    lines.append("")
     lines.append(f"## Risk Assessment: {a['risk_level']}")
-    lines.append(f"")
+    lines.append("")
     lines.append(f"**{a['risk_label']}**")
-    lines.append(f"")
+    lines.append("")
     lines.append(f"Confidence Score: {a['confidence_score']}/100")
     if a.get('survives_fdr_correction'):
-        lines.append(f"Survives FDR Correction: Yes (robust to multiple testing)")
-    lines.append(f"")
+        lines.append("Survives FDR Correction: Yes (robust to multiple testing)")
+    lines.append("")
 
     # Evidence
-    lines.append(f"---")
-    lines.append(f"")
-    lines.append(f"## Evidence Summary")
-    lines.append(f"")
+    lines.append("---")
+    lines.append("")
+    lines.append("## Evidence Summary")
+    lines.append("")
 
     ev = report.get('evidence', {})
 
     # Price analysis
     pa = ev.get('price_analysis', {})
     if pa.get('finding'):
-        lines.append(f"### Price Analysis")
-        lines.append(f"")
+        lines.append("### Price Analysis")
+        lines.append("")
         lines.append(pa['finding'])
-        lines.append(f"")
+        lines.append("")
         if 'interpretation' in pa:
             lines.append(f"*{pa['interpretation']}*")
-            lines.append(f"")
+            lines.append("")
 
     # Bayesian
     ba = ev.get('bayesian_analysis', {})
     if ba.get('finding'):
-        lines.append(f"### Risk Probability")
-        lines.append(f"")
+        lines.append("### Risk Probability")
+        lines.append("")
         lines.append(ba['finding'])
-        lines.append(f"")
+        lines.append("")
         if ba.get('evidence_strength'):
             lines.append(f"*{ba['evidence_strength']}*")
-            lines.append(f"")
+            lines.append("")
         if ba.get('risk_factors'):
             lines.append(f"**Risk factors considered:** {', '.join(ba['risk_factors'])}")
-            lines.append(f"")
+            lines.append("")
 
     # Distribution
     da = ev.get('distribution_analysis', {})
     if da.get('finding'):
-        lines.append(f"### Distribution Position")
-        lines.append(f"")
+        lines.append("### Distribution Position")
+        lines.append("")
         lines.append(da['finding'])
-        lines.append(f"")
+        lines.append("")
 
     # FDR
     mt = ev.get('multiple_testing', {})
     if mt.get('finding'):
-        lines.append(f"### Multiple Testing Correction")
-        lines.append(f"")
+        lines.append("### Multiple Testing Correction")
+        lines.append("")
         lines.append(mt['finding'])
-        lines.append(f"")
+        lines.append("")
 
     # Context
     ctx = report.get('context', {})
     if ctx.get('explanation'):
-        lines.append(f"---")
-        lines.append(f"")
-        lines.append(f"## Comparable Contract Context")
-        lines.append(f"")
+        lines.append("---")
+        lines.append("")
+        lines.append("## Comparable Contract Context")
+        lines.append("")
         lines.append(ctx['explanation'])
-        lines.append(f"")
-        lines.append(f"| Metric | Value |")
-        lines.append(f"|---|---|")
+        lines.append("")
+        lines.append("| Metric | Value |")
+        lines.append("|---|---|")
         lines.append(f"| Comparable contracts | {ctx['total_comparables_in_agency']} |")
         lines.append(f"| Agency median | ${ctx['agency_median']:,.0f} |")
         lines.append(f"| Agency min | ${ctx['agency_min']:,.0f} |")
         lines.append(f"| Agency max | ${ctx['agency_max']:,.0f} |")
         lines.append(f"| This contract rank | #{ctx['contract_rank']} of {ctx['total_comparables_in_agency']} |")
-        lines.append(f"")
+        lines.append("")
 
     # Political donations
     pd = ctx.get('political_donations', {})
     if pd.get('finding'):
-        lines.append(f"### Political Donations")
-        lines.append(f"")
+        lines.append("### Political Donations")
+        lines.append("")
         lines.append(pd['finding'])
-        lines.append(f"")
+        lines.append("")
 
     # Recommendations
     rec = report.get('recommendations', {})
     if rec.get('action'):
-        lines.append(f"---")
-        lines.append(f"")
-        lines.append(f"## Recommended Action")
-        lines.append(f"")
+        lines.append("---")
+        lines.append("")
+        lines.append("## Recommended Action")
+        lines.append("")
         lines.append(rec['action'])
-        lines.append(f"")
+        lines.append("")
         if rec.get('next_steps'):
-            lines.append(f"### Next Steps")
-            lines.append(f"")
+            lines.append("### Next Steps")
+            lines.append("")
             for i, step in enumerate(rec['next_steps'], 1):
                 lines.append(f"{i}. {step}")
-            lines.append(f"")
+            lines.append("")
 
     # Legal
     legal = report.get('legal_framework', [])
     if legal:
-        lines.append(f"---")
-        lines.append(f"")
-        lines.append(f"## Legal Framework")
-        lines.append(f"")
+        lines.append("---")
+        lines.append("")
+        lines.append("## Legal Framework")
+        lines.append("")
         for cite in legal:
             lines.append(f"**{cite['statute']}** — {cite['name']}")
-            lines.append(f"")
+            lines.append("")
             lines.append(f"> {cite['relevance']}")
-            lines.append(f"")
+            lines.append("")
 
     # Methodology
     meth = report.get('methodology', {})
     if meth:
-        lines.append(f"---")
-        lines.append(f"")
-        lines.append(f"## Methodology")
-        lines.append(f"")
+        lines.append("---")
+        lines.append("")
+        lines.append("## Methodology")
+        lines.append("")
         for m in meth.get('statistical_methods', []):
             lines.append(f"**{m['name']}:** {m['description']}")
-            lines.append(f"")
+            lines.append("")
         if meth.get('transparency_note'):
             lines.append(f"*{meth['transparency_note']}*")
-            lines.append(f"")
+            lines.append("")
 
     # Footer
-    lines.append(f"---")
-    lines.append(f"")
+    lines.append("---")
+    lines.append("")
     lines.append(f"*Report generated by SUNLIGHT Fraud Detection System v{meth.get('version', '2.0.0')}*")
 
     return '\n'.join(lines)

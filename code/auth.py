@@ -522,21 +522,21 @@ if __name__ == "__main__":
                                   rate_window=args.rate_window,
                                   scopes=args.scopes,
                                   expires_at=args.expires)
-        print(f"\nAPI Key Generated:")
+        print("\nAPI Key Generated:")
         print(f"  Key ID:    {result['key_id']}")
         print(f"  API Key:   {result['api_key']}")
         print(f"  Client:    {result['client_name']}")
         print(f"  Rate:      {result['rate_limit']} req/{result['rate_window']}s")
         print(f"  Scopes:    {result['scopes']}")
-        print(f"\n  WARNING: Store this key securely. It cannot be retrieved.")
+        print("\n  WARNING: Store this key securely. It cannot be retrieved.")
 
     elif args.command == 'rotate':
         result = rotate_api_key(db, args.key_id)
-        print(f"\nKey Rotated:")
+        print("\nKey Rotated:")
         print(f"  Old Key ID: {args.key_id} (revoked)")
         print(f"  New Key ID: {result['key_id']}")
         print(f"  API Key:    {result['api_key']}")
-        print(f"\n  WARNING: Store this key securely. It cannot be retrieved.")
+        print("\n  WARNING: Store this key securely. It cannot be retrieved.")
 
     elif args.command == 'revoke':
         revoke_api_key(db, args.key_id)
