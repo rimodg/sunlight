@@ -176,9 +176,9 @@ This data exists but is only usable after fixing the 8,764 "None" strings.
 
 ## Recommended Actions (Prioritized)
 
-### P0 — Before Next Pipeline Run
-1. Mark 4 stale RUNNING runs as ABORTED
-2. Add indexes on `vendor_name` and `agency_name` for `contracts` and `contracts_clean`
+### P0 — Before Next Pipeline Run ✅ COMPLETED 2026-02-17
+1. ~~Mark 4 stale RUNNING runs as ABORTED~~ — Done. All 4 set to ABORTED.
+2. ~~Add indexes on `vendor_name` and `agency_name` for `contracts` and `contracts_clean`~~ — Done. 6 indexes created: `idx_contracts_vendor_name`, `idx_contracts_agency_name`, `idx_contracts_clean_vendor_name`, `idx_contracts_clean_agency_name`, `idx_contract_scores_run_id`, `idx_contract_scores_fraud_tier`.
 
 ### P1 — Data Quality
 3. Fix "None" strings in `contracts_clean` (`award_type`, `extent_competed`) -> SQL NULL
