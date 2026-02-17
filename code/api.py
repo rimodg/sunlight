@@ -30,7 +30,7 @@ from datetime import datetime, timezone
 from typing import Optional, List
 from enum import Enum
 
-from fastapi import FastAPI, HTTPException, Query, Path, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Query, Path, BackgroundTasks, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -45,6 +45,11 @@ from institutional_pipeline import (
     verify_audit_chain,
 )
 from sunlight_logging import get_logger
+from auth import (
+    create_auth_dependency, require_api_key_dynamic,
+    generate_api_key, rotate_api_key,
+    revoke_api_key, list_api_keys, get_key_usage, init_auth_schema,
+)
 
 logger = get_logger("api")
 
@@ -244,13 +249,17 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+# Initialize auth
+init_auth_schema(DB_PATH)
+require_api_key = require_api_key_dynamic
+
 
 # ---------------------------------------------------------------------------
 # Health
 # ---------------------------------------------------------------------------
 
 @app.get("/health", response_model=HealthResponse, tags=["System"])
-def health_check():
+def health_check(client: dict = Depends(require_api_key)):
     """Service health check with database status."""
     try:
         conn = get_db()
@@ -286,6 +295,7 @@ def list_contracts(
     max_amount: Optional[float] = Query(None, ge=0),
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=500),
+    client: dict = Depends(require_api_key),
 ):
     """List contracts with optional filters and pagination."""
     conn = get_db()
@@ -324,7 +334,7 @@ def list_contracts(
 
 
 @app.get("/contracts/{contract_id}", response_model=ContractOut, tags=["Contracts"])
-def get_contract(contract_id: str = Path(...)):
+def get_contract(contract_id: str = Path(...), client: dict = Depends(require_api_key)):
     """Get a single contract by ID."""
     conn = get_db()
     c = conn.cursor()
@@ -341,7 +351,7 @@ def get_contract(contract_id: str = Path(...)):
 
 
 @app.post("/contracts", response_model=ContractOut, status_code=201, tags=["Contracts"])
-def submit_contract(contract: ContractIn):
+def submit_contract(contract: ContractIn, client: dict = Depends(require_api_key)):
     """Submit a new contract for future analysis."""
     conn = get_db()
     c = conn.cursor()
@@ -393,7 +403,7 @@ def submit_contract(contract: ContractIn):
 # ---------------------------------------------------------------------------
 
 @app.post("/analyze", response_model=AnalyzeSingleResponse, tags=["Analysis"])
-def analyze_single(request: AnalyzeSingleRequest):
+def analyze_single(request: AnalyzeSingleRequest, client: dict = Depends(require_api_key)):
     """
     Score a single contract against the database of comparables.
 
@@ -472,7 +482,7 @@ def analyze_single(request: AnalyzeSingleRequest):
 
 
 @app.post("/analyze/batch", response_model=BatchResponse, tags=["Analysis"])
-def analyze_batch(request: BatchRequest):
+def analyze_batch(request: BatchRequest, client: dict = Depends(require_api_key)):
     """
     Run the full two-pass institutional pipeline on all contracts.
 
@@ -517,6 +527,7 @@ def list_scores(
     survives_fdr: Optional[bool] = Query(None),
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=500),
+    client: dict = Depends(require_api_key),
 ):
     """Query scored contracts with filters."""
     conn = get_db()
@@ -564,7 +575,7 @@ def list_scores(
 
 
 @app.get("/scores/{contract_id}", tags=["Scores"])
-def get_contract_scores(contract_id: str = Path(...)):
+def get_contract_scores(contract_id: str = Path(...), client: dict = Depends(require_api_key)):
     """Get all scores for a specific contract across all runs."""
     conn = get_db()
     c = conn.cursor()
@@ -598,7 +609,7 @@ def get_contract_scores(contract_id: str = Path(...)):
 # ---------------------------------------------------------------------------
 
 @app.get("/reports/evidence/{contract_id}", response_model=EvidenceOut, tags=["Reports"])
-def get_evidence_package(contract_id: str = Path(...)):
+def get_evidence_package(contract_id: str = Path(...), client: dict = Depends(require_api_key)):
     """
     Generate a full prosecutor-grade evidence package for a contract.
 
@@ -678,6 +689,7 @@ def triage_queue(
     run_id: Optional[str] = Query(None, description="Limit to a specific run"),
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=500),
+    client: dict = Depends(require_api_key),
 ):
     """
     Get the triage queue ordered by priority (RED first, then YELLOW).
@@ -722,7 +734,7 @@ def triage_queue(
 # ---------------------------------------------------------------------------
 
 @app.get("/runs", response_model=List[RunOut], tags=["Runs"])
-def list_runs():
+def list_runs(client: dict = Depends(require_api_key)):
     """List all analysis runs."""
     conn = get_db()
     c = conn.cursor()
@@ -737,7 +749,7 @@ def list_runs():
 
 
 @app.get("/runs/{run_id}", tags=["Runs"])
-def get_run(run_id: str = Path(...)):
+def get_run(run_id: str = Path(...), client: dict = Depends(require_api_key)):
     """Get run detail with verification status."""
     conn = get_db()
     c = conn.cursor()
@@ -780,6 +792,7 @@ def get_run(run_id: str = Path(...)):
 def get_audit_trail(
     offset: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    client: dict = Depends(require_api_key),
 ):
     """
     Get the cryptographic audit trail.
@@ -828,7 +841,7 @@ def get_audit_trail(
 # ---------------------------------------------------------------------------
 
 @app.get("/methodology", tags=["System"])
-def get_methodology():
+def get_methodology(client: dict = Depends(require_api_key)):
     """
     Return the detection methodology — full transparency.
 
@@ -879,3 +892,72 @@ def get_methodology():
             "No black-box scores."
         ),
     }
+
+
+# ---------------------------------------------------------------------------
+# Admin — Key Management
+# ---------------------------------------------------------------------------
+
+def _require_admin(client: dict):
+    """Check that client has admin scope."""
+    if 'admin' not in client.get('scopes', ''):
+        raise HTTPException(status_code=403, detail="Admin scope required.")
+
+
+class KeyGenerateRequest(BaseModel):
+    client_name: str = Field(..., min_length=1)
+    rate_limit: int = Field(default=100, ge=1)
+    rate_window: int = Field(default=3600, ge=60)
+    scopes: str = Field(default="read,analyze")
+    expires_at: Optional[str] = None
+
+
+class KeyRotateRequest(BaseModel):
+    key_id: str
+
+
+@app.post("/admin/keys", tags=["Admin"], status_code=201)
+def admin_generate_key(request: KeyGenerateRequest, client: dict = Depends(require_api_key)):
+    """Generate a new API key. Requires admin scope."""
+    _require_admin(client)
+    result = generate_api_key(
+        DB_PATH, request.client_name,
+        rate_limit=request.rate_limit,
+        rate_window=request.rate_window,
+        scopes=request.scopes,
+        expires_at=request.expires_at,
+    )
+    return result
+
+
+@app.get("/admin/keys", tags=["Admin"])
+def admin_list_keys(client: dict = Depends(require_api_key)):
+    """List all API keys (no secrets). Requires admin scope."""
+    _require_admin(client)
+    return list_api_keys(DB_PATH)
+
+
+@app.post("/admin/keys/rotate", tags=["Admin"])
+def admin_rotate_key(request: KeyRotateRequest, client: dict = Depends(require_api_key)):
+    """Rotate an API key. Requires admin scope."""
+    _require_admin(client)
+    try:
+        result = rotate_api_key(DB_PATH, request.key_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return result
+
+
+@app.delete("/admin/keys/{key_id}", tags=["Admin"])
+def admin_revoke_key(key_id: str = Path(...), client: dict = Depends(require_api_key)):
+    """Revoke an API key. Requires admin scope."""
+    _require_admin(client)
+    revoke_api_key(DB_PATH, key_id)
+    return {"status": "revoked", "key_id": key_id}
+
+
+@app.get("/admin/keys/{key_id}/usage", tags=["Admin"])
+def admin_key_usage(key_id: str = Path(...), client: dict = Depends(require_api_key)):
+    """Get usage statistics for a key. Requires admin scope."""
+    _require_admin(client)
+    return get_key_usage(DB_PATH, key_id)

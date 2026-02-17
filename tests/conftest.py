@@ -9,6 +9,9 @@ import sqlite3
 import tempfile
 import json
 
+# Disable auth for tests by default
+os.environ['SUNLIGHT_AUTH_ENABLED'] = 'false'
+
 # Add code directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'code'))
 

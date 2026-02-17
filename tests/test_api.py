@@ -12,12 +12,30 @@ from fastapi.testclient import TestClient
 
 @pytest.fixture
 def api_client(populated_db, monkeypatch):
-    """Create a test client with a populated temp database."""
-    monkeypatch.setattr('api.DB_PATH', populated_db)
-    # Need to re-import after patching
+    """Create a test client with a populated temp database (auth disabled)."""
     import api
-    api.DB_PATH = populated_db
+    import auth
+    monkeypatch.setattr(api, 'DB_PATH', populated_db)
+    monkeypatch.setattr(auth, 'AUTH_ENABLED', False)
+    auth.init_auth_schema(populated_db)
     return TestClient(api.app)
+
+
+@pytest.fixture
+def auth_client(populated_db, monkeypatch):
+    """Create a test client with auth ENABLED and a pre-generated key."""
+    import api
+    import auth
+    monkeypatch.setattr(api, 'DB_PATH', populated_db)
+    monkeypatch.setattr(auth, 'AUTH_ENABLED', True)
+    auth.init_auth_schema(populated_db)
+    # Generate a test key
+    result = auth.generate_api_key(
+        populated_db, "test_client",
+        rate_limit=100, scopes="read,analyze,admin"
+    )
+    client = TestClient(api.app)
+    return client, result['api_key']
 
 
 class TestHealth:
@@ -280,3 +298,120 @@ class TestOpenAPIDocs:
         assert '/health' in schema['paths']
         assert '/analyze' in schema['paths']
         assert '/analyze/batch' in schema['paths']
+
+
+class TestAuth:
+
+    def test_missing_key_returns_401(self, auth_client):
+        client, _ = auth_client
+        resp = client.get("/health")
+        assert resp.status_code == 401
+        assert "Missing API key" in resp.json()['detail']
+
+    def test_invalid_key_returns_401(self, auth_client):
+        client, _ = auth_client
+        resp = client.get("/health", headers={"X-API-Key": "sk_sunlight_bogus"})
+        assert resp.status_code == 401
+        assert "Invalid" in resp.json()['detail']
+
+    def test_valid_key_succeeds(self, auth_client):
+        client, key = auth_client
+        resp = client.get("/health", headers={"X-API-Key": key})
+        assert resp.status_code == 200
+        assert resp.json()['status'] == 'healthy'
+
+    def test_admin_generate_key(self, auth_client):
+        client, key = auth_client
+        resp = client.post("/admin/keys", json={
+            "client_name": "new_client",
+            "rate_limit": 50,
+            "scopes": "read",
+        }, headers={"X-API-Key": key})
+        assert resp.status_code == 201
+        data = resp.json()
+        assert data['client_name'] == 'new_client'
+        assert data['api_key'].startswith('sk_sunlight_')
+        assert data['rate_limit'] == 50
+
+    def test_admin_list_keys(self, auth_client):
+        client, key = auth_client
+        resp = client.get("/admin/keys", headers={"X-API-Key": key})
+        assert resp.status_code == 200
+        assert len(resp.json()) >= 1
+
+    def test_admin_rotate_key(self, auth_client):
+        client, key = auth_client
+        # Get current key_id
+        keys = client.get("/admin/keys", headers={"X-API-Key": key}).json()
+        key_id = keys[0]['key_id']
+        # Rotate
+        resp = client.post("/admin/keys/rotate", json={"key_id": key_id},
+                           headers={"X-API-Key": key})
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data['api_key'].startswith('sk_sunlight_')
+        assert data['key_id'] != key_id
+
+    def test_admin_revoke_key(self, auth_client):
+        client, key = auth_client
+        # Generate a key to revoke
+        gen_resp = client.post("/admin/keys", json={"client_name": "disposable"},
+                               headers={"X-API-Key": key})
+        new_key_id = gen_resp.json()['key_id']
+        new_api_key = gen_resp.json()['api_key']
+        # Verify it works
+        assert client.get("/health", headers={"X-API-Key": new_api_key}).status_code == 200
+        # Revoke
+        resp = client.delete(f"/admin/keys/{new_key_id}", headers={"X-API-Key": key})
+        assert resp.status_code == 200
+        # Verify revoked key is rejected
+        resp = client.get("/health", headers={"X-API-Key": new_api_key})
+        assert resp.status_code == 403
+
+    def test_admin_key_usage(self, auth_client):
+        client, key = auth_client
+        # Make a few requests
+        client.get("/health", headers={"X-API-Key": key})
+        client.get("/contracts", headers={"X-API-Key": key})
+        # Get usage
+        keys = client.get("/admin/keys", headers={"X-API-Key": key}).json()
+        key_id = keys[0]['key_id']
+        resp = client.get(f"/admin/keys/{key_id}/usage", headers={"X-API-Key": key})
+        assert resp.status_code == 200
+        assert resp.json()['total_requests'] >= 2
+
+    def test_non_admin_rejected(self, auth_client):
+        client, admin_key = auth_client
+        # Generate a non-admin key via admin endpoint
+        gen_resp = client.post("/admin/keys", json={
+            "client_name": "reader_only",
+            "scopes": "read",
+        }, headers={"X-API-Key": admin_key})
+        reader_key = gen_resp.json()['api_key']
+        # Try admin endpoint with reader key
+        resp = client.get("/admin/keys", headers={"X-API-Key": reader_key})
+        assert resp.status_code == 403
+
+    def test_rate_limiting(self, populated_db, monkeypatch):
+        import api
+        import auth
+        monkeypatch.setattr(api, 'DB_PATH', populated_db)
+        monkeypatch.setattr(auth, 'AUTH_ENABLED', True)
+        auth.init_auth_schema(populated_db)
+        # Reset the module-level rate limiter
+        auth._rate_limiter = auth.RateLimiter()
+        # Create key with rate limit of 3
+        result = auth.generate_api_key(
+            populated_db, "rate_test", rate_limit=3, rate_window=3600,
+            scopes="read,analyze,admin"
+        )
+        test_key = result['api_key']
+        client = TestClient(api.app)
+        # 3 requests should work
+        for _ in range(3):
+            resp = client.get("/health", headers={"X-API-Key": test_key})
+            assert resp.status_code == 200
+        # 4th should be rate limited
+        resp = client.get("/health", headers={"X-API-Key": test_key})
+        assert resp.status_code == 429
+        assert "Rate limit exceeded" in resp.json()['detail']
