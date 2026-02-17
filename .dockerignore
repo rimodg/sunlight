@@ -1,0 +1,17 @@
+.venv/
+.git/
+.github/
+__pycache__/
+*.pyc
+*.db
+data/raw/
+*.tar.gz
+.env
+.env.local
+.DS_Store
+tests/
+reports/
+documentation/
+*.txt
+*.md
+!requirements.txt
