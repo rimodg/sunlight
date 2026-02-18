@@ -8,6 +8,7 @@ include = [
     "code/doj_validation.py",
     "code/institutional_pipeline.py",
     "code/institutional_statistical_rigor.py",
+    "code/ingestion.py",
     "code/sunlight_logging.py",
     "tests/**/*.py",
 ]

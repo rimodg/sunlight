@@ -19,6 +19,8 @@ Endpoints:
     GET  /runs                       — List analysis runs
     GET  /runs/{run_id}              — Run detail with verification
     GET  /audit                      — Audit trail
+    POST /ingest                     — Upload document for async ingestion
+    GET  /ingest/{job_id}            — Check ingestion job status
 """
 
 import os
@@ -50,6 +52,9 @@ from auth import (
     create_auth_dependency, require_api_key_dynamic,
     generate_api_key, rotate_api_key,
     revoke_api_key, list_api_keys, get_key_usage, init_auth_schema,
+)
+from ingestion import (
+    init_ingestion_schema, create_job, get_job, process_ingestion,
 )
 
 logger = get_logger("api")
@@ -250,8 +255,9 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Initialize auth
+# Initialize auth and ingestion schemas
 init_auth_schema(DB_PATH)
+init_ingestion_schema(DB_PATH)
 require_api_key = require_api_key_dynamic
 
 
@@ -921,6 +927,103 @@ def get_methodology(client: dict = Depends(require_api_key)):
             "No black-box scores."
         ),
     }
+
+
+# ---------------------------------------------------------------------------
+# Ingestion
+# ---------------------------------------------------------------------------
+
+from fastapi import UploadFile, File
+
+class IngestionResponse(BaseModel):
+    job_id: str
+    status: str
+    message: str
+
+
+class IngestionStatusResponse(BaseModel):
+    job_id: str
+    status: str
+    source_filename: Optional[str]
+    source_format: str
+    submitted_at: str
+    completed_at: Optional[str]
+    total_records: int
+    inserted: int
+    duplicates: int
+    errors: int
+    scored: int
+    error_details: Optional[str]
+
+
+@app.post("/ingest", response_model=IngestionResponse, status_code=202, tags=["Ingestion"])
+async def ingest_document(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    client: dict = Depends(require_api_key),
+):
+    """
+    Upload a procurement document for ingestion and async scoring.
+
+    Accepts PDF, CSV, or JSON files. Extracts structured contract data,
+    inserts into the database, and scores through the detection pipeline.
+    Returns a tracking ID for polling status.
+
+    Supported formats:
+    - **JSON**: Single contract object, array, or `{"contracts": [...]}`
+    - **CSV**: Header row with columns matching contract fields
+    - **PDF**: Best-effort text extraction (structured formats preferred)
+    """
+    filename = file.filename or "upload"
+    ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else ''
+
+    # Determine format
+    content_type = file.content_type or ''
+    if ext == 'json' or 'json' in content_type:
+        source_format = 'json'
+    elif ext == 'csv' or 'csv' in content_type:
+        source_format = 'csv'
+    elif ext == 'pdf' or 'pdf' in content_type:
+        source_format = 'pdf'
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file format: {ext}. Use JSON, CSV, or PDF."
+        )
+
+    content = await file.read()
+    if len(content) == 0:
+        raise HTTPException(status_code=400, detail="Empty file")
+
+    source_hash = hashlib.sha256(content).hexdigest()
+
+    # Create tracking job
+    job_id = create_job(
+        DB_PATH, filename, source_format, source_hash,
+        client_name=client.get('client_name', 'anonymous'),
+    )
+
+    # Process async
+    background_tasks.add_task(process_ingestion, DB_PATH, job_id, content, source_format, filename)
+
+    logger.info("Ingestion job submitted",
+                extra={"job_id": job_id, "source_file": filename, "source_format": source_format,
+                       "size_bytes": len(content), "client_name_val": client.get('client_name')})
+
+    return IngestionResponse(
+        job_id=job_id,
+        status="PENDING",
+        message=f"File '{filename}' accepted for processing. Poll /ingest/{job_id} for status.",
+    )
+
+
+@app.get("/ingest/{job_id}", response_model=IngestionStatusResponse, tags=["Ingestion"])
+def get_ingestion_status(job_id: str = Path(...), client: dict = Depends(require_api_key)):
+    """Check the status of an ingestion job."""
+    job = get_job(DB_PATH, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Ingestion job {job_id} not found")
+    return IngestionStatusResponse(**job)
 
 
 # ---------------------------------------------------------------------------

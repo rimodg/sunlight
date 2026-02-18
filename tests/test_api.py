@@ -15,9 +15,11 @@ def api_client(populated_db, monkeypatch):
     """Create a test client with a populated temp database (auth disabled)."""
     import api
     import auth
+    import ingestion
     monkeypatch.setattr(api, 'DB_PATH', populated_db)
     monkeypatch.setattr(auth, 'AUTH_ENABLED', False)
     auth.init_auth_schema(populated_db)
+    ingestion.init_ingestion_schema(populated_db)
     return TestClient(api.app)
 
 
@@ -460,3 +462,86 @@ class TestAuth:
         resp = client.get("/health", headers={"X-API-Key": test_key})
         assert resp.status_code == 429
         assert "Rate limit exceeded" in resp.json()['detail']
+
+
+class TestIngestion:
+
+    def test_ingest_json_single(self, api_client):
+        import json
+        contract = {
+            "contract_id": "INGEST_TEST_001",
+            "award_amount": 500000,
+            "vendor_name": "Test Vendor Inc",
+            "agency_name": "DEPARTMENT OF DEFENSE",
+            "description": "Test contract for ingestion",
+        }
+        content = json.dumps(contract).encode()
+        resp = api_client.post(
+            "/ingest",
+            files={"file": ("test.json", content, "application/json")},
+        )
+        assert resp.status_code == 202
+        data = resp.json()
+        assert data['status'] == 'PENDING'
+        assert 'job_id' in data
+
+        # Poll until complete (background task runs synchronously in test client)
+        job_id = data['job_id']
+        status_resp = api_client.get(f"/ingest/{job_id}")
+        assert status_resp.status_code == 200
+        status = status_resp.json()
+        assert status['status'] in ('COMPLETED', 'PROCESSING', 'PENDING')
+
+    def test_ingest_json_array(self, api_client):
+        import json
+        contracts = [
+            {"contract_id": "INGEST_ARR_001", "award_amount": 100000,
+             "vendor_name": "Vendor A", "agency_name": "DEPARTMENT OF DEFENSE"},
+            {"contract_id": "INGEST_ARR_002", "award_amount": 200000,
+             "vendor_name": "Vendor B", "agency_name": "DEPARTMENT OF DEFENSE"},
+        ]
+        content = json.dumps(contracts).encode()
+        resp = api_client.post(
+            "/ingest",
+            files={"file": ("batch.json", content, "application/json")},
+        )
+        assert resp.status_code == 202
+        job_id = resp.json()['job_id']
+        status = api_client.get(f"/ingest/{job_id}").json()
+        assert status['total_records'] == 2
+
+    def test_ingest_csv(self, api_client):
+        csv_content = (
+            "contract_id,award_amount,vendor_name,agency_name,description\n"
+            "CSV_TEST_001,750000,CSV Vendor,DEPARTMENT OF DEFENSE,CSV test\n"
+            "CSV_TEST_002,350000,CSV Vendor 2,DEPARTMENT OF DEFENSE,CSV test 2\n"
+        ).encode()
+        resp = api_client.post(
+            "/ingest",
+            files={"file": ("contracts.csv", csv_content, "text/csv")},
+        )
+        assert resp.status_code == 202
+        job_id = resp.json()['job_id']
+        status = api_client.get(f"/ingest/{job_id}").json()
+        assert status['source_format'] == 'csv'
+        assert status['total_records'] == 2
+
+    def test_ingest_unsupported_format(self, api_client):
+        resp = api_client.post(
+            "/ingest",
+            files={"file": ("data.xyz", b"some data", "application/octet-stream")},
+        )
+        assert resp.status_code == 400
+        assert "Unsupported" in resp.json()['detail']
+
+    def test_ingest_empty_file(self, api_client):
+        resp = api_client.post(
+            "/ingest",
+            files={"file": ("empty.json", b"", "application/json")},
+        )
+        assert resp.status_code == 400
+        assert "Empty" in resp.json()['detail']
+
+    def test_ingest_job_not_found(self, api_client):
+        resp = api_client.get("/ingest/nonexistent_job")
+        assert resp.status_code == 404
