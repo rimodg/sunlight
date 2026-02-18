@@ -1,0 +1,153 @@
+{
+  "case_packet_version": "1.0.0",
+  "rulepack_version": "2.0.0",
+  "generated_at": "2026-02-18T18:38:21.380029+00:00",
+  "data_snapshot_id": "9c0e1fb0856bae08",
+  "disclaimer": "IMPORTANT: All findings in this case packet are statistical risk indicators, not allegations of fraud. Flagged contracts require human review and investigation before any conclusions can be drawn. Statistical anomalies may have legitimate explanations including market conditions, specialized requirements, or data quality issues.",
+  "contract": {
+    "contract_id": "00500199911C0001500990012",
+    "award_amount": 109153559.72,
+    "vendor_name": "HP ENTERPRISE SERVICES, LLC",
+    "agency_name": "Department of Health and Human Services",
+    "description": "PROGRAM SAFEGUARD CONTRACT",
+    "start_date": "1999-11-19"
+  },
+  "assessment": {
+    "fraud_tier": "RED",
+    "confidence_score": 62,
+    "run_id": "run_20260212_185337_42",
+    "scored_at": "2026-02-13T08:49:55.219054+00:00"
+  },
+  "triggered_typologies": [
+    {
+      "rule_id": "PRICE-001",
+      "rule_name": "Extreme Price Inflation",
+      "description": "Bootstrap 95% CI lower bound (340%) exceeds DOJ extreme threshold (300%). This level of markup has been prosecuted under the False Claims Act.",
+      "severity": "CRITICAL",
+      "threshold": "CI lower > 300%",
+      "actual_value": "339.9%"
+    },
+    {
+      "rule_id": "BAYES-002",
+      "rule_name": "Elevated Bayesian Fraud Probability",
+      "description": "Bayesian posterior fraud probability (56.6%) exceeds 50% threshold.",
+      "severity": "MEDIUM",
+      "threshold": "Posterior > 50%",
+      "actual_value": "56.6%"
+    },
+    {
+      "rule_id": "OUTLIER-002",
+      "rule_name": "Upper Quartile Outlier",
+      "description": "Contract amount exceeds 92th percentile of comparable contracts.",
+      "severity": "MEDIUM",
+      "threshold": "Percentile > 75th",
+      "actual_value": "91.6th percentile"
+    }
+  ],
+  "evidence": {
+    "markup_pct": 356.38,
+    "markup_ci_lower": 339.9,
+    "markup_ci_upper": 371.1,
+    "raw_zscore": 0.2492,
+    "log_zscore": 1.5878,
+    "bootstrap_percentile": 92.6,
+    "percentile_ci_lower": 91.6,
+    "percentile_ci_upper": 93.7,
+    "bayesian_prior": 0.035,
+    "bayesian_posterior": 0.5662,
+    "bayesian_likelihood_ratio": 35.99,
+    "raw_pvalue": 0.0001,
+    "fdr_adjusted_pvalue": 0.00020976138828633406,
+    "survives_fdr": true,
+    "comparable_count": 2326
+  },
+  "peer_comparison": {
+    "available": true,
+    "agency": "Department of Health and Human Services",
+    "peer_count": 2326,
+    "contract_amount": 109153559.72,
+    "peer_statistics": {
+      "median": 23917329.64,
+      "mean": 58201708.99,
+      "std_dev": 204440807.44,
+      "p25": 17557138.77,
+      "p75": 40097280.11,
+      "p95": 168397057.91
+    },
+    "anomaly_assessment": {
+      "percentile_rank": 92.6,
+      "deviation_from_median_pct": 356.4,
+      "z_score": 0.25
+    },
+    "interpretation": "This contract ($109,153,560) is at the 93th percentile of 2326 comparable contracts in Department of Health and Human Services. The peer median is $23,917,330. This is a statistical risk indicator, not an allegation."
+  },
+  "vendor_linkages": {
+    "vendor_name": "HP ENTERPRISE SERVICES, LLC",
+    "match_type": "exact_name",
+    "linkage_confidence": "HIGH",
+    "total_contracts": 3,
+    "other_contracts": [
+      {
+        "contract_id": "00500200210C0006500990012",
+        "award_amount": 134646738.9,
+        "agency_name": "Department of Health and Human Services",
+        "description": "None"
+      },
+      {
+        "contract_id": "00500200304C0007500990012",
+        "award_amount": 69148374.07,
+        "agency_name": "Department of Health and Human Services",
+        "description": "None"
+      }
+    ],
+    "flagged_contracts": [
+      {
+        "contract_id": "00500200210C0006500990012",
+        "award_amount": 134646738.9,
+        "agency_name": "Department of Health and Human Services",
+        "description": "None",
+        "fraud_tier": "RED",
+        "confidence_score": 72
+      },
+      {
+        "contract_id": "00500200304C0007500990012",
+        "award_amount": 69148374.07,
+        "agency_name": "Department of Health and Human Services",
+        "description": "None",
+        "fraud_tier": "YELLOW",
+        "confidence_score": 46
+      }
+    ],
+    "political_donations": {
+      "count": 0,
+      "total_amount": 0,
+      "records": []
+    },
+    "note": "Vendor linkages are based on exact name matching. Variations in vendor naming may cause missed linkages. These are indicators for further investigation, not conclusions."
+  },
+  "recommendations": {
+    "risk_severity": "RED",
+    "recommended_action": "Immediate detailed review recommended",
+    "next_steps": [
+      "Request complete cost/pricing data from vendor (FAR 15.403)",
+      "Compare line-item pricing against GSA schedule or commercial equivalents",
+      "Review contract modification history for unexplained cost growth",
+      "Check vendor debarment/suspension status (SAM.gov)",
+      "Investigate pattern across other flagged contracts from this vendor",
+      "If evidence supports, consider referral to OIG or contracting officer"
+    ],
+    "escalation_path": "OIG Hotline or Contracting Officer for RED-tier findings; Contracting Officer for YELLOW-tier findings"
+  },
+  "disposition": {
+    "status": "PENDING_REVIEW",
+    "analyst_notes": "",
+    "disposition_options": [
+      "TRUE_POSITIVE \u2014 Confirmed pricing anomaly, escalate",
+      "FALSE_POSITIVE \u2014 Legitimate pricing, document rationale",
+      "BENIGN \u2014 Anomaly explained by market conditions",
+      "NEEDS_INFO \u2014 Insufficient information, request documentation"
+    ],
+    "reviewed_by": null,
+    "reviewed_at": null
+  }
+}
