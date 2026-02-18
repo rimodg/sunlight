@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUNLIGHT | Procurement Fraud Detection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- ============================================================ -->
+    <!-- TOP BAR                                                       -->
+    <!-- ============================================================ -->
+    <header class="topbar">
+        <div class="topbar-brand">
+            <div class="topbar-wordmark">SUN<span>LIGHT</span></div>
+            <div class="topbar-divider"></div>
+            <div class="topbar-subtitle">Procurement Fraud Detection</div>
+        </div>
+        <div class="topbar-stats">
+            <div class="topbar-stat">
+                <div id="status-dot" class="status-dot"></div>
+                <span id="status-text">Connecting...</span>
+            </div>
+            <div class="topbar-stat">
+                Contracts: <strong id="topbar-contracts">--</strong>
+            </div>
+            <div class="topbar-stat">
+                Scored: <strong id="topbar-scored">--</strong>
+            </div>
+            <div class="topbar-stat" id="topbar-time">--</div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- DASHBOARD BODY                                                -->
+    <!-- ============================================================ -->
+    <main class="dashboard">
+
+        <!-- KPI ROW ------------------------------------------------- -->
+        <section>
+            <div class="section-header">
+                <span class="section-title">Key Performance Indicators</span>
+            </div>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Contracts</div>
+                    <div class="kpi-value" id="kpi-total">--</div>
+                    <div class="kpi-delta">in database</div>
+                </div>
+                <div class="kpi-card red">
+                    <div class="kpi-label">Flagged</div>
+                    <div class="kpi-value" id="kpi-flagged">--</div>
+                    <div class="kpi-delta">RED + YELLOW</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Detection Rate</div>
+                    <div class="kpi-value" id="kpi-rate">--</div>
+                    <div class="kpi-delta">flagged / total</div>
+                </div>
+                <div class="kpi-card amber">
+                    <div class="kpi-label">Avg Risk Score</div>
+                    <div class="kpi-value" id="kpi-risk">--</div>
+                    <div class="kpi-delta">across flagged</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Flagged Exposure</div>
+                    <div class="kpi-value" id="kpi-exposure">--</div>
+                    <div class="kpi-delta">total award value</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RISK DISTRIBUTION + DETECTION FEED ---------------------- -->
+        <section class="grid-3-2">
+            <!-- Detection Feed -->
+            <div class="card">
+                <div class="section-header">
+                    <span class="section-title">Detection Feed</span>
+                    <span class="section-badge" id="detection-count">0</span>
+                </div>
+                <div class="detection-table-wrap">
+                    <table class="detection-table">
+                        <thead>
+                            <tr>
+                                <th>Contract ID</th>
+                                <th>Vendor</th>
+                                <th>Agency</th>
+                                <th>Tier</th>
+                                <th>Confidence</th>
+                                <th>Markup</th>
+                                <th style="text-align:right">Award</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detection-tbody">
+                            <tr>
+                                <td colspan="7" class="empty-state">
+                                    <div class="icon">&#8987;</div>
+                                    <div class="message">Loading detection data...</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Risk Distribution Donut -->
+            <div class="card">
+                <div class="section-header">
+                    <span class="section-title">Risk Distribution</span>
+                </div>
+                <div class="donut-container">
+                    <div class="donut-chart-wrap">
+                        <canvas id="donut-chart"></canvas>
+                        <div class="donut-center-label">
+                            <span class="value" id="donut-total">--</span>
+                            <span class="label">contracts</span>
+                        </div>
+                    </div>
+                    <div class="donut-legend">
+                        <div class="legend-item" id="legend-red">
+                            <div class="legend-dot red"></div>
+                            <div class="legend-text">
+                                <div class="tier-name">RED</div>
+                                <div class="tier-detail">Prosecution-grade</div>
+                            </div>
+                            <span class="legend-count">--</span>
+                            <span class="legend-amount">--</span>
+                        </div>
+                        <div class="legend-item" id="legend-yellow">
+                            <div class="legend-dot amber"></div>
+                            <div class="legend-text">
+                                <div class="tier-name">YELLOW</div>
+                                <div class="tier-detail">Investigation-worthy</div>
+                            </div>
+                            <span class="legend-count">--</span>
+                            <span class="legend-amount">--</span>
+                        </div>
+                        <div class="legend-item" id="legend-green">
+                            <div class="legend-dot green"></div>
+                            <div class="legend-text">
+                                <div class="tier-name">GREEN</div>
+                                <div class="tier-detail">Normal pricing</div>
+                            </div>
+                            <span class="legend-count">--</span>
+                            <span class="legend-amount">--</span>
+                        </div>
+                        <div class="legend-item" id="legend-gray">
+                            <div class="legend-dot gray"></div>
+                            <div class="legend-text">
+                                <div class="tier-name">GRAY</div>
+                                <div class="tier-detail">Insufficient data</div>
+                            </div>
+                            <span class="legend-count">--</span>
+                            <span class="legend-amount">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VENDOR RISK + AGENCY EXPOSURE ----------------------------- -->
+        <section class="grid-2col">
+            <div class="card">
+                <div class="section-header">
+                    <span class="section-title">Vendor Risk Ranking</span>
+                </div>
+                <div class="rank-list" id="vendor-risk-list">
+                    <div class="empty-state"><div class="message">Loading...</div></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="section-header">
+                    <span class="section-title">Agency Exposure</span>
+                </div>
+                <div class="rank-list" id="agency-exposure-list">
+                    <div class="empty-state"><div class="message">Loading...</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UPLOAD + SYSTEM HEALTH ------------------------------------ -->
+        <section class="grid-2col">
+            <!-- Upload Zone -->
+            <div class="card">
+                <div class="section-header">
+                    <span class="section-title">Contract Ingestion</span>
+                </div>
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-icon">&#8679;</div>
+                    <div class="upload-title">Drop contract data here</div>
+                    <div class="upload-subtitle">JSON or CSV &middot; up to 50 MB &middot; scored automatically</div>
+                    <input type="file" id="upload-input" accept=".json,.csv" style="display:none">
+                    <div class="upload-progress" id="upload-progress">
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="upload-status" id="upload-status-text"></div>
+                    </div>
+                    <div class="upload-result" id="upload-result"></div>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="card">
+                <div class="section-header">
+                    <span class="section-title">System Health</span>
+                </div>
+                <div class="health-grid">
+                    <div class="health-item">
+                        <span class="label">Audit Chain</span>
+                        <span class="value" id="health-status">--</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="label">Version</span>
+                        <span class="value" id="health-version">--</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="label">Database</span>
+                        <span class="value" id="health-db">--</span>
+                    </div>
+                    <div class="health-item">
+                        <span class="label">Contracts</span>
+                        <span class="value" id="health-contracts">--</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                        -->
+    <!-- ============================================================ -->
+    <footer class="footer">
+        <div class="footer-text">
+            SUNLIGHT v2.0.0 &mdash; <span>Statistical anomaly detection for government procurement</span>
+            &middot; All findings are risk indicators, not allegations of fraud
+        </div>
+    </footer>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

@@ -38,7 +38,8 @@ from enum import Enum
 
 from fastapi import FastAPI, HTTPException, Query, Path, BackgroundTasks, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 # Add code directory to path for imports
@@ -290,6 +291,14 @@ async def limit_request_size(request: Request, call_next):
         )
     return await call_next(request)
 
+
+# Static files and templates
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_STATIC_DIR = os.path.join(_REPO_ROOT, "static")
+_TEMPLATE_DIR = os.path.join(_REPO_ROOT, "templates")
+
+if os.path.isdir(_STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")
 
 # Initialize auth and ingestion schemas
 init_auth_schema(DB_PATH)
@@ -1186,3 +1195,138 @@ def admin_key_usage(key_id: str = Path(...), client: dict = Depends(require_api_
     """Get usage statistics for a key. Requires admin scope."""
     _require_admin(client)
     return get_key_usage(DB_PATH, key_id)
+
+
+# ---------------------------------------------------------------------------
+# Web Dashboard (unauthenticated — served at /dashboard)
+# ---------------------------------------------------------------------------
+
+@app.get("/dashboard", response_class=HTMLResponse, tags=["Dashboard"],
+         include_in_schema=False)
+def serve_dashboard():
+    """Serve the SUNLIGHT web dashboard."""
+    template_path = os.path.join(_TEMPLATE_DIR, "dashboard.html")
+    if not os.path.exists(template_path):
+        raise HTTPException(status_code=404, detail="Dashboard template not found")
+    with open(template_path) as f:
+        return HTMLResponse(content=f.read())
+
+
+@app.get("/dashboard/api/health", tags=["Dashboard"], include_in_schema=False)
+def dashboard_api_health():
+    """Health data for dashboard (unauthenticated)."""
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM contracts")
+    contract_count = c.fetchone()[0]
+    c.execute("SELECT COUNT(*) FROM contract_scores")
+    scored_count = c.fetchone()[0]
+
+    audit_chain_valid = True
+    try:
+        c.execute("""
+            WITH chain AS (
+                SELECT sequence_number,
+                       previous_log_hash,
+                       current_log_hash,
+                       LAG(current_log_hash) OVER (ORDER BY sequence_number) AS expected_prev
+                FROM audit_log
+            )
+            SELECT COUNT(*) FROM chain
+            WHERE sequence_number > 1 AND previous_log_hash != expected_prev
+        """)
+        chain_breaks = c.fetchone()[0]
+        audit_chain_valid = chain_breaks == 0
+    except Exception:
+        pass
+
+    db_name = os.path.basename(DB_PATH)
+    conn.close()
+    return {
+        "status": "operational",
+        "version": API_VERSION,
+        "database": db_name,
+        "contract_count": contract_count,
+        "scored_count": scored_count,
+        "audit_chain_valid": audit_chain_valid,
+    }
+
+
+@app.get("/dashboard/api/triage", tags=["Dashboard"], include_in_schema=False)
+def dashboard_api_triage(
+    limit: int = Query(100, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+):
+    """Flagged contracts for dashboard (unauthenticated)."""
+    return get_flagged_queue(DB_PATH, offset=offset, limit=limit)
+
+
+@app.get("/dashboard/api/scores", tags=["Dashboard"], include_in_schema=False)
+def dashboard_api_scores(
+    limit: int = Query(500, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+):
+    """All scores for dashboard donut chart (unauthenticated)."""
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM contract_scores")
+    total = c.fetchone()[0]
+    c.execute(
+        "SELECT score_id, contract_id, run_id, fraud_tier, confidence_score, "
+        "markup_pct, bayesian_posterior, comparable_count "
+        "FROM contract_scores ORDER BY triage_priority ASC LIMIT ? OFFSET ?",
+        (limit, offset),
+    )
+    items = [dict(r) for r in c.fetchall()]
+    conn.close()
+    return {"total": total, "offset": offset, "limit": limit, "items": items}
+
+
+@app.get("/dashboard/api/contracts", tags=["Dashboard"], include_in_schema=False)
+def dashboard_api_contracts(limit: int = Query(1, ge=1, le=500)):
+    """Contract count for dashboard (unauthenticated)."""
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM contracts")
+    total = c.fetchone()[0]
+    conn.close()
+    return {"total": total}
+
+
+@app.get("/dashboard/api/report/{contract_id}", tags=["Dashboard"],
+         include_in_schema=False)
+def dashboard_api_report(contract_id: str = Path(...)):
+    """Detection report for expanded row (unauthenticated)."""
+    report = generate_detection_report(DB_PATH, contract_id)
+    if "error" in report:
+        raise HTTPException(status_code=404, detail=report["error"])
+    return report
+
+
+@app.post("/dashboard/api/ingest", tags=["Dashboard"], include_in_schema=False)
+async def dashboard_api_ingest(request: Request, background_tasks: BackgroundTasks):
+    """File ingestion from dashboard upload (unauthenticated)."""
+    form = await request.form()
+    upload = form.get("file")
+    if not upload:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    content = await upload.read()
+    filename = upload.filename or "upload"
+    file_format = "csv" if filename.lower().endswith(".csv") else "json"
+    job = create_job(DB_PATH, filename, file_format, len(content))
+
+    background_tasks.add_task(
+        process_ingestion, DB_PATH, job["job_id"], content, file_format
+    )
+    return job
+
+
+@app.get("/dashboard/api/ingest/{job_id}", tags=["Dashboard"],
+         include_in_schema=False)
+def dashboard_api_ingest_status(job_id: str = Path(...)):
+    """Check ingestion job status from dashboard (unauthenticated)."""
+    job = get_job(DB_PATH, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
