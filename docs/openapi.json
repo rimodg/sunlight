@@ -1,0 +1,2290 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "SUNLIGHT Fraud Detection API",
+        "description": "Institutional-grade fraud detection for government procurement contracts. Bootstrap/Bayesian/FDR statistical engine with DOJ-calibrated thresholds. Every detection is explainable and prosecution-ready.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "summary": "Health Check",
+                "description": "Service health check with database status.",
+                "operationId": "health_check_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/contracts": {
+            "get": {
+                "tags": [
+                    "Contracts"
+                ],
+                "summary": "List Contracts",
+                "description": "List contracts with optional filters and pagination.",
+                "operationId": "list_contracts_contracts_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "agency",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by agency name (substring match)",
+                            "title": "Agency"
+                        },
+                        "description": "Filter by agency name (substring match)"
+                    },
+                    {
+                        "name": "vendor",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by vendor name (substring match)",
+                            "title": "Vendor"
+                        },
+                        "description": "Filter by vendor name (substring match)"
+                    },
+                    {
+                        "name": "min_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Min Amount"
+                        }
+                    },
+                    {
+                        "name": "max_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Max Amount"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0,
+                            "title": "Offset"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 500,
+                            "minimum": 1,
+                            "default": 50,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Contracts"
+                ],
+                "summary": "Submit Contract",
+                "description": "Submit a new contract for future analysis.",
+                "operationId": "submit_contract_contracts_post",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ContractIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContractOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contracts/{contract_id}": {
+            "get": {
+                "tags": [
+                    "Contracts"
+                ],
+                "summary": "Get Contract",
+                "description": "Get a single contract by ID.",
+                "operationId": "get_contract_contracts__contract_id__get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Contract Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContractOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/analyze": {
+            "post": {
+                "tags": [
+                    "Analysis"
+                ],
+                "summary": "Analyze Single",
+                "description": "Score a single contract against the database of comparables.\n\nReturns fraud tier, confidence score, statistical evidence, and legal citations.\nEvery field is explainable \u2014 no black-box scores.",
+                "operationId": "analyze_single_analyze_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AnalyzeSingleRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnalyzeSingleResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/analyze/batch": {
+            "post": {
+                "tags": [
+                    "Analysis"
+                ],
+                "summary": "Analyze Batch",
+                "description": "Run the full two-pass institutional pipeline on all contracts.\n\nPass 1: Score each contract (bootstrap CIs, Bayesian posteriors)\nPass 2: Apply FDR correction across all scored contracts\n\nResults are persisted to the database with a unique run_id.\nThe run is fully reproducible given the same seed and data.",
+                "operationId": "analyze_batch_analyze_batch_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BatchRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BatchResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/scores": {
+            "get": {
+                "tags": [
+                    "Scores"
+                ],
+                "summary": "List Scores",
+                "description": "Query scored contracts with filters.",
+                "operationId": "list_scores_scores_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "run_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by analysis run",
+                            "title": "Run Id"
+                        },
+                        "description": "Filter by analysis run"
+                    },
+                    {
+                        "name": "tier",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/TierEnum"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by fraud tier",
+                            "title": "Tier"
+                        },
+                        "description": "Filter by fraud tier"
+                    },
+                    {
+                        "name": "min_confidence",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "maximum": 100,
+                                    "minimum": 0
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Min Confidence"
+                        }
+                    },
+                    {
+                        "name": "survives_fdr",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Survives Fdr"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0,
+                            "title": "Offset"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 500,
+                            "minimum": 1,
+                            "default": 50,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scores/{contract_id}": {
+            "get": {
+                "tags": [
+                    "Scores"
+                ],
+                "summary": "Get Contract Scores",
+                "description": "Get all scores for a specific contract across all runs.",
+                "operationId": "get_contract_scores_scores__contract_id__get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Contract Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reports/evidence/{contract_id}": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get Evidence Package",
+                "description": "Generate a full prosecutor-grade evidence package for a contract.\n\nIncludes bootstrap CIs, Bayesian analysis, legal citations,\nand human-readable reasoning. Suitable for court presentation.",
+                "operationId": "get_evidence_package_reports_evidence__contract_id__get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Contract Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EvidenceOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reports/triage": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Triage Queue",
+                "description": "Get the triage queue ordered by priority (RED first, then YELLOW).\n\nThis is the primary interface for fraud investigators.",
+                "operationId": "triage_queue_reports_triage_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "run_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Limit to a specific run",
+                            "title": "Run Id"
+                        },
+                        "description": "Limit to a specific run"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0,
+                            "title": "Offset"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 500,
+                            "minimum": 1,
+                            "default": 50,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reports/detection/{contract_id}": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get Detection Report",
+                "description": "Generate a client-facing detection report with explainable reasoning.\n\nReturns structured JSON or human-readable markdown explaining WHY each\nflag was raised. Designed for World Bank and institutional reviewers.",
+                "operationId": "get_detection_report_reports_detection__contract_id__get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "contract_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Contract Id"
+                        }
+                    },
+                    {
+                        "name": "run_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Specific run to report on",
+                            "title": "Run Id"
+                        },
+                        "description": "Specific run to report on"
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "'json' or 'markdown'",
+                            "default": "json",
+                            "title": "Format"
+                        },
+                        "description": "'json' or 'markdown'"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/runs": {
+            "get": {
+                "tags": [
+                    "Runs"
+                ],
+                "summary": "List Runs",
+                "description": "List all analysis runs.",
+                "operationId": "list_runs_runs_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/RunOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response List Runs Runs Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/runs/{run_id}": {
+            "get": {
+                "tags": [
+                    "Runs"
+                ],
+                "summary": "Get Run",
+                "description": "Get run detail with verification status.",
+                "operationId": "get_run_runs__run_id__get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "run_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Run Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/audit": {
+            "get": {
+                "tags": [
+                    "Audit"
+                ],
+                "summary": "Get Audit Trail",
+                "description": "Get the cryptographic audit trail.\n\nEach entry is hash-chained to the previous, providing tamper-evident\nlogging suitable for institutional compliance requirements.",
+                "operationId": "get_audit_trail_audit_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0,
+                            "title": "Offset"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000,
+                            "minimum": 1,
+                            "default": 100,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/methodology": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "summary": "Get Methodology",
+                "description": "Return the detection methodology \u2014 full transparency.\n\nEvery threshold, every base rate, every statistical method is documented.\nThis is not a black box.",
+                "operationId": "get_methodology_methodology_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/ingest": {
+            "post": {
+                "tags": [
+                    "Ingestion"
+                ],
+                "summary": "Ingest Document",
+                "description": "Upload a procurement document for ingestion and async scoring.\n\nAccepts PDF, CSV, or JSON files. Extracts structured contract data,\ninserts into the database, and scores through the detection pipeline.\nReturns a tracking ID for polling status.\n\nSupported formats:\n- **JSON**: Single contract object, array, or `{\"contracts\": [...]}`\n- **CSV**: Header row with columns matching contract fields\n- **PDF**: Best-effort text extraction (structured formats preferred)",
+                "operationId": "ingest_document_ingest_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_ingest_document_ingest_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IngestionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/ingest/{job_id}": {
+            "get": {
+                "tags": [
+                    "Ingestion"
+                ],
+                "summary": "Get Ingestion Status",
+                "description": "Check the status of an ingestion job.",
+                "operationId": "get_ingestion_status_ingest__job_id__get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "job_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Job Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IngestionStatusResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/dashboard/health": {
+            "get": {
+                "tags": [
+                    "Admin Dashboard"
+                ],
+                "summary": "Admin Dashboard Health",
+                "description": "System health overview: database stats, pipeline status, audit chain integrity.\nRequires admin scope.",
+                "operationId": "admin_dashboard_health_admin_dashboard_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/admin/dashboard/detections": {
+            "get": {
+                "tags": [
+                    "Admin Dashboard"
+                ],
+                "summary": "Admin Dashboard Detections",
+                "description": "Detection statistics: tier distribution, run history, top flagged vendors/agencies.\nRequires admin scope.",
+                "operationId": "admin_dashboard_detections_admin_dashboard_detections_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 365,
+                            "minimum": 1,
+                            "description": "Lookback period in days",
+                            "default": 30,
+                            "title": "Days"
+                        },
+                        "description": "Lookback period in days"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/dashboard/api-usage": {
+            "get": {
+                "tags": [
+                    "Admin Dashboard"
+                ],
+                "summary": "Admin Dashboard Api Usage",
+                "description": "API usage per client: request volume, top endpoints, active keys.\nRequires admin scope.",
+                "operationId": "admin_dashboard_api_usage_admin_dashboard_api_usage_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 365,
+                            "minimum": 1,
+                            "description": "Lookback period in days",
+                            "default": 30,
+                            "title": "Days"
+                        },
+                        "description": "Lookback period in days"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/dashboard/flagged": {
+            "get": {
+                "tags": [
+                    "Admin Dashboard"
+                ],
+                "summary": "Admin Dashboard Flagged",
+                "description": "Flagged contracts queue with investigation priority.\nRED contracts first, then YELLOW, ordered by triage priority.\nRequires admin scope.",
+                "operationId": "admin_dashboard_flagged_admin_dashboard_flagged_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tier",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by tier: RED or YELLOW",
+                            "title": "Tier"
+                        },
+                        "description": "Filter by tier: RED or YELLOW"
+                    },
+                    {
+                        "name": "run_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by run ID",
+                            "title": "Run Id"
+                        },
+                        "description": "Filter by run ID"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0,
+                            "title": "Offset"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 500,
+                            "minimum": 1,
+                            "default": 50,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/keys": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin List Keys",
+                "description": "List all API keys (no secrets). Requires admin scope.",
+                "operationId": "admin_list_keys_admin_keys_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Generate Key",
+                "description": "Generate a new API key. Requires admin scope.",
+                "operationId": "admin_generate_key_admin_keys_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/KeyGenerateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/admin/keys/rotate": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Rotate Key",
+                "description": "Rotate an API key. Requires admin scope.",
+                "operationId": "admin_rotate_key_admin_keys_rotate_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/KeyRotateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ]
+            }
+        },
+        "/admin/keys/{key_id}": {
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Revoke Key",
+                "description": "Revoke an API key. Requires admin scope.",
+                "operationId": "admin_revoke_key_admin_keys__key_id__delete",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "key_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Key Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/keys/{key_id}/usage": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Key Usage",
+                "description": "Get usage statistics for a key. Requires admin scope.",
+                "operationId": "admin_key_usage_admin_keys__key_id__usage_get",
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "key_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Key Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AnalyzeSingleRequest": {
+                "properties": {
+                    "contract_id": {
+                        "type": "string",
+                        "title": "Contract Id"
+                    },
+                    "award_amount": {
+                        "type": "number",
+                        "exclusiveMinimum": 0.0,
+                        "title": "Award Amount"
+                    },
+                    "vendor_name": {
+                        "type": "string",
+                        "title": "Vendor Name"
+                    },
+                    "agency_name": {
+                        "type": "string",
+                        "title": "Agency Name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "default": ""
+                    },
+                    "is_sole_source": {
+                        "type": "boolean",
+                        "title": "Is Sole Source",
+                        "default": false
+                    },
+                    "has_political_donations": {
+                        "type": "boolean",
+                        "title": "Has Political Donations",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "contract_id",
+                    "award_amount",
+                    "vendor_name",
+                    "agency_name"
+                ],
+                "title": "AnalyzeSingleRequest"
+            },
+            "AnalyzeSingleResponse": {
+                "properties": {
+                    "contract_id": {
+                        "type": "string",
+                        "title": "Contract Id"
+                    },
+                    "fraud_tier": {
+                        "type": "string",
+                        "title": "Fraud Tier"
+                    },
+                    "confidence_score": {
+                        "type": "integer",
+                        "title": "Confidence Score"
+                    },
+                    "markup_pct": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Markup Pct"
+                    },
+                    "markup_ci_lower": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Markup Ci Lower"
+                    },
+                    "markup_ci_upper": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Markup Ci Upper"
+                    },
+                    "bayesian_posterior": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bayesian Posterior"
+                    },
+                    "comparable_count": {
+                        "type": "integer",
+                        "title": "Comparable Count"
+                    },
+                    "reasoning": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Reasoning"
+                    },
+                    "legal_citations": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Legal Citations"
+                    },
+                    "methodology_version": {
+                        "type": "string",
+                        "title": "Methodology Version"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "contract_id",
+                    "fraud_tier",
+                    "confidence_score",
+                    "markup_pct",
+                    "markup_ci_lower",
+                    "markup_ci_upper",
+                    "bayesian_posterior",
+                    "comparable_count",
+                    "reasoning",
+                    "legal_citations",
+                    "methodology_version"
+                ],
+                "title": "AnalyzeSingleResponse"
+            },
+            "BatchRequest": {
+                "properties": {
+                    "run_seed": {
+                        "type": "integer",
+                        "title": "Run Seed",
+                        "description": "Seed for reproducibility",
+                        "default": 42
+                    },
+                    "n_bootstrap": {
+                        "type": "integer",
+                        "maximum": 50000.0,
+                        "minimum": 100.0,
+                        "title": "N Bootstrap",
+                        "default": 1000
+                    },
+                    "fdr_alpha": {
+                        "type": "number",
+                        "exclusiveMaximum": 1.0,
+                        "exclusiveMinimum": 0.0,
+                        "title": "Fdr Alpha",
+                        "default": 0.1
+                    },
+                    "min_amount": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "title": "Min Amount",
+                        "default": 0
+                    },
+                    "limit": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Limit"
+                    }
+                },
+                "type": "object",
+                "title": "BatchRequest"
+            },
+            "BatchResponse": {
+                "properties": {
+                    "run_id": {
+                        "type": "string",
+                        "title": "Run Id"
+                    },
+                    "run_seed": {
+                        "type": "integer",
+                        "title": "Run Seed"
+                    },
+                    "config_hash": {
+                        "type": "string",
+                        "title": "Config Hash"
+                    },
+                    "dataset_hash": {
+                        "type": "string",
+                        "title": "Dataset Hash"
+                    },
+                    "n_contracts": {
+                        "type": "integer",
+                        "title": "N Contracts"
+                    },
+                    "n_scored": {
+                        "type": "integer",
+                        "title": "N Scored"
+                    },
+                    "n_errors": {
+                        "type": "integer",
+                        "title": "N Errors"
+                    },
+                    "tier_counts": {
+                        "additionalProperties": true,
+                        "type": "object",
+                        "title": "Tier Counts"
+                    },
+                    "pass1_time": {
+                        "type": "number",
+                        "title": "Pass1 Time"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "run_id",
+                    "run_seed",
+                    "config_hash",
+                    "dataset_hash",
+                    "n_contracts",
+                    "n_scored",
+                    "n_errors",
+                    "tier_counts",
+                    "pass1_time"
+                ],
+                "title": "BatchResponse"
+            },
+            "Body_ingest_document_ingest_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_ingest_document_ingest_post"
+            },
+            "ContractIn": {
+                "properties": {
+                    "contract_id": {
+                        "type": "string",
+                        "title": "Contract Id",
+                        "description": "Unique contract identifier"
+                    },
+                    "award_amount": {
+                        "type": "number",
+                        "exclusiveMinimum": 0.0,
+                        "title": "Award Amount",
+                        "description": "Award amount in USD"
+                    },
+                    "vendor_name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "title": "Vendor Name"
+                    },
+                    "agency_name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "title": "Agency Name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "description": "Contract description",
+                        "default": ""
+                    },
+                    "start_date": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Start Date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "contract_id",
+                    "award_amount",
+                    "vendor_name",
+                    "agency_name"
+                ],
+                "title": "ContractIn"
+            },
+            "ContractOut": {
+                "properties": {
+                    "contract_id": {
+                        "type": "string",
+                        "title": "Contract Id"
+                    },
+                    "award_amount": {
+                        "type": "number",
+                        "title": "Award Amount"
+                    },
+                    "vendor_name": {
+                        "type": "string",
+                        "title": "Vendor Name"
+                    },
+                    "agency_name": {
+                        "type": "string",
+                        "title": "Agency Name"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description"
+                    },
+                    "start_date": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Start Date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "contract_id",
+                    "award_amount",
+                    "vendor_name",
+                    "agency_name",
+                    "description",
+                    "start_date"
+                ],
+                "title": "ContractOut"
+            },
+            "EvidenceOut": {
+                "properties": {
+                    "contract_id": {
+                        "type": "string",
+                        "title": "Contract Id"
+                    },
+                    "contract_amount": {
+                        "type": "number",
+                        "title": "Contract Amount"
+                    },
+                    "sample_size": {
+                        "type": "integer",
+                        "title": "Sample Size"
+                    },
+                    "raw_zscore": {
+                        "type": "number",
+                        "title": "Raw Zscore"
+                    },
+                    "log_zscore": {
+                        "type": "number",
+                        "title": "Log Zscore"
+                    },
+                    "raw_markup_pct": {
+                        "type": "number",
+                        "title": "Raw Markup Pct"
+                    },
+                    "bootstrap_markup": {
+                        "additionalProperties": true,
+                        "type": "object",
+                        "title": "Bootstrap Markup"
+                    },
+                    "bootstrap_percentile": {
+                        "additionalProperties": true,
+                        "type": "object",
+                        "title": "Bootstrap Percentile"
+                    },
+                    "bayesian_fraud_probability": {
+                        "additionalProperties": true,
+                        "type": "object",
+                        "title": "Bayesian Fraud Probability"
+                    },
+                    "fdr_adjusted_pvalue": {
+                        "type": "number",
+                        "title": "Fdr Adjusted Pvalue"
+                    },
+                    "survives_fdr": {
+                        "type": "boolean",
+                        "title": "Survives Fdr"
+                    },
+                    "tier": {
+                        "type": "string",
+                        "title": "Tier"
+                    },
+                    "confidence_score": {
+                        "type": "integer",
+                        "title": "Confidence Score"
+                    },
+                    "reasoning": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Reasoning"
+                    },
+                    "legal_citations": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Legal Citations"
+                    },
+                    "methodology_version": {
+                        "type": "string",
+                        "title": "Methodology Version"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "contract_id",
+                    "contract_amount",
+                    "sample_size",
+                    "raw_zscore",
+                    "log_zscore",
+                    "raw_markup_pct",
+                    "bootstrap_markup",
+                    "bootstrap_percentile",
+                    "bayesian_fraud_probability",
+                    "fdr_adjusted_pvalue",
+                    "survives_fdr",
+                    "tier",
+                    "confidence_score",
+                    "reasoning",
+                    "legal_citations",
+                    "methodology_version"
+                ],
+                "title": "EvidenceOut"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "HealthResponse": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "version": {
+                        "type": "string",
+                        "title": "Version"
+                    },
+                    "database": {
+                        "type": "string",
+                        "title": "Database"
+                    },
+                    "contract_count": {
+                        "type": "integer",
+                        "title": "Contract Count"
+                    },
+                    "scored_count": {
+                        "type": "integer",
+                        "title": "Scored Count"
+                    },
+                    "audit_chain_valid": {
+                        "type": "boolean",
+                        "title": "Audit Chain Valid"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "status",
+                    "version",
+                    "database",
+                    "contract_count",
+                    "scored_count",
+                    "audit_chain_valid"
+                ],
+                "title": "HealthResponse"
+            },
+            "IngestionResponse": {
+                "properties": {
+                    "job_id": {
+                        "type": "string",
+                        "title": "Job Id"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "job_id",
+                    "status",
+                    "message"
+                ],
+                "title": "IngestionResponse"
+            },
+            "IngestionStatusResponse": {
+                "properties": {
+                    "job_id": {
+                        "type": "string",
+                        "title": "Job Id"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "source_filename": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Source Filename"
+                    },
+                    "source_format": {
+                        "type": "string",
+                        "title": "Source Format"
+                    },
+                    "submitted_at": {
+                        "type": "string",
+                        "title": "Submitted At"
+                    },
+                    "completed_at": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Completed At"
+                    },
+                    "total_records": {
+                        "type": "integer",
+                        "title": "Total Records"
+                    },
+                    "inserted": {
+                        "type": "integer",
+                        "title": "Inserted"
+                    },
+                    "duplicates": {
+                        "type": "integer",
+                        "title": "Duplicates"
+                    },
+                    "errors": {
+                        "type": "integer",
+                        "title": "Errors"
+                    },
+                    "scored": {
+                        "type": "integer",
+                        "title": "Scored"
+                    },
+                    "error_details": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Error Details"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "job_id",
+                    "status",
+                    "source_filename",
+                    "source_format",
+                    "submitted_at",
+                    "completed_at",
+                    "total_records",
+                    "inserted",
+                    "duplicates",
+                    "errors",
+                    "scored",
+                    "error_details"
+                ],
+                "title": "IngestionStatusResponse"
+            },
+            "KeyGenerateRequest": {
+                "properties": {
+                    "client_name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "title": "Client Name"
+                    },
+                    "rate_limit": {
+                        "type": "integer",
+                        "minimum": 1.0,
+                        "title": "Rate Limit",
+                        "default": 100
+                    },
+                    "rate_window": {
+                        "type": "integer",
+                        "minimum": 60.0,
+                        "title": "Rate Window",
+                        "default": 3600
+                    },
+                    "scopes": {
+                        "type": "string",
+                        "title": "Scopes",
+                        "default": "read,analyze"
+                    },
+                    "expires_at": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Expires At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "client_name"
+                ],
+                "title": "KeyGenerateRequest"
+            },
+            "KeyRotateRequest": {
+                "properties": {
+                    "key_id": {
+                        "type": "string",
+                        "title": "Key Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "key_id"
+                ],
+                "title": "KeyRotateRequest"
+            },
+            "PaginatedResponse": {
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "offset": {
+                        "type": "integer",
+                        "title": "Offset"
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "title": "Limit"
+                    },
+                    "items": {
+                        "items": {},
+                        "type": "array",
+                        "title": "Items"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "total",
+                    "offset",
+                    "limit",
+                    "items"
+                ],
+                "title": "PaginatedResponse"
+            },
+            "RunOut": {
+                "properties": {
+                    "run_id": {
+                        "type": "string",
+                        "title": "Run Id"
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "title": "Started At"
+                    },
+                    "completed_at": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Completed At"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "run_seed": {
+                        "type": "integer",
+                        "title": "Run Seed"
+                    },
+                    "n_contracts": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "N Contracts"
+                    },
+                    "n_scored": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "N Scored"
+                    },
+                    "n_errors": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "N Errors"
+                    },
+                    "config_hash": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Config Hash"
+                    },
+                    "dataset_hash": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Dataset Hash"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "run_id",
+                    "started_at",
+                    "completed_at",
+                    "status",
+                    "run_seed",
+                    "n_contracts",
+                    "n_scored",
+                    "n_errors",
+                    "config_hash",
+                    "dataset_hash"
+                ],
+                "title": "RunOut"
+            },
+            "TierEnum": {
+                "type": "string",
+                "enum": [
+                    "RED",
+                    "YELLOW",
+                    "GREEN",
+                    "GRAY"
+                ],
+                "title": "TierEnum"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    },
+                    "input": {
+                        "title": "Input"
+                    },
+                    "ctx": {
+                        "type": "object",
+                        "title": "Context"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "APIKeyHeader": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-Key"
+            }
+        }
+    }
+}
