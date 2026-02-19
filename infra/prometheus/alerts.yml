@@ -1,0 +1,76 @@
+groups:
+  - name: sunlight_api
+    rules:
+      - alert: SunlightHighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          / sum(rate(http_requests_total[5m])) > 0.01
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "SUNLIGHT API error rate > 1%"
+          description: "5xx rate is {{ $value | humanizePercentage }} over the last 5 minutes."
+          runbook_url: "https://docs.sunlight.dev/runbook#high-error-rate"
+
+      - alert: SunlightHighP95Latency
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_ms_bucket[5m])) > 2000
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "SUNLIGHT API p95 latency > 2s"
+          description: "p95 latency is {{ $value }}ms."
+          runbook_url: "https://docs.sunlight.dev/runbook#p95-latency"
+
+  - name: sunlight_queue
+    rules:
+      - alert: SunlightDLQBacklog
+        expr: jobs_dlq_size > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "SUNLIGHT DLQ has {{ $value }} items"
+          description: "Dead-letter queue exceeds threshold. Check failed jobs."
+          runbook_url: "https://docs.sunlight.dev/runbook#dlq-growth"
+
+      - alert: SunlightQueueStale
+        expr: jobs_oldest_queued_age_sec > 300
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "SUNLIGHT oldest queued job is {{ $value }}s old"
+          description: "Job queue is backed up. Check worker health."
+          runbook_url: "https://docs.sunlight.dev/runbook#queue-backlog"
+
+      - alert: SunlightQueueBackup
+        expr: jobs_queued > 100 and jobs_running < 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Queue backup: {{ $value }} queued, few running"
+
+  - name: sunlight_webhooks
+    rules:
+      - alert: SunlightWebhookFailures
+        expr: rate(webhooks_failed[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Webhook delivery failure rate elevated"
+          runbook_url: "https://docs.sunlight.dev/runbook#webhook-failures"
+
+  - name: sunlight_auth
+    rules:
+      - alert: SunlightAuthFailureSpike
+        expr: rate(auth_failures_total[5m]) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Auth failure rate > 1/s — possible brute force"
