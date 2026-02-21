@@ -54,6 +54,7 @@ from institutional_pipeline import (
 )
 from sunlight_logging import get_logger
 from detection_report import generate_detection_report, render_markdown
+from api_v2 import router as v2_router
 from auth import (
     create_auth_dependency, require_api_key_dynamic,
     generate_api_key, rotate_api_key,
@@ -275,9 +276,12 @@ app.add_middleware(
     allow_origins=CORS_ORIGINS or ["*"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE"],
-    allow_headers=["X-API-Key", "Content-Type"],
+    allow_headers=["X-API-Key", "X-Tenant-ID", "Content-Type"],
     max_age=3600,
 )
+
+# Mount v2 API router (multi-tenant, async jobs, webhooks, RBAC, metrics)
+app.include_router(v2_router)
 
 
 @app.middleware("http")
