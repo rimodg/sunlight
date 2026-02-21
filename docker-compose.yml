@@ -67,7 +67,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-sunlight}
       POSTGRES_USER: ${POSTGRES_USER:-sunlight}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-    command: python -m code.jobs --worker
+    command: python -m jobs --worker
     restart: unless-stopped
 
   prometheus:

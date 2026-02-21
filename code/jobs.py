@@ -550,3 +550,53 @@ def get_queue_metrics(db_path: str) -> Dict:
         "oldest_queued_age_sec": round(oldest_age_sec, 1),
         "total_jobs": sum(status_counts.values()),
     }
+
+
+# ---------------------------------------------------------------------------
+# CLI entrypoint: python -m jobs --worker
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    import argparse
+    import signal
+
+    parser = argparse.ArgumentParser(description="SUNLIGHT Job Worker")
+    parser.add_argument("--worker", action="store_true", help="Run as background worker")
+    parser.add_argument("--db", default=None, help="Database path")
+    parser.add_argument("--poll", type=float, default=2.0, help="Poll interval (seconds)")
+    args = parser.parse_args()
+
+    if not args.worker:
+        parser.print_help()
+        sys.exit(0)
+
+    db_path = args.db or os.environ.get(
+        "SUNLIGHT_DB_PATH",
+        os.path.join(os.path.dirname(__file__), "..", "data", "sunlight.db"),
+    )
+
+    logger.info("Starting webhook worker", extra={"db_path": db_path})
+
+    init_jobs_schema(db_path)
+
+    worker = ScanWorker(
+        db_path=db_path,
+        pipeline_fn=run_scan_pipeline,
+        poll_interval=args.poll,
+    )
+
+    # Graceful shutdown on SIGTERM/SIGINT
+    def shutdown(sig, frame):
+        logger.info("Shutting down worker")
+        worker.stop()
+        sys.exit(0)
+
+    signal.signal(signal.SIGTERM, shutdown)
+    signal.signal(signal.SIGINT, shutdown)
+
+    worker.start()
+
+    # Keep main thread alive
+    import threading
+    stop_event = threading.Event()
+    stop_event.wait()
