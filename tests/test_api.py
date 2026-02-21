@@ -351,23 +351,29 @@ class TestOpenAPIDocs:
 
 class TestAuth:
 
-    def test_missing_key_returns_401(self, auth_client):
+    def test_health_is_public(self, auth_client):
+        """Health endpoint should be accessible without auth."""
         client, _ = auth_client
         resp = client.get("/health")
+        assert resp.status_code == 200
+        assert resp.json()['status'] == 'healthy'
+
+    def test_missing_key_returns_401(self, auth_client):
+        client, _ = auth_client
+        resp = client.get("/contracts")
         assert resp.status_code == 401
         assert "Missing API key" in resp.json()['detail']
 
     def test_invalid_key_returns_401(self, auth_client):
         client, _ = auth_client
-        resp = client.get("/health", headers={"X-API-Key": "sk_sunlight_bogus"})
+        resp = client.get("/contracts", headers={"X-API-Key": "sk_sunlight_bogus"})
         assert resp.status_code == 401
         assert "Invalid" in resp.json()['detail']
 
     def test_valid_key_succeeds(self, auth_client):
         client, key = auth_client
-        resp = client.get("/health", headers={"X-API-Key": key})
+        resp = client.get("/contracts", headers={"X-API-Key": key})
         assert resp.status_code == 200
-        assert resp.json()['status'] == 'healthy'
 
     def test_admin_generate_key(self, auth_client):
         client, key = auth_client
@@ -408,19 +414,19 @@ class TestAuth:
                                headers={"X-API-Key": key})
         new_key_id = gen_resp.json()['key_id']
         new_api_key = gen_resp.json()['api_key']
-        # Verify it works
-        assert client.get("/health", headers={"X-API-Key": new_api_key}).status_code == 200
+        # Verify it works on an authenticated endpoint
+        assert client.get("/contracts", headers={"X-API-Key": new_api_key}).status_code == 200
         # Revoke
         resp = client.delete(f"/admin/keys/{new_key_id}", headers={"X-API-Key": key})
         assert resp.status_code == 200
-        # Verify revoked key is rejected
-        resp = client.get("/health", headers={"X-API-Key": new_api_key})
+        # Verify revoked key is rejected on authenticated endpoints
+        resp = client.get("/contracts", headers={"X-API-Key": new_api_key})
         assert resp.status_code == 403
 
     def test_admin_key_usage(self, auth_client):
         client, key = auth_client
-        # Make a few requests
-        client.get("/health", headers={"X-API-Key": key})
+        # Make a few requests (use authenticated endpoints for usage tracking)
+        client.get("/contracts", headers={"X-API-Key": key})
         client.get("/contracts", headers={"X-API-Key": key})
         # Get usage
         keys = client.get("/admin/keys", headers={"X-API-Key": key}).json()
@@ -456,12 +462,12 @@ class TestAuth:
         )
         test_key = result['api_key']
         client = TestClient(api.app)
-        # 3 requests should work
+        # 3 requests should work (use authenticated endpoint)
         for _ in range(3):
-            resp = client.get("/health", headers={"X-API-Key": test_key})
+            resp = client.get("/contracts", headers={"X-API-Key": test_key})
             assert resp.status_code == 200
         # 4th should be rate limited
-        resp = client.get("/health", headers={"X-API-Key": test_key})
+        resp = client.get("/contracts", headers={"X-API-Key": test_key})
         assert resp.status_code == 429
         assert "Rate limit exceeded" in resp.json()['detail']
 

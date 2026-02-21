@@ -315,8 +315,8 @@ require_api_key = require_api_key_dynamic
 # ---------------------------------------------------------------------------
 
 @app.get("/health", response_model=HealthResponse, tags=["System"])
-def health_check(client: dict = Depends(require_api_key)):
-    """Service health check with database status."""
+def health_check():
+    """Service health check with database status (unauthenticated)."""
     try:
         conn = get_db()
         c = conn.cursor()

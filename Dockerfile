@@ -32,6 +32,6 @@ ENV PYTHONPATH=/app/code \
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD python -c "import httpx; r = httpx.get('http://localhost:8000/dashboard/api/health'); r.raise_for_status()" || exit 1
+    CMD python -c "import httpx; r = httpx.get('http://localhost:8000/health'); r.raise_for_status()" || exit 1
 
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
