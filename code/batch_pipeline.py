@@ -270,18 +270,43 @@ class BatchPipeline:
         logger.info(f"Analyzing {len(releases)} releases for {self.config.country_name}")
 
         # Step 1: Extract
-        self.extracted = extract_releases(releases)
-        logger.info(f"Extracted {len(self.extracted)} releases")
+        all_extracted = extract_releases(releases)
+        logger.info(f"Extracted {len(all_extracted)} releases")
+
+        # Step 1b: Deduplicate by OCID — keep latest release per contracting process
+        ocid_map = {}
+        for ex in all_extracted:
+            key = ex.ocid or ex.release_id
+            existing = ocid_map.get(key)
+            if existing is None:
+                ocid_map[key] = ex
+            elif len(ex.fields_present) > len(existing.fields_present):
+                ocid_map[key] = ex
+            elif len(ex.fields_present) == len(existing.fields_present):
+                if ex.release_date and existing.release_date and ex.release_date > existing.release_date:
+                    ocid_map[key] = ex
+        self.extracted = list(ocid_map.values())
+        logger.info(f"Deduplicated to {len(self.extracted)} unique contracting processes")
 
         # Step 2: Compute buyer-level metrics
-        buyer_supplier_values = self._aggregate_buyer_suppliers()
+        buyer_supplier_values, buyer_contract_counts = self._aggregate_buyer_suppliers()
         buyer_concentration_results = {}
+        min_buyer_contracts = 5
         for buyer_id, supplier_vals in buyer_supplier_values.items():
-            buyer_concentration_results[buyer_id] = buyer_concentration(
-                buyer_id=buyer_id,
-                supplier_contracts=supplier_vals,
-                concentration_threshold=self.config.concentration_threshold,
-            )
+            if buyer_contract_counts.get(buyer_id, 0) < min_buyer_contracts:
+                buyer_concentration_results[buyer_id] = IndicatorResult(
+                    indicator_name="buyer_concentration",
+                    flag=None,
+                    likelihood_ratio=1.0,
+                    explanation=f"Buyer {buyer_id} has only {buyer_contract_counts.get(buyer_id, 0)} contracts — need {min_buyer_contracts} for concentration analysis",
+                    data={"buyer_id": buyer_id}
+                )
+            else:
+                buyer_concentration_results[buyer_id] = buyer_concentration(
+                    buyer_id=buyer_id,
+                    supplier_contracts=supplier_vals,
+                    concentration_threshold=self.config.concentration_threshold,
+                )
 
         # Step 3: Score each contract
         self.scores = []
@@ -295,14 +320,16 @@ class BatchPipeline:
         logger.info(f"Analysis complete. {len(self.scores)} contracts scored.")
         return self
 
-    def _aggregate_buyer_suppliers(self) -> dict[str, dict[str, float]]:
-        """Aggregate {buyer_id: {supplier_id: total_value}} across all contracts."""
-        result = defaultdict(lambda: defaultdict(float))
+    def _aggregate_buyer_suppliers(self):
+        """Aggregate {buyer_id: {supplier_id: total_value}} and {buyer_id: contract_count}."""
+        values = defaultdict(lambda: defaultdict(float))
+        counts = defaultdict(int)
         for ex in self.extracted:
             if ex.buyer_id and ex.award_supplier_id:
                 value = ex.award_value or ex.contract_value or 0
-                result[ex.buyer_id][ex.award_supplier_id] += value
-        return result
+                values[ex.buyer_id][ex.award_supplier_id] += value
+                counts[ex.buyer_id] += 1
+        return values, counts
 
     def _score_contract(
         self,
