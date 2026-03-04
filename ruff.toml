@@ -11,6 +11,15 @@ include = [
     "code/institutional_statistical_rigor.py",
     "code/ingestion.py",
     "code/sunlight_logging.py",
+    "code/vendor_intelligence.py",
+    "code/network_analysis.py",
+    "code/case_builder.py",
+    "code/priority_queue.py",
+    "code/external_data.py",
+    "code/process_indicators.py",
+    "code/ocds_adapter.py",
+    "code/api_v2_routes.py",
+    "code/live_monitor.py",
     "tests/**/*.py",
 ]
 

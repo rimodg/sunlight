@@ -212,7 +212,7 @@ class TestWebhookEvents:
 
     def test_duplicate_event_is_idempotent(self, db_path, tenant):
         """Event with same event_id should not create duplicate."""
-        evt1 = create_webhook_event(
+        create_webhook_event(
             db_path, tenant["tenant_id"], "scan.completed",
             {"job_id": "j1"}, "https://example.com/hook",
         )

@@ -510,7 +510,6 @@ def _ingest_contracts(db_path: str, contracts: list) -> tuple:
     new_count = 0
     dup_count = 0
     conn = sqlite3.connect(db_path)
-    now = datetime.now(timezone.utc).isoformat()
 
     for c in contracts:
         c_hash = compute_contract_hash(c)

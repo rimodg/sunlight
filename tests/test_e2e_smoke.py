@@ -243,7 +243,7 @@ class TestEndToEndSmoke:
         assert len(logs) == 1
         assert logs[0]["event_type"] == "scan.completed"
         assert logs[0]["status"] == "PENDING"
-        print(f"✅ Step 7: Webhook delivery logged")
+        print("✅ Step 7: Webhook delivery logged")
 
         conn.close()
 

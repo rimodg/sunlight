@@ -190,8 +190,8 @@ def _render_markdown(pkg: CasePackage) -> str:
     # Contract metadata
     lines.append("## Contract Details")
     meta = pkg.contract_metadata
-    lines.append(f"| Field | Value |")
-    lines.append(f"|---|---|")
+    lines.append("| Field | Value |")
+    lines.append("|---|---|")
     for key in ("vendor_name", "agency_name", "award_amount", "description", "start_date"):
         val = meta.get(key, "N/A")
         if key == "award_amount" and isinstance(val, (int, float)):
@@ -220,8 +220,8 @@ def _render_markdown(pkg: CasePackage) -> str:
     # Peer stats
     lines.append("## Peer Group Statistics")
     ps = pkg.peer_stats if isinstance(pkg.peer_stats, dict) else pkg.peer_stats.to_dict()
-    lines.append(f"| Metric | Value |")
-    lines.append(f"|---|---|")
+    lines.append("| Metric | Value |")
+    lines.append("|---|---|")
     lines.append(f"| Peer Count | {ps.get('peer_count', 0)} |")
     lines.append(f"| Mean Amount | ${ps.get('mean_amount', 0):,.2f} |")
     lines.append(f"| Std Dev | ${ps.get('std_amount', 0):,.2f} |")
@@ -234,8 +234,8 @@ def _render_markdown(pkg: CasePackage) -> str:
     if pkg.vendor_summary:
         lines.append("## Vendor Summary")
         vs = pkg.vendor_summary
-        lines.append(f"| Metric | Value |")
-        lines.append(f"|---|---|")
+        lines.append("| Metric | Value |")
+        lines.append("|---|---|")
         for k, v in vs.items():
             lines.append(f"| {k.replace('_', ' ').title()} | {v} |")
         lines.append("")
@@ -244,8 +244,8 @@ def _render_markdown(pkg: CasePackage) -> str:
     if pkg.markup_analysis:
         lines.append("## Markup Analysis")
         ma = pkg.markup_analysis
-        lines.append(f"| Metric | Value |")
-        lines.append(f"|---|---|")
+        lines.append("| Metric | Value |")
+        lines.append("|---|---|")
         for k, v in ma.items():
             if isinstance(v, float):
                 lines.append(f"| {k.replace('_', ' ').title()} | {v:.2f} |")
@@ -341,7 +341,6 @@ def build_case_package(
     # --- Peer group stats ---
     vendor_name = pkg.contract_metadata.get("vendor_name")
     agency_name = pkg.contract_metadata.get("agency_name")
-    award_amount = pkg.contract_metadata.get("award_amount", 0)
 
     if agency_name:
         c.execute(

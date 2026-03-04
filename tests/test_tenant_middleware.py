@@ -6,7 +6,8 @@ import pytest
 from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 
-import sys, os
+import sys
+import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'code'))
 
 from tenant_middleware import TenantMiddleware, DEFAULT_TENANT_ID

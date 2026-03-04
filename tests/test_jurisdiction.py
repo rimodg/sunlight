@@ -11,7 +11,8 @@ import pytest
 from datetime import datetime
 
 # Add parent to path for imports
-import sys, os
+import sys
+import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 from tenant_profile import (
