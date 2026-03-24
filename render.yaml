@@ -1,0 +1,11 @@
+# render.yaml — deploy SUNLIGHT to Render
+services:
+  - type: web
+    name: sunlight-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    healthCheckPath: /health
+    plan: starter  # $7/mo, always on
