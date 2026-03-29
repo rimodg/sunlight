@@ -53,6 +53,7 @@ class OCDSRelease:
     tender_value: float
     currency: str
     suppliers: List[Dict]
+    number_of_tenderers: Optional[int] = None
     tender_start: Optional[str] = None
     tender_end: Optional[str] = None
     award_date: Optional[str] = None
@@ -195,13 +196,16 @@ class OCDSToTCAMapper:
         # Detect structural issues from OCDS fields
         
         # 1. Single bidder in competitive tender
-        if len(release.suppliers) == 1 and release.procurement_method in ("open", "selective", "competitive"):
+        actual_bidders = release.number_of_tenderers
+        if actual_bidders is not None and actual_bidders <= 1 and release.procurement_method in ("open", "selective", "competitive"):
             edges.append({"source": "award", "target": "process", "type": "REMOVES", "weight": 1.0,
                          "description": "Single bidder in nominally competitive tender"})
         
         # 2. Sole source / direct award
         if release.procurement_method in ("direct", "limited", "sole_source"):
-            if release.tender_value > 100_000:  # Threshold for competitive requirement
+            competitive_thresholds = {"USD": 100_000, "PYG": 750_000_000, "COP": 400_000_000, "MXN": 1_700_000}
+            threshold = competitive_thresholds.get(release.currency, 100_000)
+            if release.tender_value > threshold:
                 edges.append({"source": "award", "target": "process", "type": "REMOVES", "weight": 0.9,
                              "description": f"Direct award of {release.currency} {release.tender_value:,.0f} — typically requires competition"})
         
