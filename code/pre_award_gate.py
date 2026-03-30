@@ -985,3 +985,32 @@ if __name__ == "__main__":
     )
     
     print(gate.format_passport(passport))
+
+
+# ═══ SUNLIGHT v4 PROTOCOL ADAPTER ═══
+
+class PreAwardGateAdapter:
+    """Implements GateEngine Protocol from sunlight_core."""
+    def __init__(self):
+        self._gate = PreAwardGate()
+
+    def evaluate(self, dossier):
+        from sunlight_core import GateResult, GateVerdict
+        graph = dossier.graph or {"nodes": [], "edges": []}
+        tca_result = None
+        if dossier.structure:
+            tca_result = {
+                "confidence": dossier.structure.confidence,
+                "contradictions": dossier.structure.contradictions,
+            }
+        passport = self._gate.evaluate(graph, tca_result=tca_result)
+        verdict_map = {"CLEAR": GateVerdict.CLEAR, "REVIEW": GateVerdict.REVIEW, "BLOCK": GateVerdict.BLOCK}
+        dossier.gate = GateResult(
+            verdict=verdict_map.get(passport.get("verdict", "CLEAR"), GateVerdict.CLEAR),
+            gates=passport.get("gates", {}),
+            blocked_at=passport.get("blocked_at"),
+            patron_detected=passport.get("patron_detected", False),
+            total_contradictions=passport.get("total_contradictions", 0),
+            recommendation=passport.get("recommendation", ""),
+        )
+        return dossier

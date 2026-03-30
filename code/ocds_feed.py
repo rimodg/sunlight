@@ -414,3 +414,39 @@ if __name__ == "__main__":
         print(json.dumps(result["graph"], indent=2))
         print(f"\nPre-filter: {result['pre_filter']}")
         print(f"\n{monitor.generate_sitrep()}")
+
+
+# ═══ SUNLIGHT v4 PROTOCOL ADAPTERS ═══
+
+class OCDSNormalizerAdapter:
+    """Implements NormalizerEngine Protocol from sunlight_core."""
+    def __init__(self):
+        self._normalizer = OCDSNormalizer()
+
+    def normalize(self, dossier):
+        release = self._normalizer.normalize(dossier.raw_ocds)
+        dossier.buyer_name = release.buyer_name
+        dossier.supplier_name = release.suppliers[0].get("name", "") if release.suppliers else ""
+        dossier.supplier_id = release.suppliers[0].get("id", "") if release.suppliers else ""
+        dossier.suppliers = release.suppliers
+        dossier.tender_value = release.tender_value
+        dossier.award_value = release.award_value
+        dossier.currency = release.currency
+        dossier.procurement_method = release.procurement_method
+        dossier.number_of_tenderers = release.number_of_tenderers
+        dossier.award_date = release.award_date
+        dossier.country_code = release.country_code
+        dossier.sector = release.sector if hasattr(release, "sector") else ""
+        return dossier
+
+
+class OCDSGraphAdapter:
+    """Implements GraphEngine Protocol from sunlight_core."""
+    def __init__(self):
+        self._normalizer = OCDSNormalizer()
+        self._mapper = OCDSToTCAMapper()
+
+    def build_graph(self, dossier):
+        release = self._normalizer.normalize(dossier.raw_ocds)
+        dossier.graph = self._mapper.map(release)
+        return dossier

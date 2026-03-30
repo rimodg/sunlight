@@ -432,3 +432,35 @@ if __name__ == "__main__":
     print(engine.format_recovery_report(projection))
     print("\n\nJSON OUTPUT:")
     print(engine.to_json(projection))
+
+
+# ═══ SUNLIGHT v4 PROTOCOL ADAPTER ═══
+
+class RecoveryEngineAdapter:
+    """Implements RecoveryEngine Protocol from sunlight_core."""
+    def __init__(self):
+        self._engine = RecoveryEngine()
+
+    def project(self, dossier):
+        from sunlight_core import RecoveryResult
+        tca_result = None
+        if dossier.structure:
+            tca_result = {
+                "confidence": dossier.structure.confidence,
+                "verdict": dossier.structure.verdict.value,
+                "contradictions": dossier.structure.contradictions,
+            }
+        projection = self._engine.project(
+            contract_value=dossier.tender_value,
+            currency=dossier.currency,
+            tca_result=tca_result,
+        )
+        dossier.recovery = RecoveryResult(
+            projected_recovery=projection.get("recovery_delta", 0),
+            currency=dossier.currency,
+            remediation_steps=projection.get("remediation_steps", []),
+            peer_benchmark=projection.get("peer_benchmark", dossier.tender_value),
+            excess=projection.get("excess", 0),
+            recovery_confidence=projection.get("confidence", 0),
+        )
+        return dossier
