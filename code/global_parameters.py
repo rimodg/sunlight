@@ -276,46 +276,50 @@ register_global_parameters(US_FEDERAL_V0)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# MJPIS_DRAFT_V0 — Multi-Jurisdiction Procurement Integrity Standard (PLACEHOLDER)
+# MJPIS_DRAFT_V0 — Multi-Jurisdiction Procurement Integrity Standard (DERIVED)
 # ═══════════════════════════════════════════════════════════════════════════
 
-MJPIS_DRAFT_V0 = GlobalParameters(
-    version="mjpis_draft_v0",
-    description=(
-        "Multi-Jurisdiction Procurement Integrity Standard — DRAFT placeholder. "
-        "Real values will be derived from unified multi-jurisdiction prosecuted-case "
-        "corpus in sub-task 2.2.5b. This is an architectural placeholder with "
-        "conservative values copied from us_federal_v0. "
-        "DO NOT USE IN PRODUCTION until derivation is complete."
-    ),
-    source_citation=(
-        "Placeholder — pending multi-jurisdiction corpus assembly and statistical "
-        "derivation in sub-task 2.2.5b. Target corpus: US DOJ (9 cases), UK SFO "
-        "(crown prosecutions 2015-2025), French PNF (procurement cases), World Bank "
-        "INT (sanctions board cases). Derivation method: intersection of mature "
-        "legal systems, consensus statistical bars maximizing precision while "
-        "preserving recall across jurisdictions."
-    ),
-    derivation_date="2026-04-08",
-    evidentiary_standard="intersection_of_mature_legal_systems",
-    # Placeholder values below — will be replaced by real derivation
-    default_base_rate=0.03,  # PLACEHOLDER (copied from us_federal_v0)
-    red_posterior_threshold=0.72,  # PLACEHOLDER (copied from us_federal_v0)
-    yellow_posterior_threshold=0.38,  # PLACEHOLDER (copied from us_federal_v0)
-    min_typologies_for_red=2,  # PLACEHOLDER (copied from us_federal_v0)
-    min_ci_for_yellow=66,  # PLACEHOLDER (copied from us_federal_v0)
-    fdr_alpha=0.05,  # PLACEHOLDER (copied from us_federal_v0)
-    bootstrap_ci_level=0.95,  # PLACEHOLDER (copied from us_federal_v0)
-    bootstrap_n_resamples=10_000,  # PLACEHOLDER (copied from us_federal_v0)
-    max_flags_per_1k=150,  # PLACEHOLDER (copied from us_federal_v0)
-    notes=(
-        "DRAFT PLACEHOLDER VERSION. This is the registry slot the living standard "
-        "will occupy once multi-jurisdiction research produces real values. Current "
-        "values are conservative placeholders (identical to us_federal_v0) to enable "
-        "architectural testing. Sub-task 2.2.5b will replace these with empirically "
-        "derived consensus thresholds from the unified prosecuted-case corpus."
-    ),
-)
+# Derive MJPIS parameters from corpus at import time
+# If corpus file is missing or derivation module unavailable, fall back to placeholder values
+try:
+    from mjpis_derivation import get_derived_mjpis
+    from dataclasses import replace
+    derived = get_derived_mjpis()
+    # Override version to stable registry key "mjpis_draft_v0"
+    # (derived instance has semantic version like "mjpis_v0.1" from corpus)
+    MJPIS_DRAFT_V0 = replace(derived, version="mjpis_draft_v0")
+except (FileNotFoundError, ImportError) as e:
+    # Fallback to placeholder values if corpus file or derivation module unavailable
+    MJPIS_DRAFT_V0 = GlobalParameters(
+        version="mjpis_draft_v0",
+        description=(
+            "Multi-Jurisdiction Procurement Integrity Standard — FALLBACK placeholder. "
+            "Corpus derivation unavailable. Using conservative values copied "
+            "from us_federal_v0. DO NOT USE IN PRODUCTION."
+        ),
+        source_citation=(
+            f"Fallback mode — corpus derivation unavailable: {e}. "
+            f"Using us_federal_v0 values as conservative placeholder."
+        ),
+        derivation_date="2026-04-08",
+        evidentiary_standard="intersection_of_mature_legal_systems",
+        # Placeholder values below — copied from us_federal_v0
+        default_base_rate=0.03,
+        red_posterior_threshold=0.72,
+        yellow_posterior_threshold=0.38,
+        min_typologies_for_red=2,
+        min_ci_for_yellow=66,
+        fdr_alpha=0.05,
+        bootstrap_ci_level=0.95,
+        bootstrap_n_resamples=10_000,
+        max_flags_per_1k=150,
+        notes=(
+            f"FALLBACK MODE: Corpus derivation unavailable ({e}). Using us_federal_v0 "
+            f"values as conservative placeholder. This typically indicates the corpus file "
+            f"research/corpus/prosecuted_cases_global_v0.1.json or the mjpis_derivation "
+            f"module is missing from this deployment."
+        ),
+    )
 
 # Register mjpis_draft_v0
 register_global_parameters(MJPIS_DRAFT_V0)
