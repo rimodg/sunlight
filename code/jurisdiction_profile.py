@@ -249,6 +249,16 @@ class JurisdictionProfile:
     # CRI STATISTICAL CALIBRATION (for institutional pipeline)
     # ═══════════════════════════════════════════════════════════
 
+    global_params_version: str = "us_federal_v0"
+    # Reference to global statistical parameters registry
+    # Options:
+    #   "us_federal_v0": Empirical DOJ calibration (sub-task 2.2.4a)
+    #   "mjpis_draft_v0": Multi-jurisdiction standard (DRAFT, pending sub-task 2.2.5b)
+    # Consumed by: Future migration (sub-task TBD) — currently coexists with legacy fields
+    # Note: Legacy fields (base_rate, red_posterior_threshold, etc.) remain for backwards
+    # compatibility during migration. Consumers will be migrated to use
+    # get_global_parameters(profile.global_params_version) in future sub-tasks.
+
     base_rate: float = 0.03
     # Bayesian prior — estimated fraud prevalence in this context
     # Examples:
@@ -585,6 +595,7 @@ US_FEDERAL = JurisdictionProfile(
     ],
 
     # CRI statistical calibration (from doj_federal in calibration_config.py)
+    global_params_version="us_federal_v0",
     base_rate=0.03,
     evidentiary_standard="beyond_reasonable_doubt",
     red_posterior_threshold=0.72,
@@ -664,6 +675,7 @@ UK_CENTRAL_GOVERNMENT = JurisdictionProfile(
     ],
 
     # CRI statistical calibration (GLOBAL parameters — match US_FEDERAL until sub-task 2.2.6)
+    global_params_version="us_federal_v0",
     base_rate=0.025,  # 2.5% (UK NAO estimate, lower than US federal 3%)
     evidentiary_standard="beyond_reasonable_doubt",  # UK criminal standard
     red_posterior_threshold=0.72,  # Same as US_FEDERAL (global parameter)
@@ -697,6 +709,33 @@ UK_CENTRAL_GOVERNMENT = JurisdictionProfile(
 
 # Register uk_central_government profile
 register_profile(UK_CENTRAL_GOVERNMENT)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# IMPORT-TIME SANITY CHECK: Global parameters registry consistency
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Verify that the global parameters registry values match the legacy profile fields
+# This import-time assertion guarantees consistency during the migration period
+# If registry and legacy fields drift, the module fails to load (correct failure mode)
+
+from global_parameters import get_global_parameters
+
+_US_FEDERAL_GLOBAL = get_global_parameters(US_FEDERAL.global_params_version)
+assert _US_FEDERAL_GLOBAL.red_posterior_threshold == US_FEDERAL.red_posterior_threshold, \
+    f"us_federal_v0 red_posterior_threshold mismatch: registry={_US_FEDERAL_GLOBAL.red_posterior_threshold}, profile={US_FEDERAL.red_posterior_threshold}"
+assert _US_FEDERAL_GLOBAL.yellow_posterior_threshold == US_FEDERAL.yellow_posterior_threshold, \
+    f"us_federal_v0 yellow_posterior_threshold mismatch: registry={_US_FEDERAL_GLOBAL.yellow_posterior_threshold}, profile={US_FEDERAL.yellow_posterior_threshold}"
+assert _US_FEDERAL_GLOBAL.fdr_alpha == US_FEDERAL.fdr_alpha, \
+    f"us_federal_v0 fdr_alpha mismatch: registry={_US_FEDERAL_GLOBAL.fdr_alpha}, profile={US_FEDERAL.fdr_alpha}"
+assert _US_FEDERAL_GLOBAL.bootstrap_n_resamples == US_FEDERAL.bootstrap_n_resamples, \
+    f"us_federal_v0 bootstrap_n_resamples mismatch: registry={_US_FEDERAL_GLOBAL.bootstrap_n_resamples}, profile={US_FEDERAL.bootstrap_n_resamples}"
+
+_UK_CENTRAL_GLOBAL = get_global_parameters(UK_CENTRAL_GOVERNMENT.global_params_version)
+assert _UK_CENTRAL_GLOBAL.red_posterior_threshold == UK_CENTRAL_GOVERNMENT.red_posterior_threshold, \
+    f"UK profile red_posterior_threshold mismatch: registry={_UK_CENTRAL_GLOBAL.red_posterior_threshold}, profile={UK_CENTRAL_GOVERNMENT.red_posterior_threshold}"
+assert _UK_CENTRAL_GLOBAL.yellow_posterior_threshold == UK_CENTRAL_GOVERNMENT.yellow_posterior_threshold, \
+    f"UK profile yellow_posterior_threshold mismatch: registry={_UK_CENTRAL_GLOBAL.yellow_posterior_threshold}, profile={UK_CENTRAL_GOVERNMENT.yellow_posterior_threshold}"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
