@@ -65,6 +65,27 @@ class JurisdictionProfile:
     # Consumed by: GEO-001, GEO-002 (geographic mismatch detection)
 
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # LOCAL PARAMETERS — Jurisdiction-Specific Configuration
+    # ═══════════════════════════════════════════════════════════════════════════
+    #
+    # These parameters vary by jurisdiction and are consumed by TCA structural rules.
+    # They represent local legal/fiscal/procurement context:
+    #   - Fiscal calendar (when the fiscal year ends, which months have pressure)
+    #   - Procurement thresholds (competition requirements, currency)
+    #   - Price variation tolerances (acceptable markup ranges)
+    #   - Legal framework (citations, oversight bodies)
+    #
+    # Why "local"? Because fiscal year-end in the UK (March 31) is different from
+    # the US federal government (September 30), and both are different from
+    # calendar-year jurisdictions (December 31). These parameters adapt SUNLIGHT's
+    # structural rules to the local operating environment.
+    #
+    # TCA rules (TIME-001, PROC-001, FIN-001, etc.) use these parameters to detect
+    # structural anomalies relative to local norms.
+    # ═══════════════════════════════════════════════════════════════════════════
+
+
     # ═══════════════════════════════════════════════════════════
     # FISCAL CALENDAR (for TCA TIME-001, TIME-002, TIME-003)
     # ═══════════════════════════════════════════════════════════
@@ -194,6 +215,34 @@ class JurisdictionProfile:
     #   world_bank: ["Integrity Vice Presidency", "INT", "Sanctions Board"]
     # Consumed by: PROC-003, PROC-004 (oversight body detection)
     # Note: Not consumed in 2.2.4a — included in schema for 2.2.4b
+
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # GLOBAL PARAMETERS — Statistical Calibration
+    # ═══════════════════════════════════════════════════════════════════════════
+    #
+    # These parameters control CRI's statistical detection machinery. While they
+    # vary across profiles (DOJ vs World Bank vs SAI), they represent global
+    # statistical/methodological choices, not jurisdiction-specific legal/fiscal facts.
+    #
+    # Key distinction from LOCAL parameters:
+    #   - LOCAL: "When does the fiscal year end?" (legal/fiscal fact)
+    #   - GLOBAL: "How confident must we be to flag?" (statistical/operational choice)
+    #
+    # Examples:
+    #   - base_rate: fraud prevalence estimate (Bayesian prior)
+    #   - red_posterior_threshold: minimum confidence for RED classification
+    #   - bootstrap_n_resamples: statistical rigor parameter
+    #
+    # These parameters are consumed by the CRI statistical engines (Bayesian scoring,
+    # bootstrap analysis, tier assignment) and control the detection sensitivity,
+    # false positive rate, and operational workload.
+    #
+    # Why "global"? Because they apply uniformly across all contracts within a
+    # jurisdiction, rather than varying by contract type, buyer, or procurement method.
+    # They represent the statistical lens through which we view the structural
+    # anomalies detected by TCA rules.
+    # ═══════════════════════════════════════════════════════════════════════════
 
 
     # ═══════════════════════════════════════════════════════════
