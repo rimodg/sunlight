@@ -617,6 +617,89 @@ register_profile(US_FEDERAL)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# UK CENTRAL GOVERNMENT PROFILE (Sub-task 2.2.4d)
+# ═══════════════════════════════════════════════════════════════════════════
+
+UK_CENTRAL_GOVERNMENT = JurisdictionProfile(
+    # Identity
+    name="uk_central_government",
+    description=(
+        "UK central government procurement. Fiscal year ends March 31. "
+        "Governed by Procurement Act 2023 (replacing Public Contracts Regulations 2015). "
+        "Evidentiary standard: beyond reasonable doubt (criminal prosecution). "
+        "Base rate reflects UK's low corruption context (TI CPI rank ~20th globally)."
+    ),
+    country_code="GB",
+
+    # Fiscal calendar (UK government: April 1 - March 31)
+    fiscal_year_end_month=3,  # March
+    fiscal_year_end_day=31,
+    fiscal_q4_months=[1, 2, 3],  # January, February, March
+    fiscal_safe_months=[8, 9, 10],  # August, September, October (mid-fiscal-year)
+
+    # Procurement thresholds
+    competitive_threshold=214_000,  # GBP 214,000 (PCR 2015 Schedule 1, central government)
+    currency="GBP",
+    mega_contract_threshold=20_000_000,  # GBP 20 million (equivalent to $25M USD)
+
+    # Price variation tolerances
+    max_award_inflation_pct=15.0,  # PCR 2015 Reg 72 allows ~10%, using 15% for consistency
+    competitive_pricing_tolerance_pct=5.0,  # OECD standard (±5% = 0.95-1.05 ratio)
+
+    # Legal framework
+    legal_citations={
+        "procurement_law": "UK Procurement Act 2023",
+        "competition_law": "Competition Act 1998",
+        "case_authority": "UK Serious Fraud Office — Crown Prosecution 2015-2025",
+    },
+    universal_citations=[
+        "UNCAC Art. 9(1)",
+        "UNDP POPP Procurement Methods Policy",
+        "OECD Public Procurement Principles",
+        "World Bank Procurement Framework",
+    ],
+    oversight_body_names=[
+        # Empty for now (matches US_FEDERAL pattern)
+        # Will populate when PROC-003/PROC-004 oversight detection implemented
+    ],
+
+    # CRI statistical calibration (GLOBAL parameters — match US_FEDERAL until sub-task 2.2.6)
+    base_rate=0.025,  # 2.5% (UK NAO estimate, lower than US federal 3%)
+    evidentiary_standard="beyond_reasonable_doubt",  # UK criminal standard
+    red_posterior_threshold=0.72,  # Same as US_FEDERAL (global parameter)
+    yellow_posterior_threshold=0.38,  # Same as US_FEDERAL (global parameter)
+    min_typologies_for_red=2,  # Same as US_FEDERAL (global parameter)
+    min_ci_for_yellow=66,  # Same as US_FEDERAL (global parameter)
+    fdr_alpha=0.05,  # Same as US_FEDERAL (global parameter)
+    bootstrap_ci_level=0.95,  # Same as US_FEDERAL (global parameter)
+    bootstrap_n_resamples=10_000,  # Same as US_FEDERAL (global parameter)
+    max_flags_per_1k=150,  # Same as US_FEDERAL (global parameter)
+
+    # Metadata
+    notes=(
+        "First non-US jurisdiction profile. Validates jurisdiction profile architecture "
+        "for second major legal framework. UK fiscal year ends March 31 (not Sep 30). "
+        "Competitive threshold £214,000 (not $100K USD). Governed by Procurement Act 2023 "
+        "(replaced EU-derived PCR 2015 post-Brexit). Base rate 2.5% reflects UK's low-corruption "
+        "context (TI CPI rank ~20th). Statistical parameters match US_FEDERAL pending "
+        "multi-jurisdiction calibration (sub-task 2.2.6)."
+    ),
+    source_citations=[
+        "UK Procurement Act 2023 (c. 54)",
+        "The Public Contracts Regulations 2015 (SI 2015/102) Schedule 1",
+        "HM Treasury Managing Public Money Annex 2.1",
+        "Competition Act 1998 (c. 41)",
+        "UK Serious Fraud Office prosecution records 2015-2025",
+        "Transparency International Corruption Perceptions Index 2024",
+        "OECD Public Procurement Principles",
+    ],
+)
+
+# Register uk_central_government profile
+register_profile(UK_CENTRAL_GOVERNMENT)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # CLI: Print profile summary
 # ═══════════════════════════════════════════════════════════════════════════
 
