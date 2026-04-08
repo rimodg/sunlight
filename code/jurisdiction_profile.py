@@ -1,0 +1,589 @@
+"""
+SUNLIGHT Jurisdiction Profile System
+=====================================
+
+Unified jurisdiction configuration for TCA + CRI engines.
+Replaces all hardcoded jurisdiction-specific constants.
+
+This module enables SUNLIGHT to deploy across UNDP's 170-country operational
+context without per-deployment rule rewriting. It unifies:
+- TCA structural rules (fiscal calendar, procurement thresholds, legal citations)
+- CRI statistical calibration (Bayesian priors, detection thresholds)
+
+Architecture:
+    JurisdictionProfile = CalibrationProfile + Fiscal Calendar + Legal Framework
+
+The profile is the single source of truth for:
+1. When the fiscal year ends (TIME-001, TIME-002, TIME-003)
+2. What procurement threshold triggers competition requirements (PROC-001)
+3. Which legal citations ground rule evidence (all rules)
+4. What fraud prevalence rate informs Bayesian priors (CRI scoring)
+5. What evidentiary standard applies (RED/YELLOW tier thresholds)
+
+Authors: Rimwaya Ouedraogo, Hugo Villalba
+Version: 1.0.0
+Schema Version: JP-2026-04-001
+"""
+
+from __future__ import annotations
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional
+import json
+import os
+
+
+@dataclass
+class JurisdictionProfile:
+    """
+    Unified jurisdiction configuration for TCA + CRI engines.
+    Replaces all hardcoded jurisdiction-specific constants.
+
+    This profile contains THREE categories of parameters:
+    1. Fiscal/Procurement Parameters (for TCA structural rules)
+    2. Legal Framework (for TCA evidence citations)
+    3. Statistical Calibration (for CRI detection thresholds)
+
+    Each parameter documents:
+    - What it controls
+    - Example values for common jurisdictions
+    - Which rules/functions consume it
+    """
+
+    # ═══════════════════════════════════════════════════════════
+    # IDENTITY
+    # ═══════════════════════════════════════════════════════════
+
+    name: str
+    # Profile identifier (e.g., "us_federal", "uk", "world_bank_africa")
+    # Consumed by: Audit trail, logging
+
+    description: str = ""
+    # Human-readable description of this profile's jurisdiction/context
+
+    country_code: Optional[str] = None
+    # ISO 3166-1 alpha-2 code ("US", "GB", "UA", None for multi-country)
+    # Consumed by: GEO-001, GEO-002 (geographic mismatch detection)
+
+
+    # ═══════════════════════════════════════════════════════════
+    # FISCAL CALENDAR (for TCA TIME-001, TIME-002, TIME-003)
+    # ═══════════════════════════════════════════════════════════
+
+    fiscal_year_end_month: int = 12
+    # Month when fiscal year ends (1-12)
+    # Examples:
+    #   us_federal: 9 (Sep 30)
+    #   us_private/colombia/mexico/paraguay: 12 (Dec 31)
+    #   uk/india/japan/canada/south_africa/nigeria/kenya: 3 (Mar 31)
+    #   australia/pakistan/egypt/bangladesh: 6 (Jun 30)
+    # Consumed by: TIME-001 (fiscal year-end pressure detection)
+
+    fiscal_year_end_day: int = 31
+    # Day when fiscal year ends (1-31)
+    # Examples:
+    #   us_federal: 30 (Sep 30)
+    #   uk: 31 (Mar 31)
+    #   us_private: 31 (Dec 31)
+    # Consumed by: TIME-001 (final 2 weeks = day >= year_end_day - 15)
+
+    fiscal_q4_months: List[int] = field(default_factory=lambda: [10, 11, 12])
+    # Months in final fiscal quarter
+    # Examples:
+    #   us_federal: [7, 8, 9]
+    #   us_private/colombia: [10, 11, 12]
+    #   uk/india: [1, 2, 3]
+    #   australia: [4, 5, 6]
+    # Consumed by: TIME-002 (quarter-end pressure detection)
+
+    fiscal_safe_months: List[int] = field(default_factory=lambda: [1, 2, 7, 8])
+    # Months with no fiscal pressure (positive structural signal)
+    # Examples:
+    #   us_federal: [10, 11, 12, 4, 5, 6]
+    #   uk: [7, 8, 9, 10]
+    #   us_private: [1, 2, 7, 8]
+    # Consumed by: TIME-003 (absence of timing anomaly)
+
+
+    # ═══════════════════════════════════════════════════════════
+    # PROCUREMENT THRESHOLDS (for TCA PROC-001)
+    # ═══════════════════════════════════════════════════════════
+
+    competitive_threshold: float = 100_000
+    # Minimum contract value requiring competitive procurement
+    # Examples:
+    #   us_federal: 250_000 USD (FAR Part 6)
+    #   uk: 214_000 GBP (Procurement Act 2023, central government)
+    #   ukraine: 200_000 UAH (Prozorro threshold)
+    #   world_bank: 100_000 USD (UNDP POPP default)
+    # Consumed by: PROC-001 (direct award threshold violation)
+
+    currency: str = "USD"
+    # ISO 4217 currency code
+    # Examples:
+    #   us_federal: "USD"
+    #   uk: "GBP"
+    #   ukraine: "UAH"
+    #   eurozone: "EUR"
+    # Consumed by: PROC-001, FIN-001, FIN-002, FIN-003, CRI mega_contract logic
+
+    mega_contract_threshold: float = 25_000_000
+    # Threshold for "mega contract" Bayesian context modifier
+    # Examples:
+    #   us_federal: 25_000_000 USD
+    #   uk: 20_000_000 GBP
+    #   ukraine: 100_000_000 UAH
+    #   world_bank_africa: 10_000_000 USD (lower for developing context)
+    # Consumed by: CRI Bayesian context (institutional_pipeline.py:106)
+
+
+    # ═══════════════════════════════════════════════════════════
+    # PRICE VARIATION TOLERANCES (for TCA FIN-001, FIN-003)
+    # ═══════════════════════════════════════════════════════════
+
+    max_award_inflation_pct: float = 15.0
+    # Maximum allowable award inflation above tender estimate (percentage)
+    # Examples:
+    #   us_federal/world_bank: 15.0%
+    #   eu: 10.0% (stricter)
+    # Consumed by: FIN-001 (post-tender price inflation detection)
+
+    competitive_pricing_tolerance_pct: float = 5.0
+    # Tolerance band for "competitive outcome" pricing (percentage)
+    # Examples:
+    #   world_bank/oecd: 5.0% (±5% = 0.95 to 1.05 ratio)
+    # Consumed by: FIN-003 (award closely matches tender = competitive signal)
+
+
+    # ═══════════════════════════════════════════════════════════
+    # LEGAL FRAMEWORK (for TCA rule evidence citations)
+    # ═══════════════════════════════════════════════════════════
+
+    legal_citations: Dict[str, str] = field(default_factory=dict)
+    # Jurisdiction-specific legal citations for evidence strings
+    # Examples:
+    #   us_federal: {
+    #     "procurement_law": "FAR Part 6",
+    #     "competition_law": "Sherman Act",
+    #     "case_authority": "DOJ US v. Marquez (Maryland 2024)"
+    #   }
+    #   uk: {
+    #     "procurement_law": "UK Procurement Act 2023",
+    #     "competition_law": "Competition Act 1998",
+    #     "case_authority": "R (Chandler) v SoS for Children [2009]"
+    #   }
+    #   ukraine: {
+    #     "procurement_law": "Prozorro Public Procurement Law 922-VIII",
+    #     "case_authority": "UNDP Ukraine Anti-Corruption Case Studies"
+    #   }
+    # Consumed by: PROC-001, ENT-001, ENT-002 evidence strings
+
+    universal_citations: List[str] = field(default_factory=lambda: [
+        "UNCAC Art. 9(1)",
+        "UNDP POPP Procurement Methods Policy",
+        "OECD Public Procurement Principles",
+        "World Bank Procurement Framework",
+    ])
+    # Citations that apply regardless of jurisdiction
+    # Consumed by: All rules (combined with legal_citations)
+
+    oversight_body_names: List[str] = field(default_factory=list)
+    # Institution name strings that indicate oversight is present
+    # Examples:
+    #   us_federal: ["Inspector General", "GAO", "Government Accountability Office"]
+    #   uk: ["National Audit Office", "NAO", "Public Accounts Committee"]
+    #   world_bank: ["Integrity Vice Presidency", "INT", "Sanctions Board"]
+    # Consumed by: PROC-003, PROC-004 (oversight body detection)
+    # Note: Not consumed in 2.2.4a — included in schema for 2.2.4b
+
+
+    # ═══════════════════════════════════════════════════════════
+    # CRI STATISTICAL CALIBRATION (for institutional pipeline)
+    # ═══════════════════════════════════════════════════════════
+
+    base_rate: float = 0.03
+    # Bayesian prior — estimated fraud prevalence in this context
+    # Examples:
+    #   us_federal: 0.03 (3%, GAO estimate)
+    #   uk: 0.05 (5%, OECD estimate)
+    #   world_bank_africa: 0.20 (20%, OECD developing country estimate)
+    #   ukraine: 0.15 (15%, TI CPI-adjusted)
+    # Consumed by: BayesianFraudPrior (institutional_pipeline.py:104-105)
+
+    evidentiary_standard: str = "balance_of_probabilities"
+    # Legal/institutional framework for detection confidence
+    # Options:
+    #   "beyond_reasonable_doubt" (US DOJ criminal, ~95% certainty)
+    #   "clear_and_convincing" (US civil fraud, ~75% certainty)
+    #   "balance_of_probabilities" (World Bank/MDB, ~51% certainty)
+    #   "reasonable_suspicion" (SAI audit planning, ~30% certainty)
+    # Consumed by: Documentation, audit trail
+
+    red_posterior_threshold: float = 0.72
+    # Minimum posterior probability for RED tier classification
+    # Examples:
+    #   us_federal: 0.72 (72%, aligned with "beyond reasonable doubt")
+    #   world_bank: 0.65 (65%, "balance of probabilities")
+    #   world_bank_africa: 0.60 (60%, lower due to higher base rate)
+    # Consumed by: assign_tier() (institutional_pipeline.py:120)
+
+    yellow_posterior_threshold: float = 0.38
+    # Minimum posterior probability for YELLOW tier classification
+    # Examples:
+    #   us_federal: 0.38 (38%)
+    #   world_bank: 0.35 (35%)
+    #   world_bank_africa: 0.32 (32%)
+    # Consumed by: assign_tier() (institutional_pipeline.py:121)
+
+    min_typologies_for_red: int = 2
+    # Minimum distinct typology triggers required for RED tier
+    # Examples:
+    #   us_federal/world_bank: 2
+    #   sai_developing: 1 (broader net for audit planning)
+    # Consumed by: assign_tier() (future — not in current institutional_pipeline.py)
+
+    min_ci_for_yellow: int = 66
+    # Minimum markup confidence interval lower bound (percentage) for YELLOW tier
+    # Examples:
+    #   us_federal: 66
+    #   world_bank: 65
+    # Consumed by: assign_tier() (institutional_pipeline.py:141)
+
+    fdr_alpha: float = 0.05
+    # False Discovery Rate control level (Benjamini-Hochberg correction)
+    # Examples:
+    #   us_federal/world_bank: 0.05 (5% FDR)
+    #   sai_developing: 0.08 (8% FDR, broader net acceptable for audit planning)
+    # Consumed by: MultipleTestingCorrection (institutional_pipeline.py:264)
+
+    bootstrap_ci_level: float = 0.95
+    # Confidence interval level for bootstrap statistical tests
+    # Examples:
+    #   us_federal: 0.95 (95% CI)
+    # Consumed by: BootstrapAnalyzer (institutional_statistical_rigor.py)
+
+    bootstrap_n_resamples: int = 10_000
+    # Number of bootstrap resamples for statistical tests
+    # Examples:
+    #   us_federal: 10,000 (production standard)
+    #   development: 1,000 (faster testing)
+    # Consumed by: BootstrapAnalyzer (institutional_statistical_rigor.py)
+
+    max_flags_per_1k: int = 150
+    # Operational target for maximum flags per 1,000 contracts
+    # Examples:
+    #   us_federal: 150
+    #   world_bank_africa: 250 (higher risk environment)
+    #   sai_developing: 300 (audit planning context, not prosecution)
+    # Consumed by: Documentation, operational capacity planning
+
+
+    # ═══════════════════════════════════════════════════════════
+    # METADATA
+    # ═══════════════════════════════════════════════════════════
+
+    notes: str = ""
+    # Implementation notes, validation history, special considerations
+
+    source_citations: List[str] = field(default_factory=list)
+    # Academic/legal sources grounding this profile's parameters
+
+
+    def validate(self) -> List[str]:
+        """
+        Validate profile parameters. Returns list of warnings.
+
+        Checks:
+        - Base rate is reasonable (0.01 to 0.50)
+        - Evidentiary standard is recognized
+        - RED threshold > YELLOW threshold
+        - Fiscal calendar values are valid
+        - Currency code is reasonable
+        - FDR alpha is not too permissive
+        """
+        warnings = []
+
+        # Base rate validation
+        if not 0.01 <= self.base_rate <= 0.50:
+            warnings.append(
+                f"base_rate={self.base_rate} outside expected range [0.01, 0.50]. "
+                f"OECD estimates 10-30% for developing countries, 2-5% for US federal."
+            )
+
+        # Evidentiary standard validation
+        valid_standards = [
+            "beyond_reasonable_doubt",
+            "clear_and_convincing",
+            "balance_of_probabilities",
+            "reasonable_suspicion",
+        ]
+        if self.evidentiary_standard not in valid_standards:
+            warnings.append(
+                f"evidentiary_standard='{self.evidentiary_standard}' not recognized. "
+                f"Valid: {valid_standards}"
+            )
+
+        # Threshold ordering
+        if self.red_posterior_threshold <= self.yellow_posterior_threshold:
+            warnings.append(
+                f"red_posterior_threshold ({self.red_posterior_threshold}) must exceed "
+                f"yellow_posterior_threshold ({self.yellow_posterior_threshold})"
+            )
+
+        # Fiscal calendar validation
+        if not 1 <= self.fiscal_year_end_month <= 12:
+            warnings.append(f"fiscal_year_end_month={self.fiscal_year_end_month} invalid (must be 1-12)")
+
+        if not 1 <= self.fiscal_year_end_day <= 31:
+            warnings.append(f"fiscal_year_end_day={self.fiscal_year_end_day} invalid (must be 1-31)")
+
+        for month in self.fiscal_q4_months:
+            if not 1 <= month <= 12:
+                warnings.append(f"fiscal_q4_months contains invalid month: {month}")
+
+        for month in self.fiscal_safe_months:
+            if not 1 <= month <= 12:
+                warnings.append(f"fiscal_safe_months contains invalid month: {month}")
+
+        # Currency validation (basic check for 3-letter code)
+        if len(self.currency) != 3 or not self.currency.isupper():
+            warnings.append(f"currency='{self.currency}' should be 3-letter ISO 4217 code (e.g., 'USD', 'GBP')")
+
+        # FDR alpha validation
+        if self.fdr_alpha > 0.10:
+            warnings.append(
+                f"fdr_alpha={self.fdr_alpha} is unusually high (>10%). "
+                f"Values above 0.10 weaken false positive control."
+            )
+
+        # Bootstrap validation
+        if self.bootstrap_n_resamples < 1000:
+            warnings.append(
+                f"bootstrap_n_resamples={self.bootstrap_n_resamples} is low. "
+                f"Minimum 1,000 recommended; 10,000 for production."
+            )
+
+        return warnings
+
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary for JSON storage / API responses."""
+        return {
+            "name": self.name,
+            "description": self.description,
+            "country_code": self.country_code,
+            "fiscal_year_end_month": self.fiscal_year_end_month,
+            "fiscal_year_end_day": self.fiscal_year_end_day,
+            "fiscal_q4_months": self.fiscal_q4_months,
+            "fiscal_safe_months": self.fiscal_safe_months,
+            "competitive_threshold": self.competitive_threshold,
+            "currency": self.currency,
+            "mega_contract_threshold": self.mega_contract_threshold,
+            "max_award_inflation_pct": self.max_award_inflation_pct,
+            "competitive_pricing_tolerance_pct": self.competitive_pricing_tolerance_pct,
+            "legal_citations": self.legal_citations,
+            "universal_citations": self.universal_citations,
+            "oversight_body_names": self.oversight_body_names,
+            "base_rate": self.base_rate,
+            "evidentiary_standard": self.evidentiary_standard,
+            "red_posterior_threshold": self.red_posterior_threshold,
+            "yellow_posterior_threshold": self.yellow_posterior_threshold,
+            "min_typologies_for_red": self.min_typologies_for_red,
+            "min_ci_for_yellow": self.min_ci_for_yellow,
+            "fdr_alpha": self.fdr_alpha,
+            "bootstrap_ci_level": self.bootstrap_ci_level,
+            "bootstrap_n_resamples": self.bootstrap_n_resamples,
+            "max_flags_per_1k": self.max_flags_per_1k,
+            "notes": self.notes,
+            "source_citations": self.source_citations,
+        }
+
+
+    def to_json(self) -> str:
+        """Serialize to JSON string."""
+        return json.dumps(self.to_dict(), indent=2)
+
+
+    @classmethod
+    def from_dict(cls, d: dict) -> "JurisdictionProfile":
+        """Deserialize from dictionary."""
+        return cls(**{k: v for k, v in d.items() if k in cls.__annotations__})
+
+
+    def summary(self) -> str:
+        """Human-readable summary for audit trail / detection reports."""
+        lines = [
+            f"Jurisdiction Profile: {self.name}",
+            f"  Country: {self.country_code or 'Multi-country'}",
+            f"  Currency: {self.currency}",
+            f"  Fiscal year ends: Month {self.fiscal_year_end_month}, Day {self.fiscal_year_end_day}",
+            f"  Competitive threshold: {self.currency} {self.competitive_threshold:,.0f}",
+            f"  Base rate (fraud prior): {self.base_rate:.1%}",
+            f"  Evidentiary standard: {self.evidentiary_standard}",
+            f"  RED threshold: posterior ≥ {self.red_posterior_threshold:.0%}",
+            f"  YELLOW threshold: posterior ≥ {self.yellow_posterior_threshold:.0%}",
+            f"  FDR alpha: {self.fdr_alpha}",
+        ]
+        return "\n".join(lines)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PROFILE REGISTRY
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Profiles will be registered here as they are built
+# Sub-task 2.2.4a: Only us_federal
+# Sub-task 2.2.4b+: Additional jurisdictions
+
+PROFILES: Dict[str, JurisdictionProfile] = {}
+
+
+def register_profile(profile: JurisdictionProfile) -> None:
+    """Register a profile in the global registry."""
+    PROFILES[profile.name] = profile
+
+
+def load_profile(name: str) -> JurisdictionProfile:
+    """
+    Load a jurisdiction profile by name.
+
+    Args:
+        name: Profile identifier (e.g., "us_federal", "uk", "world_bank_africa")
+
+    Returns:
+        JurisdictionProfile instance
+
+    Raises:
+        ValueError: If profile name not found
+
+    Usage:
+        from jurisdiction_profile import load_profile
+
+        profile = load_profile("us_federal")
+        fiscal_year_end = profile.fiscal_year_end_month
+        threshold = profile.competitive_threshold
+    """
+    if name not in PROFILES:
+        available = ", ".join(sorted(PROFILES.keys()))
+        raise ValueError(
+            f"Unknown jurisdiction profile '{name}'. "
+            f"Available profiles: {available or '(none registered)'}"
+        )
+    return PROFILES[name]
+
+
+def list_profiles() -> List[dict]:
+    """List all available profiles with basic metadata."""
+    return [
+        {
+            "name": p.name,
+            "description": p.description,
+            "country_code": p.country_code,
+            "currency": p.currency,
+            "base_rate": p.base_rate,
+        }
+        for p in PROFILES.values()
+    ]
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# US FEDERAL PROFILE (Sub-task 2.2.4a)
+# ═══════════════════════════════════════════════════════════════════════════
+
+US_FEDERAL = JurisdictionProfile(
+    # Identity
+    name="us_federal",
+    description=(
+        "US federal government procurement. Calibrated against DOJ-prosecuted "
+        "price fraud cases (9 prosecutions, 100% recall). Conservative prior "
+        "based on GAO fraud prevalence estimates. Fiscal year ends September 30. "
+        "Evidentiary standard: beyond reasonable doubt (criminal prosecution)."
+    ),
+    country_code="US",
+
+    # Fiscal calendar (US federal government: October 1 - September 30)
+    fiscal_year_end_month=9,  # September
+    fiscal_year_end_day=30,
+    fiscal_q4_months=[7, 8, 9],  # July, August, September
+    fiscal_safe_months=[10, 11, 12, 4, 5, 6],  # Mid-year months, away from Sep 30
+
+    # Procurement thresholds
+    competitive_threshold=100_000,  # Current COMPETITIVE_THRESHOLDS["USD"] value
+    currency="USD",
+    mega_contract_threshold=25_000_000,  # Current institutional_pipeline.py line 106
+
+    # Price variation tolerances
+    max_award_inflation_pct=15.0,  # Current FIN-001 threshold (>1.15 = >15%)
+    competitive_pricing_tolerance_pct=5.0,  # Current FIN-003 band (0.95-1.05 = ±5%)
+
+    # Legal framework
+    legal_citations={
+        "procurement_law": "FAR Part 6",
+        "competition_law": "Sherman Antitrust Act",
+        "case_authority": "DOJ US v. Marquez (Maryland 2024)",
+    },
+    universal_citations=[
+        "UNCAC Art. 9(1)",
+        "UNDP POPP Procurement Methods Policy",
+        "OECD Public Procurement Principles",
+        "World Bank Procurement Framework",
+    ],
+    oversight_body_names=[
+        "Inspector General",
+        "IG",
+        "GAO",
+        "Government Accountability Office",
+        "Office of Inspector General",
+    ],
+
+    # CRI statistical calibration (from doj_federal in calibration_config.py)
+    base_rate=0.03,
+    evidentiary_standard="beyond_reasonable_doubt",
+    red_posterior_threshold=0.72,
+    yellow_posterior_threshold=0.38,
+    min_typologies_for_red=2,
+    min_ci_for_yellow=66,
+    fdr_alpha=0.05,
+    bootstrap_ci_level=0.95,
+    bootstrap_n_resamples=10_000,
+    max_flags_per_1k=150,
+
+    # Metadata
+    notes=(
+        "Original SUNLIGHT calibration profile. Validated against 9 DOJ-prosecuted "
+        "procurement fraud cases (100% recall, 37.5% precision, 114.8 flags/1K). "
+        "Fiscal year: Oct 1 - Sep 30 (federal government). "
+        "Competitive threshold: $100K (current TCA value; FAR Part 6 actual is $250K). "
+        "This profile preserves exact DOJ validation baseline behavior."
+    ),
+    source_citations=[
+        "DOJ procurement fraud prosecutions (9 cases, 100% recall)",
+        "US Government Accountability Office procurement fraud estimates",
+        "FAR Part 6: Competition Requirements",
+        "31 USC 1501-1557: Federal fiscal year definition (Oct 1 - Sep 30)",
+    ],
+)
+
+# Register us_federal profile
+register_profile(US_FEDERAL)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# CLI: Print profile summary
+# ═══════════════════════════════════════════════════════════════════════════
+
+if __name__ == "__main__":
+    print("=" * 72)
+    print("SUNLIGHT Jurisdiction Profiles")
+    print("=" * 72)
+    for profile in PROFILES.values():
+        print()
+        print(profile.summary())
+        warnings = profile.validate()
+        if warnings:
+            print()
+            for w in warnings:
+                print(f"  ⚠ WARNING: {w}")
+    print()
+    print("=" * 72)
+    print(f"Total profiles registered: {len(PROFILES)}")
+    print(f"Available profiles: {', '.join(sorted(PROFILES.keys()))}")
