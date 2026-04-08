@@ -215,6 +215,10 @@ class CalibrationProfile:
 PROFILES = {
 
     # ── US Federal ────────────────────────────────────────────────────────
+    # NOTE: This CalibrationProfile is maintained for backward compatibility.
+    # The unified JurisdictionProfile "us_federal" (jurisdiction_profile.py)
+    # supersedes this for new code. Both contain identical CRI parameters.
+    # Migration: CalibrationProfile (CRI only) → JurisdictionProfile (CRI + TCA).
     "doj_federal": CalibrationProfile(
         name="doj_federal",
         description=(
