@@ -337,3 +337,41 @@ if __name__ == "__main__":
             print("\n✓ Integration check PASSED")
 
 
+# ═══════════════════════════════════════════════════════════
+# SECTION 5: PROTOCOL ADAPTER FOR V4 PIPELINE
+# ═══════════════════════════════════════════════════════════
+
+class TCAStructureEngineAdapter:
+    """
+    Implements the StructureEngine protocol from sunlight_core.py.
+
+    Wraps analyze_tca_graph() so the v4 SunlightPipeline can plug it in
+    as the structure analysis stage. Delegates to the pure function and
+    populates dossier.structure with the resulting StructuralResult.
+
+    Usage:
+        from tca_analyzer import TCAStructureEngineAdapter
+        pipeline = SunlightPipeline(
+            grapher=TCAGraphRuleEngineAdapter(),
+            structure=TCAStructureEngineAdapter()
+        )
+    """
+
+    def analyze(self, dossier):
+        """
+        Run TCA structural analysis on a dossier.
+
+        Expects dossier.graph to already be populated by the graph engine.
+        Populates dossier.structure with a StructuralResult containing
+        confidence, verdict, contradictions (with rule IDs and legal citations),
+        unproven assumptions, and verified edges.
+
+        Args:
+            dossier: ContractDossier with dossier.graph populated
+
+        Returns:
+            The same dossier with dossier.structure now populated
+        """
+        result = analyze_tca_graph(dossier)
+        dossier.structure = result
+        return dossier
