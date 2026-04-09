@@ -45,7 +45,7 @@ from institutional_pipeline import (
 )
 from doj_validation import (
     load_doj_cases, build_agency_cache, map_doj_agency,
-    synthesize_doj_contract, get_clean_contracts,
+    synthesize_doj_contract, get_clean_contracts, count_clean_contracts,
 )
 from calibration_config import get_profile, get_tier_thresholds
 from sunlight_logging import get_logger
@@ -62,6 +62,54 @@ CI_GATE_RECALL_MIN = 0.90      # Block CI if recall falls below 90%
 CI_GATE_FLAGS_PER_1K_MAX = 150  # Block CI if flags/1k exceeds 150
 
 RULEPACK_VERSION = "2.0.0"
+
+
+# ---------------------------------------------------------------------------
+# Helper Functions
+# ---------------------------------------------------------------------------
+
+
+def compute_scaled_clean_sample_size(total_contracts: int, floor: int = 200) -> int:
+    """
+    Compute the clean comparison sample size that scales with the square
+    root of the corpus size.
+
+    Bootstrap confidence interval width scales as O(1/sqrt(n)) where n is
+    the clean comparison sample size. Fixing the sample size at a constant
+    value produces a precision CI width that does not sharpen as the
+    deployment corpus grows, which means SUNLIGHT's stated precision
+    estimates get no more precise as it scales from 42K to 70M contracts —
+    a mathematical waste of the bootstrap framework's scaling properties.
+
+    The scaling rule is: sample_size = max(floor, int(sqrt(total_contracts))).
+    The floor of 200 preserves backward compatibility at the 42K baseline
+    (sqrt(42835) ≈ 207, essentially unchanged from the hardcoded 200), and
+    at larger scales the sample grows as sqrt(N) so the CI width shrinks
+    as 1/sqrt(sqrt(N)) = 1/N^(1/4) — dramatically tighter estimates with
+    sublinear sample growth.
+
+    Example:
+        42K contracts  → sample = max(200, 207)  =  207 (~same as baseline)
+        1M contracts   → sample = max(200, 1000) = 1000 (5x baseline)
+        70M contracts  → sample = max(200, 8366) = 8366 (42x baseline)
+
+    Computational cost grows linearly with the sample size, so bootstrap
+    runtime scales sublinearly with the corpus size (sqrt growth). This
+    is cheap enough to run on every evaluation even at large scale.
+
+    Args:
+        total_contracts: Total number of contracts in the corpus being
+            evaluated against. Typically the row count of the clean pool
+            from which samples are drawn.
+        floor: Minimum sample size regardless of corpus size. Default 200
+            preserves the historical baseline used in all regression
+            runs through commit 0f0c3f9 (sub-task 2.2.7i).
+
+    Returns:
+        The sample size to pass to the clean contract sampling function.
+    """
+    import math
+    return max(floor, int(math.sqrt(total_contracts)))
 
 
 def compute_pr_curve(y_true: List[bool], scores: List[float],
@@ -546,7 +594,18 @@ if __name__ == "__main__":
     parser.add_argument('--cases', default='prosecuted_cases.json')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--bootstrap', type=int, default=1000)
-    parser.add_argument('--clean', type=int, default=200)
+    parser.add_argument(
+        '--clean',
+        type=str,
+        default='auto',
+        help=(
+            "Clean comparison sample size for bootstrap CI. Integer for "
+            "explicit size (e.g. '200' for the historical baseline), or "
+            "'auto' (default) to compute as max(200, sqrt(total_contracts)) "
+            "which scales the precision estimate with the square root of "
+            "the corpus size."
+        ),
+    )
     parser.add_argument('--profile', type=str, default='doj_federal',
                         help='Calibration profile name (e.g., doj_federal, world_bank_africa)')
     parser.add_argument('--out-dir', default='docs')
@@ -567,8 +626,23 @@ if __name__ == "__main__":
         out_dir = os.path.join(repo_root, 'docs')
     os.makedirs(out_dir, exist_ok=True)
 
+    # Resolve --clean argument (either explicit integer or auto-scaled)
+    if args.clean == 'auto':
+        import math
+        total_contracts = count_clean_contracts(db)
+        clean_sample_size = compute_scaled_clean_sample_size(total_contracts)
+        logger.info(
+            f"Auto-scaled clean sample size: {clean_sample_size} "
+            f"(sqrt({total_contracts}) = {int(math.sqrt(total_contracts))})"
+        )
+    else:
+        try:
+            clean_sample_size = int(args.clean)
+        except ValueError:
+            parser.error(f"--clean must be an integer or 'auto', got: {args.clean}")
+
     report = run_full_evaluation(db, cases, run_seed=args.seed,
-                                  n_bootstrap=args.bootstrap, n_clean=args.clean,
+                                  n_bootstrap=args.bootstrap, n_clean=clean_sample_size,
                                   calibration_profile=args.profile)
 
     json_path = os.path.join(out_dir, 'evaluation_report.json')

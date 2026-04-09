@@ -117,6 +117,34 @@ def synthesize_doj_contract(case: Dict, agency_cache: Dict, db_agency: str) -> D
         'comparables': comparables,
     }
 
+def count_clean_contracts(db_path: str) -> int:
+    """
+    Count the total size of the clean contract pool (below-median, above $100K).
+
+    Uses the same filter conditions as get_clean_contracts() to determine
+    the pool from which samples are drawn. This count is used to compute
+    the auto-scaled sample size via sqrt(pool_size).
+    """
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute("""
+        WITH agency_medians AS (
+            SELECT agency_name, AVG(award_amount) as med_amount
+            FROM contracts
+            WHERE award_amount > 0
+            GROUP BY agency_name
+            HAVING COUNT(*) >= 10
+        )
+        SELECT COUNT(*)
+        FROM contracts c
+        JOIN agency_medians am ON c.agency_name = am.agency_name
+        WHERE c.award_amount < am.med_amount
+        AND c.award_amount > 100000
+    """)
+    count = c.fetchone()[0]
+    conn.close()
+    return count
+
 
 def get_clean_contracts(db_path: str, agency_cache: Dict, n: int = 50) -> List[Dict]:
     """
