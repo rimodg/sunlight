@@ -102,6 +102,18 @@ class BatchAnalyzeRequest(BaseModel):
     """Batch contract analysis request."""
     contracts: List[ContractInput] = Field(..., description="List of contracts to analyze")
     profile: str = Field("us_federal", description="Jurisdiction profile for all contracts")
+    capacity_budget: Optional[int] = Field(
+        default=None,
+        ge=0,
+        description=(
+            "Optional analyst investigation capacity for this batch. When "
+            "provided, SUNLIGHT will recommend at most capacity_budget contracts "
+            "for investigation, selected as the highest-risk contracts in the "
+            "batch that also clear the statistical precision floor. When None, "
+            "no capacity ceiling is applied and all contracts clearing the "
+            "statistical floor are recommended. Must be a non-negative integer."
+        ),
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -141,6 +153,16 @@ class AnalyzeResponse(BaseModel):
     gate_verdict: Optional[str] = None
     errors: List[str] = Field(default_factory=list)
     processing_time_ms: float
+    recommended_for_investigation: bool = Field(
+        default=False,
+        description=(
+            "True when this contract clears both the statistical threshold "
+            "(structural verdict at or above CONCERN) and the capacity-calibrated "
+            "threshold for the batch it was analyzed in. For single-contract "
+            "analysis via POST /analyze, this field reflects only the statistical "
+            "threshold since no batch capacity context exists."
+        ),
+    )
 
 
 class BatchAnalyzeResponse(BaseModel):
@@ -149,6 +171,20 @@ class BatchAnalyzeResponse(BaseModel):
     total_processed: int
     total_errors: int
     verdict_distribution: Dict[str, int]
+    threshold_metadata: dict = Field(
+        default_factory=dict,
+        description=(
+            "Metadata describing the thresholds applied to this batch. "
+            "Contains: statistical_threshold (float, the minimum risk score "
+            "for investigation recommendation), capacity_budget (Optional[int], "
+            "the requested capacity or None), capacity_threshold (Optional[float], "
+            "the computed risk score quantile corresponding to capacity or None "
+            "if no capacity specified), binding_threshold (float, the actual "
+            "threshold applied, equal to max(statistical, capacity)), "
+            "recommended_count (int, the number of contracts recommended for "
+            "investigation in this batch)."
+        ),
+    )
 
 
 class HealthResponse(BaseModel):
@@ -224,6 +260,41 @@ def list_profiles() -> List[str]:
 # ═══════════════════════════════════════════════════════════════════════════
 # HELPER FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════
+
+
+# Default statistical threshold for recommending a contract for investigation.
+# A risk score of 2.0 corresponds to the CONCERN verdict floor (verdict_rank=2.0,
+# confidence=0.0). Contracts below this threshold are not flagged regardless of
+# capacity pressure, because the statistical precision floor cannot be violated
+# by operational shortage of analyst capacity.
+DEFAULT_STATISTICAL_THRESHOLD: float = 2.0
+
+
+def compute_risk_score(verdict: str, confidence: float) -> float:
+    """
+    Compute a scalar risk score for ranking contracts within a batch.
+
+    The score combines the structural verdict (primary) with confidence
+    (secondary tiebreaker). Higher scores indicate higher integrity risk.
+
+    Verdict contributes the integer part of the score:
+        critical    = 4.0
+        compromised = 3.0
+        concern     = 2.0
+        sound       = 1.0
+        unknown     = 0.0
+
+    Confidence contributes up to 1.0 as a tiebreaker within verdicts,
+    so the final score falls in approximately [0.0, 5.0].
+    """
+    verdict_ranks = {
+        "critical": 4.0,
+        "compromised": 3.0,
+        "concern": 2.0,
+        "sound": 1.0,
+        "unknown": 0.0,
+    }
+    return verdict_ranks.get(verdict.lower(), 0.0) + max(0.0, min(1.0, confidence))
 
 
 def ocds_to_dict(contract: ContractInput) -> Dict:
@@ -369,6 +440,12 @@ async def analyze_contract(request: AnalyzeRequest):
         if dossier.structure is None and not errors:
             errors.append(f"Pipeline did not reach structural analysis stage (stopped at {dossier.stage.value})")
 
+        # Compute risk score and determine recommendation (statistical threshold only)
+        recommended = False
+        if structure:
+            risk_score = compute_risk_score(structure.verdict, structure.confidence)
+            recommended = risk_score >= DEFAULT_STATISTICAL_THRESHOLD
+
         return AnalyzeResponse(
             ocid=dossier.ocid,
             stage=dossier.stage.value,
@@ -377,6 +454,7 @@ async def analyze_contract(request: AnalyzeRequest):
             gate_verdict=gate_verdict,
             errors=errors,
             processing_time_ms=processing_time_ms,
+            recommended_for_investigation=recommended,
         )
 
     except Exception as e:
@@ -389,10 +467,16 @@ async def analyze_contract(request: AnalyzeRequest):
 @app.post("/batch", response_model=BatchAnalyzeResponse)
 async def batch_analyze(request: BatchAnalyzeRequest):
     """
-    Analyze multiple contracts in batch with jurisdiction calibration.
+    Analyze multiple contracts in batch with jurisdiction calibration and
+    capacity-calibrated thresholds.
 
     Maximum batch size: 1000 contracts. Returns individual analysis results
-    plus aggregate statistics (verdict distribution, total errors).
+    plus aggregate statistics (verdict distribution, total errors, threshold
+    metadata).
+
+    When capacity_budget is provided, the batch response includes at most
+    capacity_budget contracts recommended for investigation, selected as the
+    highest-risk contracts that also clear the statistical precision floor.
     """
     # Enforce batch size limit
     if len(request.contracts) > 1000:
@@ -401,13 +485,20 @@ async def batch_analyze(request: BatchAnalyzeRequest):
             detail=f"Batch size {len(request.contracts)} exceeds maximum of 1000 contracts"
         )
 
+    # Validate capacity_budget (defense in depth - Pydantic should already validate)
+    if request.capacity_budget is not None and request.capacity_budget < 0:
+        raise HTTPException(
+            status_code=400,
+            detail=f"capacity_budget must be non-negative, got {request.capacity_budget}"
+        )
+
     # Validate profile exists
     try:
         profile = get_profile(request.profile)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-    # Process each contract
+    # FIRST PASS: Analyze all contracts
     results = []
     total_errors = 0
     verdict_counts: Dict[str, int] = {}
@@ -440,6 +531,8 @@ async def batch_analyze(request: BatchAnalyzeRequest):
             if structure:
                 verdict_counts[structure.verdict] = verdict_counts.get(structure.verdict, 0) + 1
 
+            # Add result with placeholder recommended_for_investigation=False
+            # (will update in second pass after capacity threshold computation)
             results.append(AnalyzeResponse(
                 ocid=dossier.ocid,
                 stage=dossier.stage.value,
@@ -448,6 +541,7 @@ async def batch_analyze(request: BatchAnalyzeRequest):
                 gate_verdict=gate_verdict,
                 errors=errors,
                 processing_time_ms=processing_time_ms,
+                recommended_for_investigation=False,  # Placeholder
             ))
 
         except Exception as e:
@@ -461,13 +555,57 @@ async def batch_analyze(request: BatchAnalyzeRequest):
                 gate_verdict=None,
                 errors=[f"Processing failed: {str(e)}"],
                 processing_time_ms=(time.perf_counter() - t0) * 1000,
+                recommended_for_investigation=False,
             ))
+
+    # CAPACITY THRESHOLD COMPUTATION
+    # Compute risk scores for all contracts
+    risk_scores = []
+    for r in results:
+        if r.structure:
+            risk_scores.append(compute_risk_score(r.structure.verdict, r.structure.confidence))
+        else:
+            risk_scores.append(0.0)  # Failed contracts get minimum score
+
+    # Determine capacity threshold
+    capacity_threshold = None
+    if request.capacity_budget is None or request.capacity_budget >= len(results):
+        # No capacity ceiling: capacity threshold is effectively -inf
+        capacity_threshold_value = float('-inf')
+    elif request.capacity_budget == 0:
+        # Zero capacity: capacity threshold is +inf (nothing recommended)
+        capacity_threshold_value = float('inf')
+    else:
+        # Compute the C-th highest risk score (where C = capacity_budget)
+        sorted_scores = sorted(risk_scores, reverse=True)
+        capacity_threshold_value = sorted_scores[request.capacity_budget - 1]
+        capacity_threshold = capacity_threshold_value  # For metadata reporting
+
+    # Binding threshold is max of statistical and capacity thresholds
+    binding_threshold = max(DEFAULT_STATISTICAL_THRESHOLD, capacity_threshold_value)
+
+    # SECOND PASS: Update recommended_for_investigation based on binding threshold
+    recommended_count = 0
+    for i, result in enumerate(results):
+        if risk_scores[i] >= binding_threshold:
+            result.recommended_for_investigation = True
+            recommended_count += 1
+
+    # Populate threshold metadata
+    threshold_metadata = {
+        "statistical_threshold": DEFAULT_STATISTICAL_THRESHOLD,
+        "capacity_budget": request.capacity_budget,
+        "capacity_threshold": capacity_threshold,  # None if no budget, else the quantile
+        "binding_threshold": binding_threshold,
+        "recommended_count": recommended_count,
+    }
 
     return BatchAnalyzeResponse(
         results=results,
         total_processed=len(request.contracts),
         total_errors=total_errors,
         verdict_distribution=verdict_counts,
+        threshold_metadata=threshold_metadata,
     )
 
 
