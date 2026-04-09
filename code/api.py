@@ -60,6 +60,10 @@ from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT, Jurisdiction
 from global_parameters import MJPIS_DRAFT_V0, list_global_parameters
 from tca_rules import TCAGraphRuleEngineAdapter
 from tca_analyzer import TCAStructureEngineAdapter
+from calibration_store import EmpiricalCalibrationStore, BatchObservation
+from sunlight_logging import get_logger
+
+logger = get_logger("api")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -208,6 +212,21 @@ class ProfileListResponse(BaseModel):
     profiles: List[Dict[str, Any]]
 
 
+class CalibrationStateResponse(BaseModel):
+    """Empirical calibration state response."""
+    profile_name: str
+    total_contracts_analyzed: int
+    verdict_counts: Dict[str, int]
+    rule_fire_counts: Dict[str, int]
+    mean_risk_score: Optional[float]
+    variance_risk_score: Optional[float]
+    risk_score_min: Optional[float]
+    risk_score_max: Optional[float]
+    first_observation_utc: Optional[str]
+    last_observation_utc: Optional[str]
+    schema_version: str
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # FASTAPI APP INSTANCE
 # ═══════════════════════════════════════════════════════════════════════════
@@ -228,6 +247,15 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# EMPIRICAL CALIBRATION STORE
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# Module-level calibration store instance (shared across all requests)
+calibration_store = EmpiricalCalibrationStore(base_dir="calibration")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -600,6 +628,29 @@ async def batch_analyze(request: BatchAnalyzeRequest):
         "recommended_count": recommended_count,
     }
 
+    # Update empirical calibration store with observations from this batch
+    # (phase one: observation only, not yet consumed in detection path)
+    try:
+        observations = []
+        for i, result in enumerate(results):
+            if result.structure:  # Only observe contracts that reached structural analysis
+                observations.append(BatchObservation(
+                    verdict=result.structure.verdict,
+                    confidence=result.structure.confidence,
+                    risk_score=risk_scores[i],
+                    fired_rule_ids=[c.rule_id for c in result.structure.contradictions],
+                ))
+        if observations:
+            calibration_store.update_from_batch(request.profile, observations)
+    except Exception as e:
+        # Swallow storage failures — the batch analysis result is the primary
+        # product, and the calibration layer is observational metadata. Log
+        # the failure so operators can see if the store is broken.
+        logger.warning(
+            f"Empirical calibration store update failed for profile {request.profile}: {e}",
+            exc_info=True
+        )
+
     return BatchAnalyzeResponse(
         results=results,
         total_processed=len(request.contracts),
@@ -675,6 +726,35 @@ async def profiles():
         })
 
     return ProfileListResponse(profiles=profile_list)
+
+
+@app.get("/calibration/{profile_name}", response_model=CalibrationStateResponse)
+async def get_calibration_state(profile_name: str):
+    """
+    Return the current empirical calibration state for a jurisdiction
+    profile. The state accumulates observations from every batch analysis
+    that has used this profile, providing a live running view of what
+    normal looks like in this jurisdiction.
+
+    Returns fresh zero-initialized state if no observations have been
+    recorded yet (not a 404) — absence means 'no observations yet', not
+    'profile does not exist'. For the latter, clients should check
+    GET /profiles.
+    """
+    state = calibration_store.load(profile_name)
+    return CalibrationStateResponse(
+        profile_name=state.profile_name,
+        total_contracts_analyzed=state.total_contracts_analyzed,
+        verdict_counts=state.verdict_counts,
+        rule_fire_counts=state.rule_fire_counts,
+        mean_risk_score=state.mean_risk_score(),
+        variance_risk_score=state.variance_risk_score(),
+        risk_score_min=state.risk_score_min,
+        risk_score_max=state.risk_score_max,
+        first_observation_utc=state.first_observation_utc,
+        last_observation_utc=state.last_observation_utc,
+        schema_version=state.schema_version,
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -47,3 +47,7 @@ prosecuted_cases.json
 
 # OS
 Thumbs.db
+
+# Empirical calibration store — operational state accumulated at runtime,
+# not source-controlled. Each deployment maintains its own running state.
+calibration/
