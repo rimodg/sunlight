@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
-**Last updated:** April 10, 2026
-**Current commit on main:** `9ad0ca4`
+**Last updated:** April 9, 2026
+**Current commit on main:** `0f0c3f9`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -22,7 +22,7 @@ Critical path. Make SUNLIGHT deployable and testable on real UNDP data. Every it
 
 ### Cluster A1 — Mathematical correctness
 
-- [ ] **5. Sub-task 2.2.7i — Capacity-calibrated threshold layer.** Adds `capacity_budget` to POST /batch, computes the max of statistical and capacity thresholds, populates `recommended_for_investigation` on responses, reports binding threshold in response metadata. Spec already written in session conversation, ready to paste. Estimate: 2-4 hours. Blocks: nothing in this cluster. **NEXT IMMEDIATE SUB-TASK.**
+- [x] **5. Sub-task 2.2.7i — Capacity-calibrated threshold layer.** Adds `capacity_budget` to POST /batch, computes the max of statistical and capacity thresholds, populates `recommended_for_investigation` on responses, reports binding threshold in response metadata. Spec already written in session conversation, ready to paste. Estimate: 2-4 hours. Blocks: nothing in this cluster. Shipped at commit `0f0c3f9`.
 - [ ] **6. Sub-task 2.2.7h — Sample-size scaling for bootstrap.** Surgical change replacing hardcoded `clean_sample=200` with `max(200, int(sqrt(total_contracts)))` in the evaluation path so bootstrap confidence intervals sharpen correctly with scale. Estimate: 2-3 hours. Blocks: nothing, surgical fix.
 
 ### Cluster A2 — Fourth-engine engineering proof
