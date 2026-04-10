@@ -61,6 +61,7 @@ from global_parameters import MJPIS_DRAFT_V0, list_global_parameters
 from tca_rules import TCAGraphRuleEngineAdapter
 from tca_analyzer import TCAStructureEngineAdapter
 from calibration_store import EmpiricalCalibrationStore, BatchObservation
+from input_adapters import build_default_registry
 from sunlight_logging import get_logger
 
 logger = get_logger("api")
@@ -100,6 +101,16 @@ class AnalyzeRequest(BaseModel):
         False,
         description="Include full TCA structural graph in response (for debugging)"
     )
+    input_format: Optional[str] = Field(
+        default=None,
+        description=(
+            "Optional explicit input format specifier. When provided, SUNLIGHT "
+            "uses the named adapter to convert the payload to canonical OCDS shape. "
+            "When None (default), automatic routing detects the format by shape. "
+            "Supported formats: 'ocds_release', 'undp_quantum', 'undp_compass'. "
+            "Quantum and Compass adapters are placeholders pending schema integration."
+        )
+    )
 
 
 class BatchAnalyzeRequest(BaseModel):
@@ -117,6 +128,16 @@ class BatchAnalyzeRequest(BaseModel):
             "no capacity ceiling is applied and all contracts clearing the "
             "statistical floor are recommended. Must be a non-negative integer."
         ),
+    )
+    input_format: Optional[str] = Field(
+        default=None,
+        description=(
+            "Optional explicit input format specifier. When provided, SUNLIGHT "
+            "uses the named adapter to convert all payloads to canonical OCDS shape. "
+            "When None (default), automatic routing detects the format by shape. "
+            "Supported formats: 'ocds_release', 'undp_quantum', 'undp_compass'. "
+            "Quantum and Compass adapters are placeholders pending schema integration."
+        )
     )
 
 
@@ -256,6 +277,15 @@ app = FastAPI(
 
 # Module-level calibration store instance (shared across all requests)
 calibration_store = EmpiricalCalibrationStore(base_dir="calibration")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# INPUT FORMAT ADAPTER REGISTRY
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# Module-level adapter registry instance (shared across all requests)
+_input_registry = build_default_registry()
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -440,13 +470,29 @@ async def analyze_contract(request: AnalyzeRequest):
     # Convert contract input to OCDS dict
     raw_ocds = ocds_to_dict(request.contract)
 
+    # Route payload through input adapter
+    try:
+        if request.input_format:
+            # Explicit adapter selection by format name
+            adapter = _input_registry.get(request.input_format)
+        else:
+            # Automatic adapter routing by payload shape
+            adapter = _input_registry.route(raw_ocds)
+
+        canonical_ocds = adapter.to_canonical_ocds(raw_ocds)
+    except (ValueError, KeyError) as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Input format adapter error: {str(e)}"
+        )
+
     # Create pipeline and process
     pipeline = create_analysis_pipeline(profile)
     t0 = time.perf_counter()
 
     try:
         # Ingest contract as dossier
-        dossier = pipeline.ingest(raw_ocds, mode=ExecutionMode.BATCH)
+        dossier = pipeline.ingest(canonical_ocds, mode=ExecutionMode.BATCH)
 
         # Process through pipeline
         dossier = pipeline.process(dossier)
@@ -539,7 +585,17 @@ async def batch_analyze(request: BatchAnalyzeRequest):
         t0 = time.perf_counter()
 
         try:
-            dossier = pipeline.ingest(raw_ocds, mode=ExecutionMode.BATCH)
+            # Route payload through input adapter
+            try:
+                if request.input_format:
+                    adapter = _input_registry.get(request.input_format)
+                else:
+                    adapter = _input_registry.route(raw_ocds)
+                canonical_ocds = adapter.to_canonical_ocds(raw_ocds)
+            except (ValueError, KeyError) as e:
+                raise Exception(f"Input format adapter error: {str(e)}")
+
+            dossier = pipeline.ingest(canonical_ocds, mode=ExecutionMode.BATCH)
             dossier = pipeline.process(dossier)
 
             processing_time_ms = (time.perf_counter() - t0) * 1000
@@ -755,6 +811,32 @@ async def get_calibration_state(profile_name: str):
         last_observation_utc=state.last_observation_utc,
         schema_version=state.schema_version,
     )
+
+
+@app.get("/input-formats")
+async def list_input_formats():
+    """
+    List all registered input format adapters.
+
+    Returns the format names that can be passed to the input_format field
+    in POST /analyze and POST /batch requests. Each format name corresponds
+    to an adapter that converts source-format payloads to canonical OCDS
+    release dict shape.
+
+    Note: 'undp_quantum' and 'undp_compass' are placeholder adapters that
+    raise NotImplementedError until the UNDP institutional schemas are
+    integrated during Phase B onboarding work.
+    """
+    formats = _input_registry.list_formats()
+    return {
+        "available_formats": formats,
+        "description": (
+            "Input format adapters convert heterogeneous procurement data "
+            "formats into canonical OCDS release shape for SUNLIGHT ingestion. "
+            "Use the 'input_format' field in analyze/batch requests to select "
+            "an adapter explicitly, or omit it for automatic format detection."
+        )
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════════
