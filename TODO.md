@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 10, 2026
-**Current commit on main:** `799f298`
+**Current commit on main:** `de69410`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -27,7 +27,7 @@ Critical path. Make SUNLIGHT deployable and testable on real UNDP data. Every it
 
 ### Cluster A2 — Fourth-engine engineering proof
 
-- [ ] **7. Sub-task 2.2.7k — Empirical self-calibration layer.** The engineering proof of the monotonic-learning property. SUNLIGHT maintains running empirical distributions of rule fire rates and risk scores per profile, continuously sharpened by operational flow, with the fraud-pattern side strictly anchored in the Jurisprudence corpus (never self-learned) so circular drift cannot occur. Spec needs to be written before paste. Estimate: spec writing 1 hour, Claude Code implementation 4-6 hours. Depends on: 2.2.7i and 2.2.7h landing first.
+- [x] **7. Sub-task 2.2.7k — Empirical self-calibration layer.** The engineering proof of the monotonic-learning property. SUNLIGHT maintains running empirical distributions of rule fire rates and risk scores per profile, continuously sharpened by operational flow, with the fraud-pattern side strictly anchored in the Jurisprudence corpus (never self-learned) so circular drift cannot occur. Spec needs to be written before paste. Estimate: spec writing 1 hour, Claude Code implementation 4-6 hours. Depends on: 2.2.7i and 2.2.7h landing first. Phase one (observation layer) shipped at commit `de69410`. Phase two (consumption layer, provisional 2.2.7l) reserved for future work.
 
 ### Cluster A3 — Deployment hardening
 
