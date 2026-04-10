@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 10, 2026
-**Current commit on main:** `ea4f2ec`
+**Current commit on main:** `1f9b71b`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -33,7 +33,7 @@ Critical path. Make SUNLIGHT deployable and testable on real UNDP data. Every it
 
 - [x] **8. Sub-task 2.2.7d — Dockerfile and containerized deployment artifact.** Multi-stage Dockerfile producing a reproducible container image for the API service. Dependency pinning, non-root user, health check configuration, environment variable configuration, minimal attack surface. Estimate: 2-4 hours. Depends on: 2.2.7k. Shipped at commit `ea4f2ec`.
 - [ ] **9. Sub-task 2.2.7c — Output serialization hardening with roundtrip tests.** Defensive hardening of every Pydantic response model to ensure JSON roundtrip stability. Estimate: 2-3 hours. Parallel with 2.2.7d.
-- [ ] **10. Sub-task 2.2.7e — Integration test suite against live HTTP server.** Actual uvicorn server spun up in a test fixture, hit with real HTTP requests, verifying end-to-end behavior including the Dockerized deployment path. Estimate: 2-3 hours. Depends on: 2.2.7d.
+- [x] **10. Sub-task 2.2.7e — Integration test suite against live HTTP server.** Actual uvicorn server spun up in a test fixture, hit with real HTTP requests, verifying end-to-end behavior including the Dockerized deployment path. Estimate: 2-3 hours. Depends on: 2.2.7d. Shipped at commit `1f9b71b`.
 
 ### Cluster A4 — Flexibility
 
