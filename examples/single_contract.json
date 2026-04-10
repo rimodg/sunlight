@@ -1,0 +1,27 @@
+{
+  "contract": {
+    "ocid": "ocds-example-001",
+    "buyer": {
+      "id": "US-DOD",
+      "name": "Department of Defense"
+    },
+    "tender": {
+      "title": "Professional Services Contract",
+      "value": {
+        "amount": 250000,
+        "currency": "USD"
+      },
+      "procurementMethod": "open",
+      "numberOfTenderers": 5
+    },
+    "awards": [
+      {
+        "value": {
+          "amount": 240000,
+          "currency": "USD"
+        }
+      }
+    ]
+  },
+  "profile": "us_federal"
+}

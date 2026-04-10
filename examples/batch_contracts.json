@@ -1,0 +1,78 @@
+{
+  "contracts": [
+    {
+      "ocid": "ocds-batch-001",
+      "buyer": {
+        "id": "US-GSA",
+        "name": "General Services Administration"
+      },
+      "tender": {
+        "title": "IT Services Contract",
+        "value": {
+          "amount": 500000,
+          "currency": "USD"
+        },
+        "procurementMethod": "open",
+        "numberOfTenderers": 8
+      },
+      "awards": [
+        {
+          "value": {
+            "amount": 475000,
+            "currency": "USD"
+          }
+        }
+      ]
+    },
+    {
+      "ocid": "ocds-batch-002",
+      "buyer": {
+        "id": "US-DOT",
+        "name": "Department of Transportation"
+      },
+      "tender": {
+        "title": "Construction Contract",
+        "value": {
+          "amount": 1200000,
+          "currency": "USD"
+        },
+        "procurementMethod": "selective",
+        "numberOfTenderers": 2
+      },
+      "awards": [
+        {
+          "value": {
+            "amount": 1150000,
+            "currency": "USD"
+          }
+        }
+      ]
+    },
+    {
+      "ocid": "ocds-batch-003",
+      "buyer": {
+        "id": "US-VA",
+        "name": "Department of Veterans Affairs"
+      },
+      "tender": {
+        "title": "Medical Supplies",
+        "value": {
+          "amount": 75000,
+          "currency": "USD"
+        },
+        "procurementMethod": "direct",
+        "numberOfTenderers": 1
+      },
+      "awards": [
+        {
+          "value": {
+            "amount": 75000,
+            "currency": "USD"
+          }
+        }
+      ]
+    }
+  ],
+  "profile": "us_federal",
+  "capacity_budget": 50
+}

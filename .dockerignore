@@ -1,17 +1,69 @@
-.venv/
+# Version control
 .git/
 .github/
+.gitignore
+
+# Python artifacts
 __pycache__/
 *.pyc
-*.db
-data/raw/
-*.tar.gz
-.env
-.env.local
-.DS_Store
+*.pyo
+*.pyd
+.Python
+*.so
+.venv/
+venv/
+env/
+ENV/
+
+# Development and testing
 tests/
-reports/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.tox/
+
+# Documentation and development notes
+docs/
 documentation/
-*.txt
 *.md
 !requirements.txt
+
+# Data files - exclude large datasets but keep required files
+# (prosecuted_cases.json and data/ are explicitly COPY'd in Dockerfile)
+data/raw/
+*.tar.gz
+*.zip
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+
+# Reports and generated files
+reports/
+output/
+
+# Calibration directory - runtime state, not build input
+calibration/
+
+# Database files - handled separately
+*.db
+*.sqlite
+*.sqlite3
