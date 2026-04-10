@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 10, 2026
-**Current commit on main:** `231702b`
+**Current commit on main:** `e3ca5ba`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -41,7 +41,7 @@ Critical path. Make SUNLIGHT deployable and testable on real UNDP data. Every it
 
 ### Cluster A5 — Documentation
 
-- [ ] **12. Sub-task 2.2.7f — `docs/INTEGRATION.md` developer guide.** Deployment instructions, API reference with example curl commands for every endpoint, profile selection guidance, capacity budget calibration guidance, troubleshooting section, security deployment notes. Estimate: 3-4 hours. Depends on: everything else in Phase A being stable.
+- [x] **12. Sub-task 2.2.7f — `docs/INTEGRATION.md` developer guide.** Deployment instructions, API reference with example curl commands for every endpoint, profile selection guidance, capacity budget calibration guidance, troubleshooting section, security deployment notes. Estimate: 3-4 hours. Depends on: everything else in Phase A being stable. Shipped at commit `e3ca5ba`.
 
 ### Cluster A6 — Empirical validation
 
