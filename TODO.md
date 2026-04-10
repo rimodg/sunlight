@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 10, 2026
-**Current commit on main:** `a65f0db`
+**Current commit on main:** `231702b`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -37,7 +37,7 @@ Critical path. Make SUNLIGHT deployable and testable on real UNDP data. Every it
 
 ### Cluster A4 — Flexibility
 
-- [ ] **11. Sub-task 2.2.7b — Input format adapter architecture.** Pluggable ingestion layer with adapters for canonical OCDS (exists, wrapped in adapter interface), placeholder for Quantum format, placeholder for Compass format. Estimate: 3-5 hours. Best shipped after 2.2.7c.
+- [x] **11. Sub-task 2.2.7b — Input format adapter architecture.** Pluggable ingestion layer with adapters for canonical OCDS (exists, wrapped in adapter interface), placeholder for Quantum format, placeholder for Compass format. Estimate: 3-5 hours. Best shipped after 2.2.7c. Shipped at commit `231702b`.
 
 ### Cluster A5 — Documentation
 
