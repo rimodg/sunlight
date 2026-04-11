@@ -145,9 +145,12 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     # contributing statistically only when sub-task 2.3.7 ships the
     # real multi-jurisdiction intersection methodology.
     if "US_DOJ" in jurisdictions:
+        non_doj_case_count = sum(
+            1 for c in corpus["cases"] if c["jurisdiction"] != "US_DOJ"
+        )
         logger.info(
             f"MJPIS v0.1 passthrough: using US_DOJ calibration; "
-            f"{len(jurisdictions - {'US_DOJ'})} non-DOJ case(s) present in "
+            f"{non_doj_case_count} non-DOJ case(s) present in "
             f"corpus but not yet consumed (awaits sub-task 2.3.7 intersection "
             f"methodology)"
         )

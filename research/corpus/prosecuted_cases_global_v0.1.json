@@ -4,7 +4,7 @@
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
   "last_updated": "2026-04-10",
   "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF"],
-  "total_cases": 12,
+  "total_cases": 13,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -257,6 +257,27 @@
       "source_url": "https://www.agence-francaise-anticorruption.gouv.fr/",
       "source_document": "PNF CJIP Airbus SE, approved 2020-01-31; CJIP amount EUR 2,083,137,455; published on Agence Francaise Anticorruption (AFA) platform",
       "notes": "Simultaneous three-jurisdiction resolution 31 Jan 2020: UK SFO EUR 991M (separate entry UK_SFO_Airbus_2020), French PNF CJIP EUR 2,083M (this entry), US DOJ/State USD 525M. Global resolution EUR 3.6B. Largest French CJIP at time of approval. AFA (Agence Francaise Anticorruption) monitor appointed as part of CJIP terms. Same underlying conduct as UK SFO entry. Co-anchor with UK SFO entry for MJPIS cross-jurisdictional calibration — cases UK_SFO_Airbus_2020 and FR_PNF_Airbus_2020 in corpus are the same conduct counted from two mature prosecution authorities, which is specifically what MJPIS intersection methodology needs. Do not double-count in MJPIS derivation: intersection methodology treats these as two jurisdictional data points on one underlying event, not two independent events."
+    },
+    {
+      "case_id": "UK_SFO_StandardBank_2015",
+      "jurisdiction": "UK_SFO",
+      "jurisdiction_type": "criminal_dpa",
+      "country_code": "GB",
+      "year": 2015,
+      "legal_basis": "Failure of a commercial organisation to prevent bribery, Bribery Act 2010 s.7 (1 count)",
+      "case_name": "Serious Fraud Office v. Standard Bank Plc",
+      "contract_value_usd": 600000000,
+      "contract_value_local": 600000000,
+      "contract_currency": "USD",
+      "settlement_amount_usd": 32700000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": 6000000,
+      "bribery_channel_percentage": 1.0,
+      "dimensional_tags": ["bribery_channel", "failure_to_prevent", "self_reported", "template_case"],
+      "evidentiary_standard": "beyond_reasonable_doubt",
+      "source_url": "https://www.sfo.gov.uk/cases/standard-bank-plc/",
+      "source_document": "SFO v Standard Bank Plc Approved Judgment (Leveson P), 2015-11-30; first UK SFO Deferred Prosecution Agreement; additional source: https://www.judiciary.uk/wp-content/uploads/2015/11/sfo-v-standard-bank_Final_1.pdf",
+      "notes": "First UK SFO DPA ever approved and first successful use of Bribery Act 2010 s.7 failure-to-prevent-bribery offence — the 'double first.' Approved 30 November 2015 by Sir Brian Leveson PQBD at Southwark Crown Court. Standard Bank Plc (now ICBC Standard Bank) held mandate to raise USD 600M sovereign note private placement for Government of Tanzania. Tanzanian subsidiary Stanbic Bank Tanzania paid USD 6M to EGMA (Enterprise Growth Market Advisors), a Tanzanian consultancy whose directors included the serving Commissioner of the Tanzania Revenue Authority (Harry Kitilya) and the former CEO of the Tanzanian Capital Markets and Securities Authority (Dr Fratern Mboya). EGMA provided no substantive service; the USD 6M was withdrawn in cash over 10 days. Penalty breakdown: USD 16.8M financial penalty to SFO + USD 8.4M disgorgement of profits + USD 6M compensation to Government of Tanzania + ~USD 1.05M interest + GBP 330K (~USD 496K) SFO costs + PwC independent compliance monitor at Standard Bank expense. Total approximately USD 32.7M. Standard Bank self-reported to SFO within 4 weeks of internal investigation commencement, which was material to Sir Brian Leveson's approval. Bribery Act 2010 s.7 template case for all subsequent UK DPAs. Bribery-channel dimensional anchor for MJPIS: documented channel amount USD 6M, underlying contract value USD 600M, channel ratio 1.0%. First corpus case where both bribery channel amount and underlying contract value are public and explicit, making this the bribery-channel dimensional anchor that Rolls-Royce and Airbus cannot provide (those cases are sustained-scheme with no per-transaction channel itemization in the public record)."
     }
   ]
 }
