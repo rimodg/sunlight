@@ -135,44 +135,102 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     else:
         evidentiary_standard = "beyond_reasonable_doubt"
 
-    # v0.1 derivation: as long as US_DOJ is present in the corpus,
-    # inherit the empirical DOJ calibration exactly. This preserves
-    # backwards compatibility, keeps the derivation stable as the
-    # corpus grows with non-DOJ cases during Phase B expansion, and
-    # ensures the passthrough continues producing sensible output
-    # with a thin seed corpus.
-    # Non-DOJ cases sit in the corpus as reference data and begin
-    # contributing statistically only when sub-task 2.3.7 ships the
-    # real multi-jurisdiction intersection methodology.
-    if "US_DOJ" in jurisdictions:
-        non_doj_case_count = sum(
-            1 for c in corpus["cases"] if c["jurisdiction"] != "US_DOJ"
-        )
-        logger.info(
-            f"MJPIS v0.1 passthrough: using US_DOJ calibration; "
-            f"{non_doj_case_count} non-DOJ case(s) present in "
-            f"corpus but not yet consumed (awaits sub-task 2.3.7 intersection "
-            f"methodology)"
-        )
-        # Inherit US_FEDERAL_V0 values directly
-        red_threshold = US_FEDERAL_V0.red_posterior_threshold
-        yellow_threshold = US_FEDERAL_V0.yellow_posterior_threshold
-        default_base_rate = US_FEDERAL_V0.default_base_rate
-        min_typologies = US_FEDERAL_V0.min_typologies_for_red
-        min_ci = US_FEDERAL_V0.min_ci_for_yellow
-        fdr_alpha = US_FEDERAL_V0.fdr_alpha
-        bootstrap_ci = US_FEDERAL_V0.bootstrap_ci_level
-        bootstrap_n = US_FEDERAL_V0.bootstrap_n_resamples
-        max_flags = US_FEDERAL_V0.max_flags_per_1k
-    else:
-        # Multi-jurisdiction intersection derivation deferred to 2.2.6
-        raise NotImplementedError(
-            f"Multi-jurisdiction derivation not yet implemented. "
-            f"Corpus contains: {sorted(jurisdictions)}. "
-            f"Deferred to sub-task 2.2.6 (full intersection methodology)."
+    # mjpis_v0.2 derivation (sub-task 2.3.7 minimum-viable):
+    # Real per-dimension derivation for the markup_based dimension. The
+    # remaining statistical bars (posterior thresholds, FDR alpha, bootstrap
+    # parameters) still inherit US_FEDERAL_V0 — those require cross-
+    # jurisdictional recalibration that is out of scope for the minimum-
+    # viable increment.
+    #
+    # Algorithm for markup_floor derivation:
+    #   1. Partition corpus by (jurisdiction, dimensional_tag).
+    #   2. For each jurisdiction with markup_based cases that have populated
+    #      markup_percentage, compute the per-jurisdiction floor as the
+    #      minimum markup ratio observed (strictest case that jurisdiction
+    #      has prosecuted at).
+    #   3. Intersection floor = minimum across per-jurisdiction floors. This
+    #      is the strictest bar that ANY mature jurisdiction in the corpus
+    #      has prosecuted at — the empirical evidentiary floor below which
+    #      no mature legal system treats the case as prosecutable.
+    #   4. Record contributing case(s) that set the intersection floor for
+    #      provenance.
+    #
+    # When no jurisdiction has markup_based cases with populated percentages,
+    # the derivation falls back to the DynCorp 2005 default (0.75).
+    from dataclasses import replace
+
+    # Step 1-2: Partition + per-jurisdiction markup floors
+    markup_cases_by_jurisdiction: Dict[str, list] = {}
+    for case in corpus["cases"]:
+        if "markup_based" not in case.get("dimensional_tags", []):
+            continue
+        markup_pct = case.get("markup_percentage")
+        if markup_pct is None:
+            continue
+        ratio = float(markup_pct) / 100.0
+        j = case["jurisdiction"]
+        markup_cases_by_jurisdiction.setdefault(j, []).append(
+            {"case_id": case["case_id"], "markup_ratio": ratio}
         )
 
-    return GlobalParameters(
+    per_jurisdiction_floors: Dict[str, float] = {
+        j: min(c["markup_ratio"] for c in cases)
+        for j, cases in markup_cases_by_jurisdiction.items()
+        if cases
+    }
+
+    # Step 3: Intersection floor (min across jurisdictions)
+    if per_jurisdiction_floors:
+        intersection_floor = min(per_jurisdiction_floors.values())
+    else:
+        # No corpus cases tagged markup_based with populated percentages —
+        # fall back to US_FEDERAL_V0 default (DynCorp 2005 empirical floor).
+        intersection_floor = US_FEDERAL_V0.markup_floor_ratio
+
+    # Step 4: Identify contributing case(s) that set the intersection floor
+    contributing_cases = []
+    _EPS = 1e-9
+    for j, cases in markup_cases_by_jurisdiction.items():
+        for c in cases:
+            if abs(c["markup_ratio"] - intersection_floor) < _EPS:
+                contributing_cases.append({
+                    "case_id": c["case_id"],
+                    "jurisdiction": j,
+                    "markup_ratio": c["markup_ratio"],
+                })
+
+    # Provenance trail for the derived markup_floor_ratio
+    derivation_metadata = {
+        "methodology_version": "mjpis_v0.2",
+        "markup_floor_derivation": {
+            "per_jurisdiction": per_jurisdiction_floors,
+            "intersection_floor": intersection_floor,
+            "contributing_cases": contributing_cases,
+        },
+        "corpus_version": corpus_version,
+        "jurisdictions_considered": sorted(jurisdictions),
+    }
+
+    # Log the derivation outcome
+    non_doj_case_count = sum(
+        1 for c in corpus["cases"] if c["jurisdiction"] != "US_DOJ"
+    )
+    logger.info(
+        f"MJPIS v0.2 derivation: markup_floor_ratio={intersection_floor:.4f} "
+        f"(intersection across {len(per_jurisdiction_floors)} jurisdiction(s) "
+        f"with markup-based cases); "
+        f"{non_doj_case_count} non-DOJ case(s) present in corpus "
+        f"(non-markup dimensions await further sub-task 2.3.7 consumers)"
+    )
+
+    # Construct derived GlobalParameters via dataclasses.replace so ALL
+    # statistical fields from US_FEDERAL_V0 are preserved by default, and
+    # only the MJPIS-specific fields are overridden. This is the correct
+    # pattern for a partial derivation: the minimum-viable increment only
+    # derives markup_floor_ratio empirically; everything else inherits
+    # until its own consumer rule and derivation land.
+    return replace(
+        US_FEDERAL_V0,
         version=f"mjpis_v{corpus_version}",
         description=(
             f"Multi-Jurisdiction Procurement Integrity Standard, "
@@ -182,30 +240,27 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             f"markup_based={dimensional_counts['markup_based']}, "
             f"bribery_channel={dimensional_counts['bribery_channel']}, "
             f"administrative_sanctionable={dimensional_counts['administrative_sanctionable']}. "
-            f"v{corpus_version} is a DRAFT derivation; full multi-jurisdiction "
-            f"intersection methodology lands in sub-task 2.2.6."
+            f"mjpis_v0.2 derives markup_floor_ratio empirically via "
+            f"cross-jurisdictional intersection; remaining statistical bars "
+            f"inherit US_FEDERAL_V0 until their own consumers and derivations land."
         ),
         source_citation=(
             f"research/corpus/prosecuted_cases_global_v{corpus_version}.json"
         ),
         derivation_date=str(date.today()),
         evidentiary_standard=evidentiary_standard,
-        default_base_rate=default_base_rate,
-        red_posterior_threshold=red_threshold,
-        yellow_posterior_threshold=yellow_threshold,
-        min_typologies_for_red=min_typologies,
-        min_ci_for_yellow=min_ci,
-        fdr_alpha=fdr_alpha,
-        bootstrap_ci_level=bootstrap_ci,
-        bootstrap_n_resamples=bootstrap_n,
-        max_flags_per_1k=max_flags,
+        markup_floor_ratio=intersection_floor,
+        derivation_metadata=derivation_metadata,
         notes=(
             f"Derived from {total_cases} cases across {len(jurisdictions)} "
             f"jurisdiction(s) via mjpis_derivation.derive_mjpis_parameters(). "
-            f"v{corpus_version}: Single-jurisdiction derivation (US DOJ only) "
-            f"inherits US_FEDERAL_V0 calibration. Multi-jurisdiction intersection "
-            f"methodology lands in sub-task 2.2.6 when corpus expands to UK SFO + "
-            f"FR PNF + WB INT."
+            f"mjpis_v0.2 (sub-task 2.3.7 minimum-viable): real per-dimension "
+            f"derivation for markup_floor_ratio via intersection across "
+            f"{len(per_jurisdiction_floors)} jurisdiction(s) with markup-based "
+            f"cases. Contributing case(s): "
+            f"{', '.join(c['case_id'] for c in contributing_cases) or '(none)'}. "
+            f"Remaining statistical bars (posterior thresholds, FDR, bootstrap) "
+            f"inherit US_FEDERAL_V0 pending their own derivation layers."
         ),
     )
 

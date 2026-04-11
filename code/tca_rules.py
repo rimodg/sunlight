@@ -41,6 +41,7 @@ from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from jurisdiction_profile import JurisdictionProfile, US_FEDERAL
+from global_parameters import get_global_parameters
 
 
 # ═══════════════════════════════════════════════════════════
@@ -206,6 +207,11 @@ def build_rules(profile: JurisdictionProfile) -> List[Rule]:
         List of 16 Rule objects with profile values baked into their lambdas
     """
     rules: List[Rule] = []
+
+    # Resolve the profile's global parameters via the registry key. Captured
+    # in closures alongside `profile` for rules that consume MJPIS-derived
+    # fields (currently FIN-001 via markup_floor_ratio + derivation_metadata).
+    global_params = get_global_parameters(profile.global_params_version)
 
     # Build evidence string for PROC-001 from profile
     proc_001_evidence = "; ".join(
@@ -388,23 +394,76 @@ def build_rules(profile: JurisdictionProfile) -> List[Rule]:
     # LAYER 2: FINANCIAL ENRICHMENT
     # ─────────────────────────────────────────
 
+    # FIN-001 is a TWO-THRESHOLD rule (sub-task 2.3.7 minimum-viable):
+    #   Check A: award/tender ratio exceeds the LOCAL legal tolerance
+    #            (profile.max_award_inflation_pct, e.g. 15% for US / UK)
+    #   Check B: award/tender ratio exceeds the MJPIS EMPIRICAL markup floor
+    #            (global_params.markup_floor_ratio, derived from cross-
+    #            jurisdictional intersection of prosecuted-case corpus)
+    # The rule fires when EITHER check trips. On US_FEDERAL_V0 (Check B = 75%,
+    # Check A = 15%), Check B is strictly looser than Check A, so any contract
+    # tripping B also trips A and the firing set is unchanged from the legacy
+    # single-threshold rule. When the profile references mjpis_draft_v0 and
+    # derivation_metadata is populated, contracts crossing Check B receive an
+    # evidence string with MJPIS provenance (methodology version + contributing
+    # case IDs); otherwise the legacy evidence string is emitted byte-identically.
+    def _fin001_description(f):
+        """Build the FIN-001 edge description with optional MJPIS provenance branch."""
+        tender = f["tender_value"]
+        award = f["award_value"]
+        currency = f["currency"]
+        award_ratio = award / tender
+        pct_over_tender = (award_ratio - 1) * 100
+        # Legacy description — byte-identical to the pre-sub-task-2.3.7 output.
+        legacy = (
+            f"Award ({currency} {award:,.0f}) exceeds tender "
+            f"({currency} {tender:,.0f}) by {pct_over_tender:.1f}%"
+        )
+        # Check B tripped AND derivation metadata populated → provenance branch.
+        mjpis_threshold = 1 + global_params.markup_floor_ratio
+        check_b_tripped = award_ratio > mjpis_threshold
+        mdm = global_params.derivation_metadata or {}
+        methodology_version = mdm.get("methodology_version")
+        if check_b_tripped and methodology_version:
+            floor_info = mdm.get("markup_floor_derivation", {})
+            contributing = floor_info.get("contributing_cases", [])
+            case_ids = ", ".join(c["case_id"] for c in contributing) or "(unknown)"
+            mjpis_floor_pct = global_params.markup_floor_ratio * 100
+            return (
+                f"{legacy} — crosses MJPIS empirical markup floor "
+                f"({mjpis_floor_pct:.1f}%, derived via {methodology_version} "
+                f"from: {case_ids})"
+            )
+        return legacy
+
     rules.append(Rule(
         rule_id="FIN-001",
         layer="financial",
         name="Award significantly exceeds tender value",
-        description="Award amount exceeds tender estimate by more than 15%",
-        evidence="World Bank Procurement Framework; UNDP POPP Contract Modifications policy",
+        description=(
+            "Award amount exceeds tender estimate by more than the local legal "
+            "tolerance (Check A) or the MJPIS empirical markup floor (Check B)"
+        ),
+        evidence=(
+            "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; "
+            "MJPIS empirical markup floor (sub-task 2.3.7)"
+        ),
         condition=lambda f: (
             f["tender_value"] > 0
             and f["award_value"] > 0
-            and f["award_value"] / f["tender_value"] > (1 + profile.max_award_inflation_pct / 100)
+            and (
+                # Check A: local legal tolerance (e.g. 15% for US / UK)
+                f["award_value"] / f["tender_value"] > (1 + profile.max_award_inflation_pct / 100)
+                # Check B: MJPIS cross-jurisdictional empirical markup floor
+                or f["award_value"] / f["tender_value"] > (1 + global_params.markup_floor_ratio)
+            )
         ),
         nodes=lambda f: [{"id": "price_inflation", "label": "Post-Tender Price Inflation"}],
         edges=lambda f: [{
             "source": "price_inflation", "target": "budget",
             "type": "REMOVES", "weight": 0.8,
             "rule": "FIN-001",
-            "description": f"Award ({f['currency']} {f['award_value']:,.0f}) exceeds tender ({f['currency']} {f['tender_value']:,.0f}) by {((f['award_value']/f['tender_value'])-1)*100:.1f}%"
+            "description": _fin001_description(f),
         }],
     ))
 

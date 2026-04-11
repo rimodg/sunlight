@@ -163,6 +163,27 @@ class GlobalParameters:
     #   world_bank_africa: 250 (higher risk environment)
     #   sai_developing: 300 (audit planning context, not prosecution)
 
+    # MJPIS-Derived Empirical Thresholds (sub-task 2.3.7 minimum-viable)
+    markup_floor_ratio: float = 0.75
+    # MJPIS-derived empirical markup floor, expressed as a ratio above tender
+    # value (0.75 = 75% markup = award/tender > 1.75). Default matches the
+    # DynCorp 2005 DOJ case (the minimum markup across all prosecuted DOJ
+    # price-fraud cases in the seed corpus). Consumed by FIN-001 as a second
+    # threshold alongside the local legal tolerance (max_award_inflation_pct).
+    # A rule fires if EITHER the local threshold OR the MJPIS empirical
+    # threshold is crossed.
+
+    derivation_metadata: dict = field(default_factory=dict)
+    # Provenance trail for MJPIS-derived fields. Populated by
+    # mjpis_derivation.derive_mjpis_parameters() when the real per-dimension
+    # derivation runs. Empty dict for non-derived profiles (e.g., US_FEDERAL_V0).
+    # Expected keys when populated:
+    #   methodology_version: str (e.g., "mjpis_v0.2")
+    #   markup_floor_derivation: dict with per_jurisdiction floors,
+    #                            intersection_floor, contributing_cases
+    #   corpus_version: str (corpus version at derivation time)
+    #   jurisdictions_considered: list[str]
+
     # Metadata
     notes: str = ""
     # Implementation notes, validation history, special considerations
