@@ -12,7 +12,7 @@
 - [x] **1. Canonical doc update.** Shipped at commit `9ad0ca4`. `SUNLIGHT_SYSTEM_REFERENCE.md` now reflects the architectural state of main through the REST API layer, including section 3.5 (REST API Layer), section 5.4 (REST API end-to-end validation), updated section 10 priorities, and corrected commit count.
 - [ ] **2. Project instructions re-paste.** Copy the updated `SUNLIGHT_SYSTEM_REFERENCE.md` contents into Claude project settings so future sessions auto-load correct state. 30-second UI action. (Rim's own action, not Claude Code.)
 - [ ] **3. Security baseline — 15 minutes.** Verify FileVault enabled on the Mac (`System Settings → Privacy & Security → FileVault`). Verify 2FA enabled on Rim's and Hugo's GitHub accounts. Verify `sunlight.db` and `prosecuted_cases.json` are not in any cloud sync folder (iCloud Drive, Google Drive, Dropbox). (Rim's own action, unblocked by anything else.)
-- [ ] **4. Stored memory cleanup decision.** Three stale items flagged in auto-loaded context: the Paraguay 500-contract validation that never happened, the "six engine builds" list that does not match current architecture, and the GitHub auth friction note that is no longer accurate. Decision: explicit cleanup via the memory tool, or leave to age out naturally.
+- [x] **4. Stored memory cleanup decision.** Three stale items flagged in auto-loaded context: the Paraguay 500-contract validation that never happened, the "six engine builds" list that does not match current architecture, and the GitHub auth friction note that is no longer accurate. Decision: explicit cleanup via the memory tool, or leave to age out naturally.  Decision: leave stale items to age out naturally. No active purge.
 
 ---
 
@@ -53,7 +53,7 @@ Critical path. Make SUNLIGHT deployable and testable on real UNDP data. Every it
 
 Fixes the 9-DOJ-cases validation weakness and makes the living multi-jurisdiction standard real rather than aspirational. Critical for the Timilsina pitch, much stronger if at least partially in place when the Scharff reply lands.
 
-- [ ] **14. Sub-task 2.3.1 — Naming decision.** "Jurisprudence Engine" proposed because it signals legal grounding, works in English and French, has scholarly gravity. Alternatives open.
+- [x] **14. Sub-task 2.3.1 — Naming decision.** "Jurisprudence Engine" proposed because it signals legal grounding, works in English and French, has scholarly gravity. Alternatives open.  Locked as **Jurisprudence Engine**. Signals legal grounding, works in English and French, scholarly gravity.
 - [ ] **15. Sub-task 2.3.2 — Corpus expansion, UK SFO DPAs.** Extract 12-15 UK SFO Deferred Prosecution Agreement cases from 2014-2025 into the existing `prosecuted_cases_global_v0.1.json` schema. Target cases: Rolls-Royce 2017, Airbus 2020, Standard Bank 2015, Tesco 2017, Sarclad 2016, Güralp 2019, Airline Services 2020, Amec Foster Wheeler 2021, NatWest 2021, and others. Estimate: 6-10 hours research.
 - [ ] **16. Sub-task 2.3.3 — Corpus expansion, French PNF CJIPs.** Extract 8-12 French PNF CJIP cases from 2017-2025. Target cases: HSBC 2017, Société Générale 2018, Airbus 2020, Bolloré 2021, Bolloré 2023, McDonald's France 2022, Google France 2019, and others. Estimate: 5-8 hours research.
 - [ ] **17. Sub-task 2.3.4 — Corpus expansion, World Bank INT Sanctions Board.** Extract 10-15 World Bank INT Sanctions Board cases from recent fiscal years. Administrative-sanctionable at "more likely than not" standard. Estimate: 6-10 hours.
@@ -77,7 +77,7 @@ Fixes the 9-DOJ-cases validation weakness and makes the living multi-jurisdictio
 
 Executed after the build is stable, before any public claims about the architectural methodology are made, ideally before the Scharff outreach actually lands in her inbox.
 
-- [ ] **24. Architecture name lock.** Decide on the final name for the architectural methodology — "Perpetual Intelligence Architecture" or alternative. Blocks all of 25-27.
+- [x] **24. Architecture name lock.** Decide on the final name for the architectural methodology — "Perpetual Intelligence Architecture" or alternative. Blocks all of 25-27.  Locked as **Invariant Detection Architecture (IDA)**. SUNLIGHT is the first reference implementation. Documented in docs/ARCHITECTURE.md.
 - [ ] **25. Trademark filing.** USPTO TEAS Plus form, Classes 9 + 42 minimum, possibly 41. Approximately $500-750 total. One hour. Establishes legal priority on the architecture name.
 - [ ] **26. Domain registration.** .com, .org, .net at minimum for the chosen name. Under $100, 15 minutes.
 - [ ] **27. Public GitHub prior-art repo.** New public repo with a markdown file describing the seven architectural principles and the SUNLIGHT case study. Establishes cryptographically timestamped prior art against any later patent claim by anyone else. 3-4 hours writing.

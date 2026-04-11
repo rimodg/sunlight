@@ -1,4 +1,4 @@
-# SUNLIGHT — Architectural Pattern
+# The Invariant Detection Architecture (IDA) — Architectural Pattern
 
 **Status:** Internal architectural reference, private repository.
 
@@ -12,7 +12,7 @@
 
 SUNLIGHT is the first reference implementation of an architectural pattern for building institutional detection systems that preserve precision as scale grows along every axis of growth — more contracts, more jurisdictions, more prosecuted cases in the calibration corpus, more operational feedback. The pattern is composed of seven specific principles. Each principle has been implemented and tested inside SUNLIGHT's v4 core. This document describes the pattern as an architecture, independent of SUNLIGHT as a product, so that the composition can be referenced, cited, and extended in future work.
 
-The pattern name is reserved for a future Phase D decision (see TODO.md item 24). Candidate names include *Perpetual Intelligence Architecture*, *Monotonic Institutional Systems*, and *Scale-Invariant Institutional Intelligence*. Until that decision is locked, this document refers to the pattern as "the architecture."
+The architecture is formally named the Invariant Detection Architecture (IDA). SUNLIGHT is the first reference implementation of the Invariant Detection Architecture, specialized for procurement integrity analysis in multilateral institutional contexts. The name denotes the central architectural claim: detection properties that are invariant under every growth axis of the system (more contracts, more jurisdictions, more prosecuted cases in the calibration corpus, more operational feedback).
 
 ## 2 — The problem the pattern solves
 
