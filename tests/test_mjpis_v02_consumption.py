@@ -41,12 +41,22 @@ class TestMjpisV02Derivation:
     """The derivation function produces a real per-dimension provenance trail."""
 
     def test_derivation_produces_provenance(self):
-        """`derive_mjpis_parameters` populates markup_floor_ratio and metadata."""
+        """`derive_mjpis_parameters` populates markup_floor_ratio and metadata.
+
+        After Phase B session 2 case 2 (Tesco 2017) landed in the corpus,
+        the UK SFO per-jurisdiction floor (0.501 = Tesco's overstatement
+        ratio) undercuts the US DOJ per-jurisdiction floor (0.75 = DynCorp
+        2005), so the intersection floor tightens to 0.501. Both DynCorp
+        and Tesco appear in `contributing_cases` as per-jurisdiction floor
+        setters (audit trail records every jurisdiction's floor setter).
+        """
         gp = get_derived_mjpis()
 
-        # markup_floor_ratio is set from the intersection, not the dataclass default
-        assert gp.markup_floor_ratio == 0.75, (
-            f"Expected markup_floor_ratio=0.75 (DynCorp 2005 intersection), "
+        # markup_floor_ratio is set from the intersection. After Tesco 2017
+        # landed in the corpus, the UK SFO floor (0.501) undercuts the US
+        # DOJ floor (0.75), so the intersection tightens to 0.501.
+        assert gp.markup_floor_ratio == 0.501, (
+            f"Expected markup_floor_ratio=0.501 (Tesco 2017 UK SFO floor), "
             f"got {gp.markup_floor_ratio}"
         )
 
@@ -66,22 +76,29 @@ class TestMjpisV02Derivation:
         assert "intersection_floor" in floor_info
         assert "contributing_cases" in floor_info
 
-        # US DOJ is the jurisdiction that sets the floor (seed corpus has only
-        # DOJ cases with populated markup_percentage)
+        # Both US DOJ and UK SFO set per-jurisdiction floors (DynCorp 2005
+        # at 0.75 and Tesco 2017 at 0.501 respectively).
         assert "US_DOJ" in floor_info["per_jurisdiction"]
+        assert "UK_SFO" in floor_info["per_jurisdiction"]
         assert floor_info["per_jurisdiction"]["US_DOJ"] == 0.75
-        assert floor_info["intersection_floor"] == 0.75
+        assert floor_info["per_jurisdiction"]["UK_SFO"] == 0.501
+        assert floor_info["intersection_floor"] == 0.501
 
-        # At least one contributing case is DynCorp 2005 (the empirical floor)
+        # Both DynCorp 2005 and Tesco 2017 are contributing cases (one
+        # per-jurisdiction floor setter each).
         contributing_case_ids = {c["case_id"] for c in floor_info["contributing_cases"]}
         assert "US_v_DynCorp_2005" in contributing_case_ids, (
             f"Expected DynCorp 2005 among contributing_cases, got {contributing_case_ids}"
+        )
+        assert "UK_SFO_Tesco_2017" in contributing_case_ids, (
+            f"Expected Tesco 2017 among contributing_cases, got {contributing_case_ids}"
         )
 
         # corpus_version + jurisdictions_considered are captured
         assert "corpus_version" in gp.derivation_metadata
         assert "jurisdictions_considered" in gp.derivation_metadata
         assert "US_DOJ" in gp.derivation_metadata["jurisdictions_considered"]
+        assert "UK_SFO" in gp.derivation_metadata["jurisdictions_considered"]
 
 
 class TestFin001ConsumesMjpisProvenance:
@@ -155,8 +172,11 @@ class TestFin001ConsumesMjpisProvenance:
         )
 
     def test_mjpis_draft_v0_has_populated_metadata(self):
-        """MJPIS_DRAFT_V0 registered at import time carries the provenance trail."""
-        assert MJPIS_DRAFT_V0.markup_floor_ratio == 0.75
+        """MJPIS_DRAFT_V0 registered at import time carries the provenance trail.
+
+        After Tesco 2017 landed, the MJPIS draft floor tightens to 0.501.
+        """
+        assert MJPIS_DRAFT_V0.markup_floor_ratio == 0.501
         assert MJPIS_DRAFT_V0.derivation_metadata.get("methodology_version") == "mjpis_v0.2"
 
     def test_us_federal_v0_has_empty_metadata(self):

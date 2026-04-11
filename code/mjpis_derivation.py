@@ -187,17 +187,22 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         # fall back to US_FEDERAL_V0 default (DynCorp 2005 empirical floor).
         intersection_floor = US_FEDERAL_V0.markup_floor_ratio
 
-    # Step 4: Identify contributing case(s) that set the intersection floor
+    # Step 4: Identify contributing case(s) — one per-jurisdiction floor setter.
+    # These are the cases that set each jurisdiction's local floor. The
+    # intersection floor is the minimum across them, but the full audit trail
+    # records every jurisdiction's floor setter because each one carries
+    # evidentiary weight in the multi-jurisdiction derivation.
     contributing_cases = []
     _EPS = 1e-9
-    for j, cases in markup_cases_by_jurisdiction.items():
-        for c in cases:
-            if abs(c["markup_ratio"] - intersection_floor) < _EPS:
+    for j, j_floor in per_jurisdiction_floors.items():
+        for c in markup_cases_by_jurisdiction[j]:
+            if abs(c["markup_ratio"] - j_floor) < _EPS:
                 contributing_cases.append({
                     "case_id": c["case_id"],
                     "jurisdiction": j,
                     "markup_ratio": c["markup_ratio"],
                 })
+                break  # one floor setter per jurisdiction
 
     # Provenance trail for the derived markup_floor_ratio
     derivation_metadata = {
