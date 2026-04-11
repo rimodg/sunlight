@@ -2,9 +2,9 @@
   "corpus_version": "0.1",
   "corpus_name": "MJPIS Global Prosecuted Cases Corpus",
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
-  "last_updated": "2026-04-10",
+  "last_updated": "2026-04-11",
   "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF"],
-  "total_cases": 13,
+  "total_cases": 14,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -278,6 +278,27 @@
       "source_url": "https://www.sfo.gov.uk/cases/standard-bank-plc/",
       "source_document": "SFO v Standard Bank Plc Approved Judgment (Leveson P), 2015-11-30; first UK SFO Deferred Prosecution Agreement; additional source: https://www.judiciary.uk/wp-content/uploads/2015/11/sfo-v-standard-bank_Final_1.pdf",
       "notes": "First UK SFO DPA ever approved and first successful use of Bribery Act 2010 s.7 failure-to-prevent-bribery offence — the 'double first.' Approved 30 November 2015 by Sir Brian Leveson PQBD at Southwark Crown Court. Standard Bank Plc (now ICBC Standard Bank) held mandate to raise USD 600M sovereign note private placement for Government of Tanzania. Tanzanian subsidiary Stanbic Bank Tanzania paid USD 6M to EGMA (Enterprise Growth Market Advisors), a Tanzanian consultancy whose directors included the serving Commissioner of the Tanzania Revenue Authority (Harry Kitilya) and the former CEO of the Tanzanian Capital Markets and Securities Authority (Dr Fratern Mboya). EGMA provided no substantive service; the USD 6M was withdrawn in cash over 10 days. Penalty breakdown: USD 16.8M financial penalty to SFO + USD 8.4M disgorgement of profits + USD 6M compensation to Government of Tanzania + ~USD 1.05M interest + GBP 330K (~USD 496K) SFO costs + PwC independent compliance monitor at Standard Bank expense. Total approximately USD 32.7M. Standard Bank self-reported to SFO within 4 weeks of internal investigation commencement, which was material to Sir Brian Leveson's approval. Bribery Act 2010 s.7 template case for all subsequent UK DPAs. Bribery-channel dimensional anchor for MJPIS: documented channel amount USD 6M, underlying contract value USD 600M, channel ratio 1.0%. First corpus case where both bribery channel amount and underlying contract value are public and explicit, making this the bribery-channel dimensional anchor that Rolls-Royce and Airbus cannot provide (those cases are sustained-scheme with no per-transaction channel itemization in the public record)."
+    },
+    {
+      "case_id": "FR_PNF_Bollore_2021",
+      "jurisdiction": "FR_PNF",
+      "jurisdiction_type": "cjip",
+      "country_code": "FR",
+      "year": 2021,
+      "legal_basis": "Corruption d'agent public etranger (bribery of foreign public official), French Penal Code; Convention Judiciaire d'Interet Public (CJIP) under Sapin II law",
+      "case_name": "Parquet National Financier v. Bollore SE and Financiere de l'Odet SE",
+      "contract_value_usd": null,
+      "contract_value_local": null,
+      "contract_currency": "EUR",
+      "settlement_amount_usd": 14500000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": null,
+      "dimensional_tags": ["bribery_channel", "procurement_concession", "political_campaign_services_in_exchange", "africa_infrastructure"],
+      "evidentiary_standard": "french_cjip_admission_of_facts",
+      "source_url": "https://www.agence-francaise-anticorruption.gouv.fr/fr/cjip-bollore-financiere-odet",
+      "source_document": "PNF CJIP Bollore SE and Financiere de l'Odet SE, CJIP signed 2021-02-09, corporate CJIP approved 2021-02-26 by Paris Tribunal Judiciaire (Judge Isabelle Prevost-Desprez); total penalty EUR 12,000,000 (~USD 14.5M historical); additional source: https://www.asso-sherpa.org/corruption-in-togo-french-supreme-court-rejected-annulation-of-proceedings-requested-by-vincent-bollore-and-others",
+      "notes": "Seventh French CJIP. Signed 9 Feb 2021 between PNF and Bollore SE + Financiere de l'Odet SE; corporate CJIP approved 26 Feb 2021 by Paris Tribunal Judiciaire (Judge Isabelle Prevost-Desprez) at EUR 12M fine. Underlying conduct: Euro RSCG (Bollore subsidiary, now Havas) provided communications and consulting services for President Faure Gnassingbe's 2010 Togolese presidential campaign at undercharged rates, in exchange for port concession extensions at Lome port (operated by Bollore Africa Logistics subsidiary). Parallel Guinea proceedings (Alpha Conde 2010 presidential campaign, ~EUR 170,000 in undercharged communications services in exchange for Conakry port concession) dropped on prescription. CJIP allowed Bollore to escape exclusion from public procurement, which was the most consequential institutional sanction available — this is a notable structural data point on how French negotiated justice handles procurement-debarment trade-offs and matters for SUNLIGHT's positioning on the difference between financial penalty and procurement-eligibility consequences. Same-day CRPC plea agreements for three executives (Vincent Bollore, Gilles Alix, Jean-Philippe Dorent, EUR 375,000 each) were REJECTED by the same court on 26 Feb 2021 as inappropriate for the gravity of the conduct; trial scheduled 7-17 December 2026 at Paris Tribunal Correctionnel. Procurement-bribery dimensional category: port concession contracts as the procurement instrument, political campaign services as the bribery channel. Distinct from Airbus FR PNF entry (case 12), which was aircraft sales bribery via intermediaries — this is procurement-concession bribery via in-kind services. Bribery channel amount left null because the public CJIP record describes 'undercharging' rather than itemizing a specific channel transfer for the Togolese conduct. Resolution type: CJIP (French equivalent of DPA); total penalty EUR 12,000,000 (~USD 14.5M historical); countries affected: 1 (Togo, with parallel Guinea proceedings dropped on prescription)."
     }
   ]
 }
