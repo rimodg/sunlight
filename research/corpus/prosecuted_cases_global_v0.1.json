@@ -3,8 +3,8 @@
   "corpus_name": "MJPIS Global Prosecuted Cases Corpus",
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
   "last_updated": "2026-04-10",
-  "jurisdictions_included": ["US_DOJ", "UK_SFO"],
-  "total_cases": 10,
+  "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF"],
+  "total_cases": 12,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -215,6 +215,48 @@
       "source_url": "https://www.judiciary.uk/wp-content/uploads/2017/01/sfo-v-rolls-royce.pdf",
       "source_document": "SFO v Rolls-Royce plc Approved Judgment (Leveson P), 2017-01-17; indictment U20170036; additional source: https://assets.publishing.service.gov.uk/media/67c061c4b0bb6528ee866bc3/SFO-Rolls-Royce_DPA_Details_of_Compliance.pdf",
       "notes": "Largest UK criminal corporate penalty at time of DPA. UK SFO Deferred Prosecution Agreement approved 17 January 2017 by Sir Brian Leveson P, indictment U20170036. Total penalty GBP 497,252,645 (~USD 604.8M historical): GBP 258.17M disgorgement of profit + GBP 239.08M financial penalty + GBP 13M SFO costs. Part of USD 800M global settlement including parallel US DOJ proceeding (USD 169,917,710) and Brazilian MPF proceeding (USD 25,579,170). 25+ years of systematic bribery across 12 countries. Indonesia intermediary payments documented from 1989 onwards (~GBP 2.25M); full global bribery spend across 12 countries not itemized in public record — bribery_channel_amount_usd left null to avoid anchoring MJPIS calibration on a partial figure. Markup not directly itemized; disgorged gross profit GBP 258.17M represents tainted contract profit. Reference case for UK SFO anchor in MJPIS multi-jurisdiction intersection methodology (Phase B sub-task 2.3.7)."
+    },
+    {
+      "case_id": "UK_SFO_Airbus_2020",
+      "jurisdiction": "UK_SFO",
+      "jurisdiction_type": "criminal_dpa",
+      "country_code": "GB",
+      "year": 2020,
+      "legal_basis": "Failure of a commercial organisation to prevent bribery, Bribery Act 2010 s.7 (5 counts)",
+      "case_name": "Serious Fraud Office v. Airbus SE",
+      "contract_value_usd": null,
+      "contract_value_local": null,
+      "contract_currency": "EUR",
+      "settlement_amount_usd": 1090000000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": null,
+      "dimensional_tags": ["bribery_channel", "multi_jurisdiction_settlement", "sustained_scheme", "failure_to_prevent"],
+      "evidentiary_standard": "beyond_reasonable_doubt",
+      "source_url": "https://www.sfo.gov.uk/cases/airbus-se/",
+      "source_document": "SFO v Airbus SE Approved Judgment (Dame Victoria Sharp PQBD), 2020-01-31; UK SFO DPA resolution, 5 counts s.7 Bribery Act 2010; additional source: https://www.judiciary.uk/wp-content/uploads/2020/01/Approved-Judgment-SFO-v-Airbus.pdf",
+      "notes": "Simultaneous three-jurisdiction resolution 31 Jan 2020: UK SFO EUR 991M (this entry), French PNF CJIP EUR 2,083M (separate entry FR_PNF_Airbus_2020), US DOJ/State USD 525M. Global resolution EUR 3.6B — largest corporate bribery resolution at time of DPA. Conduct period 2011-2015. Five countries affected by UK portion: Sri Lanka, Malaysia, Indonesia, Taiwan, Ghana. Indictment 5 counts s.7 Bribery Act 2010. UK breakdown: disgorgement EUR 585.94M + financial penalty EUR 398.03M + SFO costs EUR 6.99M. Approved by Dame Victoria Sharp PQBD. Co-anchor with French PNF entry for MJPIS cross-jurisdictional calibration. Markup percentage not itemized in public DPA record. bribery_channel_amount_usd left null because the public DPA record does not itemize per-country bribery spend in a form suitable for MJPIS anchoring."
+    },
+    {
+      "case_id": "FR_PNF_Airbus_2020",
+      "jurisdiction": "FR_PNF",
+      "jurisdiction_type": "cjip",
+      "country_code": "FR",
+      "year": 2020,
+      "legal_basis": "Convention Judiciaire d'Interet Public (CJIP) for bribery of foreign public officials under French law",
+      "case_name": "Parquet National Financier v. Airbus SE",
+      "contract_value_usd": null,
+      "contract_value_local": null,
+      "contract_currency": "EUR",
+      "settlement_amount_usd": 2291000000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": null,
+      "dimensional_tags": ["bribery_channel", "multi_jurisdiction_settlement", "sustained_scheme"],
+      "evidentiary_standard": "french_cjip_admission_of_facts",
+      "source_url": "https://www.agence-francaise-anticorruption.gouv.fr/",
+      "source_document": "PNF CJIP Airbus SE, approved 2020-01-31; CJIP amount EUR 2,083,137,455; published on Agence Francaise Anticorruption (AFA) platform",
+      "notes": "Simultaneous three-jurisdiction resolution 31 Jan 2020: UK SFO EUR 991M (separate entry UK_SFO_Airbus_2020), French PNF CJIP EUR 2,083M (this entry), US DOJ/State USD 525M. Global resolution EUR 3.6B. Largest French CJIP at time of approval. AFA (Agence Francaise Anticorruption) monitor appointed as part of CJIP terms. Same underlying conduct as UK SFO entry. Co-anchor with UK SFO entry for MJPIS cross-jurisdictional calibration — cases UK_SFO_Airbus_2020 and FR_PNF_Airbus_2020 in corpus are the same conduct counted from two mature prosecution authorities, which is specifically what MJPIS intersection methodology needs. Do not double-count in MJPIS derivation: intersection methodology treats these as two jurisdictional data points on one underlying event, not two independent events."
     }
   ]
 }
