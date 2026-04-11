@@ -2,9 +2,9 @@
   "corpus_version": "0.1",
   "corpus_name": "MJPIS Global Prosecuted Cases Corpus",
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
-  "last_updated": "2026-04-08",
-  "jurisdictions_included": ["US_DOJ"],
-  "total_cases": 9,
+  "last_updated": "2026-04-10",
+  "jurisdictions_included": ["US_DOJ", "UK_SFO"],
+  "total_cases": 10,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -194,6 +194,27 @@
       "source_url": "https://www.justice.gov/opa/pr/bae-systems-pay-400-million-resolve-false-claims-act-allegations",
       "source_document": "DOJ Press Release, 2010-03-01",
       "notes": "Charged unrelated labor costs to government contracts, inflated billable hours. Timecard manipulation and cost allocation fraud. Defense services contracts."
+    },
+    {
+      "case_id": "UK_SFO_RollsRoyce_2017",
+      "jurisdiction": "UK_SFO",
+      "jurisdiction_type": "criminal_dpa",
+      "country_code": "GB",
+      "year": 2017,
+      "legal_basis": "Conspiracy to corrupt (Criminal Law Act 1977 s.1); False accounting (Theft Act 1968 s.17); Failure to prevent bribery (Bribery Act 2010 s.7)",
+      "case_name": "Serious Fraud Office v. Rolls-Royce plc",
+      "contract_value_usd": null,
+      "contract_value_local": null,
+      "contract_currency": "GBP",
+      "settlement_amount_usd": 604800000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": null,
+      "dimensional_tags": ["bribery_channel", "multi_jurisdiction_settlement", "sustained_scheme"],
+      "evidentiary_standard": "beyond_reasonable_doubt",
+      "source_url": "https://www.judiciary.uk/wp-content/uploads/2017/01/sfo-v-rolls-royce.pdf",
+      "source_document": "SFO v Rolls-Royce plc Approved Judgment (Leveson P), 2017-01-17; indictment U20170036; additional source: https://assets.publishing.service.gov.uk/media/67c061c4b0bb6528ee866bc3/SFO-Rolls-Royce_DPA_Details_of_Compliance.pdf",
+      "notes": "Largest UK criminal corporate penalty at time of DPA. UK SFO Deferred Prosecution Agreement approved 17 January 2017 by Sir Brian Leveson P, indictment U20170036. Total penalty GBP 497,252,645 (~USD 604.8M historical): GBP 258.17M disgorgement of profit + GBP 239.08M financial penalty + GBP 13M SFO costs. Part of USD 800M global settlement including parallel US DOJ proceeding (USD 169,917,710) and Brazilian MPF proceeding (USD 25,579,170). 25+ years of systematic bribery across 12 countries. Indonesia intermediary payments documented from 1989 onwards (~GBP 2.25M); full global bribery spend across 12 countries not itemized in public record — bribery_channel_amount_usd left null to avoid anchoring MJPIS calibration on a partial figure. Markup not directly itemized; disgorged gross profit GBP 258.17M represents tainted contract profit. Reference case for UK SFO anchor in MJPIS multi-jurisdiction intersection methodology (Phase B sub-task 2.3.7)."
     }
   ]
 }

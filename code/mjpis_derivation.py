@@ -41,9 +41,12 @@ Version: 1.0.0
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from datetime import date
 from typing import Dict, Set
+
+logger = logging.getLogger(__name__)
 
 
 def load_corpus(corpus_path: Path) -> Dict:
@@ -132,13 +135,22 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     else:
         evidentiary_standard = "beyond_reasonable_doubt"
 
-    # v0.1 derivation: when the corpus contains only US_DOJ cases,
+    # v0.1 derivation: as long as US_DOJ is present in the corpus,
     # inherit the empirical DOJ calibration exactly. This preserves
-    # backwards compatibility and ensures the derivation produces
-    # sensible output even with a thin seed corpus.
-    # Future versions (2.2.6+) will implement the full intersection
-    # methodology across multiple jurisdictions.
-    if jurisdictions == {"US_DOJ"}:
+    # backwards compatibility, keeps the derivation stable as the
+    # corpus grows with non-DOJ cases during Phase B expansion, and
+    # ensures the passthrough continues producing sensible output
+    # with a thin seed corpus.
+    # Non-DOJ cases sit in the corpus as reference data and begin
+    # contributing statistically only when sub-task 2.3.7 ships the
+    # real multi-jurisdiction intersection methodology.
+    if "US_DOJ" in jurisdictions:
+        logger.info(
+            f"MJPIS v0.1 passthrough: using US_DOJ calibration; "
+            f"{len(jurisdictions - {'US_DOJ'})} non-DOJ case(s) present in "
+            f"corpus but not yet consumed (awaits sub-task 2.3.7 intersection "
+            f"methodology)"
+        )
         # Inherit US_FEDERAL_V0 values directly
         red_threshold = US_FEDERAL_V0.red_posterior_threshold
         yellow_threshold = US_FEDERAL_V0.yellow_posterior_threshold
