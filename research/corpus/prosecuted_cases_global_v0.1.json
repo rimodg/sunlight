@@ -2,9 +2,9 @@
   "corpus_version": "0.1",
   "corpus_name": "MJPIS Global Prosecuted Cases Corpus",
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
-  "last_updated": "2026-04-11",
+  "last_updated": "2026-04-12",
   "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF"],
-  "total_cases": 16,
+  "total_cases": 17,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -341,6 +341,27 @@
       "source_url": "https://www.sfo.gov.uk/",
       "source_document": "SFO v Sarclad Ltd (previously 'XYZ Limited') Approved Judgment (Leveson P), 2016-07-06; reporting restrictions lifted July 2019 after individual acquittals",
       "notes": "Second UK SFO Deferred Prosecution Agreement (previously designated 'XYZ Limited' under reporting restrictions until individual acquittals July 2019). Approved 6 July 2016 by Sir Brian Leveson PQBD. Sarclad Ltd, a Yorkshire-based steel technology products supplier (subsidiary of US-registered Heico Companies group), admitted to systematic use of bribes via third-party intermediaries to secure 28 contracts in Asian jurisdictions between June 2004 and June 2012. Total contract value GBP 17.24M. Penalty: GBP 6,553,085 total (GBP 6,201,085 disgorgement of gross profits + GBP 352,000 financial penalty, the maximum cash available without rendering Sarclad insolvent). GBP 1,953,085 paid by US parent Heico as repayment of dividends received from Sarclad during the indictment period. DPA term included annual compliance reporting to SFO on third-party intermediary transactions. DPA terms have been met and the DPA has concluded. Three former executives (Michael Sorby, Adrian Leek, David Justice) were acquitted by jury at Southwark Crown Court on 16 July 2019 — the third UK SFO DPA case where the corporate accepted liability via DPA but individuals were not convicted. Sir Brian Leveson described the bribery as 'prolific', 'systematic' and 'grave'. SFO statement of facts explicitly noted the SFO was 'not able to demonstrate whether the various Sarclad agents actually paid bribes to named or unknown individuals', hence bribery channel amount left null. Gross profit margin on implicated contracts: GBP 6.2M / GBP 17.24M = 35.96%, noted as contextual data but NOT tagged markup_based because this is gross profit margin on bribery-procured contracts, not a documented overstatement ratio comparable to DynCorp or Tesco's markup_based cases. No effect on MJPIS markup_floor_ratio derivation. 24 of 28 implicated contracts pre-dated the Bribery Act 2010; only 4 post-dated it, and in 2 of those the agreement to pay was concluded before 1 July 2011 when the Act came into force."
+    },
+    {
+      "case_id": "UK_SFO_Guralp_2019",
+      "jurisdiction": "UK_SFO",
+      "jurisdiction_type": "criminal_dpa",
+      "country_code": "GB",
+      "year": 2019,
+      "legal_basis": "Conspiracy to make corrupt payments (Criminal Law Act 1977 s.1); Failure to prevent bribery (Bribery Act 2010 s.7)",
+      "case_name": "Serious Fraud Office v. Guralp Systems Ltd",
+      "contract_value_usd": null,
+      "contract_value_local": 2000000,
+      "contract_currency": "GBP",
+      "settlement_amount_usd": 2700000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": 50.0,
+      "dimensional_tags": ["bribery_channel", "sustained_scheme", "self_reported", "no_financial_penalty"],
+      "evidentiary_standard": "criminal_beyond_reasonable_doubt",
+      "source_url": "https://www.gov.uk/sfo-cases/guralp-sytems-ltd",
+      "source_document": "SFO v Guralp Systems Ltd Approved Judgment, 2019-10-22; reporting restrictions lifted December 2019 after individual acquittals; DPA breach enforcement proceedings November 2024; High Court enforceability confirmation January 2026",
+      "notes": "Sixth UK SFO Deferred Prosecution Agreement, approved 22 October 2019 (not made public until individual acquittals December 2019). Guralp Systems Ltd, a UK seismological instrument manufacturer. Accepted charges of conspiracy to make corrupt payments and failure to prevent bribery in relation to payments to Dr. Heon-Cheol Chi, a public official at the Korea Institute of Geoscience and Mineral Resources (KIGAM), South Korea. Dr. Chi held various positions at KIGAM 2002-2015, agreed to recommend GSL's services and influence contract awards in exchange for corrupt payments. Total corrupt payments approximately GBP 1M over 12 years (2003-2015), in return for approximately GBP 2M worth of contracts. Approximate bribery channel ratio: GBP 1M / GBP 2M = 50%. Penalty: GBP 2,069,861 disgorgement of gross profits ONLY — no financial penalty element. First UK SFO DPA with no penalty, due to Guralp's impecunious financial circumstances (the court noted this does not set precedent). Three employees (Dr. Cansun Guralp founding director, Natalie Pearce, Andrew Bell) acquitted by jury at Southwark Crown Court December 2019 — fourth consecutive UK SFO DPA where individuals were not convicted. Dr. Chi was convicted in the US in July 2017 for money laundering the proceeds of bribes from GSL. Guralp self-reported to both SFO and US DOJ in October 2015; US DOJ issued declination letter August 2018 citing FCPA violations but ceding primacy to SFO. DPA BREACH alleged by SFO November 2024; High Court confirmed DPA enforceable January 2026 — this is a live enforcement case as of April 2026. Settlement amount USD is approximate historical conversion of GBP 2,069,861. Dimensional category: bribery_channel + sustained_scheme. NOT tagged markup_based — the 50% ratio is bribery-channel payments as a fraction of contract value, not a documented overstatement ratio, so it has no effect on MJPIS markup_floor_ratio derivation. The dimensional partition in derive_mjpis_parameters() correctly routes this case to the bribery_channel pool, which has no consumer rule yet (deferred past item 20 MVP)."
     }
   ]
 }
