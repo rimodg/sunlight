@@ -4,7 +4,7 @@
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
   "last_updated": "2026-04-12",
   "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF"],
-  "total_cases": 19,
+  "total_cases": 20,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -404,6 +404,27 @@
       "source_url": "https://www.justice.gov/archives/opa/pr/soci-t-g-n-rale-sa-agrees-pay-860-million-criminal-penalties-bribing-gaddafi-era-libyan",
       "source_document": "PNF CJIP Société Générale S.A., 2018-06-04; parallel US DOJ press release 2018-06-04 (EDNY)",
       "notes": "Third French PNF CJIP in the corpus. Signed and approved 4 June 2018 by Paris Tribunal de Grande Instance. Société Générale S.A. and wholly-owned subsidiary SGA Société Générale Acceptance N.V. Amount: EUR 250.15M (~USD 292.78M). Historic institutional significance: this was the FIRST-EVER coordinated resolution between US DOJ and French PNF in a foreign bribery case, establishing the tri-jurisdictional cooperation template that Airbus 2020 later scaled to include UK SFO. Underlying conduct 2004-2009: Société Générale paid over USD 90M to a Libyan intermediary ('broker') who then paid high-level Libyan officials to secure 13 investments and 1 restructuring for Société Générale from Libyan state-owned financial institutions including the Libyan Investment Authority (LIA), Libya's sovereign wealth fund. Total investment flow: approximately USD 3.66B. Total profits earned by Société Générale: approximately USD 523M. Intermediary commissions: 1.5% to 3% of each transaction nominal value. Bribery channel ratio: USD 90M / USD 3.66B = 2.46% of investment flow, or USD 90M / USD 523M = 17.2% of profit. Parallel US DOJ FCPA resolution on SAME underlying conduct: USD 585.55M FCPA total criminal penalty, with USD 292.78M credit for the PNF payment (50% offset). SGA Société Générale Acceptance N.V. pleaded guilty to one count conspiracy to violate FCPA anti-bribery provisions in EDNY before Chief Judge Dora L. Irizarry. Société Générale entered three-year DPA with DOJ. Additional LIBOR manipulation penalties: USD 275M DOJ + USD 475M CFTC for rigging the London InterBank Offered Rate between May 2010 and October 2011 — these are separate conduct from the Libya bribery scheme and not relevant to SUNLIGHT's procurement integrity scope. Per Airbus-established protocol, only the FR PNF side is entered in the corpus to avoid over-weighting one underlying event across multiple jurisdictions. The DOJ penalty is documented here for institutional context but is NOT a separate corpus entry. Cross-jurisdictional anchor dimensional tag marks this as a case where the same conduct produced parallel prosecutions in mature jurisdictions — exactly the structural precedent that validates the MJPIS intersection methodology."
+    },
+    {
+      "case_id": "FR_PNF_EgisAvia_2019",
+      "jurisdiction": "FR_PNF",
+      "jurisdiction_type": "cjip",
+      "country_code": "FR",
+      "year": 2019,
+      "legal_basis": "Corruption d'agent public etranger (bribery of foreign public official); Convention Judiciaire d'Interet Public (CJIP) under Sapin II law; Article 180-2 Code de procedure penale",
+      "case_name": "PNF v. SAS Egis Avia",
+      "contract_value_usd": null,
+      "contract_value_local": 4000000,
+      "contract_currency": "EUR",
+      "settlement_amount_usd": 2900000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": 9.75,
+      "dimensional_tags": ["bribery_channel", "sustained_scheme", "procurement_infrastructure", "airport_terminal", "shell_company_intermediary"],
+      "evidentiary_standard": "french_cjip_admission_of_facts",
+      "source_url": "https://www.agence-francaise-anticorruption.gouv.fr/files/files/Communiqu%C3%A9%20de%20presse%20PNF%20CJIP%20EGIS%20AVIA%2010%20d%C3%A9cembre%202019.pdf",
+      "source_document": "PNF CJIP SAS Egis Avia, 2019-12-10; Agence Française Anticorruption press release",
+      "notes": "Fourth French PNF CJIP in the corpus. Signed and approved 10 December 2019 by the president of the Paris Tribunal de Grande Instance under Article 180-2 of the French Code of Criminal Procedure (permitting CJIPs during the course of a judicial investigation, not only in preliminary investigations). SAS Egis Avia, a subsidiary of the Egis Group specializing in airport and air traffic services. Admitted bribery of foreign public official (corruption d'agent public etranger). Underlying procurement: EUR 4M contract signed in 2008 for the modernization and equipping of the Oran airport terminal (aerogare d'Oran) in Algeria. Mechanism: a EUR ~390,000 consultancy contract signed with a shell company domiciled in the British Virgin Islands (a French Non-Cooperative State or Territory designation) that was used to funnel payments to several Algerian intermediaries who influenced the contract award. Investigators identified multiple cash payments including EUR 12,000 to Amine Zerhouni, son of former Algerian Interior Minister Noureddine Yazid Zerhouni. Penalty calculation: EUR 1,681,345 disgorgement (margin expected from the disputed contract plus commissions paid to the shell intermediary) + EUR 918,655 additional penalty (reflecting seriousness of facts, delayed cooperation at earlier stages offset by active cooperation of new management). Total: EUR 2.6M (approximately USD 2.9M at December 2019 exchange rates). Investigation originally opened 11 October 2013 after the Direction Departementale des Finances Publiques des Hauts-de-Seine filed a complaint based on suspicious consultancy fee payments identified during an accounting review of Egis Avia. Aggravating factors: delayed cooperation in early stages, seriousness of facts involving systematic bribery over a public infrastructure procurement. Mitigating factors: age of the underlying conduct (2008 contract), active cooperation of new management who took over after the conduct. 9th CJIP overall in France since the Sapin II law introduction in 2016, 5th CJIP involving the PNF. Institutional relevance for SUNLIGHT: Egis Avia is the first procurement-infrastructure case in the FR PNF portion of the corpus. Airport terminal construction bribery in a North African country is directly structurally analogous to the development-finance procurement patterns that UNDP programs and World Bank INT investigate. The shell-company-intermediary mechanism (BVI consultancy contract used to launder bribes to host-country intermediaries) is the canonical procurement-bribery structure that SUNLIGHT's TCA engine is designed to detect through MISSING-node analysis on the stakeholder dependency graph. Bribery channel ratio: EUR 390,000 shell-company consultancy / EUR 4M contract = approximately 9.75%. NOT markup_based — this is classical bribery_channel. No effect on MJPIS markup_floor_ratio derivation."
     }
   ]
 }
