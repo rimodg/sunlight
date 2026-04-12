@@ -4,7 +4,7 @@
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
   "last_updated": "2026-04-12",
   "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF"],
-  "total_cases": 17,
+  "total_cases": 18,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -362,6 +362,27 @@
       "source_url": "https://www.gov.uk/sfo-cases/guralp-sytems-ltd",
       "source_document": "SFO v Guralp Systems Ltd Approved Judgment, 2019-10-22; reporting restrictions lifted December 2019 after individual acquittals; DPA breach enforcement proceedings November 2024; High Court enforceability confirmation January 2026",
       "notes": "Sixth UK SFO Deferred Prosecution Agreement, approved 22 October 2019 (not made public until individual acquittals December 2019). Guralp Systems Ltd, a UK seismological instrument manufacturer. Accepted charges of conspiracy to make corrupt payments and failure to prevent bribery in relation to payments to Dr. Heon-Cheol Chi, a public official at the Korea Institute of Geoscience and Mineral Resources (KIGAM), South Korea. Dr. Chi held various positions at KIGAM 2002-2015, agreed to recommend GSL's services and influence contract awards in exchange for corrupt payments. Total corrupt payments approximately GBP 1M over 12 years (2003-2015), in return for approximately GBP 2M worth of contracts. Approximate bribery channel ratio: GBP 1M / GBP 2M = 50%. Penalty: GBP 2,069,861 disgorgement of gross profits ONLY — no financial penalty element. First UK SFO DPA with no penalty, due to Guralp's impecunious financial circumstances (the court noted this does not set precedent). Three employees (Dr. Cansun Guralp founding director, Natalie Pearce, Andrew Bell) acquitted by jury at Southwark Crown Court December 2019 — fourth consecutive UK SFO DPA where individuals were not convicted. Dr. Chi was convicted in the US in July 2017 for money laundering the proceeds of bribes from GSL. Guralp self-reported to both SFO and US DOJ in October 2015; US DOJ issued declination letter August 2018 citing FCPA violations but ceding primacy to SFO. DPA BREACH alleged by SFO November 2024; High Court confirmed DPA enforceable January 2026 — this is a live enforcement case as of April 2026. Settlement amount USD is approximate historical conversion of GBP 2,069,861. Dimensional category: bribery_channel + sustained_scheme. NOT tagged markup_based — the 50% ratio is bribery-channel payments as a fraction of contract value, not a documented overstatement ratio, so it has no effect on MJPIS markup_floor_ratio derivation. The dimensional partition in derive_mjpis_parameters() correctly routes this case to the bribery_channel pool, which has no consumer rule yet (deferred past item 20 MVP)."
+    },
+    {
+      "case_id": "UK_SFO_Serco_2019",
+      "jurisdiction": "UK_SFO",
+      "jurisdiction_type": "criminal_dpa",
+      "country_code": "GB",
+      "year": 2019,
+      "legal_basis": "Fraud (3 counts, Fraud Act 2006); False accounting (2 counts, Theft Act 1968 s.17)",
+      "case_name": "Serious Fraud Office v. Serco Geografix Ltd",
+      "contract_value_usd": null,
+      "contract_value_local": null,
+      "contract_currency": "GBP",
+      "settlement_amount_usd": 29500000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": null,
+      "dimensional_tags": ["false_accounting", "government_contract_fraud", "self_reported"],
+      "evidentiary_standard": "criminal_beyond_reasonable_doubt",
+      "source_url": "https://www.judiciary.uk/wp-content/uploads/2019/07/serco-dpa-4.07.19.pdf",
+      "source_document": "SFO v Serco Geografix Ltd Approved Judgment (William Davis J), 2019-07-04",
+      "notes": "Fifth UK SFO Deferred Prosecution Agreement, approved 4 July 2019 by Mr Justice William Davis at Southwark Crown Court. Serco Geografix Ltd (SGL), a dormant wholly-owned subsidiary of Serco Group plc. SGL admitted three offences of fraud and two of false accounting arising from a scheme to dishonestly mislead the Ministry of Justice (MoJ) about the true extent of profits being made by parent company Serco Limited (SL) from electronic monitoring contracts between 2010 and 2013. SL's contracts with MoJ were based on a projected 14% profit margin; SL far exceeded this margin and SGL fabricated cost figures to prevent the MoJ from exercising its contractual right to an abatement of charges on unanticipated cost efficiencies. Penalty: GBP 19.2M financial penalty (50% discount from GBP 38.4M starting point for self-reporting and cooperation) + GBP 3.7M SFO costs = GBP 22.9M total (~USD 29.5M). Additionally, Serco paid GBP 12.8M compensation to MoJ as part of a GBP 70M civil settlement in 2013. Novel institutional feature: Serco Group plc (ultimate parent) provided formal undertaking guaranteeing SGL's performance under the DPA, because SGL was dormant — Mr Justice Davis noted that without these parent company undertakings 'it is very unlikely that the goals of a DPA could have been achieved.' Two former Serco directors were subsequently prosecuted but acquitted in April 2021 when the SFO failed to disclose key evidence — fifth consecutive UK SFO DPA where the corporate accepted liability but individuals were not convicted. The court described the conduct as having 'a serious impact on the integrity of the process whereby public functions are contracted out by HM Government.' NOT tagged markup_based because the underlying conduct is profit concealment through false cost reporting, not contract-price overstatement in the DynCorp/Tesco sense. NOT tagged bribery_channel because no bribes were paid to secure the contracts — the fraud was in the performance and reporting phase, not the award phase. No effect on MJPIS markup_floor_ratio derivation. Relevant to SUNLIGHT as institutional intelligence on government contract fraud patterns in the electronic monitoring sector."
     }
   ]
 }
