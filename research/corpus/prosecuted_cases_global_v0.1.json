@@ -4,7 +4,7 @@
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
   "last_updated": "2026-04-11",
   "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF"],
-  "total_cases": 15,
+  "total_cases": 16,
   "cases": [
     {
       "case_id": "US_v_Oracle_2011",
@@ -320,6 +320,27 @@
       "source_url": "https://www.judiciary.uk/wp-content/uploads/2019/01/sfo-v-tesco-stores-ltd-2017-approved-final.pdf",
       "source_document": "SFO v Tesco Stores Limited Approved Judgment (Leveson P), 2017-04-10; approved under reporting restrictions until January 2019; additional source: https://www.sfo.gov.uk/cases/tesco-plc/",
       "notes": "Fourth UK SFO Deferred Prosecution Agreement and the first UK SFO use of a false accounting DPA. Approved 10 April 2017 by Sir Brian Leveson PQBD at Southwark Crown Court. Tesco Stores Limited (subsidiary of Tesco PLC) admitted false accounting under Theft Act 1968 s.17 for the period February to September 2014, during which UK commercial income was unlawfully recognised in earlier accounting periods than those in which it was earned. The overstatement of expected profits was initially announced at GBP 250M on 22 September 2014, later revised upward to GBP 326M. Set against the underlying UK profit base of GBP 499M for the half-year period covered by the misstatement, the documented overstatement ratio is GBP 250M / GBP 499M = 0.501. Penalty breakdown: GBP 128,992,500 financial penalty plus approximately GBP 3M SFO costs, total approximately GBP 129M (~USD 162M historical at 2017 rates). DPA approved subject to reporting restrictions until January 2019, at which point the parallel prosecutions of three former Tesco executives (Carl Rogberg, Chris Bush, John Scouler) collapsed: Bush and Scouler's trial collapsed November 2018 with the trial judge ruling no case to answer (upheld by Court of Appeal December 2018), and the SFO offered no evidence against Rogberg in January 2019. Strategic importance for SUNLIGHT corpus: first UK SFO markup_based case with a clean documented markup ratio, and the load-bearing demonstration of the item 20 MVP architectural property committed at 04352a8. Tesco's 0.501 ratio (stored as markup_percentage=50.1 to match DynCorp's percent convention) is BELOW DynCorp 2005's 0.75 floor, which means when this case enters the corpus the MJPIS intersection methodology computes UK_SFO per-jurisdiction floor at 0.501, US_DOJ per-jurisdiction floor at 0.75, and intersection (minimum / strictest) at 0.501. The markup_floor_ratio field on the MJPIS-derived GlobalParameters instance tightens from 0.75 to 0.501 with zero code change at call sites. FIN-001 Check B threshold tightens correspondingly from award_ratio > 1.75 to award_ratio > 1.501 under any profile referencing mjpis_draft_v0. Contracts with award/tender inflation between 50% and 75% that previously did not trip Check B now do, and their evidence strings cite both DynCorp 2005 and Tesco 2017 as empirical anchors via the mjpis_v0.2 intersection methodology. The DOJ profile continues to use US_FEDERAL_V0 directly (markup_floor_ratio defaults to 0.75, derivation_metadata empty), so DOJ regression is byte-identical."
+    },
+    {
+      "case_id": "UK_SFO_Sarclad_2016",
+      "jurisdiction": "UK_SFO",
+      "jurisdiction_type": "criminal_dpa",
+      "country_code": "GB",
+      "year": 2016,
+      "legal_basis": "Conspiracy to corrupt (Prevention of Corruption Act 1906 s.1); Conspiracy to bribe (Bribery Act 2010 s.1); Failure to prevent bribery (Bribery Act 2010 s.7)",
+      "case_name": "Serious Fraud Office v. Sarclad Ltd",
+      "contract_value_usd": null,
+      "contract_value_local": 17240000,
+      "contract_currency": "GBP",
+      "settlement_amount_usd": 8400000,
+      "markup_percentage": null,
+      "bribery_channel_amount_usd": null,
+      "bribery_channel_percentage": null,
+      "dimensional_tags": ["bribery_channel", "sustained_scheme", "self_reported"],
+      "evidentiary_standard": "criminal_beyond_reasonable_doubt",
+      "source_url": "https://www.sfo.gov.uk/",
+      "source_document": "SFO v Sarclad Ltd (previously 'XYZ Limited') Approved Judgment (Leveson P), 2016-07-06; reporting restrictions lifted July 2019 after individual acquittals",
+      "notes": "Second UK SFO Deferred Prosecution Agreement (previously designated 'XYZ Limited' under reporting restrictions until individual acquittals July 2019). Approved 6 July 2016 by Sir Brian Leveson PQBD. Sarclad Ltd, a Yorkshire-based steel technology products supplier (subsidiary of US-registered Heico Companies group), admitted to systematic use of bribes via third-party intermediaries to secure 28 contracts in Asian jurisdictions between June 2004 and June 2012. Total contract value GBP 17.24M. Penalty: GBP 6,553,085 total (GBP 6,201,085 disgorgement of gross profits + GBP 352,000 financial penalty, the maximum cash available without rendering Sarclad insolvent). GBP 1,953,085 paid by US parent Heico as repayment of dividends received from Sarclad during the indictment period. DPA term included annual compliance reporting to SFO on third-party intermediary transactions. DPA terms have been met and the DPA has concluded. Three former executives (Michael Sorby, Adrian Leek, David Justice) were acquitted by jury at Southwark Crown Court on 16 July 2019 — the third UK SFO DPA case where the corporate accepted liability via DPA but individuals were not convicted. Sir Brian Leveson described the bribery as 'prolific', 'systematic' and 'grave'. SFO statement of facts explicitly noted the SFO was 'not able to demonstrate whether the various Sarclad agents actually paid bribes to named or unknown individuals', hence bribery channel amount left null. Gross profit margin on implicated contracts: GBP 6.2M / GBP 17.24M = 35.96%, noted as contextual data but NOT tagged markup_based because this is gross profit margin on bribery-procured contracts, not a documented overstatement ratio comparable to DynCorp or Tesco's markup_based cases. No effect on MJPIS markup_floor_ratio derivation. 24 of 28 implicated contracts pre-dated the Bribery Act 2010; only 4 post-dated it, and in 2 of those the agreement to pay was concluded before 1 July 2011 when the Act came into force."
     }
   ]
 }
