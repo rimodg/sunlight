@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 13, 2026
-**Current commit on main:** `39b5d65`
+**Current commit on main:** `8fe487c`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -87,14 +87,14 @@ Executed after the build is stable, before any public claims about the architect
 
 ## Phase E — Legal citations architecture hardening
 
-Items identified by the legal_citations depth audit (session of April 13, 2026). Recommendation 1 (hardcoded US statutes in CRI) shipped at commit `39b5d65`. Remaining items below.
+Items identified by the legal_citations depth audit (session of April 13, 2026). Recommendation 1 (hardcoded US statutes in CRI) shipped at commit `39b5d65`. Recommendation 6 (universal_citations expansion) shipped at commit `8fe487c`. Remaining items 30-33 below.
 
 - [x] **29. Audit recommendation 1 — Decouple CRI legal citations from hardcoded US statutes.** Add `false_claims_law`, `false_records_law`, `anti_kickback_law`, `extreme_markup_precedent` keys to `legal_citations` on `JurisdictionProfile`. Modify `ProsecutorEvidencePackage._determine_tier()` to read from profile instead of hardcoding. Shipped at commit `39b5d65`. DOJ regression byte-identical.
 - [ ] **30. Audit recommendation 2 — Retire dead `competition_law` key.** `competition_law` is defined on both profiles but consumed by zero rules. Either delete it from both profiles or wire it into the appropriate rule (ENT-001 or a new rule). Estimate: 30 minutes.
 - [ ] **31. Audit recommendation 3 — Deepen existing profiles.** Expand `legal_citations` on US_FEDERAL and UK_CENTRAL_GOVERNMENT with additional framework categories (e.g., `bid_rigging_law`, `debarment_authority`, `whistleblower_statute`). Add at least 3-4 more keys per profile to match the depth of the procurement legal landscape each jurisdiction represents. Estimate: 2-3 hours.
 - [ ] **32. Audit recommendation 4 — Create WB_INT jurisdiction profile.** New `JurisdictionProfile` for World Bank INT: World Bank Procurement Regulations, Sanctions Board procedures, "more likely than not" evidentiary standard, IDA/IBRD debarment authority. Requires defining appropriate legal_citations keys for MDB administrative-sanctionable context. Estimate: 3-4 hours.
 - [ ] **33. Audit recommendation 5 — Create FRANCE_PNF jurisdiction profile.** New `JurisdictionProfile` for French PNF/CJIP context: Code pénal art. 433-1, Loi Sapin II, CJIP evidentiary standard (admission of facts), AFA oversight. Estimate: 3-4 hours.
-- [ ] **34. Audit recommendation 6 — Trim dead `universal_citations` entries.** Items 3-4 in `universal_citations` (`OECD Public Procurement Principles`, `World Bank Procurement Framework`) are never consumed by any rule. Either wire them into rules or remove them to prevent false expectations about citation coverage. Estimate: 30 minutes.
+- [x] **34. Audit recommendation 6 — Expand universal_citations to full UNCAC + OECD coverage.** Replaced the 4-item default with a 9-item ordered list covering UNCAC Art. 9(1), 9(2), 12, 15, 16, 17, 18, OECD Anti-Bribery Convention 1997, and OECD Recommendation on Public Procurement 2015. Removed institution-specific dead items (UNDP POPP, OECD Public Procurement Principles, World Bank Procurement Framework) — these belong in per-jurisdiction `legal_citations`, not in universal layer. Removed `[:2]` slice in PROC-001 so the full list propagates. 12 new regression tests. Shipped at commit `8fe487c`. DOJ regression byte-identical.
 
 ---
 
