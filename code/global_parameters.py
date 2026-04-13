@@ -59,7 +59,7 @@ Schema Version: GP-2026-04-001
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # ═══════════════════════════════════════════════════════════════════════════
 # GLOBAL PARAMETERS DATACLASS
@@ -172,6 +172,15 @@ class GlobalParameters:
     # threshold alongside the local legal tolerance (max_award_inflation_pct).
     # A rule fires if EITHER the local threshold OR the MJPIS empirical
     # threshold is crossed.
+
+    bribery_channel_ratio: Optional[float] = None
+    # MJPIS-derived empirical bribery-channel floor, expressed as a ratio of
+    # (bribe payments / contract value). None when not derived. When populated,
+    # represents the minimum ratio that any mature jurisdiction in the corpus
+    # has prosecuted as a bribery-channel case — the threshold above which
+    # SUNLIGHT treats the ratio as structurally significant. No TCA rule
+    # consumes this parameter yet; pure additive scaffolding for future
+    # bribery-channel dimension rule work.
 
     derivation_metadata: dict = field(default_factory=dict)
     # Provenance trail for MJPIS-derived fields. Populated by

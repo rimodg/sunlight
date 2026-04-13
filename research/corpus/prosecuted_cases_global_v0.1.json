@@ -3,7 +3,12 @@
   "corpus_name": "MJPIS Global Prosecuted Cases Corpus",
   "description": "Multi-jurisdiction prosecuted procurement fraud cases used for Multi-Jurisdiction Procurement Integrity Standard (MJPIS) threshold derivation. v0.1 seeded with US DOJ cases only; expanded to UK SFO, French PNF, and World Bank INT in later research phases.",
   "last_updated": "2026-04-13",
-  "jurisdictions_included": ["US_DOJ", "UK_SFO", "FR_PNF", "WB_INT"],
+  "jurisdictions_included": [
+    "US_DOJ",
+    "UK_SFO",
+    "FR_PNF",
+    "WB_INT"
+  ],
   "total_cases": 32,
   "cases": [
     {
@@ -21,7 +26,9 @@
       "markup_percentage": 350.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/opa/pr/oracle-corp-pay-us-2-million-resolve-false-claims-act-allegations",
       "source_document": "DOJ Press Release, 2011-08-01",
@@ -42,7 +49,9 @@
       "markup_percentage": 450.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/archive/opa/pr/2006/May/06_civ_322.html",
       "source_document": "DOJ Press Release, 2006-05-31",
@@ -63,7 +72,9 @@
       "markup_percentage": 75.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/archive/opa/pr/2005/March/05_civ_132.htm",
       "source_document": "DOJ Press Release, 2005-03-15",
@@ -84,7 +95,9 @@
       "markup_percentage": 265.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/opa/pr/united-technologies-agrees-pay-us-755-million-resolve-claims-it-violated-false-claims-act",
       "source_document": "DOJ Press Release, 2015-07-02",
@@ -105,7 +118,9 @@
       "markup_percentage": 303.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/opa/pr/lockheed-martin-agrees-pay-158-million-resolve-false-claims-act-allegations",
       "source_document": "DOJ Press Release, 2012-12-20",
@@ -126,7 +141,9 @@
       "markup_percentage": 181.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/archive/opa/pr/2009/June/09-civ-615.html",
       "source_document": "DOJ Press Release, 2009-06-25",
@@ -147,7 +164,9 @@
       "markup_percentage": 230.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/opa/pr/caci-international-inc-agrees-pay-35-million-settle-false-claims-act-allegations",
       "source_document": "DOJ Press Release, 2010-11-17",
@@ -168,7 +187,9 @@
       "markup_percentage": 154.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/opa/pr/raytheon-company-agrees-pay-91-million-settle-false-claims-act-allegations",
       "source_document": "DOJ Press Release, 2014-04-30",
@@ -189,7 +210,9 @@
       "markup_percentage": 190.0,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based"],
+      "dimensional_tags": [
+        "markup_based"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.justice.gov/opa/pr/bae-systems-pay-400-million-resolve-false-claims-act-allegations",
       "source_document": "DOJ Press Release, 2010-03-01",
@@ -210,7 +233,11 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["bribery_channel", "multi_jurisdiction_settlement", "sustained_scheme"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "multi_jurisdiction_settlement",
+        "sustained_scheme"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.judiciary.uk/wp-content/uploads/2017/01/sfo-v-rolls-royce.pdf",
       "source_document": "SFO v Rolls-Royce plc Approved Judgment (Leveson P), 2017-01-17; indictment U20170036; additional source: https://assets.publishing.service.gov.uk/media/67c061c4b0bb6528ee866bc3/SFO-Rolls-Royce_DPA_Details_of_Compliance.pdf",
@@ -231,7 +258,12 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["bribery_channel", "multi_jurisdiction_settlement", "sustained_scheme", "failure_to_prevent"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "multi_jurisdiction_settlement",
+        "sustained_scheme",
+        "failure_to_prevent"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.sfo.gov.uk/cases/airbus-se/",
       "source_document": "SFO v Airbus SE Approved Judgment (Dame Victoria Sharp PQBD), 2020-01-31; UK SFO DPA resolution, 5 counts s.7 Bribery Act 2010; additional source: https://www.judiciary.uk/wp-content/uploads/2020/01/Approved-Judgment-SFO-v-Airbus.pdf",
@@ -252,7 +284,11 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["bribery_channel", "multi_jurisdiction_settlement", "sustained_scheme"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "multi_jurisdiction_settlement",
+        "sustained_scheme"
+      ],
       "evidentiary_standard": "french_cjip_admission_of_facts",
       "source_url": "https://www.agence-francaise-anticorruption.gouv.fr/",
       "source_document": "PNF CJIP Airbus SE, approved 2020-01-31; CJIP amount EUR 2,083,137,455; published on Agence Francaise Anticorruption (AFA) platform",
@@ -273,11 +309,17 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": 6000000,
       "bribery_channel_percentage": 1.0,
-      "dimensional_tags": ["bribery_channel", "failure_to_prevent", "self_reported", "template_case"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "failure_to_prevent",
+        "self_reported",
+        "template_case"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.sfo.gov.uk/cases/standard-bank-plc/",
       "source_document": "SFO v Standard Bank Plc Approved Judgment (Leveson P), 2015-11-30; first UK SFO Deferred Prosecution Agreement; additional source: https://www.judiciary.uk/wp-content/uploads/2015/11/sfo-v-standard-bank_Final_1.pdf",
-      "notes": "First UK SFO DPA ever approved and first successful use of Bribery Act 2010 s.7 failure-to-prevent-bribery offence — the 'double first.' Approved 30 November 2015 by Sir Brian Leveson PQBD at Southwark Crown Court. Standard Bank Plc (now ICBC Standard Bank) held mandate to raise USD 600M sovereign note private placement for Government of Tanzania. Tanzanian subsidiary Stanbic Bank Tanzania paid USD 6M to EGMA (Enterprise Growth Market Advisors), a Tanzanian consultancy whose directors included the serving Commissioner of the Tanzania Revenue Authority (Harry Kitilya) and the former CEO of the Tanzanian Capital Markets and Securities Authority (Dr Fratern Mboya). EGMA provided no substantive service; the USD 6M was withdrawn in cash over 10 days. Penalty breakdown: USD 16.8M financial penalty to SFO + USD 8.4M disgorgement of profits + USD 6M compensation to Government of Tanzania + ~USD 1.05M interest + GBP 330K (~USD 496K) SFO costs + PwC independent compliance monitor at Standard Bank expense. Total approximately USD 32.7M. Standard Bank self-reported to SFO within 4 weeks of internal investigation commencement, which was material to Sir Brian Leveson's approval. Bribery Act 2010 s.7 template case for all subsequent UK DPAs. Bribery-channel dimensional anchor for MJPIS: documented channel amount USD 6M, underlying contract value USD 600M, channel ratio 1.0%. First corpus case where both bribery channel amount and underlying contract value are public and explicit, making this the bribery-channel dimensional anchor that Rolls-Royce and Airbus cannot provide (those cases are sustained-scheme with no per-transaction channel itemization in the public record)."
+      "notes": "First UK SFO DPA ever approved and first successful use of Bribery Act 2010 s.7 failure-to-prevent-bribery offence — the 'double first.' Approved 30 November 2015 by Sir Brian Leveson PQBD at Southwark Crown Court. Standard Bank Plc (now ICBC Standard Bank) held mandate to raise USD 600M sovereign note private placement for Government of Tanzania. Tanzanian subsidiary Stanbic Bank Tanzania paid USD 6M to EGMA (Enterprise Growth Market Advisors), a Tanzanian consultancy whose directors included the serving Commissioner of the Tanzania Revenue Authority (Harry Kitilya) and the former CEO of the Tanzanian Capital Markets and Securities Authority (Dr Fratern Mboya). EGMA provided no substantive service; the USD 6M was withdrawn in cash over 10 days. Penalty breakdown: USD 16.8M financial penalty to SFO + USD 8.4M disgorgement of profits + USD 6M compensation to Government of Tanzania + ~USD 1.05M interest + GBP 330K (~USD 496K) SFO costs + PwC independent compliance monitor at Standard Bank expense. Total approximately USD 32.7M. Standard Bank self-reported to SFO within 4 weeks of internal investigation commencement, which was material to Sir Brian Leveson's approval. Bribery Act 2010 s.7 template case for all subsequent UK DPAs. Bribery-channel dimensional anchor for MJPIS: documented channel amount USD 6M, underlying contract value USD 600M, channel ratio 1.0%. First corpus case where both bribery channel amount and underlying contract value are public and explicit, making this the bribery-channel dimensional anchor that Rolls-Royce and Airbus cannot provide (those cases are sustained-scheme with no per-transaction channel itemization in the public record).",
+      "bribery_channel_ratio": 0.01
     },
     {
       "case_id": "FR_PNF_Bollore_2021",
@@ -294,7 +336,12 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["bribery_channel", "procurement_concession", "political_campaign_services_in_exchange", "africa_infrastructure"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "procurement_concession",
+        "political_campaign_services_in_exchange",
+        "africa_infrastructure"
+      ],
       "evidentiary_standard": "french_cjip_admission_of_facts",
       "source_url": "https://www.agence-francaise-anticorruption.gouv.fr/fr/cjip-bollore-financiere-odet",
       "source_document": "PNF CJIP Bollore SE and Financiere de l'Odet SE, CJIP signed 2021-02-09, corporate CJIP approved 2021-02-26 by Paris Tribunal Judiciaire (Judge Isabelle Prevost-Desprez); total penalty EUR 12,000,000 (~USD 14.5M historical); additional source: https://www.asso-sherpa.org/corruption-in-togo-french-supreme-court-rejected-annulation-of-proceedings-requested-by-vincent-bollore-and-others",
@@ -315,7 +362,12 @@
       "markup_percentage": 50.1,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["markup_based", "self_reported", "false_accounting", "first_uk_false_accounting_dpa"],
+      "dimensional_tags": [
+        "markup_based",
+        "self_reported",
+        "false_accounting",
+        "first_uk_false_accounting_dpa"
+      ],
       "evidentiary_standard": "beyond_reasonable_doubt",
       "source_url": "https://www.judiciary.uk/wp-content/uploads/2019/01/sfo-v-tesco-stores-ltd-2017-approved-final.pdf",
       "source_document": "SFO v Tesco Stores Limited Approved Judgment (Leveson P), 2017-04-10; approved under reporting restrictions until January 2019; additional source: https://www.sfo.gov.uk/cases/tesco-plc/",
@@ -336,7 +388,11 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["bribery_channel", "sustained_scheme", "self_reported"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "sustained_scheme",
+        "self_reported"
+      ],
       "evidentiary_standard": "criminal_beyond_reasonable_doubt",
       "source_url": "https://www.sfo.gov.uk/",
       "source_document": "SFO v Sarclad Ltd (previously 'XYZ Limited') Approved Judgment (Leveson P), 2016-07-06; reporting restrictions lifted July 2019 after individual acquittals",
@@ -357,11 +413,17 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": 50.0,
-      "dimensional_tags": ["bribery_channel", "sustained_scheme", "self_reported", "no_financial_penalty"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "sustained_scheme",
+        "self_reported",
+        "no_financial_penalty"
+      ],
       "evidentiary_standard": "criminal_beyond_reasonable_doubt",
       "source_url": "https://www.gov.uk/sfo-cases/guralp-sytems-ltd",
       "source_document": "SFO v Guralp Systems Ltd Approved Judgment, 2019-10-22; reporting restrictions lifted December 2019 after individual acquittals; DPA breach enforcement proceedings November 2024; High Court enforceability confirmation January 2026",
-      "notes": "Sixth UK SFO Deferred Prosecution Agreement, approved 22 October 2019 (not made public until individual acquittals December 2019). Guralp Systems Ltd, a UK seismological instrument manufacturer. Accepted charges of conspiracy to make corrupt payments and failure to prevent bribery in relation to payments to Dr. Heon-Cheol Chi, a public official at the Korea Institute of Geoscience and Mineral Resources (KIGAM), South Korea. Dr. Chi held various positions at KIGAM 2002-2015, agreed to recommend GSL's services and influence contract awards in exchange for corrupt payments. Total corrupt payments approximately GBP 1M over 12 years (2003-2015), in return for approximately GBP 2M worth of contracts. Approximate bribery channel ratio: GBP 1M / GBP 2M = 50%. Penalty: GBP 2,069,861 disgorgement of gross profits ONLY — no financial penalty element. First UK SFO DPA with no penalty, due to Guralp's impecunious financial circumstances (the court noted this does not set precedent). Three employees (Dr. Cansun Guralp founding director, Natalie Pearce, Andrew Bell) acquitted by jury at Southwark Crown Court December 2019 — fourth consecutive UK SFO DPA where individuals were not convicted. Dr. Chi was convicted in the US in July 2017 for money laundering the proceeds of bribes from GSL. Guralp self-reported to both SFO and US DOJ in October 2015; US DOJ issued declination letter August 2018 citing FCPA violations but ceding primacy to SFO. DPA BREACH alleged by SFO November 2024; High Court confirmed DPA enforceable January 2026 — this is a live enforcement case as of April 2026. Settlement amount USD is approximate historical conversion of GBP 2,069,861. Dimensional category: bribery_channel + sustained_scheme. NOT tagged markup_based — the 50% ratio is bribery-channel payments as a fraction of contract value, not a documented overstatement ratio, so it has no effect on MJPIS markup_floor_ratio derivation. The dimensional partition in derive_mjpis_parameters() correctly routes this case to the bribery_channel pool, which has no consumer rule yet (deferred past item 20 MVP)."
+      "notes": "Sixth UK SFO Deferred Prosecution Agreement, approved 22 October 2019 (not made public until individual acquittals December 2019). Guralp Systems Ltd, a UK seismological instrument manufacturer. Accepted charges of conspiracy to make corrupt payments and failure to prevent bribery in relation to payments to Dr. Heon-Cheol Chi, a public official at the Korea Institute of Geoscience and Mineral Resources (KIGAM), South Korea. Dr. Chi held various positions at KIGAM 2002-2015, agreed to recommend GSL's services and influence contract awards in exchange for corrupt payments. Total corrupt payments approximately GBP 1M over 12 years (2003-2015), in return for approximately GBP 2M worth of contracts. Approximate bribery channel ratio: GBP 1M / GBP 2M = 50%. Penalty: GBP 2,069,861 disgorgement of gross profits ONLY — no financial penalty element. First UK SFO DPA with no penalty, due to Guralp's impecunious financial circumstances (the court noted this does not set precedent). Three employees (Dr. Cansun Guralp founding director, Natalie Pearce, Andrew Bell) acquitted by jury at Southwark Crown Court December 2019 — fourth consecutive UK SFO DPA where individuals were not convicted. Dr. Chi was convicted in the US in July 2017 for money laundering the proceeds of bribes from GSL. Guralp self-reported to both SFO and US DOJ in October 2015; US DOJ issued declination letter August 2018 citing FCPA violations but ceding primacy to SFO. DPA BREACH alleged by SFO November 2024; High Court confirmed DPA enforceable January 2026 — this is a live enforcement case as of April 2026. Settlement amount USD is approximate historical conversion of GBP 2,069,861. Dimensional category: bribery_channel + sustained_scheme. NOT tagged markup_based — the 50% ratio is bribery-channel payments as a fraction of contract value, not a documented overstatement ratio, so it has no effect on MJPIS markup_floor_ratio derivation. The dimensional partition in derive_mjpis_parameters() correctly routes this case to the bribery_channel pool, which has no consumer rule yet (deferred past item 20 MVP).",
+      "bribery_channel_ratio": 0.5
     },
     {
       "case_id": "UK_SFO_Serco_2019",
@@ -378,7 +440,11 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["false_accounting", "government_contract_fraud", "self_reported"],
+      "dimensional_tags": [
+        "false_accounting",
+        "government_contract_fraud",
+        "self_reported"
+      ],
       "evidentiary_standard": "criminal_beyond_reasonable_doubt",
       "source_url": "https://www.judiciary.uk/wp-content/uploads/2019/07/serco-dpa-4.07.19.pdf",
       "source_document": "SFO v Serco Geografix Ltd Approved Judgment (William Davis J), 2019-07-04",
@@ -399,11 +465,18 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": 90000000,
       "bribery_channel_percentage": 2.46,
-      "dimensional_tags": ["bribery_channel", "sustained_scheme", "multi_jurisdiction_settlement", "cross_jurisdictional_anchor", "sovereign_wealth_fund"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "sustained_scheme",
+        "multi_jurisdiction_settlement",
+        "cross_jurisdictional_anchor",
+        "sovereign_wealth_fund"
+      ],
       "evidentiary_standard": "french_cjip_admission_of_facts",
       "source_url": "https://www.justice.gov/archives/opa/pr/soci-t-g-n-rale-sa-agrees-pay-860-million-criminal-penalties-bribing-gaddafi-era-libyan",
       "source_document": "PNF CJIP Société Générale S.A., 2018-06-04; parallel US DOJ press release 2018-06-04 (EDNY)",
-      "notes": "Third French PNF CJIP in the corpus. Signed and approved 4 June 2018 by Paris Tribunal de Grande Instance. Société Générale S.A. and wholly-owned subsidiary SGA Société Générale Acceptance N.V. Amount: EUR 250.15M (~USD 292.78M). Historic institutional significance: this was the FIRST-EVER coordinated resolution between US DOJ and French PNF in a foreign bribery case, establishing the tri-jurisdictional cooperation template that Airbus 2020 later scaled to include UK SFO. Underlying conduct 2004-2009: Société Générale paid over USD 90M to a Libyan intermediary ('broker') who then paid high-level Libyan officials to secure 13 investments and 1 restructuring for Société Générale from Libyan state-owned financial institutions including the Libyan Investment Authority (LIA), Libya's sovereign wealth fund. Total investment flow: approximately USD 3.66B. Total profits earned by Société Générale: approximately USD 523M. Intermediary commissions: 1.5% to 3% of each transaction nominal value. Bribery channel ratio: USD 90M / USD 3.66B = 2.46% of investment flow, or USD 90M / USD 523M = 17.2% of profit. Parallel US DOJ FCPA resolution on SAME underlying conduct: USD 585.55M FCPA total criminal penalty, with USD 292.78M credit for the PNF payment (50% offset). SGA Société Générale Acceptance N.V. pleaded guilty to one count conspiracy to violate FCPA anti-bribery provisions in EDNY before Chief Judge Dora L. Irizarry. Société Générale entered three-year DPA with DOJ. Additional LIBOR manipulation penalties: USD 275M DOJ + USD 475M CFTC for rigging the London InterBank Offered Rate between May 2010 and October 2011 — these are separate conduct from the Libya bribery scheme and not relevant to SUNLIGHT's procurement integrity scope. Per Airbus-established protocol, only the FR PNF side is entered in the corpus to avoid over-weighting one underlying event across multiple jurisdictions. The DOJ penalty is documented here for institutional context but is NOT a separate corpus entry. Cross-jurisdictional anchor dimensional tag marks this as a case where the same conduct produced parallel prosecutions in mature jurisdictions — exactly the structural precedent that validates the MJPIS intersection methodology."
+      "notes": "Third French PNF CJIP in the corpus. Signed and approved 4 June 2018 by Paris Tribunal de Grande Instance. Société Générale S.A. and wholly-owned subsidiary SGA Société Générale Acceptance N.V. Amount: EUR 250.15M (~USD 292.78M). Historic institutional significance: this was the FIRST-EVER coordinated resolution between US DOJ and French PNF in a foreign bribery case, establishing the tri-jurisdictional cooperation template that Airbus 2020 later scaled to include UK SFO. Underlying conduct 2004-2009: Société Générale paid over USD 90M to a Libyan intermediary ('broker') who then paid high-level Libyan officials to secure 13 investments and 1 restructuring for Société Générale from Libyan state-owned financial institutions including the Libyan Investment Authority (LIA), Libya's sovereign wealth fund. Total investment flow: approximately USD 3.66B. Total profits earned by Société Générale: approximately USD 523M. Intermediary commissions: 1.5% to 3% of each transaction nominal value. Bribery channel ratio: USD 90M / USD 3.66B = 2.46% of investment flow, or USD 90M / USD 523M = 17.2% of profit. Parallel US DOJ FCPA resolution on SAME underlying conduct: USD 585.55M FCPA total criminal penalty, with USD 292.78M credit for the PNF payment (50% offset). SGA Société Générale Acceptance N.V. pleaded guilty to one count conspiracy to violate FCPA anti-bribery provisions in EDNY before Chief Judge Dora L. Irizarry. Société Générale entered three-year DPA with DOJ. Additional LIBOR manipulation penalties: USD 275M DOJ + USD 475M CFTC for rigging the London InterBank Offered Rate between May 2010 and October 2011 — these are separate conduct from the Libya bribery scheme and not relevant to SUNLIGHT's procurement integrity scope. Per Airbus-established protocol, only the FR PNF side is entered in the corpus to avoid over-weighting one underlying event across multiple jurisdictions. The DOJ penalty is documented here for institutional context but is NOT a separate corpus entry. Cross-jurisdictional anchor dimensional tag marks this as a case where the same conduct produced parallel prosecutions in mature jurisdictions — exactly the structural precedent that validates the MJPIS intersection methodology.",
+      "bribery_channel_ratio": 0.0246
     },
     {
       "case_id": "FR_PNF_EgisAvia_2019",
@@ -420,11 +493,18 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": 9.75,
-      "dimensional_tags": ["bribery_channel", "sustained_scheme", "procurement_infrastructure", "airport_terminal", "shell_company_intermediary"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "sustained_scheme",
+        "procurement_infrastructure",
+        "airport_terminal",
+        "shell_company_intermediary"
+      ],
       "evidentiary_standard": "french_cjip_admission_of_facts",
       "source_url": "https://www.agence-francaise-anticorruption.gouv.fr/files/files/Communiqu%C3%A9%20de%20presse%20PNF%20CJIP%20EGIS%20AVIA%2010%20d%C3%A9cembre%202019.pdf",
       "source_document": "PNF CJIP SAS Egis Avia, 2019-12-10; Agence Française Anticorruption press release",
-      "notes": "Fourth French PNF CJIP in the corpus. Signed and approved 10 December 2019 by the president of the Paris Tribunal de Grande Instance under Article 180-2 of the French Code of Criminal Procedure (permitting CJIPs during the course of a judicial investigation, not only in preliminary investigations). SAS Egis Avia, a subsidiary of the Egis Group specializing in airport and air traffic services. Admitted bribery of foreign public official (corruption d'agent public etranger). Underlying procurement: EUR 4M contract signed in 2008 for the modernization and equipping of the Oran airport terminal (aerogare d'Oran) in Algeria. Mechanism: a EUR ~390,000 consultancy contract signed with a shell company domiciled in the British Virgin Islands (a French Non-Cooperative State or Territory designation) that was used to funnel payments to several Algerian intermediaries who influenced the contract award. Investigators identified multiple cash payments including EUR 12,000 to Amine Zerhouni, son of former Algerian Interior Minister Noureddine Yazid Zerhouni. Penalty calculation: EUR 1,681,345 disgorgement (margin expected from the disputed contract plus commissions paid to the shell intermediary) + EUR 918,655 additional penalty (reflecting seriousness of facts, delayed cooperation at earlier stages offset by active cooperation of new management). Total: EUR 2.6M (approximately USD 2.9M at December 2019 exchange rates). Investigation originally opened 11 October 2013 after the Direction Departementale des Finances Publiques des Hauts-de-Seine filed a complaint based on suspicious consultancy fee payments identified during an accounting review of Egis Avia. Aggravating factors: delayed cooperation in early stages, seriousness of facts involving systematic bribery over a public infrastructure procurement. Mitigating factors: age of the underlying conduct (2008 contract), active cooperation of new management who took over after the conduct. 9th CJIP overall in France since the Sapin II law introduction in 2016, 5th CJIP involving the PNF. Institutional relevance for SUNLIGHT: Egis Avia is the first procurement-infrastructure case in the FR PNF portion of the corpus. Airport terminal construction bribery in a North African country is directly structurally analogous to the development-finance procurement patterns that UNDP programs and World Bank INT investigate. The shell-company-intermediary mechanism (BVI consultancy contract used to launder bribes to host-country intermediaries) is the canonical procurement-bribery structure that SUNLIGHT's TCA engine is designed to detect through MISSING-node analysis on the stakeholder dependency graph. Bribery channel ratio: EUR 390,000 shell-company consultancy / EUR 4M contract = approximately 9.75%. NOT markup_based — this is classical bribery_channel. No effect on MJPIS markup_floor_ratio derivation."
+      "notes": "Fourth French PNF CJIP in the corpus. Signed and approved 10 December 2019 by the president of the Paris Tribunal de Grande Instance under Article 180-2 of the French Code of Criminal Procedure (permitting CJIPs during the course of a judicial investigation, not only in preliminary investigations). SAS Egis Avia, a subsidiary of the Egis Group specializing in airport and air traffic services. Admitted bribery of foreign public official (corruption d'agent public etranger). Underlying procurement: EUR 4M contract signed in 2008 for the modernization and equipping of the Oran airport terminal (aerogare d'Oran) in Algeria. Mechanism: a EUR ~390,000 consultancy contract signed with a shell company domiciled in the British Virgin Islands (a French Non-Cooperative State or Territory designation) that was used to funnel payments to several Algerian intermediaries who influenced the contract award. Investigators identified multiple cash payments including EUR 12,000 to Amine Zerhouni, son of former Algerian Interior Minister Noureddine Yazid Zerhouni. Penalty calculation: EUR 1,681,345 disgorgement (margin expected from the disputed contract plus commissions paid to the shell intermediary) + EUR 918,655 additional penalty (reflecting seriousness of facts, delayed cooperation at earlier stages offset by active cooperation of new management). Total: EUR 2.6M (approximately USD 2.9M at December 2019 exchange rates). Investigation originally opened 11 October 2013 after the Direction Departementale des Finances Publiques des Hauts-de-Seine filed a complaint based on suspicious consultancy fee payments identified during an accounting review of Egis Avia. Aggravating factors: delayed cooperation in early stages, seriousness of facts involving systematic bribery over a public infrastructure procurement. Mitigating factors: age of the underlying conduct (2008 contract), active cooperation of new management who took over after the conduct. 9th CJIP overall in France since the Sapin II law introduction in 2016, 5th CJIP involving the PNF. Institutional relevance for SUNLIGHT: Egis Avia is the first procurement-infrastructure case in the FR PNF portion of the corpus. Airport terminal construction bribery in a North African country is directly structurally analogous to the development-finance procurement patterns that UNDP programs and World Bank INT investigate. The shell-company-intermediary mechanism (BVI consultancy contract used to launder bribes to host-country intermediaries) is the canonical procurement-bribery structure that SUNLIGHT's TCA engine is designed to detect through MISSING-node analysis on the stakeholder dependency graph. Bribery channel ratio: EUR 390,000 shell-company consultancy / EUR 4M contract = approximately 9.75%. NOT markup_based — this is classical bribery_channel. No effect on MJPIS markup_floor_ratio derivation.",
+      "bribery_channel_ratio": 0.0975
     },
     {
       "case_id": "UK_SFO_AmecFosterWheeler_2021",
@@ -441,11 +521,20 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": 1100000,
       "bribery_channel_percentage": 0.58,
-      "dimensional_tags": ["bribery_channel", "sustained_scheme", "third_party_agent_channel", "multi_country_conduct", "oil_and_gas_sector", "cross_jurisdictional_anchor", "unaoil_related"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "sustained_scheme",
+        "third_party_agent_channel",
+        "multi_country_conduct",
+        "oil_and_gas_sector",
+        "cross_jurisdictional_anchor",
+        "unaoil_related"
+      ],
       "evidentiary_standard": "criminal_beyond_reasonable_doubt",
       "source_url": "https://www.sfo.gov.uk/cases/amec-foster-wheeler-energy-limited/",
       "source_document": "SFO v Amec Foster Wheeler Energy Limited Approved Judgment (HHJ Beddoe), 2021-07-01; SFO press release 2021-07-02; parallel DOJ press release 2021-06-25",
-      "notes": "Tenth UK SFO Deferred Prosecution Agreement, approved 1 July 2021 by HHJ Beddoe at Southwark Crown Court — deliberately timed to the 10th anniversary of the UK Bribery Act 2010 coming into force. Amec Foster Wheeler Energy Limited (AFWEL), now wholly-owned by John Wood Group PLC following the 2017 acquisition. AFWEL took responsibility for 10 offences: 9 counts of conspiracy to make corrupt payments, and 1 count of failure to prevent bribery under section 7 of the Bribery Act 2010. Underlying conduct spanned five jurisdictions over nearly 20 years (1996-2014): Nigeria, Saudi Arabia, Malaysia, India, and Brazil, all in the oil and gas sector, involving the use of corrupt third-party agents and intermediaries by the legacy Foster Wheeler business before its acquisition by Amec. UK penalty: GBP 103M total (financial penalty plus disgorgement plus costs). Parallel resolutions: DOJ three-year DPA plus SEC cease-and-desist order totaling USD 41M (reduced to approximately USD 18M direct payment after crediting UK and Brazil portions); Brazilian leniency agreements with Ministerio Publico Federal (MPF), Controladoria-Geral da Uniao (CGU), and Advocacia-Geral da Uniao (AGU). Global settlement total: approximately USD 177M (~GBP 130M+). Best-documented specific conduct is the Brazil subset: between 2011 and 2014, AFWEL conspired with an Italian sales agent affiliated with the Monaco-based intermediary (later identified in parallel proceedings as Unaoil) to pay approximately USD 1.1M in bribes to decision-makers at Petroleo Brasileiro S.A. (Petrobras) in exchange for a USD 190M contract to design the Complexo Gas-Quimico UFN-IV gas-to-chemicals complex. AFWEL earned at least USD 12.9M in profits from the Brazil contract. Bribery channel ratio for the Brazil subset: USD 1.1M / USD 190M = 0.58%. Cross-jurisdictional protocol: per Airbus-established pattern, only the UK SFO side is entered in the corpus. The US DOJ and SEC resolutions on the same underlying conduct are documented here for institutional context but are NOT separate corpus entries (US already heavily represented with 9 seed cases). The Brazilian authority leniency agreements are NOT separate entries (Brazil not a mature corpus jurisdiction at this stage). Settlement_amount_usd recorded as approximately USD 140M, representing the UK GBP 103M portion at mid-2021 exchange rates — the global USD 177M figure is documented in notes but not used as the corpus primary number to avoid double-counting with future potential DOJ/Brazil corpus entries. This case strengthens the UK SFO bribery_channel coverage with a clean ~0.58% channel ratio on a very large contract (USD 190M), complementing Standard Bank 2015's ~1% on a different sector. The Unaoil connection is institutionally significant — Unaoil was the center of a global oil-and-gas bribery network whose investigations have produced DPAs in multiple jurisdictions and whose structural pattern (Monaco-based intermediary routing bribes through third-party consultancy contracts) is exactly the MISSING-node topology that TCA is designed to detect on stakeholder dependency graphs. NOT markup_based — this is pure bribery_channel via third-party agents. No effect on MJPIS markup_floor_ratio derivation."
+      "notes": "Tenth UK SFO Deferred Prosecution Agreement, approved 1 July 2021 by HHJ Beddoe at Southwark Crown Court — deliberately timed to the 10th anniversary of the UK Bribery Act 2010 coming into force. Amec Foster Wheeler Energy Limited (AFWEL), now wholly-owned by John Wood Group PLC following the 2017 acquisition. AFWEL took responsibility for 10 offences: 9 counts of conspiracy to make corrupt payments, and 1 count of failure to prevent bribery under section 7 of the Bribery Act 2010. Underlying conduct spanned five jurisdictions over nearly 20 years (1996-2014): Nigeria, Saudi Arabia, Malaysia, India, and Brazil, all in the oil and gas sector, involving the use of corrupt third-party agents and intermediaries by the legacy Foster Wheeler business before its acquisition by Amec. UK penalty: GBP 103M total (financial penalty plus disgorgement plus costs). Parallel resolutions: DOJ three-year DPA plus SEC cease-and-desist order totaling USD 41M (reduced to approximately USD 18M direct payment after crediting UK and Brazil portions); Brazilian leniency agreements with Ministerio Publico Federal (MPF), Controladoria-Geral da Uniao (CGU), and Advocacia-Geral da Uniao (AGU). Global settlement total: approximately USD 177M (~GBP 130M+). Best-documented specific conduct is the Brazil subset: between 2011 and 2014, AFWEL conspired with an Italian sales agent affiliated with the Monaco-based intermediary (later identified in parallel proceedings as Unaoil) to pay approximately USD 1.1M in bribes to decision-makers at Petroleo Brasileiro S.A. (Petrobras) in exchange for a USD 190M contract to design the Complexo Gas-Quimico UFN-IV gas-to-chemicals complex. AFWEL earned at least USD 12.9M in profits from the Brazil contract. Bribery channel ratio for the Brazil subset: USD 1.1M / USD 190M = 0.58%. Cross-jurisdictional protocol: per Airbus-established pattern, only the UK SFO side is entered in the corpus. The US DOJ and SEC resolutions on the same underlying conduct are documented here for institutional context but are NOT separate corpus entries (US already heavily represented with 9 seed cases). The Brazilian authority leniency agreements are NOT separate entries (Brazil not a mature corpus jurisdiction at this stage). Settlement_amount_usd recorded as approximately USD 140M, representing the UK GBP 103M portion at mid-2021 exchange rates — the global USD 177M figure is documented in notes but not used as the corpus primary number to avoid double-counting with future potential DOJ/Brazil corpus entries. This case strengthens the UK SFO bribery_channel coverage with a clean ~0.58% channel ratio on a very large contract (USD 190M), complementing Standard Bank 2015's ~1% on a different sector. The Unaoil connection is institutionally significant — Unaoil was the center of a global oil-and-gas bribery network whose investigations have produced DPAs in multiple jurisdictions and whose structural pattern (Monaco-based intermediary routing bribes through third-party consultancy contracts) is exactly the MISSING-node topology that TCA is designed to detect on stakeholder dependency graphs. NOT markup_based — this is pure bribery_channel via third-party agents. No effect on MJPIS markup_floor_ratio derivation.",
+      "bribery_channel_ratio": 0.0058
     },
     {
       "case_id": "FR_PNF_Bouygues_Linkcity_2023",
@@ -462,7 +551,14 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["procurement_favoritism", "bid_rigging", "public_procurement_rules_violation", "small_inducement_channel", "public_hospital_sector", "domestic_procurement"],
+      "dimensional_tags": [
+        "procurement_favoritism",
+        "bid_rigging",
+        "public_procurement_rules_violation",
+        "small_inducement_channel",
+        "public_hospital_sector",
+        "domestic_procurement"
+      ],
       "evidentiary_standard": "french_cjip_admission_of_facts",
       "source_url": "https://www.justice.gouv.fr/sites/default/files/2023-06/CJIP_BBSE_LYSE_20230523.pdf",
       "source_document": "PNF CJIP Bouygues Bâtiment Sud Est & Linkcity Sud Est, signed 2023-05-15, approved 2023-05-17 by Paris Tribunal Judiciaire",
@@ -483,7 +579,15 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["bribery_channel", "sustained_scheme", "commercial_intermediary_channel", "political_corruption", "second_settlement_same_company", "cross_border_procurement", "defense_aerospace_sector"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "sustained_scheme",
+        "commercial_intermediary_channel",
+        "political_corruption",
+        "second_settlement_same_company",
+        "cross_border_procurement",
+        "defense_aerospace_sector"
+      ],
       "evidentiary_standard": "french_cjip_admission_of_facts",
       "source_url": "https://www.airbus.com/en/newsroom/press-releases/2022-11-airbus-finalises-cjip-agreement-with-french-authorities",
       "source_document": "PNF CJIP Airbus SE (second), signed 2022-11-17, approved 2022-11-30 by Stephane Noel, president of Paris Tribunal Judiciaire; Airbus press release 2022-11-30",
@@ -504,11 +608,22 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": 44000000,
       "bribery_channel_percentage": 1.26,
-      "dimensional_tags": ["bribery_channel", "sustained_scheme", "third_party_agent_channel", "multi_country_conduct", "oil_and_gas_sector", "unaoil_related", "criminal_conviction_not_dpa", "fictitious_invoice_concealment", "individual_executive_conviction"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "sustained_scheme",
+        "third_party_agent_channel",
+        "multi_country_conduct",
+        "oil_and_gas_sector",
+        "unaoil_related",
+        "criminal_conviction_not_dpa",
+        "fictitious_invoice_concealment",
+        "individual_executive_conviction"
+      ],
       "evidentiary_standard": "criminal_conviction_guilty_plea",
       "source_url": "https://www.sfo.gov.uk/cases/petrofac-limited/",
       "source_document": "R v Petrofac Limited, Southwark Crown Court (Judge Deborah Taylor), guilty plea 2021-10-01, sentenced 2021-10-04; SFO press release 2021-10-04",
-      "notes": "Ninth UK SFO case in the corpus and the first that is a CONVICTION rather than a Deferred Prosecution Agreement — distinct evidentiary standard from the eight UK SFO DPA cases already in the corpus (Rolls-Royce, Airbus, Standard Bank, Tesco, Sarclad, Guralp, Serco, Amec Foster Wheeler). Petrofac Limited (Jersey-registered oil services company) pleaded guilty 1 October 2021 at Westminster Magistrates Court and was sentenced 4 October 2021 by Judge Deborah Taylor at Southwark Crown Court. Pleaded guilty to seven separate counts of failing to prevent bribery under section 7 of the Bribery Act 2010 — the third-ever section 7 prosecution in the courts of England and Wales. Total penalty: GBP 77M (~USD 105M). Breakdown: GBP 47.2M financial penalty + GBP 22.8M confiscation order + GBP 7M SFO costs. Underlying conduct between October 2011 and May 2017: senior executives within Petrofac Group paid GBP 32M (USD 44M) in bribes to agents to win GBP 2.6B (USD 3.5B) of oil and gas contracts in Iraq, Saudi Arabia, and the United Arab Emirates. Bribery channel ratio: USD 44M / USD 3.5B = 1.26%. Specific largest contract: USD 1.7B EPC Engineering Procurement Construction contract for the Jazan Refinery and Terminal Project in Saudi Arabia, secured via USD 21.4M in series of corrupt payments. Concealment methods: payments made against false invoices, sub-contracts, fictitious services contracts, and through companies already legitimately contracted to provide services to Petrofac (layered concealment via existing legitimate vendor relationships). Judge Deborah Taylor described the corruption as 'systemic, serious and grave.' Individual executive: David Lufkin, former Global Head of Sales at Petrofac, was the first SFO cooperator whose individual conviction enabled the corporate conviction. Lufkin pleaded guilty to 14 counts of individual bribery (11 counts in February 2019 covering Iraq and Saudi Arabia, 3 additional counts in January 2021 covering UAE Upper Zakum UZ750 Field Development and Bab Integrated Facilities Projects). Lufkin's bribery total: USD 81M paid to secure USD 8.4B of contracts. Lufkin received a 2-year custodial sentence suspended for 18 months — substantial reduction from a possible 7-year sentence due to his cooperation. The SFO's investigation began 12 May 2017 and was part of the broader Unaoil network probe (Monaco-based intermediary), the same network as Amec Foster Wheeler 2021 already in the corpus. Dimensional category: bribery_channel + sustained_scheme + third_party_agent_channel + multi_country_conduct + oil_and_gas_sector + unaoil_related + criminal_conviction_not_dpa + fictitious_invoice_concealment + individual_executive_conviction. NOT markup_based. MJPIS markup_floor_ratio remains 0.501. Institutional significance: this is the highest-evidentiary-standard UK SFO outcome in the corpus (criminal conviction at the corporate level, not just admission via DPA), strengthening the UK SFO anchor's evidentiary baseline. The fictitious-invoice and existing-vendor-channel concealment patterns are exactly the structural anomalies TCA's stakeholder dependency graph is designed to surface — payments routed through legitimate vendor relationships are the hardest topology for indicator-based methods to detect because they look like normal commercial activity. Two cases in the corpus now reference the Unaoil network (Amec Foster Wheeler 2021 and Petrofac 2021), establishing Unaoil as a structural cluster for future case-packet cross-referencing logic. NOTE on attempted case substitution: NatWest 2021 was originally targeted for this slot. NatWest's GBP 264.8M conviction is FCA-prosecuted, not SFO-prosecuted — different prosecutor, different statutory basis (Money Laundering Regulations 2007 vs. Bribery Act 2010), different evidentiary frame. Adding NatWest under the UK_SFO jurisdiction tag would mislabel jurisdictional provenance and corrupt the MJPIS partition logic. NatWest is documented as a known FCA prosecution but excluded from the UK_SFO corpus per the dimensional relevance protocol that governs Phase B extraction."
+      "notes": "Ninth UK SFO case in the corpus and the first that is a CONVICTION rather than a Deferred Prosecution Agreement — distinct evidentiary standard from the eight UK SFO DPA cases already in the corpus (Rolls-Royce, Airbus, Standard Bank, Tesco, Sarclad, Guralp, Serco, Amec Foster Wheeler). Petrofac Limited (Jersey-registered oil services company) pleaded guilty 1 October 2021 at Westminster Magistrates Court and was sentenced 4 October 2021 by Judge Deborah Taylor at Southwark Crown Court. Pleaded guilty to seven separate counts of failing to prevent bribery under section 7 of the Bribery Act 2010 — the third-ever section 7 prosecution in the courts of England and Wales. Total penalty: GBP 77M (~USD 105M). Breakdown: GBP 47.2M financial penalty + GBP 22.8M confiscation order + GBP 7M SFO costs. Underlying conduct between October 2011 and May 2017: senior executives within Petrofac Group paid GBP 32M (USD 44M) in bribes to agents to win GBP 2.6B (USD 3.5B) of oil and gas contracts in Iraq, Saudi Arabia, and the United Arab Emirates. Bribery channel ratio: USD 44M / USD 3.5B = 1.26%. Specific largest contract: USD 1.7B EPC Engineering Procurement Construction contract for the Jazan Refinery and Terminal Project in Saudi Arabia, secured via USD 21.4M in series of corrupt payments. Concealment methods: payments made against false invoices, sub-contracts, fictitious services contracts, and through companies already legitimately contracted to provide services to Petrofac (layered concealment via existing legitimate vendor relationships). Judge Deborah Taylor described the corruption as 'systemic, serious and grave.' Individual executive: David Lufkin, former Global Head of Sales at Petrofac, was the first SFO cooperator whose individual conviction enabled the corporate conviction. Lufkin pleaded guilty to 14 counts of individual bribery (11 counts in February 2019 covering Iraq and Saudi Arabia, 3 additional counts in January 2021 covering UAE Upper Zakum UZ750 Field Development and Bab Integrated Facilities Projects). Lufkin's bribery total: USD 81M paid to secure USD 8.4B of contracts. Lufkin received a 2-year custodial sentence suspended for 18 months — substantial reduction from a possible 7-year sentence due to his cooperation. The SFO's investigation began 12 May 2017 and was part of the broader Unaoil network probe (Monaco-based intermediary), the same network as Amec Foster Wheeler 2021 already in the corpus. Dimensional category: bribery_channel + sustained_scheme + third_party_agent_channel + multi_country_conduct + oil_and_gas_sector + unaoil_related + criminal_conviction_not_dpa + fictitious_invoice_concealment + individual_executive_conviction. NOT markup_based. MJPIS markup_floor_ratio remains 0.501. Institutional significance: this is the highest-evidentiary-standard UK SFO outcome in the corpus (criminal conviction at the corporate level, not just admission via DPA), strengthening the UK SFO anchor's evidentiary baseline. The fictitious-invoice and existing-vendor-channel concealment patterns are exactly the structural anomalies TCA's stakeholder dependency graph is designed to surface — payments routed through legitimate vendor relationships are the hardest topology for indicator-based methods to detect because they look like normal commercial activity. Two cases in the corpus now reference the Unaoil network (Amec Foster Wheeler 2021 and Petrofac 2021), establishing Unaoil as a structural cluster for future case-packet cross-referencing logic. NOTE on attempted case substitution: NatWest 2021 was originally targeted for this slot. NatWest's GBP 264.8M conviction is FCA-prosecuted, not SFO-prosecuted — different prosecutor, different statutory basis (Money Laundering Regulations 2007 vs. Bribery Act 2010), different evidentiary frame. Adding NatWest under the UK_SFO jurisdiction tag would mislabel jurisdictional provenance and corrupt the MJPIS partition logic. NatWest is documented as a known FCA prosecution but excluded from the UK_SFO corpus per the dimensional relevance protocol that governs Phase B extraction.",
+      "bribery_channel_ratio": 0.0126
     },
     {
       "case_id": "WB_INT_SNCLavalin_2013",
@@ -525,7 +640,17 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["administrative_sanctionable", "bribery_channel", "sustained_scheme", "procurement_infrastructure", "bridge_project", "rural_electrification", "multilateral_development_bank_sanction", "cross_debarment_eligible", "longest_wb_debarment_at_time_of_imposition"],
+      "dimensional_tags": [
+        "administrative_sanctionable",
+        "bribery_channel",
+        "sustained_scheme",
+        "procurement_infrastructure",
+        "bridge_project",
+        "rural_electrification",
+        "multilateral_development_bank_sanction",
+        "cross_debarment_eligible",
+        "longest_wb_debarment_at_time_of_imposition"
+      ],
       "evidentiary_standard": "negotiated_resolution_agreement",
       "source_url": "https://www.worldbank.org/en/news/press-release/2013/04/17/world-bank-debars-snc-lavalin-inc-and-its-affiliates-for-ten-years",
       "source_document": "World Bank Group press release 2013-04-17; Negotiated Resolution Agreement between the World Bank Group and SNC-Lavalin Inc., April 2013; World Bank Integrity Vice Presidency (INT) investigation findings",
@@ -546,7 +671,16 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": 110000,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["administrative_sanctionable", "bribery_channel", "procurement_infrastructure", "hydropower_project", "multilateral_development_bank_sanction", "cross_debarment_eligible", "restitution_payment", "former_senior_official_intermediary"],
+      "dimensional_tags": [
+        "administrative_sanctionable",
+        "bribery_channel",
+        "procurement_infrastructure",
+        "hydropower_project",
+        "multilateral_development_bank_sanction",
+        "cross_debarment_eligible",
+        "restitution_payment",
+        "former_senior_official_intermediary"
+      ],
       "evidentiary_standard": "negotiated_resolution_agreement",
       "source_url": "https://www.worldbank.org/en/news/press-release/2012/02/22/enforcing-accountability-world-bank-debars-alstom-hydro-france-alstom-network-schweiz-ag-and-their-affiliates",
       "source_document": "World Bank Group press release 2012-02-22; Negotiated Resolution Agreement between the World Bank Group and Alstom Hydro France / Alstom Network Schweiz AG, February 2012; World Bank Integrity Vice Presidency (INT) investigation findings",
@@ -567,7 +701,19 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["administrative_sanctionable", "bribery_channel", "sustained_scheme", "voluntary_disclosure_agreement", "multi_institutional_settlement", "cross_debarment_foundational", "anti_corruption_initiative_funding", "global_corporate_shutout", "named_subsidiary_debarment", "moscow_urban_transport_project", "wb_int_anchor_case"],
+      "dimensional_tags": [
+        "administrative_sanctionable",
+        "bribery_channel",
+        "sustained_scheme",
+        "voluntary_disclosure_agreement",
+        "multi_institutional_settlement",
+        "cross_debarment_foundational",
+        "anti_corruption_initiative_funding",
+        "global_corporate_shutout",
+        "named_subsidiary_debarment",
+        "moscow_urban_transport_project",
+        "wb_int_anchor_case"
+      ],
       "evidentiary_standard": "negotiated_resolution_agreement",
       "source_url": "https://www.worldbank.org/en/news/press-release/2009/07/02/siemens-pay-million-fight-fraud-corruption-part-world-bank-group-settlement",
       "source_document": "World Bank Group press release 2009-07-02; Settlement Agreement between the World Bank Group and Siemens AG, July 2009; World Bank Integrity Vice Presidency (INT) investigation findings; OOO Siemens debarment notice 2009-11-30",
@@ -588,7 +734,17 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["administrative_sanctionable", "bribery_channel", "unsuccessful_bribery_attempt", "education_publishing_sector", "self_reported", "cross_debarment_eligible", "int_referral_to_national_prosecutor", "sudan_mdtf", "post_conflict_reconstruction_context"],
+      "dimensional_tags": [
+        "administrative_sanctionable",
+        "bribery_channel",
+        "unsuccessful_bribery_attempt",
+        "education_publishing_sector",
+        "self_reported",
+        "cross_debarment_eligible",
+        "int_referral_to_national_prosecutor",
+        "sudan_mdtf",
+        "post_conflict_reconstruction_context"
+      ],
       "evidentiary_standard": "negotiated_resolution_agreement",
       "source_url": "https://www.worldbank.org/en/news/press-release/2010/04/30/the-world-bank-group-debars-macmillan-limited-for-corruption-in-world-bank-supported-education-project-in-southern-sudan",
       "source_document": "World Bank Group press release 2010-04-30; Negotiated Resolution Agreement between the World Bank Group and Macmillan Limited, April 2010; World Bank Integrity Vice Presidency (INT) investigation findings",
@@ -609,7 +765,16 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["administrative_sanctionable", "bribery_channel", "telecommunications_sector", "iraq_emergency_project", "short_duration_debarment", "cross_debarment_eligible", "wb_doj_parallel_track", "emergency_private_sector_development"],
+      "dimensional_tags": [
+        "administrative_sanctionable",
+        "bribery_channel",
+        "telecommunications_sector",
+        "iraq_emergency_project",
+        "short_duration_debarment",
+        "cross_debarment_eligible",
+        "wb_doj_parallel_track",
+        "emergency_private_sector_development"
+      ],
       "evidentiary_standard": "negotiated_resolution_agreement",
       "source_url": "https://www.worldbank.org/en/news/press-release/2015/04/23/world-bank-debars-alcatel-lucent-trade-international-saudia-arabia-limited-18-months",
       "source_document": "World Bank Group press release 2015-04-23; Negotiated Resolution Agreement between the World Bank Group and Alcatel-Lucent Trade International A.G. / Alcatel Saudi Arabia Limited, April 2015; World Bank Integrity Vice Presidency (INT) investigation findings",
@@ -630,7 +795,18 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["administrative_sanctionable", "collusive_bid_rigging", "multi_entity_cartel", "roads_infrastructure_sector", "philippines_nrimp1", "permanent_debarment_present", "successor_liability_extension", "cross_debarment_eligible", "wb_sanctions_board_decision", "wb_int_anchor_case_for_cartel_pattern"],
+      "dimensional_tags": [
+        "administrative_sanctionable",
+        "collusive_bid_rigging",
+        "multi_entity_cartel",
+        "roads_infrastructure_sector",
+        "philippines_nrimp1",
+        "permanent_debarment_present",
+        "successor_liability_extension",
+        "cross_debarment_eligible",
+        "wb_sanctions_board_decision",
+        "wb_int_anchor_case_for_cartel_pattern"
+      ],
       "evidentiary_standard": "wb_sanctions_board_decision",
       "source_url": "https://www.worldbank.org/en/news/press-release/2011/07/29/world-bank-applies-2009-debarment-to-china-communications-construction-company-limited-for-fraud-in-philippines-roads-project",
       "source_document": "World Bank Group press release 2009-01-14; World Bank Group press release 2011-07-29 (CCCC successor-liability extension); World Bank Integrity Vice Presidency (INT) investigation findings; WB Sanctions Board decision",
@@ -651,7 +827,18 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["administrative_sanctionable", "bribery_channel", "education_publishing_sector", "self_reported", "cross_debarment_eligible", "int_referral_to_national_prosecutor", "east_africa_education_projects", "parallel_civil_recovery_order", "within_sector_comparison_to_macmillan", "kenya_tanzania_textbook_tenders"],
+      "dimensional_tags": [
+        "administrative_sanctionable",
+        "bribery_channel",
+        "education_publishing_sector",
+        "self_reported",
+        "cross_debarment_eligible",
+        "int_referral_to_national_prosecutor",
+        "east_africa_education_projects",
+        "parallel_civil_recovery_order",
+        "within_sector_comparison_to_macmillan",
+        "kenya_tanzania_textbook_tenders"
+      ],
       "evidentiary_standard": "negotiated_resolution_agreement",
       "source_url": "https://www.worldbank.org/en/news/press-release/2012/07/03/world-bank-sanctions-oxford-university-press-corrupt-practices-impacting-education-projects-east-africa",
       "source_document": "World Bank Group press release 2012-07-03; World Bank Integrity Vice Presidency (INT) investigation findings; Negotiated Resolution Agreement between WB and OUP entities; UK SFO High Court civil recovery order under Proceeds of Crime Act 2002",
@@ -672,7 +859,19 @@
       "markup_percentage": null,
       "bribery_channel_amount_usd": null,
       "bribery_channel_percentage": null,
-      "dimensional_tags": ["bribery_channel", "collusive_bid_rigging", "procurement_favoritism", "multi_charge_cjip", "money_laundering_tax_fraud", "waste_management_sector", "french_domestic_procurement", "multi_department_cartel", "competition_law_criminal_repenalization", "first_pnf_concurrence_cjip", "cross_jurisdictional_parallel_to_wb_int_cartel_pattern"],
+      "dimensional_tags": [
+        "bribery_channel",
+        "collusive_bid_rigging",
+        "procurement_favoritism",
+        "multi_charge_cjip",
+        "money_laundering_tax_fraud",
+        "waste_management_sector",
+        "french_domestic_procurement",
+        "multi_department_cartel",
+        "competition_law_criminal_repenalization",
+        "first_pnf_concurrence_cjip",
+        "cross_jurisdictional_parallel_to_wb_int_cartel_pattern"
+      ],
       "evidentiary_standard": "french_cjip_admission_of_facts",
       "source_url": "https://www.decideurs-juridiques.com/affaires-juridiques/60583-blanchiment-de-fraude-fiscale-entente-corruption-et-favoritisme-le-parquet-national-financier-pnf-conclut-une-cjip-a-17-5-millions-d-euros-avec-paprec.html",
       "source_document": "CJIP Paprec Group validated 11 February 2025 by TJ Paris; PNF press communications; Navacelle legal analysis; Nomos legal analysis; Brigade interdépartementale d'enquêtes de concurrence (BIEC) Article 40 CPP referral",

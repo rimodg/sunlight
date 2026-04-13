@@ -70,11 +70,16 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class JurisdictionAnchor:
-    """One jurisdiction's anchor case for markup_floor derivation."""
+    """One jurisdiction's anchor case for a per-parameter derivation.
+
+    Used by both markup_floor and bribery_channel derivations.
+    The `markup_percentage` field carries the anchor ratio regardless
+    of which parameter it anchors (markup ratio or bribery-channel ratio).
+    """
 
     jurisdiction: str
     case_id: str
-    markup_percentage: float  # ratio (0.501 = 50.1% markup)
+    markup_percentage: float  # ratio (e.g. 0.501, 0.0058)
     qualifying_case_count: int
 
 
@@ -89,12 +94,22 @@ class MarkupFloorDerivation:
 
 
 @dataclass(frozen=True)
+class BriberyChannelDerivation:
+    """Result of the intersection_v1 bribery-channel ratio derivation."""
+
+    value: float  # the MJPIS bribery_channel_ratio
+    contributing_jurisdictions: List[str]
+    per_jurisdiction_anchors: Dict[str, JurisdictionAnchor]
+    methodology_version: str = "intersection_v1"
+
+
+@dataclass(frozen=True)
 class DerivationAuditTrail:
     """Full per-parameter derivation log for institutional audit."""
 
     markup_floor: Optional[MarkupFloorDerivation] = None
-    # Future sub-tasks B and C will add:
-    # bribery_channel: Optional[BriberyChannelDerivation] = None
+    bribery_channel: Optional[BriberyChannelDerivation] = None
+    # Future sub-task C will add:
     # administrative_sanctionable: Optional[AdminSanctionableDerivation] = None
 
 
@@ -214,6 +229,75 @@ def derive_markup_floor_ratio(cases: List[Dict]) -> MarkupFloorDerivation:
     )
 
 
+def derive_bribery_channel_ratio(cases: List[Dict]) -> BriberyChannelDerivation:
+    """
+    Derive the MJPIS bribery_channel_ratio via intersection_v1 methodology.
+
+    Groups corpus cases by jurisdiction, filters to qualifying cases
+    (bribery_channel dimensional tag + bribery_channel_ratio documented),
+    computes per-jurisdiction anchors (minimum ratio in each jurisdiction),
+    and returns the intersection (minimum across jurisdictions).
+
+    Args:
+        cases: List of corpus case dicts.
+
+    Returns:
+        BriberyChannelDerivation with value, contributing jurisdictions,
+        per-jurisdiction anchors, and methodology version.
+
+    Raises:
+        InsufficientCorpusError: If no jurisdiction has qualifying cases.
+    """
+    if not cases:
+        raise InsufficientCorpusError(
+            "Cannot derive bribery_channel_ratio from an empty corpus."
+        )
+
+    # Group qualifying cases by jurisdiction
+    bc_cases_by_jurisdiction: Dict[str, List[Dict]] = {}
+    for case in cases:
+        if "bribery_channel" not in case.get("dimensional_tags", []):
+            continue
+        ratio = case.get("bribery_channel_ratio")
+        if ratio is None:
+            continue
+        j = case["jurisdiction"]
+        bc_cases_by_jurisdiction.setdefault(j, []).append({
+            "case_id": case["case_id"],
+            "ratio": float(ratio),
+        })
+
+    if not bc_cases_by_jurisdiction:
+        raise InsufficientCorpusError(
+            "No jurisdiction in the corpus has qualifying bribery_channel "
+            "cases with documented bribery_channel_ratio."
+        )
+
+    # Per-jurisdiction anchors: minimum ratio in each jurisdiction
+    per_jurisdiction_anchors: Dict[str, JurisdictionAnchor] = {}
+    for j, j_cases in bc_cases_by_jurisdiction.items():
+        min_case = min(j_cases, key=lambda c: c["ratio"])
+        per_jurisdiction_anchors[j] = JurisdictionAnchor(
+            jurisdiction=j,
+            case_id=min_case["case_id"],
+            markup_percentage=min_case["ratio"],
+            qualifying_case_count=len(j_cases),
+        )
+
+    # Intersection: minimum across per-jurisdiction anchors
+    intersection_value = min(
+        a.markup_percentage for a in per_jurisdiction_anchors.values()
+    )
+    contributing_jurisdictions = sorted(per_jurisdiction_anchors.keys())
+
+    return BriberyChannelDerivation(
+        value=intersection_value,
+        contributing_jurisdictions=contributing_jurisdictions,
+        per_jurisdiction_anchors=per_jurisdiction_anchors,
+        methodology_version="intersection_v1",
+    )
+
+
 # ═══════════════════════════════════════════════════════════
 # Main derivation orchestrator
 # ═══════════════════════════════════════════════════════════
@@ -282,9 +366,23 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     except InsufficientCorpusError:
         intersection_floor = US_FEDERAL_V0.markup_floor_ratio
 
+    # ── Bribery-channel ratio derivation (intersection_v1) ────
+    #
+    # Same methodology as markup floor but over bribery_channel cases.
+    # If no qualifying cases exist, the parameter stays None (no rule
+    # consumes it yet, so there is no fallback needed).
+    bribery_channel_derivation: Optional[BriberyChannelDerivation] = None
+    bribery_channel_value: Optional[float] = None
+    try:
+        bribery_channel_derivation = derive_bribery_channel_ratio(corpus["cases"])
+        bribery_channel_value = bribery_channel_derivation.value
+    except InsufficientCorpusError:
+        pass  # stays None
+
     # Store the audit trail at module level
     _audit_trail = DerivationAuditTrail(
         markup_floor=markup_floor_derivation,
+        bribery_channel=bribery_channel_derivation,
     )
 
     # ── Provenance trail for derivation_metadata on GlobalParameters ──
@@ -308,6 +406,24 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         per_jurisdiction_floors = {}
         contributing_cases = []
 
+    # Bribery-channel provenance
+    if bribery_channel_derivation is not None:
+        bc_per_jurisdiction = {
+            j: anchor.markup_percentage
+            for j, anchor in bribery_channel_derivation.per_jurisdiction_anchors.items()
+        }
+        bc_contributing_cases = [
+            {
+                "case_id": anchor.case_id,
+                "jurisdiction": anchor.jurisdiction,
+                "bribery_channel_ratio": anchor.markup_percentage,
+            }
+            for anchor in bribery_channel_derivation.per_jurisdiction_anchors.values()
+        ]
+    else:
+        bc_per_jurisdiction = {}
+        bc_contributing_cases = []
+
     derivation_metadata = {
         "methodology_version": "mjpis_v0.2",
         "markup_floor_derivation": {
@@ -315,6 +431,12 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             "per_jurisdiction": per_jurisdiction_floors,
             "intersection_floor": intersection_floor,
             "contributing_cases": contributing_cases,
+        },
+        "bribery_channel_derivation": {
+            "methodology": "intersection_v1",
+            "per_jurisdiction": bc_per_jurisdiction,
+            "intersection_floor": bribery_channel_value,
+            "contributing_cases": bc_contributing_cases,
         },
         "corpus_version": corpus_version,
         "jurisdictions_considered": sorted(jurisdictions),
@@ -325,12 +447,16 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         1 for c in corpus["cases"] if c["jurisdiction"] != "US_DOJ"
     )
     n_contributing = len(per_jurisdiction_floors)
+    n_bc_contributing = len(bc_per_jurisdiction)
+    bc_value_str = f"{bribery_channel_value:.4f}" if bribery_channel_value is not None else "None"
     logger.info(
         f"MJPIS v0.2 derivation: markup_floor_ratio={intersection_floor:.4f} "
         f"(intersection_v1 across {n_contributing} jurisdiction(s) "
         f"with markup-based cases); "
-        f"{non_doj_case_count} non-DOJ case(s) present in corpus "
-        f"(non-markup dimensions await further sub-task consumers)"
+        f"bribery_channel_ratio={bc_value_str} "
+        f"(intersection_v1 across {n_bc_contributing} jurisdiction(s) "
+        f"with bribery-channel cases); "
+        f"{non_doj_case_count} non-DOJ case(s) present in corpus"
     )
 
     # Construct derived GlobalParameters via dataclasses.replace so ALL
@@ -347,10 +473,10 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             f"markup_based={dimensional_counts['markup_based']}, "
             f"bribery_channel={dimensional_counts['bribery_channel']}, "
             f"administrative_sanctionable={dimensional_counts['administrative_sanctionable']}. "
-            f"mjpis_v0.2 derives markup_floor_ratio empirically via "
-            f"cross-jurisdictional intersection (intersection_v1); remaining "
-            f"statistical bars inherit US_FEDERAL_V0 until their own consumers "
-            f"and derivations land."
+            f"mjpis_v0.2 derives markup_floor_ratio and bribery_channel_ratio "
+            f"empirically via cross-jurisdictional intersection (intersection_v1); "
+            f"remaining statistical bars inherit US_FEDERAL_V0 until their own "
+            f"consumers and derivations land."
         ),
         source_citation=(
             f"research/corpus/prosecuted_cases_global_v{corpus_version}.json"
@@ -358,6 +484,7 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         derivation_date=str(date.today()),
         evidentiary_standard=evidentiary_standard,
         markup_floor_ratio=intersection_floor,
+        bribery_channel_ratio=bribery_channel_value,
         derivation_metadata=derivation_metadata,
         notes=(
             f"Derived from {total_cases} cases across {len(jurisdictions)} "
@@ -366,6 +493,10 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             f"{n_contributing} jurisdiction(s) with markup-based "
             f"cases. Contributing case(s): "
             f"{', '.join(c['case_id'] for c in contributing_cases) or '(none)'}. "
+            f"bribery_channel_ratio derived via intersection_v1 across "
+            f"{n_bc_contributing} jurisdiction(s) with bribery-channel "
+            f"cases. Contributing case(s): "
+            f"{', '.join(c['case_id'] for c in bc_contributing_cases) or '(none)'}. "
             f"Remaining statistical bars (posterior thresholds, FDR, bootstrap) "
             f"inherit US_FEDERAL_V0 pending their own derivation layers."
         ),
@@ -464,6 +595,15 @@ if __name__ == "__main__":
             print(f"  Value: {mf.value}")
             print(f"  Contributing jurisdictions: {mf.contributing_jurisdictions}")
             for j, anchor in mf.per_jurisdiction_anchors.items():
+                print(f"    {j}: {anchor.case_id} at {anchor.markup_percentage} "
+                      f"({anchor.qualifying_case_count} qualifying case(s))")
+
+        if trail.bribery_channel is not None:
+            bc = trail.bribery_channel
+            print(f"\nBribery-channel ratio derivation ({bc.methodology_version}):")
+            print(f"  Value: {bc.value}")
+            print(f"  Contributing jurisdictions: {bc.contributing_jurisdictions}")
+            for j, anchor in bc.per_jurisdiction_anchors.items():
                 print(f"    {j}: {anchor.case_id} at {anchor.markup_percentage} "
                       f"({anchor.qualifying_case_count} qualifying case(s))")
 
