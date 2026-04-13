@@ -16,11 +16,20 @@ Approach:
 
 import json
 import os
+import random
 import sys
 import sqlite3
 import numpy as np
 from datetime import datetime, timezone
 from typing import Dict, List, Tuple, Any
+
+# Deterministic seed for the clean-contract sample in get_clean_contracts().
+# Replaces the previous ORDER BY RANDOM() which was non-deterministic w.r.t.
+# the numpy --seed flag, causing ~3-5pp run-to-run precision variance and
+# spurious CI Gate failures on the flags/1K gate (three times during Phase B
+# session 2: Tesco, SocGen, Bouygues draws). To re-seed if the sample ever
+# needs refreshing, increment the version suffix (v1 → v2) and re-baseline.
+DOJ_VALIDATION_SAMPLE_SEED = "sunlight-doj-v1"
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -153,6 +162,13 @@ def get_clean_contracts(db_path: str, agency_cache: Dict, n: int = 50) -> List[D
     """
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
+    # Fetch ALL qualifying rows, then sample deterministically in Python.
+    # The previous ORDER BY RANDOM() LIMIT ? was non-deterministic w.r.t. the
+    # numpy --seed flag, causing run-to-run variance in precision/FPR/flags.
+    # Using random.Random(DOJ_VALIDATION_SAMPLE_SEED).sample() gives a
+    # statistically defensible pseudo-random sample that is identical on every
+    # run given the same DB contents. See DOJ_VALIDATION_SAMPLE_SEED at module
+    # top for the seed value and re-seeding instructions.
     c.execute("""
         WITH agency_medians AS (
             SELECT agency_name, AVG(award_amount) as med_amount
@@ -167,12 +183,15 @@ def get_clean_contracts(db_path: str, agency_cache: Dict, n: int = 50) -> List[D
         JOIN agency_medians am ON c.agency_name = am.agency_name
         WHERE c.award_amount < am.med_amount
         AND c.award_amount > 100000
-        ORDER BY RANDOM()
-        LIMIT ?
-    """, (n,))
+        ORDER BY c.contract_id
+    """)
+
+    all_rows = c.fetchall()
+    rng = random.Random(DOJ_VALIDATION_SAMPLE_SEED)
+    sampled_rows = rng.sample(all_rows, min(n, len(all_rows)))
 
     contracts = []
-    for row in c.fetchall():
+    for row in sampled_rows:
         cid, amount, vendor, agency, desc = row
         comparables = select_comparables_from_cache(cid, agency, amount, agency_cache)
         contracts.append({
