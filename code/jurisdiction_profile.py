@@ -181,12 +181,11 @@ class JurisdictionProfile:
 
     legal_citations: Dict[str, str] = field(default_factory=dict)
     # Jurisdiction-specific legal citations for evidence strings.
-    # Institutional-grade profiles should populate all 12 keys below.
+    # Institutional-grade profiles should populate all 11 keys below.
     # New profiles should use us_federal as the template for depth.
     #
     # --- Keys consumed by TCA rules (PROC-001, ENT-001, ENT-002) ---
     #   "procurement_law"           — primary procurement statute(s)
-    #   "competition_law"           — competition/antitrust statute
     #   "case_authority"            — leading case law references
     #
     # --- Keys consumed by CRI _determine_tier() evidence citations ---
@@ -593,7 +592,6 @@ US_FEDERAL = JurisdictionProfile(
             "FAR Part 15 — Contracting by Negotiation; "
             "FAR Part 13 — Simplified Acquisition Procedures"
         ),
-        "competition_law": "Sherman Antitrust Act",
         "case_authority": (
             "DOJ enforcement precedent: US v. Marquez (D. Md. 2024); "
             "US v. DynCorp (D.D.C. 2005); US v. Oracle Corp. (N.D. Cal. 2011); "
@@ -708,7 +706,6 @@ UK_CENTRAL_GOVERNMENT = JurisdictionProfile(
             "Concession Contracts Regulations 2016; "
             "Utilities Contracts Regulations 2016"
         ),
-        "competition_law": "Competition Act 1998",
         "case_authority": (
             "UK SFO enforcement precedent: R v Rolls-Royce (SFO DPA 2017, £497.3M); "
             "R v Airbus SE (SFO DPA 2020, £991M); "

@@ -278,11 +278,11 @@ class TestPROC001RemovedItems:
 
 
 # ---------------------------------------------------------------------------
-# Test 7: us_federal profile institutional depth — 12 legal_citations keys
+# Test 7: us_federal profile institutional depth — 11 legal_citations keys
 # ---------------------------------------------------------------------------
 
-_EXPECTED_US_FEDERAL_KEYS = {
-    "procurement_law", "competition_law", "case_authority",
+_EXPECTED_CANONICAL_KEYS = {
+    "procurement_law", "case_authority",
     "false_claims_law", "false_records_law", "anti_kickback_law",
     "extreme_markup_precedent",
     "foreign_bribery_law", "audit_oversight_law", "sanctions_debarment_law",
@@ -291,13 +291,13 @@ _EXPECTED_US_FEDERAL_KEYS = {
 
 
 class TestUSFederalInstitutionalDepth:
-    """us_federal profile must contain all 12 institutional-grade
+    """us_federal profile must contain all 11 institutional-grade
     legal_citations keys with correct canonical citation values."""
 
-    def test_all_12_keys_present(self):
+    def test_all_11_keys_present(self):
         lc = US_FEDERAL.legal_citations
-        assert set(lc.keys()) == _EXPECTED_US_FEDERAL_KEYS, \
-            f"Expected 12 keys, got {len(lc)}: missing={_EXPECTED_US_FEDERAL_KEYS - set(lc.keys())}, extra={set(lc.keys()) - _EXPECTED_US_FEDERAL_KEYS}"
+        assert set(lc.keys()) == _EXPECTED_CANONICAL_KEYS, \
+            f"Expected 11 keys, got {len(lc)}: missing={_EXPECTED_CANONICAL_KEYS - set(lc.keys())}, extra={set(lc.keys()) - _EXPECTED_CANONICAL_KEYS}"
 
     def test_foreign_bribery_law_contains_fcpa(self):
         v = US_FEDERAL.legal_citations["foreign_bribery_law"]
@@ -327,17 +327,17 @@ class TestUSFederalInstitutionalDepth:
 
 
 # ---------------------------------------------------------------------------
-# Test 8: uk_central_government institutional depth — 12 legal_citations keys
+# Test 8: uk_central_government institutional depth — 11 legal_citations keys
 # ---------------------------------------------------------------------------
 
 class TestUKCentralGovInstitutionalDepth:
-    """uk_central_government profile must contain all 12 institutional-grade
+    """uk_central_government profile must contain all 11 institutional-grade
     legal_citations keys with correct UK statutory values."""
 
-    def test_all_12_keys_present(self):
+    def test_all_11_keys_present(self):
         lc = UK_CENTRAL_GOVERNMENT.legal_citations
-        assert set(lc.keys()) == _EXPECTED_US_FEDERAL_KEYS, \
-            f"Expected 12 keys, got {len(lc)}: missing={_EXPECTED_US_FEDERAL_KEYS - set(lc.keys())}, extra={set(lc.keys()) - _EXPECTED_US_FEDERAL_KEYS}"
+        assert set(lc.keys()) == _EXPECTED_CANONICAL_KEYS, \
+            f"Expected 11 keys, got {len(lc)}: missing={_EXPECTED_CANONICAL_KEYS - set(lc.keys())}, extra={set(lc.keys()) - _EXPECTED_CANONICAL_KEYS}"
 
     def test_foreign_bribery_law_contains_bribery_act_ss6_7(self):
         v = UK_CENTRAL_GOVERNMENT.legal_citations["foreign_bribery_law"]
@@ -382,3 +382,36 @@ class TestProfileKeyParity:
             f"Profile key parity broken. "
             f"US-only: {us_keys - uk_keys}, UK-only: {uk_keys - us_keys}"
         )
+
+
+# ---------------------------------------------------------------------------
+# Test 10: Retired key negative assertions — competition_law must not exist
+# ---------------------------------------------------------------------------
+
+class TestRetiredCompetitionLawKey:
+    """Negative regression: competition_law was retired in Phase E item 30
+    (defined but never consumed by any rule). These tests lock in the removal
+    so any future commit re-adding the dead key fails immediately."""
+
+    def test_competition_law_not_in_us_federal(self):
+        assert "competition_law" not in US_FEDERAL.legal_citations, \
+            "competition_law was retired — must not be in us_federal"
+
+    def test_competition_law_not_in_uk_central_government(self):
+        assert "competition_law" not in UK_CENTRAL_GOVERNMENT.legal_citations, \
+            "competition_law was retired — must not be in uk_central_government"
+
+    def test_canonical_key_set_is_exactly_11(self):
+        expected = {
+            "procurement_law", "case_authority",
+            "false_claims_law", "false_records_law", "anti_kickback_law",
+            "extreme_markup_precedent",
+            "foreign_bribery_law", "audit_oversight_law", "sanctions_debarment_law",
+            "conflict_of_interest_law", "whistleblower_protection_law",
+        }
+        us_keys = set(US_FEDERAL.legal_citations.keys())
+        assert us_keys == expected, \
+            f"Canonical set drift: missing={expected - us_keys}, extra={us_keys - expected}"
+        uk_keys = set(UK_CENTRAL_GOVERNMENT.legal_citations.keys())
+        assert uk_keys == expected, \
+            f"Canonical set drift: missing={expected - uk_keys}, extra={uk_keys - expected}"
