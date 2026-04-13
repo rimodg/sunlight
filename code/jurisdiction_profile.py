@@ -181,22 +181,29 @@ class JurisdictionProfile:
 
     legal_citations: Dict[str, str] = field(default_factory=dict)
     # Jurisdiction-specific legal citations for evidence strings
+    #
+    # Keys consumed by TCA rules (PROC-001, ENT-001, ENT-002):
+    #   "procurement_law"  — primary procurement statute
+    #   "competition_law"  — competition/antitrust statute
+    #   "case_authority"   — leading case law reference
+    #
+    # Keys consumed by CRI _determine_tier() evidence citations:
+    #   "false_claims_law"          — statute for false/fraudulent claims
+    #   "false_records_law"         — statute for false records/material misstatement
+    #   "anti_kickback_law"         — anti-corruption/kickback statute
+    #   "extreme_markup_precedent"  — prosecution precedent for extreme price inflation
+    #
     # Examples:
     #   us_federal: {
     #     "procurement_law": "FAR Part 6",
-    #     "competition_law": "Sherman Act",
-    #     "case_authority": "DOJ US v. Marquez (Maryland 2024)"
+    #     "false_claims_law": "31 U.S.C. § 3729(a)(1)(A) - ...",
+    #     "extreme_markup_precedent": "DOJ prosecution precedent (Oracle, Boeing, Lockheed)",
     #   }
     #   uk: {
     #     "procurement_law": "UK Procurement Act 2023",
-    #     "competition_law": "Competition Act 1998",
-    #     "case_authority": "R (Chandler) v SoS for Children [2009]"
+    #     "false_claims_law": "Fraud Act 2006 s.2 - Fraud by false representation",
+    #     "extreme_markup_precedent": "UK SFO DPA precedent (Rolls-Royce, Airbus, Tesco)",
     #   }
-    #   ukraine: {
-    #     "procurement_law": "Prozorro Public Procurement Law 922-VIII",
-    #     "case_authority": "UNDP Ukraine Anti-Corruption Case Studies"
-    #   }
-    # Consumed by: PROC-001, ENT-001, ENT-002 evidence strings
 
     universal_citations: List[str] = field(default_factory=lambda: [
         "UNCAC Art. 9(1)",
@@ -579,6 +586,10 @@ US_FEDERAL = JurisdictionProfile(
         "procurement_law": "FAR Part 6",
         "competition_law": "Sherman Antitrust Act",
         "case_authority": "DOJ US v. Marquez (Maryland 2024)",
+        "false_claims_law": "31 U.S.C. § 3729(a)(1)(A) - Knowingly presenting false/fraudulent claim",
+        "false_records_law": "31 U.S.C. § 3729(a)(1)(B) - Knowingly using false record material to claim",
+        "anti_kickback_law": "Anti-Kickback Act 41 U.S.C. § 8702 - Quid pro quo indicator",
+        "extreme_markup_precedent": "DOJ prosecution precedent (Oracle, Boeing, Lockheed)",
     },
     universal_citations=[
         "UNCAC Art. 9(1)",
@@ -662,6 +673,10 @@ UK_CENTRAL_GOVERNMENT = JurisdictionProfile(
         "procurement_law": "UK Procurement Act 2023",
         "competition_law": "Competition Act 1998",
         "case_authority": "UK Serious Fraud Office — Crown Prosecution 2015-2025",
+        "false_claims_law": "Fraud Act 2006 s.2 - Fraud by false representation",
+        "false_records_law": "Fraud Act 2006 s.3 - Fraud by failing to disclose information",
+        "anti_kickback_law": "Bribery Act 2010 s.1 - Bribing another person",
+        "extreme_markup_precedent": "UK SFO DPA precedent (Rolls-Royce, Airbus, Tesco)",
     },
     universal_citations=[
         "UNCAC Art. 9(1)",

@@ -864,11 +864,21 @@ class ProsecutorEvidencePackage:
     5. Methodology documentation
     """
 
-    def __init__(self, db_path: str):
+    # Default CRI citation strings — used when no jurisdiction profile is supplied.
+    # These are the original US-derived citations preserved for backward compatibility.
+    _DEFAULT_CITATIONS = {
+        "false_claims_law": "False claims / fraudulent misrepresentation",
+        "false_records_law": "False records / material misstatement",
+        "anti_kickback_law": "Anti-corruption / quid pro quo indicator",
+        "extreme_markup_precedent": "Prosecution precedent for extreme price inflation",
+    }
+
+    def __init__(self, db_path: str, legal_citations: Dict[str, str] = None):
         self.db_path = db_path
         self.bootstrap = BootstrapAnalyzer()
         self.bayesian = BayesianFraudPrior()
         self.fpr_framework = FalsePositiveFramework(db_path)
+        self._legal_citations = legal_citations or self._DEFAULT_CITATIONS
 
     def generate_evidence(self, contract: Dict) -> StatisticalEvidence:
         """Generate complete statistical evidence package for a contract"""
@@ -1010,20 +1020,21 @@ class ProsecutorEvidencePackage:
         citations = []
 
         # Bootstrap markup assessment
+        lc = self._legal_citations
         if bootstrap_markup.is_significant:
             if bootstrap_markup.ci_lower > DOJProsecutionThresholds.EXTREME_MARKUP:
                 confidence_factors.append(95)
                 # EXTREME markup gets multiple citations - prosecution-ready on price alone
-                citations.append("31 U.S.C. § 3729(a)(1)(A) - Knowingly presenting false/fraudulent claim")
-                citations.append("31 U.S.C. § 3729(a)(1)(B) - Knowingly using false record material to claim")
-                citations.append(f"Price inflation >{DOJProsecutionThresholds.EXTREME_MARKUP}% - DOJ prosecution precedent (Oracle, Boeing, Lockheed)")
+                citations.append(lc.get("false_claims_law", self._DEFAULT_CITATIONS["false_claims_law"]))
+                citations.append(lc.get("false_records_law", self._DEFAULT_CITATIONS["false_records_law"]))
+                citations.append(f"Price inflation >{DOJProsecutionThresholds.EXTREME_MARKUP}% - {lc.get('extreme_markup_precedent', self._DEFAULT_CITATIONS['extreme_markup_precedent'])}")
             elif bootstrap_markup.ci_lower > DOJProsecutionThresholds.HIGH_MARKUP:
                 confidence_factors.append(85)
-                citations.append("31 U.S.C. § 3729(a)(1)(A) - Knowingly presenting false/fraudulent claim")
-                citations.append(f"Price inflation >{DOJProsecutionThresholds.HIGH_MARKUP}% - DOJ investigation threshold")
+                citations.append(lc.get("false_claims_law", self._DEFAULT_CITATIONS["false_claims_law"]))
+                citations.append(f"Price inflation >{DOJProsecutionThresholds.HIGH_MARKUP}% - investigation threshold")
             elif bootstrap_markup.ci_lower > DOJProsecutionThresholds.ELEVATED_MARKUP:
                 confidence_factors.append(75)
-                citations.append("31 U.S.C. § 3729(a)(1)(A) - False Claims Act price inflation")
+                citations.append(lc.get("false_claims_law", self._DEFAULT_CITATIONS["false_claims_law"]))
             else:
                 confidence_factors.append(65)
 
@@ -1048,7 +1059,7 @@ class ProsecutorEvidencePackage:
         if contract.get('has_donations', False):
             if len(confidence_factors) > 0:
                 confidence_factors.append(85)
-                citations.append("Anti-Kickback Act § 8702 - Quid pro quo indicator")
+                citations.append(lc.get("anti_kickback_law", self._DEFAULT_CITATIONS["anti_kickback_law"]))
 
         # Calculate final confidence
         if not confidence_factors:

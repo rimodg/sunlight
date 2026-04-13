@@ -1,0 +1,178 @@
+"""
+Tests for CRI legal citation propagation through jurisdiction profiles.
+
+Verifies that _determine_tier() emits jurisdiction-appropriate legal citations
+from the active profile's legal_citations dict, rather than hardcoded US statutes.
+
+Run: pytest tests/test_jurisdiction_citation_propagation.py -v
+"""
+
+import pytest
+import numpy as np
+
+from institutional_statistical_rigor import (
+    ProsecutorEvidencePackage,
+    BootstrapResult,
+    BayesianResult,
+    DOJProsecutionThresholds,
+    FraudTier,
+)
+from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT
+
+
+# ---------------------------------------------------------------------------
+# Helpers — build synthetic bootstrap / bayesian results for _determine_tier()
+# ---------------------------------------------------------------------------
+
+def _make_bootstrap(ci_lower: float, is_significant: bool = True) -> BootstrapResult:
+    """Create a BootstrapResult with controlled ci_lower."""
+    return BootstrapResult(
+        point_estimate=ci_lower * 1.2,
+        ci_lower=ci_lower,
+        ci_upper=ci_lower * 1.5,
+        ci_width=ci_lower * 0.3,
+        confidence_level=0.95,
+        n_iterations=1000,
+        sample_size=10,
+        p_value=0.001 if is_significant else 0.5,
+        is_significant=is_significant,
+        interpretation="test",
+    )
+
+
+def _make_bayesian(posterior: float = 0.5) -> BayesianResult:
+    """Create a BayesianResult with controlled posterior."""
+    return BayesianResult(
+        prior_probability=0.03,
+        likelihood_ratio=2.0,
+        posterior_probability=posterior,
+        base_rate_source="test",
+        sensitivity=0.9,
+        specificity=0.95,
+        interpretation="test",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Test 1: US profile emits US statutes
+# ---------------------------------------------------------------------------
+
+class TestUSProfileCitations:
+    """When ProsecutorEvidencePackage is constructed with US_FEDERAL legal_citations,
+    _determine_tier() must emit US-specific statutes."""
+
+    def test_extreme_markup_emits_us_false_claims_act(self, temp_db):
+        pkg = ProsecutorEvidencePackage(temp_db, legal_citations=US_FEDERAL.legal_citations)
+        markup = _make_bootstrap(ci_lower=DOJProsecutionThresholds.EXTREME_MARKUP + 50)
+        percentile = _make_bootstrap(ci_lower=50, is_significant=False)
+        bayesian = _make_bayesian(posterior=0.5)
+
+        tier, conf, citations = pkg._determine_tier(markup, percentile, bayesian, {})
+
+        assert tier == FraudTier.RED
+        assert any("31 U.S.C. § 3729(a)(1)(A)" in c for c in citations), \
+            f"Expected US False Claims Act citation, got: {citations}"
+        assert any("31 U.S.C. § 3729(a)(1)(B)" in c for c in citations), \
+            f"Expected US false records citation, got: {citations}"
+        assert any("Oracle, Boeing, Lockheed" in c for c in citations), \
+            f"Expected DOJ precedent citation, got: {citations}"
+
+    def test_donations_emit_us_anti_kickback(self, temp_db):
+        pkg = ProsecutorEvidencePackage(temp_db, legal_citations=US_FEDERAL.legal_citations)
+        markup = _make_bootstrap(ci_lower=DOJProsecutionThresholds.ELEVATED_MARKUP + 10)
+        percentile = _make_bootstrap(ci_lower=50, is_significant=False)
+        bayesian = _make_bayesian(posterior=0.5)
+
+        tier, conf, citations = pkg._determine_tier(
+            markup, percentile, bayesian, {"has_donations": True}
+        )
+
+        assert any("41 U.S.C. § 8702" in c for c in citations), \
+            f"Expected US Anti-Kickback Act citation, got: {citations}"
+
+
+# ---------------------------------------------------------------------------
+# Test 2: UK profile emits UK statutes and NOT US statutes
+# ---------------------------------------------------------------------------
+
+class TestUKProfileCitations:
+    """When ProsecutorEvidencePackage is constructed with UK_CENTRAL_GOVERNMENT
+    legal_citations, _determine_tier() must emit UK-specific statutes and must
+    NOT emit any US statute references."""
+
+    def test_extreme_markup_emits_uk_fraud_act(self, temp_db):
+        pkg = ProsecutorEvidencePackage(temp_db, legal_citations=UK_CENTRAL_GOVERNMENT.legal_citations)
+        markup = _make_bootstrap(ci_lower=DOJProsecutionThresholds.EXTREME_MARKUP + 50)
+        percentile = _make_bootstrap(ci_lower=50, is_significant=False)
+        bayesian = _make_bayesian(posterior=0.5)
+
+        tier, conf, citations = pkg._determine_tier(markup, percentile, bayesian, {})
+
+        assert tier == FraudTier.RED
+        assert any("Fraud Act 2006" in c for c in citations), \
+            f"Expected UK Fraud Act citation, got: {citations}"
+        assert any("Rolls-Royce, Airbus, Tesco" in c for c in citations), \
+            f"Expected UK SFO DPA precedent, got: {citations}"
+        # Must NOT contain US-specific references
+        for c in citations:
+            assert "U.S.C." not in c, f"UK profile must not emit US statute, got: {c}"
+            assert "DOJ prosecution precedent" not in c, f"UK profile must not reference DOJ, got: {c}"
+
+    def test_donations_emit_uk_bribery_act(self, temp_db):
+        pkg = ProsecutorEvidencePackage(temp_db, legal_citations=UK_CENTRAL_GOVERNMENT.legal_citations)
+        markup = _make_bootstrap(ci_lower=DOJProsecutionThresholds.ELEVATED_MARKUP + 10)
+        percentile = _make_bootstrap(ci_lower=50, is_significant=False)
+        bayesian = _make_bayesian(posterior=0.5)
+
+        tier, conf, citations = pkg._determine_tier(
+            markup, percentile, bayesian, {"has_donations": True}
+        )
+
+        assert any("Bribery Act 2010" in c for c in citations), \
+            f"Expected UK Bribery Act citation, got: {citations}"
+        for c in citations:
+            assert "Anti-Kickback Act" not in c, f"UK profile must not emit US AKA, got: {c}"
+
+
+# ---------------------------------------------------------------------------
+# Test 3: Minimal/empty profile gets fallback, NOT US statutes
+# ---------------------------------------------------------------------------
+
+class TestFallbackCitations:
+    """When ProsecutorEvidencePackage is constructed with no legal_citations
+    (the default), _determine_tier() must emit generic fallback citations
+    and NOT US-specific statute numbers."""
+
+    def test_extreme_markup_emits_generic_fallback(self, temp_db):
+        pkg = ProsecutorEvidencePackage(temp_db)  # no legal_citations
+        markup = _make_bootstrap(ci_lower=DOJProsecutionThresholds.EXTREME_MARKUP + 50)
+        percentile = _make_bootstrap(ci_lower=50, is_significant=False)
+        bayesian = _make_bayesian(posterior=0.5)
+
+        tier, conf, citations = pkg._determine_tier(markup, percentile, bayesian, {})
+
+        assert tier == FraudTier.RED
+        # Must contain generic fallback language
+        assert any("False claims" in c or "fraudulent misrepresentation" in c for c in citations), \
+            f"Expected generic false claims fallback, got: {citations}"
+        assert any("False records" in c or "material misstatement" in c for c in citations), \
+            f"Expected generic false records fallback, got: {citations}"
+        # Must NOT contain US-specific statute references
+        for c in citations:
+            assert "U.S.C." not in c, f"Default profile must not emit US statute, got: {c}"
+            assert "Anti-Kickback Act" not in c, f"Default profile must not emit US AKA, got: {c}"
+
+    def test_donations_emit_generic_anti_corruption(self, temp_db):
+        pkg = ProsecutorEvidencePackage(temp_db)  # no legal_citations
+        markup = _make_bootstrap(ci_lower=DOJProsecutionThresholds.ELEVATED_MARKUP + 10)
+        percentile = _make_bootstrap(ci_lower=50, is_significant=False)
+        bayesian = _make_bayesian(posterior=0.5)
+
+        tier, conf, citations = pkg._determine_tier(
+            markup, percentile, bayesian, {"has_donations": True}
+        )
+
+        assert any("Anti-corruption" in c or "quid pro quo" in c for c in citations), \
+            f"Expected generic anti-corruption fallback, got: {citations}"
+        for c in citations:
+            assert "§ 8702" not in c, f"Default profile must not emit US AKA section, got: {c}"
