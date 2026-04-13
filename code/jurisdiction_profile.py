@@ -384,6 +384,7 @@ class JurisdictionProfile:
             "clear_and_convincing",
             "balance_of_probabilities",
             "more_likely_than_not",
+            "french_cjip_admission_of_facts",
             "reasonable_suspicion",
         ]
         if self.evidentiary_standard not in valid_standards:
@@ -958,6 +959,187 @@ register_profile(WB_INT)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# FRANCE PNF PROFILE (Phase E item 33)
+# ═══════════════════════════════════════════════════════════════════════════
+
+FRANCE_PNF = JurisdictionProfile(
+    # Identity
+    name="france_pnf",
+    description=(
+        "France — Parquet National Financier. Covers procurement under French public "
+        "contract law (Code de la commande publique) and EU procurement directives as "
+        "transposed into French law. EUR currency, calendar-year fiscal alignment. "
+        "Evidentiary standard: french_cjip_admission_of_facts (corporate admission of "
+        "facts and acceptance of penal characterization under Article 41-1-2 CPP). "
+        "Base rate 2.5% reflects France's mature prosecution context (TI CPI parity "
+        "with UK). Loi Sapin II (2016) provides the overarching anti-corruption framework."
+    ),
+    country_code="FR",
+
+    # Fiscal calendar (French public bodies: January 1 – December 31)
+    fiscal_year_end_month=12,  # December
+    fiscal_year_end_day=31,
+    fiscal_q4_months=[10, 11, 12],  # October, November, December
+    fiscal_safe_months=[1, 2, 3, 4, 5, 6, 7, 8, 9],  # All months outside fiscal Q4
+
+    # Procurement thresholds
+    competitive_threshold=143_000,  # EUR 143K — formalized-procedure threshold (Code de la commande publique, EU Directive 2014/24/EU)
+    currency="EUR",
+    mega_contract_threshold=5_350_000,  # EUR 5.35M — EU Directive works threshold for maximum procedural scrutiny
+
+    # Price variation tolerances
+    max_award_inflation_pct=15.0,  # EU/French standard
+    competitive_pricing_tolerance_pct=20.0,  # ±20% — same default as UK and WB_INT pending MJPIS calibration
+
+    # Legal framework
+    legal_citations={
+        # --- TCA rule consumers (PROC-001, ENT-001, ENT-002) ---
+        "procurement_law": (
+            "Code de la commande publique (Ordonnance n° 2018-1074 du 26 novembre 2018, "
+            "consolidated 2024); "
+            "Directive 2014/24/UE relative à la passation des marchés publics "
+            "(transposed into French law); "
+            "Directive 2014/25/UE (utilities sector); "
+            "Loi n° 2016-1691 du 9 décembre 2016 relative à la transparence, à la lutte "
+            "contre la corruption et à la modernisation de la vie économique (Sapin II)"
+        ),
+        "case_authority": (
+            "Parquet National Financier enforcement precedent: "
+            "Airbus SE (CJIP 2020, EUR 2.083B global resolution with DOJ/SFO); "
+            "Bolloré (CJIP 2021, EUR 12M Togo ports); "
+            "Société Générale (CJIP 2018, EUR 250.15M Libya sovereign wealth fund); "
+            "Egis Avia (CJIP 2019, EUR 2.6M Algeria airport terminal); "
+            "Bouygues Bâtiment Sud Est / Linkcity Sud Est (CJIP 2023, EUR 7.964M "
+            "Centre Hospitalier Annecy Genevois procurement favoritism); "
+            "Airbus SE (CJIP 2022, EUR 15.856M Libya/Kazakhstan/IPA follow-on)"
+        ),
+        # --- CRI _determine_tier() consumers ---
+        "false_claims_law": (
+            "Code pénal Art. 441-1 — Faux (forgery and use of false documents); "
+            "Code pénal Art. 441-6 — Fourniture frauduleuse de document "
+            "(fraudulent provision of documents); "
+            "Code pénal Art. 313-1 — Escroquerie (fraud)"
+        ),
+        "false_records_law": (
+            "Code pénal Art. 441-1 — Faux et usage de faux (forgery and use of forgery); "
+            "Code pénal Art. 441-2 — Faux en écriture publique (forgery in public records); "
+            "Code de commerce L. 242-6 — Présentation de comptes annuels ne donnant pas "
+            "une image fidèle (presenting accounts that do not give a true and fair view)"
+        ),
+        "anti_kickback_law": (
+            "Code pénal Art. 433-1 — Corruption active d'agent public "
+            "(active bribery of French public officials); "
+            "Code pénal Art. 432-11 — Corruption passive et trafic d'influence par "
+            "personne exerçant une fonction publique (passive bribery and trading in "
+            "influence by public officials); "
+            "Code pénal Art. 433-2 — Trafic d'influence par particuliers "
+            "(trading in influence by private persons)"
+        ),
+        "extreme_markup_precedent": (
+            "PNF CJIP precedent on extreme overcharging and disgorgement: "
+            "Airbus SE 2020 (EUR 2.083B, largest French anti-bribery settlement); "
+            "Société Générale 2018 (EUR 250.15M, USD 90M in bribes over USD 3.66B "
+            "of investments, channel ratio 2.46%); "
+            "Bolloré 2021 (EUR 12M, Togo ports concession); "
+            "Egis Avia 2019 (EUR 2.6M, disgorgement calculated as margin plus "
+            "intermediary commissions)"
+        ),
+        # --- Institutional depth keys ---
+        "foreign_bribery_law": (
+            "Code pénal Art. 435-3 — Corruption active d'agent public étranger "
+            "(active bribery of foreign public officials); "
+            "Code pénal Art. 435-4 — Corruption passive d'agent public étranger; "
+            "Loi Sapin II (Loi n° 2016-1691 du 9 décembre 2016) — French transposition "
+            "of OECD Anti-Bribery Convention 1997; "
+            "Convention des Nations Unies contre la corruption (UNCAC) — ratified by "
+            "France 11 July 2005"
+        ),
+        "audit_oversight_law": (
+            "Cour des comptes (French Court of Accounts) — constitutional audit "
+            "institution under Articles 47-2 and L. 111-1 Code des juridictions "
+            "financières; "
+            "Chambres régionales des comptes (Regional Courts of Accounts); "
+            "Haute Autorité pour la transparence de la vie publique (HATVP); "
+            "Agence française anticorruption (AFA) — established by Loi Sapin II, "
+            "Articles 1-5"
+        ),
+        "sanctions_debarment_law": (
+            "Code de la commande publique L. 2141-1 à L. 2141-11 — Exclusions "
+            "obligatoires et facultatives (mandatory and optional exclusions from "
+            "public contracts); "
+            "Directive 2014/24/UE Art. 57 — Grounds for exclusion; "
+            "Code pénal Art. 131-39 — Peines applicables aux personnes morales incluant "
+            "l'exclusion des marchés publics (penalties applicable to legal persons "
+            "including exclusion from public contracts)"
+        ),
+        "conflict_of_interest_law": (
+            "Code pénal Art. 432-12 — Prise illégale d'intérêts (unlawful taking of "
+            "interests by public officials); "
+            "Code pénal Art. 432-13 — Pantouflage (illegal post-public-service private "
+            "employment restrictions); "
+            "Loi n° 2013-907 du 11 octobre 2013 relative à la transparence de la vie "
+            "publique — Déontologie et déclarations d'intérêts; "
+            "Charte de déontologie des agents publics"
+        ),
+        "whistleblower_protection_law": (
+            "Loi n° 2016-1691 du 9 décembre 2016 (Sapin II) Chapitre II Articles 6-16 "
+            "— Protection des lanceurs d'alerte (whistleblower protection); "
+            "Loi n° 2022-401 du 21 mars 2022 améliorant la protection des lanceurs "
+            "d'alerte (transposition of EU Directive 2019/1937); "
+            "Défenseur des droits — autorité compétente pour les signalements"
+        ),
+    },
+    # universal_citations: uses dataclass default (full UNCAC + OECD list)
+    oversight_body_names=[
+        "Agence française anticorruption",
+        "AFA",
+        "Cour des comptes",
+        "Haute Autorité pour la transparence de la vie publique",
+        "HATVP",
+        "Parquet National Financier",
+        "PNF",
+    ],
+
+    # CRI statistical calibration (GLOBAL parameters — referencing mjpis_draft_v0)
+    global_params_version="mjpis_draft_v0",
+    base_rate=0.025,  # 2.5% — France/UK TI CPI parity
+    evidentiary_standard="french_cjip_admission_of_facts",  # PNF CJIP standard under Art. 41-1-2 CPP
+    red_posterior_threshold=0.72,  # mjpis_draft_v0 value (pending FR-specific calibration)
+    yellow_posterior_threshold=0.38,  # mjpis_draft_v0 value (pending FR-specific calibration)
+    min_typologies_for_red=2,  # mjpis_draft_v0 value
+    min_ci_for_yellow=66,  # mjpis_draft_v0 value
+    fdr_alpha=0.05,  # mjpis_draft_v0 value
+    bootstrap_ci_level=0.95,  # mjpis_draft_v0 value
+    bootstrap_n_resamples=10_000,  # Production standard
+    max_flags_per_1k=150,  # mjpis_draft_v0 value
+
+    # Metadata
+    notes=(
+        "Fourth jurisdiction profile — completes MJPIS operational coverage. Covers "
+        "French public procurement under Code de la commande publique and EU directives. "
+        "Loi Sapin II (2016) is the overarching anti-corruption framework. PNF's CJIP "
+        "standard ('french_cjip_admission_of_facts') requires corporate admission of facts "
+        "and acceptance of penal characterization under Article 41-1-2 CPP — distinct from "
+        "US plea, UK DPA, and WB administrative standards. Base rate 2.5% reflects France's "
+        "mature prosecution context (TI CPI ~21st globally, parity with UK). Statistical "
+        "thresholds match mjpis_draft_v0 pending FR-specific calibration."
+    ),
+    source_citations=[
+        "Code de la commande publique (Ordonnance n° 2018-1074 du 26 novembre 2018)",
+        "Directive 2014/24/UE du 26 février 2014 — Passation des marchés publics",
+        "Loi n° 2016-1691 du 9 décembre 2016 (Sapin II)",
+        "Code pénal — Livre IV, Titre III (Des atteintes à l'autorité de l'État)",
+        "Parquet National Financier CJIP records 2017-2023",
+        "Agence française anticorruption annual reports",
+        "Transparency International Corruption Perceptions Index 2024",
+    ],
+)
+
+# Register france_pnf profile
+register_profile(FRANCE_PNF)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # IMPORT-TIME SANITY CHECK: Global parameters registry consistency
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -992,6 +1174,16 @@ assert _WB_INT_GLOBAL.fdr_alpha == WB_INT.fdr_alpha, \
     f"WB_INT fdr_alpha mismatch: registry={_WB_INT_GLOBAL.fdr_alpha}, profile={WB_INT.fdr_alpha}"
 assert _WB_INT_GLOBAL.bootstrap_n_resamples == WB_INT.bootstrap_n_resamples, \
     f"WB_INT bootstrap_n_resamples mismatch: registry={_WB_INT_GLOBAL.bootstrap_n_resamples}, profile={WB_INT.bootstrap_n_resamples}"
+
+_FRANCE_PNF_GLOBAL = get_global_parameters(FRANCE_PNF.global_params_version)
+assert _FRANCE_PNF_GLOBAL.red_posterior_threshold == FRANCE_PNF.red_posterior_threshold, \
+    f"FRANCE_PNF red_posterior_threshold mismatch: registry={_FRANCE_PNF_GLOBAL.red_posterior_threshold}, profile={FRANCE_PNF.red_posterior_threshold}"
+assert _FRANCE_PNF_GLOBAL.yellow_posterior_threshold == FRANCE_PNF.yellow_posterior_threshold, \
+    f"FRANCE_PNF yellow_posterior_threshold mismatch: registry={_FRANCE_PNF_GLOBAL.yellow_posterior_threshold}, profile={FRANCE_PNF.yellow_posterior_threshold}"
+assert _FRANCE_PNF_GLOBAL.fdr_alpha == FRANCE_PNF.fdr_alpha, \
+    f"FRANCE_PNF fdr_alpha mismatch: registry={_FRANCE_PNF_GLOBAL.fdr_alpha}, profile={FRANCE_PNF.fdr_alpha}"
+assert _FRANCE_PNF_GLOBAL.bootstrap_n_resamples == FRANCE_PNF.bootstrap_n_resamples, \
+    f"FRANCE_PNF bootstrap_n_resamples mismatch: registry={_FRANCE_PNF_GLOBAL.bootstrap_n_resamples}, profile={FRANCE_PNF.bootstrap_n_resamples}"
 
 
 # ═══════════════════════════════════════════════════════════════════════════

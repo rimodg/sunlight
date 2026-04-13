@@ -19,7 +19,7 @@ from institutional_statistical_rigor import (
     DOJProsecutionThresholds,
     FraudTier,
 )
-from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT, WB_INT
+from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT, WB_INT, FRANCE_PNF
 from tca_rules import build_rules
 
 
@@ -483,3 +483,77 @@ class TestWBIntProfile:
     def test_fiscal_year_end_month_is_june(self):
         assert WB_INT.fiscal_year_end_month == 6, \
             f"Expected 6 (June), got {WB_INT.fiscal_year_end_month}"
+
+
+# ---------------------------------------------------------------------------
+# Test 12: FRANCE_PNF profile — 11 legal_citations keys
+# ---------------------------------------------------------------------------
+
+class TestFrancePNFProfile:
+    """FRANCE_PNF profile must contain all 11 institutional-grade legal_citations
+    keys with correct French statutory values, and France-specific local parameters."""
+
+    def test_all_11_keys_present(self):
+        lc = FRANCE_PNF.legal_citations
+        expected = {
+            "procurement_law", "case_authority",
+            "false_claims_law", "false_records_law", "anti_kickback_law",
+            "extreme_markup_precedent",
+            "foreign_bribery_law", "audit_oversight_law", "sanctions_debarment_law",
+            "conflict_of_interest_law", "whistleblower_protection_law",
+        }
+        assert set(lc.keys()) == expected, \
+            f"Expected 11 keys, got {len(lc)}: missing={expected - set(lc.keys())}, extra={set(lc.keys()) - expected}"
+
+    def test_four_way_key_parity(self):
+        us_keys = set(US_FEDERAL.legal_citations.keys())
+        uk_keys = set(UK_CENTRAL_GOVERNMENT.legal_citations.keys())
+        wb_keys = set(WB_INT.legal_citations.keys())
+        fr_keys = set(FRANCE_PNF.legal_citations.keys())
+        assert us_keys == uk_keys == wb_keys == fr_keys, (
+            f"Four-way parity broken. "
+            f"US-only: {us_keys - fr_keys}, UK-only: {uk_keys - fr_keys}, "
+            f"WB-only: {wb_keys - fr_keys}, FR-only: {fr_keys - us_keys}"
+        )
+
+    def test_procurement_law_contains_code_and_directives(self):
+        v = FRANCE_PNF.legal_citations["procurement_law"]
+        assert "Code de la commande publique" in v, f"Missing Code de la commande publique: {v}"
+        assert "Directive 2014/24/UE" in v, f"Missing Directive 2014/24/UE: {v}"
+        assert "Sapin II" in v, f"Missing Sapin II: {v}"
+
+    def test_foreign_bribery_law_contains_art_435_and_sapin(self):
+        v = FRANCE_PNF.legal_citations["foreign_bribery_law"]
+        assert "Art. 435-3" in v, f"Missing Art. 435-3: {v}"
+        assert "Sapin II" in v, f"Missing Sapin II: {v}"
+        assert "UNCAC" in v, f"Missing UNCAC: {v}"
+
+    def test_case_authority_aggregates_pnf_corpus_cases(self):
+        v = FRANCE_PNF.legal_citations["case_authority"]
+        assert "Airbus" in v, f"Missing Airbus: {v}"
+        assert "Société Générale" in v, f"Missing Société Générale: {v}"
+        assert "Bolloré" in v, f"Missing Bolloré: {v}"
+        assert "Egis Avia" in v, f"Missing Egis Avia: {v}"
+        assert "Bouygues" in v, f"Missing Bouygues: {v}"
+
+    def test_anti_kickback_law_contains_code_penal_articles(self):
+        v = FRANCE_PNF.legal_citations["anti_kickback_law"]
+        assert "Art. 433-1" in v, f"Missing Art. 433-1: {v}"
+        assert "Art. 432-11" in v, f"Missing Art. 432-11: {v}"
+
+    def test_sanctions_debarment_law_contains_exclusion_articles(self):
+        v = FRANCE_PNF.legal_citations["sanctions_debarment_law"]
+        assert "L. 2141" in v, f"Missing L. 2141: {v}"
+        assert "Directive 2014/24/UE Art. 57" in v, f"Missing Directive Art. 57: {v}"
+
+    def test_evidentiary_standard_is_french_cjip(self):
+        assert FRANCE_PNF.evidentiary_standard == "french_cjip_admission_of_facts", \
+            f"Expected 'french_cjip_admission_of_facts', got '{FRANCE_PNF.evidentiary_standard}'"
+
+    def test_currency_and_country_code(self):
+        assert FRANCE_PNF.currency == "EUR", f"Expected EUR, got {FRANCE_PNF.currency}"
+        assert FRANCE_PNF.country_code == "FR", f"Expected FR, got {FRANCE_PNF.country_code}"
+
+    def test_fiscal_year_end_month_is_december(self):
+        assert FRANCE_PNF.fiscal_year_end_month == 12, \
+            f"Expected 12 (December), got {FRANCE_PNF.fiscal_year_end_month}"
