@@ -52,6 +52,57 @@ from sunlight_logging import get_logger
 
 logger = get_logger("evaluation")
 
+
+def resolve_db_path(cli_db: str) -> str:
+    """
+    Resolve the production DB path using a strict precedence chain.
+
+    Precedence (highest to lowest):
+        1. SUNLIGHT_DB_PATH environment variable (absolute path)
+        2. --db CLI flag value
+        3. data/sunlight.db (relative to CWD)
+        4. ../data/sunlight.db (fallback for invocation from code/)
+
+    Returns the resolved path as an absolute path string.
+    """
+    env_path = os.environ.get("SUNLIGHT_DB_PATH")
+    if env_path:
+        return os.path.abspath(env_path)
+    if os.path.exists(cli_db):
+        return os.path.abspath(cli_db)
+    fallback = "../data/sunlight.db"
+    if os.path.exists(fallback):
+        return os.path.abspath(fallback)
+    return os.path.abspath(cli_db)
+
+
+def verify_db_has_contracts(db_path: str) -> None:
+    """
+    Verify the connected DB contains the contracts table required by the
+    DOJ regression gate. Raises RuntimeError with diagnostic details if
+    the table is missing.
+    """
+    conn = sqlite3.connect(db_path)
+    try:
+        tables = [
+            row[0]
+            for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            ).fetchall()
+        ]
+    finally:
+        conn.close()
+    if "contracts" not in tables:
+        raise RuntimeError(
+            f"DOJ regression gate: connected to DB at {db_path!r} "
+            f"but it lacks the 'contracts' table. Tables found: {tables}. "
+            f"This usually means the script ran from the wrong CWD — the "
+            f"production DB is at /Users/rimodg/brain/SUNLIGHT/data/sunlight.db. "
+            f"Run from /Users/rimodg/brain/SUNLIGHT/ or pass --db with an "
+            f"absolute path, or set SUNLIGHT_DB_PATH env var."
+        )
+
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -590,7 +641,13 @@ def write_evaluation_report_md(report: Dict, path: str):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="SUNLIGHT Evaluation Framework")
-    parser.add_argument('--db', default='data/sunlight.db')
+    parser.add_argument(
+        '--db', default='data/sunlight.db',
+        help=(
+            "Path to the production SQLite DB. Precedence: SUNLIGHT_DB_PATH "
+            "env var > this flag > data/sunlight.db > ../data/sunlight.db"
+        ),
+    )
     parser.add_argument('--cases', default='prosecuted_cases.json')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--bootstrap', type=int, default=1000)
@@ -613,9 +670,8 @@ if __name__ == "__main__":
                         help='CI mode: enforce gates and exit 1 on failure')
     args = parser.parse_args()
 
-    db = args.db
-    if not os.path.exists(db):
-        db = '../data/sunlight.db'
+    db = resolve_db_path(args.db)
+    verify_db_has_contracts(db)
     cases = args.cases
     if not os.path.exists(cases):
         cases = '../prosecuted_cases.json'
