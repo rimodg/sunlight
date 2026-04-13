@@ -701,13 +701,55 @@ UK_CENTRAL_GOVERNMENT = JurisdictionProfile(
 
     # Legal framework
     legal_citations={
-        "procurement_law": "UK Procurement Act 2023",
+        # --- TCA rule consumers (PROC-001, ENT-001, ENT-002) ---
+        "procurement_law": (
+            "Procurement Act 2023 (effective 24 February 2025); "
+            "Public Contracts Regulations 2015 (legacy regulations for pre-2025 contracts); "
+            "Concession Contracts Regulations 2016; "
+            "Utilities Contracts Regulations 2016"
+        ),
         "competition_law": "Competition Act 1998",
-        "case_authority": "UK Serious Fraud Office — Crown Prosecution 2015-2025",
+        "case_authority": (
+            "UK SFO enforcement precedent: R v Rolls-Royce (SFO DPA 2017, £497.3M); "
+            "R v Airbus SE (SFO DPA 2020, £991M); "
+            "R v Standard Bank (SFO DPA 2015, $32.2M); "
+            "R v Tesco (SFO DPA 2017, £129M); "
+            "R v Petrofac (Southwark Crown Court conviction 2021, £77M); "
+            "SFO v Serco Geografix (SFO DPA 2019, £22.9M)"
+        ),
+        # --- CRI _determine_tier() consumers (commit 39b5d65, locked by tests) ---
         "false_claims_law": "Fraud Act 2006 s.2 - Fraud by false representation",
         "false_records_law": "Fraud Act 2006 s.3 - Fraud by failing to disclose information",
         "anti_kickback_law": "Bribery Act 2010 s.1 - Bribing another person",
         "extreme_markup_precedent": "UK SFO DPA precedent (Rolls-Royce, Airbus, Tesco)",
+        # --- Institutional depth keys (not yet consumed by rules) ---
+        "foreign_bribery_law": (
+            "Bribery Act 2010 s.6 — Bribery of foreign public officials; "
+            "Bribery Act 2010 s.7 — Failure of commercial organisations to prevent bribery; "
+            "OECD Anti-Bribery Convention 1997 as implemented by Part 12 of the "
+            "Anti-terrorism, Crime and Security Act 2001"
+        ),
+        "audit_oversight_law": (
+            "National Audit Act 1983; "
+            "Government Resources and Accounts Act 2000; "
+            "Budget Responsibility and National Audit Act 2011 — establishing the "
+            "National Audit Office (NAO) and the Comptroller and Auditor General"
+        ),
+        "sanctions_debarment_law": (
+            "Procurement Act 2023 Part 5 — Excluded and Excludable Suppliers; "
+            "Procurement Act 2023 s.57-58 — Debarment List; "
+            "Cabinet Office Procurement Policy Note on Exclusion and Debarment"
+        ),
+        "conflict_of_interest_law": (
+            "Bribery Act 2010 ss.1-2 — General bribery offences; "
+            "Constitutional Reform and Governance Act 2010 — Civil Service Code; "
+            "Standards in Public Life — The Seven Principles (Nolan Principles)"
+        ),
+        "whistleblower_protection_law": (
+            "Public Interest Disclosure Act 1998; "
+            "Employment Rights Act 1996 Part IVA — Protected Disclosures; "
+            "Enterprise and Regulatory Reform Act 2013 s.17 — Disclosures in the public interest"
+        ),
     },
     # universal_citations: uses dataclass default (full UNCAC + OECD list)
     oversight_body_names=[

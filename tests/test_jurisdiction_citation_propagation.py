@@ -242,8 +242,8 @@ class TestPROC001UKCentralGovUniversalCitations:
 
     def test_contains_uk_procurement_law(self):
         ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
-        assert "UK Procurement Act 2023" in ev, \
-            f"Missing UK Procurement Act 2023 in: {ev[:200]}"
+        assert "Procurement Act 2023" in ev, \
+            f"Missing Procurement Act 2023 in: {ev[:200]}"
 
 
 # ---------------------------------------------------------------------------
@@ -324,3 +324,61 @@ class TestUSFederalInstitutionalDepth:
         assert "FAR Part 6" in v or "FAR) Part 6" in v, f"Missing FAR Part 6: {v}"
         assert "FAR Part 15" in v, f"Missing FAR Part 15: {v}"
         assert "FAR Part 13" in v, f"Missing FAR Part 13: {v}"
+
+
+# ---------------------------------------------------------------------------
+# Test 8: uk_central_government institutional depth — 12 legal_citations keys
+# ---------------------------------------------------------------------------
+
+class TestUKCentralGovInstitutionalDepth:
+    """uk_central_government profile must contain all 12 institutional-grade
+    legal_citations keys with correct UK statutory values."""
+
+    def test_all_12_keys_present(self):
+        lc = UK_CENTRAL_GOVERNMENT.legal_citations
+        assert set(lc.keys()) == _EXPECTED_US_FEDERAL_KEYS, \
+            f"Expected 12 keys, got {len(lc)}: missing={_EXPECTED_US_FEDERAL_KEYS - set(lc.keys())}, extra={set(lc.keys()) - _EXPECTED_US_FEDERAL_KEYS}"
+
+    def test_foreign_bribery_law_contains_bribery_act_ss6_7(self):
+        v = UK_CENTRAL_GOVERNMENT.legal_citations["foreign_bribery_law"]
+        assert "Bribery Act 2010 s.6" in v, f"Missing BA 2010 s.6: {v}"
+        assert "Bribery Act 2010 s.7" in v, f"Missing BA 2010 s.7: {v}"
+        assert "OECD Anti-Bribery Convention" in v, f"Missing OECD Convention: {v}"
+
+    def test_audit_oversight_law_contains_nao(self):
+        v = UK_CENTRAL_GOVERNMENT.legal_citations["audit_oversight_law"]
+        assert "National Audit Act 1983" in v, f"Missing NAA 1983: {v}"
+        assert "Comptroller and Auditor General" in v, f"Missing CAG: {v}"
+
+    def test_sanctions_debarment_law_contains_pa2023_debarment(self):
+        v = UK_CENTRAL_GOVERNMENT.legal_citations["sanctions_debarment_law"]
+        assert "Procurement Act 2023" in v, f"Missing PA 2023: {v}"
+        assert "Debarment List" in v, f"Missing Debarment List: {v}"
+
+    def test_case_authority_aggregates_uk_sfo_corpus(self):
+        v = UK_CENTRAL_GOVERNMENT.legal_citations["case_authority"]
+        for name in ["Rolls-Royce", "Airbus", "Petrofac", "Tesco"]:
+            assert name in v, f"Missing {name} in case_authority: {v}"
+
+    def test_procurement_law_covers_pa2023_and_pcr2015(self):
+        v = UK_CENTRAL_GOVERNMENT.legal_citations["procurement_law"]
+        assert "Procurement Act 2023" in v, f"Missing PA 2023: {v}"
+        assert "Public Contracts Regulations 2015" in v, f"Missing PCR 2015: {v}"
+
+
+# ---------------------------------------------------------------------------
+# Test 9: Profile key parity — us_federal and uk_central_government must
+#         have identical legal_citations key sets
+# ---------------------------------------------------------------------------
+
+class TestProfileKeyParity:
+    """Load-bearing parity test: if the two profiles drift out of key parity
+    in any future commit, this test fails immediately."""
+
+    def test_us_uk_key_sets_identical(self):
+        us_keys = set(US_FEDERAL.legal_citations.keys())
+        uk_keys = set(UK_CENTRAL_GOVERNMENT.legal_citations.keys())
+        assert us_keys == uk_keys, (
+            f"Profile key parity broken. "
+            f"US-only: {us_keys - uk_keys}, UK-only: {uk_keys - us_keys}"
+        )
