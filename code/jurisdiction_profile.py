@@ -386,6 +386,7 @@ class JurisdictionProfile:
             "more_likely_than_not",
             "french_cjip_admission_of_facts",
             "wb_sanctions_board_decision",
+            "negotiated_resolution_agreement",
             "reasonable_suspicion",
         ]
         if self.evidentiary_standard not in valid_standards:
