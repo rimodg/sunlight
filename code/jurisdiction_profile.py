@@ -383,6 +383,7 @@ class JurisdictionProfile:
             "beyond_reasonable_doubt",
             "clear_and_convincing",
             "balance_of_probabilities",
+            "more_likely_than_not",
             "reasonable_suspicion",
         ]
         if self.evidentiary_standard not in valid_standards:
@@ -792,6 +793,171 @@ register_profile(UK_CENTRAL_GOVERNMENT)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# WORLD BANK INT PROFILE (Phase E item 32)
+# ═══════════════════════════════════════════════════════════════════════════
+
+WB_INT = JurisdictionProfile(
+    # Identity
+    name="wb_int",
+    description=(
+        "World Bank Group — Integrity Vice Presidency. Covers procurement under "
+        "IBRD/IDA-financed investment project financing (IPF). Contract values in USD "
+        "for cross-country comparability. WB fiscal year runs July 1 – June 30. "
+        "Evidentiary standard: more likely than not (WB Sanctions Board "
+        "civil-administrative standard, distinct from US DOJ criminal standard). "
+        "Base rate 4% reflects WB's developing-country operational footprint."
+    ),
+    country_code="INT",  # International — WB INT operates across all WB borrower countries
+
+    # Fiscal calendar (World Bank Group: July 1 – June 30)
+    fiscal_year_end_month=6,  # June
+    fiscal_year_end_day=30,
+    fiscal_q4_months=[4, 5, 6],  # April, May, June
+    fiscal_safe_months=[7, 8, 9, 10, 11, 12, 1, 2, 3],  # All months outside fiscal Q4
+
+    # Procurement thresholds
+    competitive_threshold=250_000,  # USD 250K ICB threshold for goods (WB Procurement Regulations)
+    currency="USD",
+    mega_contract_threshold=10_000_000,  # USD 10M — additional scrutiny per INT enforcement patterns
+
+    # Price variation tolerances
+    max_award_inflation_pct=15.0,  # WB Procurement Regulations standard
+    competitive_pricing_tolerance_pct=20.0,  # ±20% — broader tolerance for developing-country context
+
+    # Legal framework
+    legal_citations={
+        # --- TCA rule consumers (PROC-001, ENT-001, ENT-002) ---
+        "procurement_law": (
+            "World Bank Procurement Regulations for IPF Borrowers "
+            "(July 2016, revised November 2020 and September 2023); "
+            "World Bank Anti-Corruption Guidelines for IBRD and IDA Financed Projects "
+            "(revised January 2011); "
+            "World Bank Consultant Guidelines (revised 2014)"
+        ),
+        "case_authority": (
+            "World Bank Sanctions Board enforcement precedent: "
+            "SNC-Lavalin (2013 Padma Bridge, 10-year debarment); "
+            "Alstom Hydro France (2012 Zambia, USD 9.5M restitution); "
+            "Siemens AG (2009 global settlement, USD 100M anti-corruption payment); "
+            "Macmillan Limited (2010 Sudan MDTF education, 6-year debarment)"
+        ),
+        # --- CRI _determine_tier() consumers ---
+        "false_claims_law": (
+            "World Bank Anti-Corruption Guidelines § 1(a)(iv) — 'Fraudulent practice' "
+            "defined as any act or omission, including misrepresentation, that knowingly "
+            "or recklessly misleads or attempts to mislead a party to obtain a financial "
+            "or other benefit or to avoid an obligation; "
+            "WB Sanctions Procedures § III.A.3"
+        ),
+        "false_records_law": (
+            "World Bank Procurement Regulations Annex IV (IV.4) — misrepresentation in "
+            "bid documents and financial statements; "
+            "WB Anti-Corruption Guidelines § 1(a)(iv) — knowingly or recklessly false "
+            "representation in a financial context"
+        ),
+        "anti_kickback_law": (
+            "World Bank Anti-Corruption Guidelines § 1(a)(i) — 'Corrupt practice' "
+            "defined as offering, giving, receiving, or soliciting of anything of value "
+            "to influence improperly the actions of another party; "
+            "WB Sanctions Procedures § III.A.1"
+        ),
+        "extreme_markup_precedent": (
+            "World Bank Sanctions Board precedent on sanctionable misrepresentation "
+            "and overcharging: SNC-Lavalin Inc. Padma Bridge (2013, 10-year debarment, "
+            "longest in WB history at time of imposition); "
+            "Alstom Hydro France (2012, Zambia Kariba North hydropower, misconduct "
+            "under IBRD-financed project)"
+        ),
+        # --- Institutional depth keys ---
+        "foreign_bribery_law": (
+            "UNCAC Art. 16 — Bribery of foreign public officials and officials of "
+            "public international organizations (Article 16 specifically covers bribery "
+            "of international organization officials, which includes WB staff); "
+            "OECD Anti-Bribery Convention 1997 as incorporated into WB Anti-Corruption "
+            "Guidelines § 1(a)(i); "
+            "World Bank Staff Rule 03.01 — Standards of Professional Conduct"
+        ),
+        "audit_oversight_law": (
+            "World Bank Integrity Vice Presidency (INT) mandate under President's "
+            "Memorandum; WB Internal Audit Vice Presidency (IAD); "
+            "Independent Evaluation Group (IEG) charter; "
+            "WB Sanctions System consisting of the Office of Suspension and Debarment "
+            "(OSD) and the WB Group Sanctions Board (SB)"
+        ),
+        "sanctions_debarment_law": (
+            "World Bank Sanctions Procedures (2011, revised 2016); "
+            "World Bank Group Sanctioning Guidelines; "
+            "Agreement for Mutual Enforcement of Debarment Decisions among the African "
+            "Development Bank, Asian Development Bank, European Bank for Reconstruction "
+            "and Development, Inter-American Development Bank, and World Bank Group "
+            "(9 April 2010); "
+            "WB Integrity Compliance Officer (ICO) Terms of Reference"
+        ),
+        "conflict_of_interest_law": (
+            "WB Staff Rule 03.01 — Standards of Professional Conduct; "
+            "WB Staff Rule 03.02 — Conflicts of Interest; "
+            "WB Procurement Regulations § 3.16 — Conflict of Interest "
+            "(borrowers' procurement staff); "
+            "WB Code of Conduct for Bank Group Staff"
+        ),
+        "whistleblower_protection_law": (
+            "WB Staff Rule 08.02 — Whistleblower Protection for Bank Staff; "
+            "WB INT Reporting Mechanism (integrity complaints line); "
+            "WB Ethics Helpline — protected disclosure framework"
+        ),
+    },
+    # universal_citations: uses dataclass default (full UNCAC + OECD list)
+    oversight_body_names=[
+        "Integrity Vice Presidency",
+        "INT",
+        "Sanctions Board",
+        "Office of Suspension and Debarment",
+        "OSD",
+        "Independent Evaluation Group",
+        "IEG",
+    ],
+
+    # CRI statistical calibration (GLOBAL parameters — referencing mjpis_draft_v0)
+    global_params_version="mjpis_draft_v0",
+    base_rate=0.04,  # 4% — higher than US/UK given WB developing-country footprint
+    evidentiary_standard="more_likely_than_not",  # WB Sanctions Board civil-administrative standard
+    red_posterior_threshold=0.72,  # mjpis_draft_v0 value (pending WB-specific calibration)
+    yellow_posterior_threshold=0.38,  # mjpis_draft_v0 value (pending WB-specific calibration)
+    min_typologies_for_red=2,  # mjpis_draft_v0 value
+    min_ci_for_yellow=66,  # mjpis_draft_v0 value
+    fdr_alpha=0.05,  # mjpis_draft_v0 value
+    bootstrap_ci_level=0.95,  # mjpis_draft_v0 value
+    bootstrap_n_resamples=10_000,  # Production standard
+    max_flags_per_1k=150,  # mjpis_draft_v0 value
+
+    # Metadata
+    notes=(
+        "Third jurisdiction profile. Covers World Bank Group IPF procurement under "
+        "INT oversight. WB INT uses the MJPIS living standard (mjpis_draft_v0) rather "
+        "than a WB-specific isolated calibration, consistent with WB INT's role as one "
+        "of the four MJPIS intersection jurisdictions. Base rate 4% derived from INT's "
+        "historical sanctions rate across WB borrower countries. Evidentiary standard "
+        "'more_likely_than_not' is the WB Sanctions Board's civil-administrative standard "
+        "(functionally equivalent to 'balance of probabilities' but institutionally distinct). "
+        "Statistical thresholds match mjpis_draft_v0 pending WB-specific calibration in "
+        "future sub-task."
+    ),
+    source_citations=[
+        "World Bank Procurement Regulations for IPF Borrowers (July 2016, rev. Nov 2020, Sep 2023)",
+        "World Bank Anti-Corruption Guidelines for IBRD/IDA Financed Projects (rev. Jan 2011)",
+        "World Bank Sanctions Procedures (2011, rev. 2016)",
+        "World Bank Group Sanctioning Guidelines",
+        "Agreement for Mutual Enforcement of Debarment Decisions (9 April 2010)",
+        "World Bank INT Annual Reports 2013-2023",
+        "World Bank Sanctions Board decisions: SNC-Lavalin, Alstom, Siemens, Macmillan",
+    ],
+)
+
+# Register wb_int profile
+register_profile(WB_INT)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # IMPORT-TIME SANITY CHECK: Global parameters registry consistency
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -816,6 +982,16 @@ assert _UK_CENTRAL_GLOBAL.red_posterior_threshold == UK_CENTRAL_GOVERNMENT.red_p
     f"UK profile red_posterior_threshold mismatch: registry={_UK_CENTRAL_GLOBAL.red_posterior_threshold}, profile={UK_CENTRAL_GOVERNMENT.red_posterior_threshold}"
 assert _UK_CENTRAL_GLOBAL.yellow_posterior_threshold == UK_CENTRAL_GOVERNMENT.yellow_posterior_threshold, \
     f"UK profile yellow_posterior_threshold mismatch: registry={_UK_CENTRAL_GLOBAL.yellow_posterior_threshold}, profile={UK_CENTRAL_GOVERNMENT.yellow_posterior_threshold}"
+
+_WB_INT_GLOBAL = get_global_parameters(WB_INT.global_params_version)
+assert _WB_INT_GLOBAL.red_posterior_threshold == WB_INT.red_posterior_threshold, \
+    f"WB_INT red_posterior_threshold mismatch: registry={_WB_INT_GLOBAL.red_posterior_threshold}, profile={WB_INT.red_posterior_threshold}"
+assert _WB_INT_GLOBAL.yellow_posterior_threshold == WB_INT.yellow_posterior_threshold, \
+    f"WB_INT yellow_posterior_threshold mismatch: registry={_WB_INT_GLOBAL.yellow_posterior_threshold}, profile={WB_INT.yellow_posterior_threshold}"
+assert _WB_INT_GLOBAL.fdr_alpha == WB_INT.fdr_alpha, \
+    f"WB_INT fdr_alpha mismatch: registry={_WB_INT_GLOBAL.fdr_alpha}, profile={WB_INT.fdr_alpha}"
+assert _WB_INT_GLOBAL.bootstrap_n_resamples == WB_INT.bootstrap_n_resamples, \
+    f"WB_INT bootstrap_n_resamples mismatch: registry={_WB_INT_GLOBAL.bootstrap_n_resamples}, profile={WB_INT.bootstrap_n_resamples}"
 
 
 # ═══════════════════════════════════════════════════════════════════════════

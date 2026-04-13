@@ -19,7 +19,7 @@ from institutional_statistical_rigor import (
     DOJProsecutionThresholds,
     FraudTier,
 )
-from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT
+from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT, WB_INT
 from tca_rules import build_rules
 
 
@@ -415,3 +415,71 @@ class TestRetiredCompetitionLawKey:
         uk_keys = set(UK_CENTRAL_GOVERNMENT.legal_citations.keys())
         assert uk_keys == expected, \
             f"Canonical set drift: missing={expected - uk_keys}, extra={uk_keys - expected}"
+
+
+# ---------------------------------------------------------------------------
+# Test 11: WB_INT profile — 11 legal_citations keys
+# ---------------------------------------------------------------------------
+
+class TestWBIntProfile:
+    """WB_INT profile must contain all 11 institutional-grade legal_citations
+    keys with correct WB Group citation values, and WB-specific local parameters."""
+
+    def test_all_11_keys_present(self):
+        lc = WB_INT.legal_citations
+        expected = {
+            "procurement_law", "case_authority",
+            "false_claims_law", "false_records_law", "anti_kickback_law",
+            "extreme_markup_precedent",
+            "foreign_bribery_law", "audit_oversight_law", "sanctions_debarment_law",
+            "conflict_of_interest_law", "whistleblower_protection_law",
+        }
+        assert set(lc.keys()) == expected, \
+            f"Expected 11 keys, got {len(lc)}: missing={expected - set(lc.keys())}, extra={set(lc.keys()) - expected}"
+
+    def test_three_way_key_parity(self):
+        us_keys = set(US_FEDERAL.legal_citations.keys())
+        uk_keys = set(UK_CENTRAL_GOVERNMENT.legal_citations.keys())
+        wb_keys = set(WB_INT.legal_citations.keys())
+        assert us_keys == uk_keys == wb_keys, (
+            f"Three-way parity broken. "
+            f"US-only: {us_keys - wb_keys}, UK-only: {uk_keys - wb_keys}, "
+            f"WB-only: {wb_keys - us_keys}"
+        )
+
+    def test_procurement_law_contains_wb_regulations(self):
+        v = WB_INT.legal_citations["procurement_law"]
+        assert "World Bank Procurement Regulations" in v, f"Missing WB Procurement Regulations: {v}"
+        assert "Anti-Corruption Guidelines" in v, f"Missing Anti-Corruption Guidelines: {v}"
+        assert "Consultant Guidelines" in v, f"Missing Consultant Guidelines: {v}"
+
+    def test_sanctions_debarment_law_contains_procedures_and_mutual_enforcement(self):
+        v = WB_INT.legal_citations["sanctions_debarment_law"]
+        assert "Sanctions Procedures" in v, f"Missing Sanctions Procedures: {v}"
+        assert "Mutual Enforcement of Debarment Decisions" in v, f"Missing Mutual Enforcement: {v}"
+        assert "9 April 2010" in v, f"Missing 9 April 2010: {v}"
+
+    def test_case_authority_aggregates_wb_corpus_cases(self):
+        v = WB_INT.legal_citations["case_authority"]
+        assert "SNC-Lavalin" in v, f"Missing SNC-Lavalin: {v}"
+        assert "Alstom" in v, f"Missing Alstom: {v}"
+        assert "Siemens" in v, f"Missing Siemens: {v}"
+        assert "Macmillan" in v, f"Missing Macmillan: {v}"
+
+    def test_foreign_bribery_law_contains_uncac_and_staff_rule(self):
+        v = WB_INT.legal_citations["foreign_bribery_law"]
+        assert "UNCAC Art. 16" in v, f"Missing UNCAC Art. 16: {v}"
+        assert "OECD Anti-Bribery Convention" in v, f"Missing OECD Convention: {v}"
+        assert "Staff Rule 03.01" in v, f"Missing Staff Rule 03.01: {v}"
+
+    def test_evidentiary_standard_is_more_likely_than_not(self):
+        assert WB_INT.evidentiary_standard == "more_likely_than_not", \
+            f"Expected 'more_likely_than_not', got '{WB_INT.evidentiary_standard}'"
+
+    def test_currency_and_country_code(self):
+        assert WB_INT.currency == "USD", f"Expected USD, got {WB_INT.currency}"
+        assert WB_INT.country_code == "INT", f"Expected INT, got {WB_INT.country_code}"
+
+    def test_fiscal_year_end_month_is_june(self):
+        assert WB_INT.fiscal_year_end_month == 6, \
+            f"Expected 6 (June), got {WB_INT.fiscal_year_end_month}"
