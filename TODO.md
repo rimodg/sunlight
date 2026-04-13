@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 13, 2026
-**Current commit on main:** `0f3ab1d`
+**Current commit on main:** `fec5a55`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
