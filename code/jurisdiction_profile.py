@@ -180,30 +180,27 @@ class JurisdictionProfile:
     # ═══════════════════════════════════════════════════════════
 
     legal_citations: Dict[str, str] = field(default_factory=dict)
-    # Jurisdiction-specific legal citations for evidence strings
+    # Jurisdiction-specific legal citations for evidence strings.
+    # Institutional-grade profiles should populate all 12 keys below.
+    # New profiles should use us_federal as the template for depth.
     #
-    # Keys consumed by TCA rules (PROC-001, ENT-001, ENT-002):
-    #   "procurement_law"  — primary procurement statute
-    #   "competition_law"  — competition/antitrust statute
-    #   "case_authority"   — leading case law reference
+    # --- Keys consumed by TCA rules (PROC-001, ENT-001, ENT-002) ---
+    #   "procurement_law"           — primary procurement statute(s)
+    #   "competition_law"           — competition/antitrust statute
+    #   "case_authority"            — leading case law references
     #
-    # Keys consumed by CRI _determine_tier() evidence citations:
+    # --- Keys consumed by CRI _determine_tier() evidence citations ---
     #   "false_claims_law"          — statute for false/fraudulent claims
     #   "false_records_law"         — statute for false records/material misstatement
     #   "anti_kickback_law"         — anti-corruption/kickback statute
     #   "extreme_markup_precedent"  — prosecution precedent for extreme price inflation
     #
-    # Examples:
-    #   us_federal: {
-    #     "procurement_law": "FAR Part 6",
-    #     "false_claims_law": "31 U.S.C. § 3729(a)(1)(A) - ...",
-    #     "extreme_markup_precedent": "DOJ prosecution precedent (Oracle, Boeing, Lockheed)",
-    #   }
-    #   uk: {
-    #     "procurement_law": "UK Procurement Act 2023",
-    #     "false_claims_law": "Fraud Act 2006 s.2 - Fraud by false representation",
-    #     "extreme_markup_precedent": "UK SFO DPA precedent (Rolls-Royce, Airbus, Tesco)",
-    #   }
+    # --- Institutional depth keys (not yet consumed by rules) ---
+    #   "foreign_bribery_law"           — foreign bribery / transnational corruption statute
+    #   "audit_oversight_law"           — audit/oversight/inspector general authority
+    #   "sanctions_debarment_law"       — debarment, suspension, and sanctions authority
+    #   "conflict_of_interest_law"      — conflict of interest / procurement integrity statute
+    #   "whistleblower_protection_law"  — whistleblower / anti-retaliation protections
 
     universal_citations: List[str] = field(default_factory=lambda: [
         "UNCAC Art. 9(1) — Public procurement systems based on transparency, competition and objective criteria",
@@ -590,13 +587,45 @@ US_FEDERAL = JurisdictionProfile(
 
     # Legal framework
     legal_citations={
-        "procurement_law": "FAR Part 6",
+        # --- TCA rule consumers (PROC-001, ENT-001, ENT-002) ---
+        "procurement_law": (
+            "Federal Acquisition Regulation (FAR) Part 6 — Competition Requirements; "
+            "FAR Part 15 — Contracting by Negotiation; "
+            "FAR Part 13 — Simplified Acquisition Procedures"
+        ),
         "competition_law": "Sherman Antitrust Act",
-        "case_authority": "DOJ US v. Marquez (Maryland 2024)",
+        "case_authority": (
+            "DOJ enforcement precedent: US v. Marquez (D. Md. 2024); "
+            "US v. DynCorp (D.D.C. 2005); US v. Oracle Corp. (N.D. Cal. 2011); "
+            "US v. Boeing Co. (E.D. Va. 2006); US v. Lockheed Martin (D.D.C. 2008)"
+        ),
+        # --- CRI _determine_tier() consumers (commit 39b5d65, locked by tests) ---
         "false_claims_law": "31 U.S.C. § 3729(a)(1)(A) - Knowingly presenting false/fraudulent claim",
         "false_records_law": "31 U.S.C. § 3729(a)(1)(B) - Knowingly using false record material to claim",
         "anti_kickback_law": "Anti-Kickback Act 41 U.S.C. § 8702 - Quid pro quo indicator",
         "extreme_markup_precedent": "DOJ prosecution precedent (Oracle, Boeing, Lockheed)",
+        # --- Institutional depth keys (not yet consumed by rules) ---
+        "foreign_bribery_law": (
+            "Foreign Corrupt Practices Act — 15 U.S.C. §§ 78dd-1, 78dd-2, 78dd-3 "
+            "(anti-bribery provisions) and 15 U.S.C. § 78m(b)(2) (books and records provisions)"
+        ),
+        "audit_oversight_law": (
+            "Inspector General Act of 1978 (5 U.S.C. App.) and "
+            "31 U.S.C. § 3512 — Federal Managers' Financial Integrity Act"
+        ),
+        "sanctions_debarment_law": (
+            "FAR Subpart 9.4 — Debarment, Suspension, and Ineligibility; "
+            "Executive Order 12549; "
+            "2 C.F.R. Part 180 — OMB Guidelines for Governmentwide Debarment and Suspension (Nonprocurement)"
+        ),
+        "conflict_of_interest_law": (
+            "18 U.S.C. § 208 — Acts affecting a personal financial interest; "
+            "41 U.S.C. §§ 2101-2107 — Procurement Integrity Act"
+        ),
+        "whistleblower_protection_law": (
+            "31 U.S.C. § 3730(h) — False Claims Act anti-retaliation; "
+            "41 U.S.C. § 4712 — Pilot program for enhancement of contractor protection from reprisal"
+        ),
     },
     # universal_citations: uses dataclass default (full UNCAC + OECD list)
     oversight_body_names=[

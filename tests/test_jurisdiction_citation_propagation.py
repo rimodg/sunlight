@@ -216,7 +216,7 @@ class TestPROC001USFederalUniversalCitations:
 
     def test_contains_procurement_law(self):
         ev = _get_proc_001_evidence(US_FEDERAL)
-        assert "FAR Part 6" in ev, f"Missing FAR Part 6 in: {ev[:200]}"
+        assert "FAR" in ev and "Part 6" in ev, f"Missing FAR Part 6 in: {ev[:200]}"
 
 
 # ---------------------------------------------------------------------------
@@ -275,3 +275,52 @@ class TestPROC001RemovedItems:
         assert "UNDP POPP" not in ev
         assert "OECD Public Procurement Principles" not in ev
         assert "World Bank Procurement Framework" not in ev
+
+
+# ---------------------------------------------------------------------------
+# Test 7: us_federal profile institutional depth — 12 legal_citations keys
+# ---------------------------------------------------------------------------
+
+_EXPECTED_US_FEDERAL_KEYS = {
+    "procurement_law", "competition_law", "case_authority",
+    "false_claims_law", "false_records_law", "anti_kickback_law",
+    "extreme_markup_precedent",
+    "foreign_bribery_law", "audit_oversight_law", "sanctions_debarment_law",
+    "conflict_of_interest_law", "whistleblower_protection_law",
+}
+
+
+class TestUSFederalInstitutionalDepth:
+    """us_federal profile must contain all 12 institutional-grade
+    legal_citations keys with correct canonical citation values."""
+
+    def test_all_12_keys_present(self):
+        lc = US_FEDERAL.legal_citations
+        assert set(lc.keys()) == _EXPECTED_US_FEDERAL_KEYS, \
+            f"Expected 12 keys, got {len(lc)}: missing={_EXPECTED_US_FEDERAL_KEYS - set(lc.keys())}, extra={set(lc.keys()) - _EXPECTED_US_FEDERAL_KEYS}"
+
+    def test_foreign_bribery_law_contains_fcpa(self):
+        v = US_FEDERAL.legal_citations["foreign_bribery_law"]
+        assert "Foreign Corrupt Practices Act" in v, f"Missing FCPA: {v}"
+        assert "15 U.S.C." in v, f"Missing USC reference: {v}"
+
+    def test_sanctions_debarment_law_contains_far_and_eo(self):
+        v = US_FEDERAL.legal_citations["sanctions_debarment_law"]
+        assert "FAR Subpart 9.4" in v, f"Missing FAR 9.4: {v}"
+        assert "Executive Order 12549" in v, f"Missing EO 12549: {v}"
+
+    def test_audit_oversight_law_contains_ig_act(self):
+        v = US_FEDERAL.legal_citations["audit_oversight_law"]
+        assert "Inspector General Act" in v, f"Missing IG Act: {v}"
+        assert "31 U.S.C. § 3512" in v, f"Missing FMFIA: {v}"
+
+    def test_case_authority_aggregates_corpus_cases(self):
+        v = US_FEDERAL.legal_citations["case_authority"]
+        for name in ["DynCorp", "Oracle", "Boeing", "Lockheed Martin"]:
+            assert name in v, f"Missing {name} in case_authority: {v}"
+
+    def test_procurement_law_covers_three_far_parts(self):
+        v = US_FEDERAL.legal_citations["procurement_law"]
+        assert "FAR Part 6" in v or "FAR) Part 6" in v, f"Missing FAR Part 6: {v}"
+        assert "FAR Part 15" in v, f"Missing FAR Part 15: {v}"
+        assert "FAR Part 13" in v, f"Missing FAR Part 13: {v}"
