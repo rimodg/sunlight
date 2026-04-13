@@ -57,7 +57,8 @@ from sunlight_core import (
     ExecutionMode,
 )
 from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT, JurisdictionProfile
-from global_parameters import MJPIS_DRAFT_V0, list_global_parameters
+from global_parameters import MJPIS_DRAFT_V0, list_global_parameters, get_global_parameters
+from evg import gate as evg_gate
 from tca_rules import TCAGraphRuleEngineAdapter
 from tca_analyzer import TCAStructureEngineAdapter
 from calibration_store import EmpiricalCalibrationStore, BatchObservation
@@ -169,13 +170,44 @@ class StructuralFindings(BaseModel):
     )
 
 
+class EVGDimensionResult(BaseModel):
+    """Result of evaluating a single EVG dimension."""
+    dimension: str = Field(..., description="Dimension name (cri_markup, cri_bribery_channel, tca_typologies)")
+    fired: bool = Field(..., description="Whether this dimension exceeded its threshold")
+    observed_value: Optional[float] = Field(None, description="Observed value for this dimension")
+    threshold: Optional[float] = Field(None, description="MJPIS-derived threshold for this dimension")
+    detail: str = Field(..., description="Human-readable explanation of the evaluation")
+
+
+class EVGGateOutcome(BaseModel):
+    """Full EVG gate outcome with per-dimension traceability."""
+    verdict: str = Field(..., description="Evidence verdict: green, yellow, or red")
+    dimensions_fired: int = Field(..., description="Number of dimensions that exceeded their threshold")
+    dimension_results: List[EVGDimensionResult] = Field(
+        ..., description="Per-dimension evaluation results"
+    )
+    global_params_version: str = Field(..., description="Global parameters version used for thresholds")
+    methodology_note: str = Field("", description="Methodology description")
+
+
 class AnalyzeResponse(BaseModel):
     """Full analysis result for a single contract."""
     ocid: str
     stage: str = Field(..., description="Final pipeline stage reached")
     profile_used: str
     structure: Optional[StructuralFindings] = None
-    gate_verdict: Optional[str] = None
+    gate_verdict: Optional[str] = Field(
+        None,
+        description="EVG evidence verdict: green, yellow, or red"
+    )
+    gate_outcome: Optional[EVGGateOutcome] = Field(
+        None,
+        description=(
+            "Full EVG gate outcome with per-dimension traceability. "
+            "Contains the verdict, count of dimensions fired, and detailed "
+            "per-dimension results showing observed values versus MJPIS thresholds."
+        ),
+    )
     errors: List[str] = Field(default_factory=list)
     processing_time_ms: float
     recommended_for_investigation: bool = Field(
@@ -407,8 +439,9 @@ def create_analysis_pipeline(profile: JurisdictionProfile) -> SunlightPipeline:
     engine is jurisdiction-agnostic and uses the rule output from the
     grapher.
 
-    Gate engine (EVG) wiring is deferred to a future sub-task — the
-    response returns gate_verdict=None until EVG is integrated.
+    The EVG (Evidence Verification Gate) runs after the pipeline produces
+    the dossier — it is called separately in the endpoint handlers, not
+    as a pipeline engine, because it consumes GlobalParameters directly.
     """
     return SunlightPipeline(
         grapher=TCAGraphRuleEngineAdapter(profile=profile),
@@ -502,10 +535,26 @@ async def analyze_contract(request: AnalyzeRequest):
         # Convert structure to findings model
         structure = structural_result_to_findings(dossier)
 
-        # Extract gate verdict if available
-        gate_verdict = None
-        if dossier.gate:
-            gate_verdict = dossier.gate.verdict.value
+        # Run EVG gate against MJPIS thresholds
+        global_params = get_global_parameters(profile.global_params_version)
+        evg_outcome = evg_gate(dossier.price, dossier.structure, global_params)
+        gate_verdict = evg_outcome.verdict.value
+        gate_outcome = EVGGateOutcome(
+            verdict=evg_outcome.verdict.value,
+            dimensions_fired=evg_outcome.dimensions_fired,
+            dimension_results=[
+                EVGDimensionResult(
+                    dimension=dr.dimension.value,
+                    fired=dr.fired,
+                    observed_value=dr.observed_value,
+                    threshold=dr.threshold,
+                    detail=dr.detail,
+                )
+                for dr in evg_outcome.dimension_results
+            ],
+            global_params_version=evg_outcome.global_params_version,
+            methodology_note=evg_outcome.methodology_note,
+        )
 
         # Extract errors
         errors = [e.get("error", str(e)) for e in dossier.errors]
@@ -526,6 +575,7 @@ async def analyze_contract(request: AnalyzeRequest):
             profile_used=request.profile,
             structure=structure,
             gate_verdict=gate_verdict,
+            gate_outcome=gate_outcome,
             errors=errors,
             processing_time_ms=processing_time_ms,
             recommended_for_investigation=recommended,
@@ -579,6 +629,7 @@ async def batch_analyze(request: BatchAnalyzeRequest):
 
     # Create pipeline once for the entire batch (all contracts share the same profile)
     pipeline = create_analysis_pipeline(profile)
+    global_params = get_global_parameters(profile.global_params_version)
 
     for contract in request.contracts:
         raw_ocds = ocds_to_dict(contract)
@@ -601,7 +652,27 @@ async def batch_analyze(request: BatchAnalyzeRequest):
             processing_time_ms = (time.perf_counter() - t0) * 1000
 
             structure = structural_result_to_findings(dossier)
-            gate_verdict = dossier.gate.verdict.value if dossier.gate else None
+
+            # Run EVG gate against MJPIS thresholds
+            evg_outcome = evg_gate(dossier.price, dossier.structure, global_params)
+            gate_verdict = evg_outcome.verdict.value
+            gate_outcome = EVGGateOutcome(
+                verdict=evg_outcome.verdict.value,
+                dimensions_fired=evg_outcome.dimensions_fired,
+                dimension_results=[
+                    EVGDimensionResult(
+                        dimension=dr.dimension.value,
+                        fired=dr.fired,
+                        observed_value=dr.observed_value,
+                        threshold=dr.threshold,
+                        detail=dr.detail,
+                    )
+                    for dr in evg_outcome.dimension_results
+                ],
+                global_params_version=evg_outcome.global_params_version,
+                methodology_note=evg_outcome.methodology_note,
+            )
+
             errors = [e.get("error", str(e)) for e in dossier.errors]
 
             # Check if pipeline reached structural stage
@@ -623,6 +694,7 @@ async def batch_analyze(request: BatchAnalyzeRequest):
                 profile_used=request.profile,
                 structure=structure,
                 gate_verdict=gate_verdict,
+                gate_outcome=gate_outcome,
                 errors=errors,
                 processing_time_ms=processing_time_ms,
                 recommended_for_investigation=False,  # Placeholder
