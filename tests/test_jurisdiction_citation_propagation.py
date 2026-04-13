@@ -1,8 +1,10 @@
 """
-Tests for CRI legal citation propagation through jurisdiction profiles.
+Tests for CRI legal citation propagation and universal_citations coverage.
 
-Verifies that _determine_tier() emits jurisdiction-appropriate legal citations
-from the active profile's legal_citations dict, rather than hardcoded US statutes.
+- Tests 1-3 (commit 39b5d65): _determine_tier() emits jurisdiction-appropriate
+  legal citations from the active profile's legal_citations dict.
+- Tests 4-6 (this commit): PROC-001 evidence string contains the full UNCAC +
+  OECD universal_citations list and NOT the removed institution-specific items.
 
 Run: pytest tests/test_jurisdiction_citation_propagation.py -v
 """
@@ -18,6 +20,7 @@ from institutional_statistical_rigor import (
     FraudTier,
 )
 from jurisdiction_profile import US_FEDERAL, UK_CENTRAL_GOVERNMENT
+from tca_rules import build_rules
 
 
 # ---------------------------------------------------------------------------
@@ -176,3 +179,99 @@ class TestFallbackCitations:
             f"Expected generic anti-corruption fallback, got: {citations}"
         for c in citations:
             assert "§ 8702" not in c, f"Default profile must not emit US AKA section, got: {c}"
+
+
+# ---------------------------------------------------------------------------
+# Helper — extract PROC-001 evidence string from a built rule set
+# ---------------------------------------------------------------------------
+
+def _get_proc_001_evidence(profile):
+    """Build rules for a profile and return the PROC-001 evidence string."""
+    rules = build_rules(profile)
+    proc_001 = [r for r in rules if r.rule_id == "PROC-001"]
+    assert len(proc_001) == 1, f"Expected exactly one PROC-001 rule, got {len(proc_001)}"
+    return proc_001[0].evidence
+
+
+# ---------------------------------------------------------------------------
+# Test 4: PROC-001 under us_federal emits full UNCAC + OECD set
+# ---------------------------------------------------------------------------
+
+class TestPROC001USFederalUniversalCitations:
+    """PROC-001 evidence string under us_federal must contain the full
+    universal_citations list including key UNCAC articles and OECD instruments."""
+
+    def test_contains_uncac_art_9_1(self):
+        ev = _get_proc_001_evidence(US_FEDERAL)
+        assert "UNCAC Art. 9(1)" in ev, f"Missing UNCAC Art. 9(1) in: {ev[:200]}"
+
+    def test_contains_uncac_art_16(self):
+        ev = _get_proc_001_evidence(US_FEDERAL)
+        assert "UNCAC Art. 16" in ev, f"Missing UNCAC Art. 16 in: {ev[:200]}"
+
+    def test_contains_oecd_anti_bribery(self):
+        ev = _get_proc_001_evidence(US_FEDERAL)
+        assert "OECD Anti-Bribery Convention 1997" in ev, \
+            f"Missing OECD Anti-Bribery Convention in: {ev[:200]}"
+
+    def test_contains_procurement_law(self):
+        ev = _get_proc_001_evidence(US_FEDERAL)
+        assert "FAR Part 6" in ev, f"Missing FAR Part 6 in: {ev[:200]}"
+
+
+# ---------------------------------------------------------------------------
+# Test 5: PROC-001 under uk_central_government emits same universal set
+# ---------------------------------------------------------------------------
+
+class TestPROC001UKCentralGovUniversalCitations:
+    """PROC-001 evidence string under uk_central_government must contain
+    the same universal UNCAC + OECD references (they are jurisdiction-agnostic)."""
+
+    def test_contains_uncac_art_9_1(self):
+        ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
+        assert "UNCAC Art. 9(1)" in ev, f"Missing UNCAC Art. 9(1) in: {ev[:200]}"
+
+    def test_contains_uncac_art_16(self):
+        ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
+        assert "UNCAC Art. 16" in ev, f"Missing UNCAC Art. 16 in: {ev[:200]}"
+
+    def test_contains_oecd_anti_bribery(self):
+        ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
+        assert "OECD Anti-Bribery Convention 1997" in ev, \
+            f"Missing OECD Anti-Bribery Convention in: {ev[:200]}"
+
+    def test_contains_uk_procurement_law(self):
+        ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
+        assert "UK Procurement Act 2023" in ev, \
+            f"Missing UK Procurement Act 2023 in: {ev[:200]}"
+
+
+# ---------------------------------------------------------------------------
+# Test 6: PROC-001 must NOT contain removed institution-specific items
+# ---------------------------------------------------------------------------
+
+class TestPROC001RemovedItems:
+    """PROC-001 evidence string must NOT contain the old institution-specific
+    items that were removed from universal_citations."""
+
+    def test_no_undp_popp(self):
+        ev = _get_proc_001_evidence(US_FEDERAL)
+        assert "UNDP POPP" not in ev, \
+            f"UNDP POPP should have been removed from universal_citations: {ev[:200]}"
+
+    def test_no_oecd_public_procurement_principles(self):
+        ev = _get_proc_001_evidence(US_FEDERAL)
+        assert "OECD Public Procurement Principles" not in ev, \
+            f"OECD Public Procurement Principles should have been removed: {ev[:200]}"
+
+    def test_no_world_bank_procurement_framework(self):
+        ev = _get_proc_001_evidence(US_FEDERAL)
+        assert "World Bank Procurement Framework" not in ev, \
+            f"World Bank Procurement Framework should have been removed: {ev[:200]}"
+
+    def test_uk_profile_also_clean(self):
+        """Same removal assertions under uk_central_government."""
+        ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
+        assert "UNDP POPP" not in ev
+        assert "OECD Public Procurement Principles" not in ev
+        assert "World Bank Procurement Framework" not in ev

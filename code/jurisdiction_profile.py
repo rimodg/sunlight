@@ -206,13 +206,20 @@ class JurisdictionProfile:
     #   }
 
     universal_citations: List[str] = field(default_factory=lambda: [
-        "UNCAC Art. 9(1)",
-        "UNDP POPP Procurement Methods Policy",
-        "OECD Public Procurement Principles",
-        "World Bank Procurement Framework",
+        "UNCAC Art. 9(1) — Public procurement systems based on transparency, competition and objective criteria",
+        "UNCAC Art. 9(2) — Public finance management measures",
+        "UNCAC Art. 12 — Private sector measures against corruption",
+        "UNCAC Art. 15 — Bribery of national public officials",
+        "UNCAC Art. 16 — Bribery of foreign public officials and officials of public international organizations",
+        "UNCAC Art. 17 — Embezzlement, misappropriation or other diversion of property by a public official",
+        "UNCAC Art. 18 — Trading in influence",
+        "OECD Anti-Bribery Convention 1997 — Convention on Combating Bribery of Foreign Public Officials in International Business Transactions",
+        "OECD Recommendation on Public Procurement 2015 — OECD/LEGAL/0411",
     ])
-    # Citations that apply regardless of jurisdiction
-    # Consumed by: All rules (combined with legal_citations)
+    # Universally-applicable international framework citations.
+    # Ordered: procurement-specific UNCAC first, broader anti-corruption UNCAC second,
+    # OECD instruments third. Order determines emission order in evidence strings.
+    # Consumed by: PROC-001 evidence string (full list, no slicing)
 
     oversight_body_names: List[str] = field(default_factory=list)
     # Institution name strings that indicate oversight is present
@@ -591,12 +598,7 @@ US_FEDERAL = JurisdictionProfile(
         "anti_kickback_law": "Anti-Kickback Act 41 U.S.C. § 8702 - Quid pro quo indicator",
         "extreme_markup_precedent": "DOJ prosecution precedent (Oracle, Boeing, Lockheed)",
     },
-    universal_citations=[
-        "UNCAC Art. 9(1)",
-        "UNDP POPP Procurement Methods Policy",
-        "OECD Public Procurement Principles",
-        "World Bank Procurement Framework",
-    ],
+    # universal_citations: uses dataclass default (full UNCAC + OECD list)
     oversight_body_names=[
         "Inspector General",
         "IG",
@@ -678,12 +680,7 @@ UK_CENTRAL_GOVERNMENT = JurisdictionProfile(
         "anti_kickback_law": "Bribery Act 2010 s.1 - Bribing another person",
         "extreme_markup_precedent": "UK SFO DPA precedent (Rolls-Royce, Airbus, Tesco)",
     },
-    universal_citations=[
-        "UNCAC Art. 9(1)",
-        "UNDP POPP Procurement Methods Policy",
-        "OECD Public Procurement Principles",
-        "World Bank Procurement Framework",
-    ],
+    # universal_citations: uses dataclass default (full UNCAC + OECD list)
     oversight_body_names=[
         # Empty for now (matches US_FEDERAL pattern)
         # Will populate when PROC-003/PROC-004 oversight detection implemented

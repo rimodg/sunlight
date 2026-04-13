@@ -215,7 +215,7 @@ def build_rules(profile: JurisdictionProfile) -> List[Rule]:
 
     # Build evidence string for PROC-001 from profile
     proc_001_evidence = "; ".join(
-        profile.universal_citations[:2] +
+        profile.universal_citations +
         [profile.legal_citations.get("procurement_law", "")]
     )
 
