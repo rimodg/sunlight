@@ -29,24 +29,89 @@ The derivation methodology:
    when the corpus contains cases from more than one jurisdiction,
    otherwise inherit the dominant jurisdiction's standard.
 
-v0.1 note: with only US DOJ cases in the seed corpus, the derivation
-produces values identical to the empirical DOJ calibration. When the
-corpus expands in later research phases, the same function produces
-multi-jurisdiction intersection values automatically.
+v0.2 derivation:
+
+  markup_floor_ratio is derived via the intersection_v1 methodology:
+    - Group corpus cases by jurisdiction.
+    - For each jurisdiction, filter to cases where markup_percentage is
+      documented (non-null) AND dimensional_tags contains "markup_based".
+    - For each jurisdiction with at least one qualifying case, compute
+      the jurisdiction's anchor as the MINIMUM markup_percentage across
+      that jurisdiction's qualifying cases.
+    - The MJPIS markup_floor_ratio is the MINIMUM across per-jurisdiction
+      anchors — the strictest jurisdiction's strictest case.
+    - If only one jurisdiction has qualifying cases, the MJPIS value
+      equals that jurisdiction's anchor (degrades cleanly to single-
+      jurisdiction calibration when corpus is thin).
+    - The function returns both the computed value AND a derivation log
+      showing which jurisdictions contributed, which case was each
+      jurisdiction's anchor, and what each anchor value was.
 
 Authors: Rimwaya Ouedraogo, Hugo Villalba
-Version: 1.0.0
+Version: 2.0.0
 """
 
 from __future__ import annotations
 
 import json
 import logging
-from pathlib import Path
+from dataclasses import dataclass, replace
 from datetime import date
-from typing import Dict, Set
+from pathlib import Path
+from typing import Dict, List, Optional, Set
 
 logger = logging.getLogger(__name__)
+
+
+# ═══════════════════════════════════════════════════════════
+# Dataclasses for structured derivation results
+# ═══════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class JurisdictionAnchor:
+    """One jurisdiction's anchor case for markup_floor derivation."""
+
+    jurisdiction: str
+    case_id: str
+    markup_percentage: float  # ratio (0.501 = 50.1% markup)
+    qualifying_case_count: int
+
+
+@dataclass(frozen=True)
+class MarkupFloorDerivation:
+    """Result of the intersection_v1 markup floor derivation."""
+
+    value: float  # the MJPIS markup_floor_ratio
+    contributing_jurisdictions: List[str]
+    per_jurisdiction_anchors: Dict[str, JurisdictionAnchor]
+    methodology_version: str = "intersection_v1"
+
+
+@dataclass(frozen=True)
+class DerivationAuditTrail:
+    """Full per-parameter derivation log for institutional audit."""
+
+    markup_floor: Optional[MarkupFloorDerivation] = None
+    # Future sub-tasks B and C will add:
+    # bribery_channel: Optional[BriberyChannelDerivation] = None
+    # administrative_sanctionable: Optional[AdminSanctionableDerivation] = None
+
+
+class InsufficientCorpusError(Exception):
+    """Raised when the corpus lacks qualifying cases for a derivation."""
+
+
+# ═══════════════════════════════════════════════════════════
+# Module-level state for the audit trail
+# ═══════════════════════════════════════════════════════════
+
+_audit_trail: Optional[DerivationAuditTrail] = None
+
+
+# ═══════════════════════════════════════════════════════════
+# Corpus loading
+# ═══════════════════════════════════════════════════════════
 
 
 def load_corpus(corpus_path: Path) -> Dict:
@@ -67,41 +132,110 @@ def load_corpus(corpus_path: Path) -> Dict:
         return json.load(f)
 
 
+# ═══════════════════════════════════════════════════════════
+# Per-parameter derivation functions
+# ═══════════════════════════════════════════════════════════
+
+
+def derive_markup_floor_ratio(cases: List[Dict]) -> MarkupFloorDerivation:
+    """
+    Derive the MJPIS markup_floor_ratio via intersection_v1 methodology.
+
+    Groups corpus cases by jurisdiction, filters to qualifying cases
+    (markup_percentage documented + markup_based dimensional tag),
+    computes per-jurisdiction anchors (minimum markup in each
+    jurisdiction), and returns the intersection (minimum across
+    jurisdictions).
+
+    Args:
+        cases: List of corpus case dicts (the "cases" array from the
+               corpus JSON, not the full corpus dict).
+
+    Returns:
+        MarkupFloorDerivation with value, contributing jurisdictions,
+        per-jurisdiction anchors, and methodology version.
+
+    Raises:
+        InsufficientCorpusError: If no jurisdiction has qualifying
+            markup_based cases with documented markup_percentage, or
+            if the cases list is empty.
+    """
+    if not cases:
+        raise InsufficientCorpusError(
+            "Cannot derive markup_floor_ratio from an empty corpus. "
+            "At least one case with markup_based tag and documented "
+            "markup_percentage is required."
+        )
+
+    # Group qualifying cases by jurisdiction
+    markup_cases_by_jurisdiction: Dict[str, List[Dict]] = {}
+    for case in cases:
+        if "markup_based" not in case.get("dimensional_tags", []):
+            continue
+        markup_pct = case.get("markup_percentage")
+        if markup_pct is None:
+            continue
+        ratio = float(markup_pct) / 100.0
+        j = case["jurisdiction"]
+        markup_cases_by_jurisdiction.setdefault(j, []).append({
+            "case_id": case["case_id"],
+            "markup_ratio": ratio,
+        })
+
+    if not markup_cases_by_jurisdiction:
+        raise InsufficientCorpusError(
+            "No jurisdiction in the corpus has qualifying markup_based "
+            "cases with documented markup_percentage. Cannot derive "
+            "markup_floor_ratio."
+        )
+
+    # Per-jurisdiction anchors: minimum markup in each jurisdiction
+    per_jurisdiction_anchors: Dict[str, JurisdictionAnchor] = {}
+    for j, j_cases in markup_cases_by_jurisdiction.items():
+        min_case = min(j_cases, key=lambda c: c["markup_ratio"])
+        per_jurisdiction_anchors[j] = JurisdictionAnchor(
+            jurisdiction=j,
+            case_id=min_case["case_id"],
+            markup_percentage=min_case["markup_ratio"],
+            qualifying_case_count=len(j_cases),
+        )
+
+    # Intersection: minimum across per-jurisdiction anchors
+    intersection_value = min(
+        a.markup_percentage for a in per_jurisdiction_anchors.values()
+    )
+    contributing_jurisdictions = sorted(per_jurisdiction_anchors.keys())
+
+    return MarkupFloorDerivation(
+        value=intersection_value,
+        contributing_jurisdictions=contributing_jurisdictions,
+        per_jurisdiction_anchors=per_jurisdiction_anchors,
+        methodology_version="intersection_v1",
+    )
+
+
+# ═══════════════════════════════════════════════════════════
+# Main derivation orchestrator
+# ═══════════════════════════════════════════════════════════
+
+
 def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     """
     Derive a GlobalParameters instance from the prosecuted cases corpus.
 
-    v0.1 derivation is conservative: when only one jurisdiction is
-    present in the corpus, the derivation returns values matching that
-    jurisdiction's calibration. When multiple jurisdictions are present,
-    the derivation computes the intersection (stricter of each pair).
+    Calls per-parameter derivation functions (currently markup_floor_ratio
+    via intersection_v1) and assembles the result into a GlobalParameters
+    instance. Parameters without their own derivation function yet inherit
+    from US_FEDERAL_V0.
 
     Args:
         corpus: Corpus dictionary loaded from JSON
 
     Returns:
         GlobalParameters instance with derived threshold values
-
-    Raises:
-        NotImplementedError: If multi-jurisdiction derivation is attempted
-            (deferred to sub-task 2.2.6)
-
-    v0.1 Methodology:
-        - Jurisdictions: Extract unique jurisdiction codes from cases
-        - Dimensional analysis: Count cases in each dimension
-        - Evidentiary standard: Determined by jurisdiction composition
-        - Statistical thresholds:
-            * Single jurisdiction: Inherit that jurisdiction's calibration
-            * Multi-jurisdiction: Intersection derivation (deferred to 2.2.6)
-
-    Example:
-        >>> corpus = load_corpus(CORPUS_PATH)
-        >>> params = derive_mjpis_parameters(corpus)
-        >>> params.version
-        'mjpis_v0.1'
-        >>> params.red_posterior_threshold
-        0.72
     """
+    global _audit_trail
+
     # Late import to avoid circular dependency with global_parameters.py
     from global_parameters import GlobalParameters, US_FEDERAL_V0
 
@@ -135,79 +269,49 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     else:
         evidentiary_standard = "beyond_reasonable_doubt"
 
-    # mjpis_v0.2 derivation (sub-task 2.3.7 minimum-viable):
-    # Real per-dimension derivation for the markup_based dimension. The
-    # remaining statistical bars (posterior thresholds, FDR alpha, bootstrap
-    # parameters) still inherit US_FEDERAL_V0 — those require cross-
-    # jurisdictional recalibration that is out of scope for the minimum-
-    # viable increment.
+    # ── Markup floor derivation (intersection_v1) ──────────────
     #
-    # Algorithm for markup_floor derivation:
-    #   1. Partition corpus by (jurisdiction, dimensional_tag).
-    #   2. For each jurisdiction with markup_based cases that have populated
-    #      markup_percentage, compute the per-jurisdiction floor as the
-    #      minimum markup ratio observed (strictest case that jurisdiction
-    #      has prosecuted at).
-    #   3. Intersection floor = minimum across per-jurisdiction floors. This
-    #      is the strictest bar that ANY mature jurisdiction in the corpus
-    #      has prosecuted at — the empirical evidentiary floor below which
-    #      no mature legal system treats the case as prosecutable.
-    #   4. Record contributing case(s) that set the intersection floor for
-    #      provenance.
-    #
-    # When no jurisdiction has markup_based cases with populated percentages,
-    # the derivation falls back to the DynCorp 2005 default (0.75).
-    from dataclasses import replace
-
-    # Step 1-2: Partition + per-jurisdiction markup floors
-    markup_cases_by_jurisdiction: Dict[str, list] = {}
-    for case in corpus["cases"]:
-        if "markup_based" not in case.get("dimensional_tags", []):
-            continue
-        markup_pct = case.get("markup_percentage")
-        if markup_pct is None:
-            continue
-        ratio = float(markup_pct) / 100.0
-        j = case["jurisdiction"]
-        markup_cases_by_jurisdiction.setdefault(j, []).append(
-            {"case_id": case["case_id"], "markup_ratio": ratio}
-        )
-
-    per_jurisdiction_floors: Dict[str, float] = {
-        j: min(c["markup_ratio"] for c in cases)
-        for j, cases in markup_cases_by_jurisdiction.items()
-        if cases
-    }
-
-    # Step 3: Intersection floor (min across jurisdictions)
-    if per_jurisdiction_floors:
-        intersection_floor = min(per_jurisdiction_floors.values())
-    else:
-        # No corpus cases tagged markup_based with populated percentages —
-        # fall back to US_FEDERAL_V0 default (DynCorp 2005 empirical floor).
+    # Call the standalone derivation function. If it raises
+    # InsufficientCorpusError (no qualifying markup_based cases),
+    # fall back to the US_FEDERAL_V0 default (DynCorp 2005
+    # empirical floor at 0.75).
+    markup_floor_derivation: Optional[MarkupFloorDerivation] = None
+    try:
+        markup_floor_derivation = derive_markup_floor_ratio(corpus["cases"])
+        intersection_floor = markup_floor_derivation.value
+    except InsufficientCorpusError:
         intersection_floor = US_FEDERAL_V0.markup_floor_ratio
 
-    # Step 4: Identify contributing case(s) — one per-jurisdiction floor setter.
-    # These are the cases that set each jurisdiction's local floor. The
-    # intersection floor is the minimum across them, but the full audit trail
-    # records every jurisdiction's floor setter because each one carries
-    # evidentiary weight in the multi-jurisdiction derivation.
-    contributing_cases = []
-    _EPS = 1e-9
-    for j, j_floor in per_jurisdiction_floors.items():
-        for c in markup_cases_by_jurisdiction[j]:
-            if abs(c["markup_ratio"] - j_floor) < _EPS:
-                contributing_cases.append({
-                    "case_id": c["case_id"],
-                    "jurisdiction": j,
-                    "markup_ratio": c["markup_ratio"],
-                })
-                break  # one floor setter per jurisdiction
+    # Store the audit trail at module level
+    _audit_trail = DerivationAuditTrail(
+        markup_floor=markup_floor_derivation,
+    )
 
-    # Provenance trail for the derived markup_floor_ratio
+    # ── Provenance trail for derivation_metadata on GlobalParameters ──
+    #
+    # Backward-compatible dict format consumed by existing tests and
+    # FIN-001's evidence string builder.
+    if markup_floor_derivation is not None:
+        per_jurisdiction_floors = {
+            j: anchor.markup_percentage
+            for j, anchor in markup_floor_derivation.per_jurisdiction_anchors.items()
+        }
+        contributing_cases = [
+            {
+                "case_id": anchor.case_id,
+                "jurisdiction": anchor.jurisdiction,
+                "markup_ratio": anchor.markup_percentage,
+            }
+            for anchor in markup_floor_derivation.per_jurisdiction_anchors.values()
+        ]
+    else:
+        per_jurisdiction_floors = {}
+        contributing_cases = []
+
     derivation_metadata = {
         "methodology_version": "mjpis_v0.2",
         "markup_floor_derivation": {
+            "methodology": "intersection_v1",
             "per_jurisdiction": per_jurisdiction_floors,
             "intersection_floor": intersection_floor,
             "contributing_cases": contributing_cases,
@@ -220,20 +324,18 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     non_doj_case_count = sum(
         1 for c in corpus["cases"] if c["jurisdiction"] != "US_DOJ"
     )
+    n_contributing = len(per_jurisdiction_floors)
     logger.info(
         f"MJPIS v0.2 derivation: markup_floor_ratio={intersection_floor:.4f} "
-        f"(intersection across {len(per_jurisdiction_floors)} jurisdiction(s) "
+        f"(intersection_v1 across {n_contributing} jurisdiction(s) "
         f"with markup-based cases); "
         f"{non_doj_case_count} non-DOJ case(s) present in corpus "
-        f"(non-markup dimensions await further sub-task 2.3.7 consumers)"
+        f"(non-markup dimensions await further sub-task consumers)"
     )
 
     # Construct derived GlobalParameters via dataclasses.replace so ALL
     # statistical fields from US_FEDERAL_V0 are preserved by default, and
-    # only the MJPIS-specific fields are overridden. This is the correct
-    # pattern for a partial derivation: the minimum-viable increment only
-    # derives markup_floor_ratio empirically; everything else inherits
-    # until its own consumer rule and derivation land.
+    # only the MJPIS-specific fields are overridden.
     return replace(
         US_FEDERAL_V0,
         version=f"mjpis_v{corpus_version}",
@@ -246,8 +348,9 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             f"bribery_channel={dimensional_counts['bribery_channel']}, "
             f"administrative_sanctionable={dimensional_counts['administrative_sanctionable']}. "
             f"mjpis_v0.2 derives markup_floor_ratio empirically via "
-            f"cross-jurisdictional intersection; remaining statistical bars "
-            f"inherit US_FEDERAL_V0 until their own consumers and derivations land."
+            f"cross-jurisdictional intersection (intersection_v1); remaining "
+            f"statistical bars inherit US_FEDERAL_V0 until their own consumers "
+            f"and derivations land."
         ),
         source_citation=(
             f"research/corpus/prosecuted_cases_global_v{corpus_version}.json"
@@ -259,15 +362,42 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         notes=(
             f"Derived from {total_cases} cases across {len(jurisdictions)} "
             f"jurisdiction(s) via mjpis_derivation.derive_mjpis_parameters(). "
-            f"mjpis_v0.2 (sub-task 2.3.7 minimum-viable): real per-dimension "
-            f"derivation for markup_floor_ratio via intersection across "
-            f"{len(per_jurisdiction_floors)} jurisdiction(s) with markup-based "
+            f"markup_floor_ratio derived via intersection_v1 across "
+            f"{n_contributing} jurisdiction(s) with markup-based "
             f"cases. Contributing case(s): "
             f"{', '.join(c['case_id'] for c in contributing_cases) or '(none)'}. "
             f"Remaining statistical bars (posterior thresholds, FDR, bootstrap) "
             f"inherit US_FEDERAL_V0 pending their own derivation layers."
         ),
     )
+
+
+# ═══════════════════════════════════════════════════════════
+# Audit trail accessor
+# ═══════════════════════════════════════════════════════════
+
+
+def get_derivation_audit_trail() -> DerivationAuditTrail:
+    """
+    Return the full per-parameter derivation log.
+
+    The audit trail is populated when derive_mjpis_parameters() runs
+    (typically at import time via global_parameters.py). Each parameter
+    that has a derivation function gets a typed entry in the trail.
+
+    Returns:
+        DerivationAuditTrail with markup_floor as the first populated
+        entry. Future sub-tasks will add bribery_channel and
+        administrative_sanctionable entries.
+    """
+    if _audit_trail is None:
+        return DerivationAuditTrail()
+    return _audit_trail
+
+
+# ═══════════════════════════════════════════════════════════
+# Public API
+# ═══════════════════════════════════════════════════════════
 
 
 # Path to the seed corpus
@@ -288,13 +418,12 @@ def get_derived_mjpis() -> "GlobalParameters":
     Raises:
         FileNotFoundError: If corpus file doesn't exist
         json.JSONDecodeError: If corpus file is malformed
-        NotImplementedError: If multi-jurisdiction derivation is attempted
 
     Example:
         >>> from mjpis_derivation import get_derived_mjpis
         >>> mjpis_params = get_derived_mjpis()
-        >>> mjpis_params.version
-        'mjpis_v0.1'
+        >>> mjpis_params.markup_floor_ratio
+        0.501
     """
     corpus = load_corpus(CORPUS_PATH)
     return derive_mjpis_parameters(corpus)
@@ -322,19 +451,30 @@ if __name__ == "__main__":
         print(f"\nDerived GlobalParameters:")
         print(f"  Version: {mjpis.version}")
         print(f"  Evidentiary standard: {mjpis.evidentiary_standard}")
-        print(f"  RED threshold: posterior ≥ {mjpis.red_posterior_threshold:.0%}")
-        print(f"  YELLOW threshold: posterior ≥ {mjpis.yellow_posterior_threshold:.0%}")
+        print(f"  Markup floor ratio: {mjpis.markup_floor_ratio}")
+        print(f"  RED threshold: posterior >= {mjpis.red_posterior_threshold:.0%}")
+        print(f"  YELLOW threshold: posterior >= {mjpis.yellow_posterior_threshold:.0%}")
         print(f"  FDR alpha: {mjpis.fdr_alpha}")
         print(f"  Bootstrap resamples: {mjpis.bootstrap_n_resamples:,}")
+
+        trail = get_derivation_audit_trail()
+        if trail.markup_floor is not None:
+            mf = trail.markup_floor
+            print(f"\nMarkup floor derivation ({mf.methodology_version}):")
+            print(f"  Value: {mf.value}")
+            print(f"  Contributing jurisdictions: {mf.contributing_jurisdictions}")
+            for j, anchor in mf.per_jurisdiction_anchors.items():
+                print(f"    {j}: {anchor.case_id} at {anchor.markup_percentage} "
+                      f"({anchor.qualifying_case_count} qualifying case(s))")
 
         print("\n" + "=" * 72)
         print("Derivation successful")
 
     except FileNotFoundError as e:
-        print(f"\n✗ Corpus file not found: {e}")
-    except NotImplementedError as e:
-        print(f"\n⚠ Derivation not yet implemented: {e}")
+        print(f"\n  Corpus file not found: {e}")
+    except InsufficientCorpusError as e:
+        print(f"\n  Insufficient corpus: {e}")
     except Exception as e:
-        print(f"\n✗ Derivation failed: {e}")
+        print(f"\n  Derivation failed: {e}")
         import traceback
         traceback.print_exc()
