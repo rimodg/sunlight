@@ -1,10 +1,11 @@
 """
-Tests for MJPIS intersection_v1 derivations (markup floor + bribery channel).
-=============================================================================
+Tests for MJPIS intersection_v1 derivations (all three Phase C parameters).
+===========================================================================
 
-Sixteen regression tests locking in the principled per-jurisdiction
+Twenty-four regression tests locking in the principled per-jurisdiction
 extraction and intersection methodology introduced by item 20
-phase two sub-tasks A (markup_floor) and B (bribery_channel).
+phase two sub-tasks A (markup_floor), B (bribery_channel), and
+C (administrative_sanctionable).
 
 Run with:  pytest tests/test_mjpis_derivation_intersection.py -v
 """
@@ -13,11 +14,13 @@ import pytest
 
 from mjpis_derivation import (
     CORPUS_PATH,
+    AdministrativeSanctionableDerivation,
     BriberyChannelDerivation,
     DerivationAuditTrail,
     InsufficientCorpusError,
     JurisdictionAnchor,
     MarkupFloorDerivation,
+    derive_administrative_sanctionable_threshold,
     derive_bribery_channel_ratio,
     derive_markup_floor_ratio,
     get_derivation_audit_trail,
@@ -53,6 +56,20 @@ def _make_bc_case(case_id, jurisdiction, bribery_channel_ratio, tags=None):
         "jurisdiction": jurisdiction,
         "bribery_channel_ratio": bribery_channel_ratio,
         "dimensional_tags": tags or ["bribery_channel"],
+    }
+
+
+def _make_as_case(
+    case_id, jurisdiction, debarment_duration_months,
+    debarment_is_permanent=False, tags=None,
+):
+    """Build a minimal synthetic administrative-sanctionable corpus case dict."""
+    return {
+        "case_id": case_id,
+        "jurisdiction": jurisdiction,
+        "debarment_duration_months": debarment_duration_months,
+        "debarment_is_permanent": debarment_is_permanent,
+        "dimensional_tags": tags or ["administrative_sanctionable"],
     }
 
 
@@ -274,3 +291,127 @@ class TestBriberyChannelAuditTrail:
         assert set(bc.contributing_jurisdictions) == {"UK_SFO", "FR_PNF"}
         assert "UK_SFO" in bc.per_jurisdiction_anchors
         assert "FR_PNF" in bc.per_jurisdiction_anchors
+
+
+# ═══════════════════════════════════════════════════════════
+# Administrative-sanctionable threshold tests against the real corpus
+# ═══════════════════════════════════════════════════════════
+
+
+class TestRealCorpusAdminSanctionableDerivation:
+    """Verify intersection_v1 admin-sanctionable threshold against current corpus."""
+
+    def test_admin_sanctionable_value_is_18(self):
+        """The intersection is 18 months (Alcatel-Lucent 2015, WB_INT anchor)."""
+        cases = _load_real_cases()
+        result = derive_administrative_sanctionable_threshold(cases)
+        assert result.value == 18, (
+            f"Expected admin_sanc_threshold=18 (AlcatelLucent 2015), "
+            f"got {result.value}"
+        )
+
+    def test_admin_sanctionable_contributing_jurisdictions(self):
+        """Only WB_INT has qualifying administrative_sanctionable cases."""
+        cases = _load_real_cases()
+        result = derive_administrative_sanctionable_threshold(cases)
+        assert result.contributing_jurisdictions == ["WB_INT"], (
+            f"Expected ['WB_INT'], got {result.contributing_jurisdictions}"
+        )
+
+    def test_admin_sanctionable_wb_int_anchor(self):
+        """WB_INT anchor is Alcatel-Lucent 2015 at 18 months."""
+        cases = _load_real_cases()
+        result = derive_administrative_sanctionable_threshold(cases)
+        wb = result.per_jurisdiction_anchors["WB_INT"]
+        assert wb.case_id == "WB_INT_AlcatelLucent_2015", f"WB_INT anchor: {wb.case_id}"
+        assert int(wb.markup_percentage) == 18, f"WB_INT duration: {wb.markup_percentage}"
+
+    def test_admin_sanctionable_excluded_permanent_count(self):
+        """Excluded permanent debarment count reflects corpus state.
+
+        The CRBC case has debarment_is_permanent=False at the case level
+        (CRBC headline entity got 96 months; the E.C. de Luna permanent
+        debarment is a sub-entity documented in notes). No WB_INT case
+        has debarment_is_permanent=True in the current corpus, so the
+        excluded count is 0.
+        """
+        cases = _load_real_cases()
+        result = derive_administrative_sanctionable_threshold(cases)
+        assert result.excluded_permanent_debarment_count == 0, (
+            f"Expected 0 excluded permanent debarments, "
+            f"got {result.excluded_permanent_debarment_count}"
+        )
+
+    def test_admin_sanctionable_methodology_version(self):
+        """The derivation identifies itself as intersection_v1."""
+        cases = _load_real_cases()
+        result = derive_administrative_sanctionable_threshold(cases)
+        assert result.methodology_version == "intersection_v1"
+
+
+# ═══════════════════════════════════════════════════════════
+# Administrative-sanctionable synthetic tests
+# ═══════════════════════════════════════════════════════════
+
+
+class TestSyntheticAdminSanctionableDerivation:
+    """Verify admin-sanctionable edge cases and multi-jurisdiction logic."""
+
+    def test_three_jurisdiction_admin_sanctionable_intersection(self):
+        """With three jurisdictions, returns the minimum anchor."""
+        cases = [
+            _make_as_case("WB_A", "WB_INT", 24),
+            _make_as_case("PNF_B", "FR_PNF", 36),
+            _make_as_case("SFO_C", "UK_SFO", 12),
+        ]
+        result = derive_administrative_sanctionable_threshold(cases)
+        assert result.value == 12, f"Expected 12, got {result.value}"
+        assert set(result.contributing_jurisdictions) == {
+            "WB_INT", "FR_PNF", "UK_SFO"
+        }
+
+    def test_empty_corpus_raises_insufficient_corpus_error_admin(self):
+        """An empty cases list raises InsufficientCorpusError."""
+        with pytest.raises(InsufficientCorpusError):
+            derive_administrative_sanctionable_threshold([])
+
+
+# ═══════════════════════════════════════════════════════════
+# Administrative-sanctionable audit trail and integration tests
+# ═══════════════════════════════════════════════════════════
+
+
+class TestAdminSanctionableAuditTrailAndIntegration:
+    """Audit trail and GlobalParameters integration for admin-sanctionable."""
+
+    def test_audit_trail_has_all_three_entries(self):
+        """get_derivation_audit_trail() returns all three Phase C derivations."""
+        from global_parameters import MJPIS_DRAFT_V0  # noqa: F401
+
+        trail = get_derivation_audit_trail()
+        assert isinstance(trail, DerivationAuditTrail)
+        assert trail.markup_floor is not None, "markup_floor missing"
+        assert trail.bribery_channel is not None, "bribery_channel missing"
+        assert trail.administrative_sanctionable is not None, (
+            "administrative_sanctionable missing"
+        )
+        ad = trail.administrative_sanctionable
+        assert isinstance(ad, AdministrativeSanctionableDerivation)
+        assert ad.value == 18
+        assert ad.contributing_jurisdictions == ["WB_INT"]
+
+    def test_corpus_migration_completeness(self):
+        """Every WB_INT admin_sanctionable case has duration or permanent flag."""
+        cases = _load_real_cases()
+        for case in cases:
+            if case["jurisdiction"] != "WB_INT":
+                continue
+            if "administrative_sanctionable" not in case.get("dimensional_tags", []):
+                continue
+            has_duration = case.get("debarment_duration_months") is not None
+            is_permanent = case.get("debarment_is_permanent", False)
+            assert has_duration or is_permanent, (
+                f"WB_INT case {case['case_id']} is administrative_sanctionable "
+                f"but has neither debarment_duration_months nor "
+                f"debarment_is_permanent=True — silent null in qualifying slice"
+            )

@@ -104,13 +104,23 @@ class BriberyChannelDerivation:
 
 
 @dataclass(frozen=True)
+class AdministrativeSanctionableDerivation:
+    """Result of the intersection_v1 administrative-sanctionable threshold derivation."""
+
+    value: int  # the MJPIS administrative_sanctionable_threshold_months
+    contributing_jurisdictions: List[str]
+    per_jurisdiction_anchors: Dict[str, JurisdictionAnchor]
+    methodology_version: str = "intersection_v1"
+    excluded_permanent_debarment_count: int = 0
+
+
+@dataclass(frozen=True)
 class DerivationAuditTrail:
     """Full per-parameter derivation log for institutional audit."""
 
     markup_floor: Optional[MarkupFloorDerivation] = None
     bribery_channel: Optional[BriberyChannelDerivation] = None
-    # Future sub-task C will add:
-    # administrative_sanctionable: Optional[AdminSanctionableDerivation] = None
+    administrative_sanctionable: Optional[AdministrativeSanctionableDerivation] = None
 
 
 class InsufficientCorpusError(Exception):
@@ -298,6 +308,98 @@ def derive_bribery_channel_ratio(cases: List[Dict]) -> BriberyChannelDerivation:
     )
 
 
+def derive_administrative_sanctionable_threshold(
+    cases: List[Dict],
+) -> AdministrativeSanctionableDerivation:
+    """
+    Derive the MJPIS administrative_sanctionable_threshold_months via
+    intersection_v1 methodology.
+
+    Groups corpus cases by jurisdiction, filters to qualifying cases
+    (administrative_sanctionable tag + debarment_duration_months documented
+    + debarment_is_permanent == False), computes per-jurisdiction anchors
+    (minimum duration in each jurisdiction), and returns the intersection
+    (minimum across jurisdictions).
+
+    Permanent debarments are excluded from the duration-based intersection
+    because they are categorical (indefinite) rather than duration-based
+    sanctions. The count of excluded permanent debarments is included in
+    the result for audit transparency.
+
+    Args:
+        cases: List of corpus case dicts.
+
+    Returns:
+        AdministrativeSanctionableDerivation with value (months),
+        contributing jurisdictions, per-jurisdiction anchors, methodology
+        version, and excluded permanent debarment count.
+
+    Raises:
+        InsufficientCorpusError: If no jurisdiction has qualifying cases.
+    """
+    if not cases:
+        raise InsufficientCorpusError(
+            "Cannot derive administrative_sanctionable_threshold_months "
+            "from an empty corpus."
+        )
+
+    # Count permanent debarments excluded from duration intersection
+    excluded_permanent = 0
+    for case in cases:
+        if "administrative_sanctionable" not in case.get("dimensional_tags", []):
+            continue
+        if case.get("debarment_is_permanent", False):
+            excluded_permanent += 1
+
+    # Group qualifying cases by jurisdiction
+    as_cases_by_jurisdiction: Dict[str, List[Dict]] = {}
+    for case in cases:
+        if "administrative_sanctionable" not in case.get("dimensional_tags", []):
+            continue
+        if case.get("debarment_is_permanent", False):
+            continue  # exclude permanent debarments
+        duration = case.get("debarment_duration_months")
+        if duration is None:
+            continue
+        j = case["jurisdiction"]
+        as_cases_by_jurisdiction.setdefault(j, []).append({
+            "case_id": case["case_id"],
+            "duration_months": int(duration),
+        })
+
+    if not as_cases_by_jurisdiction:
+        raise InsufficientCorpusError(
+            "No jurisdiction in the corpus has qualifying "
+            "administrative_sanctionable cases with documented "
+            "debarment_duration_months (excluding permanent debarments)."
+        )
+
+    # Per-jurisdiction anchors: minimum duration in each jurisdiction
+    per_jurisdiction_anchors: Dict[str, JurisdictionAnchor] = {}
+    for j, j_cases in as_cases_by_jurisdiction.items():
+        min_case = min(j_cases, key=lambda c: c["duration_months"])
+        per_jurisdiction_anchors[j] = JurisdictionAnchor(
+            jurisdiction=j,
+            case_id=min_case["case_id"],
+            markup_percentage=float(min_case["duration_months"]),
+            qualifying_case_count=len(j_cases),
+        )
+
+    # Intersection: minimum across per-jurisdiction anchors
+    intersection_value = int(min(
+        a.markup_percentage for a in per_jurisdiction_anchors.values()
+    ))
+    contributing_jurisdictions = sorted(per_jurisdiction_anchors.keys())
+
+    return AdministrativeSanctionableDerivation(
+        value=intersection_value,
+        contributing_jurisdictions=contributing_jurisdictions,
+        per_jurisdiction_anchors=per_jurisdiction_anchors,
+        methodology_version="intersection_v1",
+        excluded_permanent_debarment_count=excluded_permanent,
+    )
+
+
 # ═══════════════════════════════════════════════════════════
 # Main derivation orchestrator
 # ═══════════════════════════════════════════════════════════
@@ -379,10 +481,24 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     except InsufficientCorpusError:
         pass  # stays None
 
+    # ── Administrative-sanctionable threshold derivation (intersection_v1) ─
+    #
+    # Duration-based intersection over debarment_duration_months.
+    # Permanent debarments excluded (categorical, not duration-based).
+    # If no qualifying cases exist, the parameter stays None.
+    admin_sanc_derivation: Optional[AdministrativeSanctionableDerivation] = None
+    admin_sanc_value: Optional[int] = None
+    try:
+        admin_sanc_derivation = derive_administrative_sanctionable_threshold(corpus["cases"])
+        admin_sanc_value = admin_sanc_derivation.value
+    except InsufficientCorpusError:
+        pass  # stays None
+
     # Store the audit trail at module level
     _audit_trail = DerivationAuditTrail(
         markup_floor=markup_floor_derivation,
         bribery_channel=bribery_channel_derivation,
+        administrative_sanctionable=admin_sanc_derivation,
     )
 
     # ── Provenance trail for derivation_metadata on GlobalParameters ──
@@ -424,6 +540,26 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         bc_per_jurisdiction = {}
         bc_contributing_cases = []
 
+    # Administrative-sanctionable provenance
+    if admin_sanc_derivation is not None:
+        as_per_jurisdiction = {
+            j: int(anchor.markup_percentage)
+            for j, anchor in admin_sanc_derivation.per_jurisdiction_anchors.items()
+        }
+        as_contributing_cases = [
+            {
+                "case_id": anchor.case_id,
+                "jurisdiction": anchor.jurisdiction,
+                "debarment_duration_months": int(anchor.markup_percentage),
+            }
+            for anchor in admin_sanc_derivation.per_jurisdiction_anchors.values()
+        ]
+        as_excluded_permanent = admin_sanc_derivation.excluded_permanent_debarment_count
+    else:
+        as_per_jurisdiction = {}
+        as_contributing_cases = []
+        as_excluded_permanent = 0
+
     derivation_metadata = {
         "methodology_version": "mjpis_v0.2",
         "markup_floor_derivation": {
@@ -438,6 +574,13 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             "intersection_floor": bribery_channel_value,
             "contributing_cases": bc_contributing_cases,
         },
+        "administrative_sanctionable_derivation": {
+            "methodology": "intersection_v1",
+            "per_jurisdiction": as_per_jurisdiction,
+            "intersection_floor": admin_sanc_value,
+            "contributing_cases": as_contributing_cases,
+            "excluded_permanent_debarment_count": as_excluded_permanent,
+        },
         "corpus_version": corpus_version,
         "jurisdictions_considered": sorted(jurisdictions),
     }
@@ -448,7 +591,9 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
     )
     n_contributing = len(per_jurisdiction_floors)
     n_bc_contributing = len(bc_per_jurisdiction)
+    n_as_contributing = len(as_per_jurisdiction)
     bc_value_str = f"{bribery_channel_value:.4f}" if bribery_channel_value is not None else "None"
+    as_value_str = f"{admin_sanc_value}" if admin_sanc_value is not None else "None"
     logger.info(
         f"MJPIS v0.2 derivation: markup_floor_ratio={intersection_floor:.4f} "
         f"(intersection_v1 across {n_contributing} jurisdiction(s) "
@@ -456,6 +601,10 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         f"bribery_channel_ratio={bc_value_str} "
         f"(intersection_v1 across {n_bc_contributing} jurisdiction(s) "
         f"with bribery-channel cases); "
+        f"admin_sanc_threshold={as_value_str}mo "
+        f"(intersection_v1 across {n_as_contributing} jurisdiction(s) "
+        f"with admin-sanctionable cases, "
+        f"{as_excluded_permanent} permanent debarment(s) excluded); "
         f"{non_doj_case_count} non-DOJ case(s) present in corpus"
     )
 
@@ -473,10 +622,11 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             f"markup_based={dimensional_counts['markup_based']}, "
             f"bribery_channel={dimensional_counts['bribery_channel']}, "
             f"administrative_sanctionable={dimensional_counts['administrative_sanctionable']}. "
-            f"mjpis_v0.2 derives markup_floor_ratio and bribery_channel_ratio "
-            f"empirically via cross-jurisdictional intersection (intersection_v1); "
-            f"remaining statistical bars inherit US_FEDERAL_V0 until their own "
-            f"consumers and derivations land."
+            f"mjpis_v0.2 derives markup_floor_ratio, bribery_channel_ratio, and "
+            f"administrative_sanctionable_threshold_months empirically via "
+            f"cross-jurisdictional intersection (intersection_v1); remaining "
+            f"statistical bars inherit US_FEDERAL_V0 until their own consumers "
+            f"and derivations land."
         ),
         source_citation=(
             f"research/corpus/prosecuted_cases_global_v{corpus_version}.json"
@@ -485,6 +635,7 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
         evidentiary_standard=evidentiary_standard,
         markup_floor_ratio=intersection_floor,
         bribery_channel_ratio=bribery_channel_value,
+        administrative_sanctionable_threshold_months=admin_sanc_value,
         derivation_metadata=derivation_metadata,
         notes=(
             f"Derived from {total_cases} cases across {len(jurisdictions)} "
@@ -497,6 +648,11 @@ def derive_mjpis_parameters(corpus: Dict) -> "GlobalParameters":
             f"{n_bc_contributing} jurisdiction(s) with bribery-channel "
             f"cases. Contributing case(s): "
             f"{', '.join(c['case_id'] for c in bc_contributing_cases) or '(none)'}. "
+            f"administrative_sanctionable_threshold_months derived via "
+            f"intersection_v1 across {n_as_contributing} jurisdiction(s) "
+            f"with admin-sanctionable cases ({as_excluded_permanent} "
+            f"permanent debarment(s) excluded). Contributing case(s): "
+            f"{', '.join(c['case_id'] for c in as_contributing_cases) or '(none)'}. "
             f"Remaining statistical bars (posterior thresholds, FDR, bootstrap) "
             f"inherit US_FEDERAL_V0 pending their own derivation layers."
         ),
@@ -517,8 +673,8 @@ def get_derivation_audit_trail() -> DerivationAuditTrail:
     that has a derivation function gets a typed entry in the trail.
 
     Returns:
-        DerivationAuditTrail with markup_floor as the first populated
-        entry. Future sub-tasks will add bribery_channel and
+        DerivationAuditTrail with all three Phase C derivations:
+        markup_floor (entry 0), bribery_channel (entry 1), and
         administrative_sanctionable entries.
     """
     if _audit_trail is None:
@@ -605,6 +761,16 @@ if __name__ == "__main__":
             print(f"  Contributing jurisdictions: {bc.contributing_jurisdictions}")
             for j, anchor in bc.per_jurisdiction_anchors.items():
                 print(f"    {j}: {anchor.case_id} at {anchor.markup_percentage} "
+                      f"({anchor.qualifying_case_count} qualifying case(s))")
+
+        if trail.administrative_sanctionable is not None:
+            ad = trail.administrative_sanctionable
+            print(f"\nAdmin-sanctionable threshold derivation ({ad.methodology_version}):")
+            print(f"  Value: {ad.value} months")
+            print(f"  Contributing jurisdictions: {ad.contributing_jurisdictions}")
+            print(f"  Excluded permanent debarments: {ad.excluded_permanent_debarment_count}")
+            for j, anchor in ad.per_jurisdiction_anchors.items():
+                print(f"    {j}: {anchor.case_id} at {int(anchor.markup_percentage)} months "
                       f"({anchor.qualifying_case_count} qualifying case(s))")
 
         print("\n" + "=" * 72)

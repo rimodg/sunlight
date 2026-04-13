@@ -182,6 +182,17 @@ class GlobalParameters:
     # consumes this parameter yet; pure additive scaffolding for future
     # bribery-channel dimension rule work.
 
+    administrative_sanctionable_threshold_months: Optional[int] = None
+    # MJPIS-derived empirical administrative-sanctionable floor, expressed as
+    # the minimum debarment duration (in months) that mature jurisdictions have
+    # imposed on clear administrative-sanctionable cases. None when not derived.
+    # When populated, SUNLIGHT treats any conduct that would not warrant at least
+    # this duration as structurally insufficient to constitute an administrative-
+    # sanctionable finding. Permanent debarments are excluded from the duration-
+    # based intersection (they are categorical rather than duration sanctions).
+    # No TCA rule consumes this parameter yet; pure additive scaffolding for
+    # future administrative-sanctionable dimension rule work.
+
     derivation_metadata: dict = field(default_factory=dict)
     # Provenance trail for MJPIS-derived fields. Populated by
     # mjpis_derivation.derive_mjpis_parameters() when the real per-dimension
