@@ -2,9 +2,10 @@
 Tests for the Evidence Verification Gate (EVG).
 ================================================
 
-10 regression tests covering the EVG gate function's three-verdict tier
-logic, per-dimension threshold evaluation, boundary conditions, and
-null-input handling.
+10 unit tests covering the EVG gate function's three-verdict tier logic,
+per-dimension threshold evaluation, boundary conditions, and null-input
+handling.  Plus 1 integration test verifying EVG reads the real data shape
+produced by tca_analyzer.py (closes the key-mismatch test-coverage gap).
 
 Run with:  pytest tests/test_evg_gate.py -v
 """
@@ -24,8 +25,11 @@ from evg import (
     DimensionResult,
     gate,
 )
-from sunlight_core import PriceResult, StructuralResult, StructuralVerdict
-from global_parameters import GlobalParameters
+from sunlight_core import ContractDossier, PriceResult, StructuralResult, StructuralVerdict
+from global_parameters import GlobalParameters, get_global_parameters
+from tca_rules import TCAGraphRuleEngine
+from tca_analyzer import analyze_tca_graph
+from jurisdiction_profile import US_FEDERAL
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -254,3 +258,110 @@ class TestEVGNullInputs:
                       if d.dimension == EvidenceDimension.CRI_MARKUP][0]
         assert markup_dim.fired is True
         assert outcome.verdict == EvidenceVerdict.YELLOW
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Test Suite: Integration with real TCA output shape
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+class TestEVGIntegrationWithTCAOutput:
+    """Verify EVG reads the actual data shape produced by tca_analyzer.py.
+
+    This test constructs a ContractDossier, runs it through the real
+    TCAGraphRuleEngine + analyze_tca_graph path, and feeds the resulting
+    StructuralResult into the EVG gate.  It catches key-mismatch bugs
+    like the "rule" vs "rule_id" incident (commit 706df82) by exercising
+    the real production data flow rather than synthetic helpers.
+    """
+
+    def test_evg_reads_real_tca_contradiction_keys(self):
+        """StructuralResult from real TCA pipeline has correct keys for EVG.
+
+        Fixture: direct procurement at $500K (above $100K competitive
+        threshold) with award_date 2017-09-20 (US fiscal year-end month,
+        day >= 15).  Expected to fire PROC-001 and TIME-001 minimum,
+        producing at least 2 REMOVES (contradiction) edges.
+
+        Assertions:
+          (a) Shape: every contradiction dict contains the "rule" key.
+          (b) Count: EVG's observed_value for TCA_TYPOLOGIES matches an
+              independent count of distinct rules from the same data.
+        """
+        # Build a dossier that reliably fires PROC-001 + TIME-001
+        dossier = ContractDossier(
+            contract_id="EVG-INTEGRATION-001",
+            ocid="ocds-test-evg-integration-001",
+            raw_ocds={
+                "ocid": "ocds-test-evg-integration-001",
+                "tag": ["US"],
+                "parties": [
+                    {"name": "Test Agency", "roles": ["buyer"],
+                     "address": {"countryName": "us"}},
+                    {"name": "Test Supplier", "id": "US-TEST-001",
+                     "roles": ["supplier"],
+                     "address": {"countryName": "us"}},
+                ],
+                "tender": {
+                    "value": {"amount": 500_000, "currency": "USD"},
+                    "procurementMethod": "direct",
+                    "numberOfTenderers": 1,
+                    "mainProcurementCategory": "goods",
+                },
+                "awards": [{"value": {"amount": 500_000, "currency": "USD"},
+                            "date": "2017-09-20"}],
+            },
+            buyer_name="Test Agency",
+            supplier_name="Test Supplier",
+            procurement_method="direct",
+            tender_value=500_000,
+            award_value=500_000,
+            currency="USD",
+            number_of_tenderers=1,
+            award_date="2017-09-20",
+            country_code="US",
+            sector="goods",
+        )
+
+        # Run real TCA pipeline under US_FEDERAL profile
+        engine = TCAGraphRuleEngine(profile=US_FEDERAL)
+        engine.build_graph(dossier)
+        structure = analyze_tca_graph(dossier)
+
+        # Pre-condition: at least one REMOVES edge was produced
+        assert len(structure.contradictions) > 0, (
+            "No REMOVES edges produced — test fixture needs adjustment"
+        )
+
+        # (a) Shape correctness: contradictions use the key that EVG reads
+        for c in structure.contradictions:
+            assert "rule" in c, (
+                f"Contradiction missing 'rule' key. Keys present: "
+                f"{sorted(c.keys())}.  EVG reads c.get('rule') — if this "
+                f"key is absent, TCA_TYPOLOGIES will never fire."
+            )
+            assert c["rule"] != "UNKNOWN", (
+                f"Contradiction has rule=UNKNOWN.  EVG counts distinct "
+                f"rule IDs; UNKNOWN values collapse typology count."
+            )
+
+        # (b) Count correctness: EVG's observed value matches independent count
+        gp = get_global_parameters("us_federal_v0")
+        outcome = gate(None, structure, gp)  # price=None, structure only
+
+        tca_dim = [d for d in outcome.dimension_results
+                   if d.dimension == EvidenceDimension.TCA_TYPOLOGIES][0]
+
+        # Independent count of distinct rules from contradictions
+        distinct_rules = set()
+        for c in structure.contradictions:
+            rule_id = c.get("rule") or c.get("rule_id", "")
+            if rule_id:
+                distinct_rules.add(rule_id)
+        expected = float(len(distinct_rules))
+
+        assert tca_dim.observed_value == expected, (
+            f"EVG observed {tca_dim.observed_value} typologies but "
+            f"structure has {expected} distinct rules: {sorted(distinct_rules)}.  "
+            f"Key mismatch between tca_analyzer output and EVG reader."
+        )
