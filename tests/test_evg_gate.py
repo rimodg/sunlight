@@ -74,7 +74,7 @@ def _make_structure(rule_ids: list[str] | None = None) -> StructuralResult:
     if rule_ids:
         for rid in rule_ids:
             contradictions.append({
-                "rule_id": rid,
+                "rule": rid,
                 "severity": "high",
                 "description": f"Finding from {rid}",
                 "evidence": "test evidence",

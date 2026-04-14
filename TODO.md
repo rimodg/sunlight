@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 14, 2026
-**Current commit on main:** `ac6581e`
+**Current commit on main:** `(pending)`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -70,6 +70,7 @@ Fixes the 9-DOJ-cases validation weakness and makes the living multi-jurisdictio
 
 ## Phase C — Scharff outreach document v2
 
+- [x] **23a. Analytical dossier — Stage 1: contract selection & engine runs.** Five contracts selected from production DB covering full verdict spectrum: GREEN baseline (WE31, DoD/TETRA TECH, $3.1M), YELLOW finding (75N91020F00014, HHS/LEIDOS, $50M, 1 EVG dimension: CRI_MARKUP), RED finding (N0002417C2117, DoD/ELECTRIC BOAT, $24.3B, 2 EVG dimensions: CRI_MARKUP + TCA_TYPOLOGIES via FIN-001 + TIME-001), DOJ-prosecuted reference (US_v_Boeing_2006, 450% markup, EVG RED via PROC-001 + FIN-001), jurisdiction comparison (W9113M08C0031, US_FEDERAL=YELLOW vs UK_CENTRAL_GOVERNMENT=RED, 4 behavioral deltas including TIME-001 firing only under UK March fiscal year-end). Bug fix discovered during work: EVG key mismatch — `evg.py` read `c.get("rule_id")` but `tca_analyzer.py` produces `"rule"` key; TCA_TYPOLOGIES dimension never fired in production. Fixed to `c.get("rule") or c.get("rule_id", "")`. Test helper aligned. Tender/award value split implemented: `tender_value` = CRI peer median (estimated fair price), `award_value` = actual contract amount, enabling FIN-001 to detect price inflation on production contracts. 5/5 sanity checks pass. DOJ regression byte-identical. Script: `demo/generate_dossier_material.py`. Output: `demo/contracts_analyzed.json`.
 - [ ] **23. Scharff outreach document v2 draft.** Written directly in conversation, not a Claude Code task. Anchored in Dr. Timilsina's published implementation-gap framing, shared Fazekas methodological lineage, explicit mapping to Compass five indicators, and the current architectural state. Sent only after Phase A is complete and Phase B has at least 2.3.2-2.3.4 done. Estimate: 45-90 minutes of careful writing, several iterations. Blocks: Phase A completion, partial Phase B.
 
 ---

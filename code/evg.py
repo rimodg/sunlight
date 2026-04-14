@@ -167,7 +167,8 @@ def gate(
         # Each distinct rule_id represents a different typology trigger.
         rule_ids = set()
         for c in structure.contradictions:
-            rule_id = c.get("rule_id", "")
+            # tca_analyzer.py produces key "rule"; accept both for robustness
+            rule_id = c.get("rule") or c.get("rule_id", "")
             if rule_id:
                 rule_ids.add(rule_id)
         distinct_typologies = len(rule_ids)

@@ -1,0 +1,933 @@
+{
+  "metadata": {
+    "engine_version": "v4_core",
+    "head_commit": "244f991",
+    "doj_regression_baseline": "69.2% / 100% / 8.0% / TP=9 FP=4 FN=0 TN=46",
+    "test_suite_passing": 682,
+    "generated_at": "2026-04-14T12:38:58.912148+00:00",
+    "mjpis_parameters": {
+      "markup_floor_ratio": 0.501,
+      "bribery_channel_ratio": 0.0058,
+      "administrative_sanctionable_threshold_months": 18
+    }
+  },
+  "contracts": [
+    {
+      "case_number": 1,
+      "verdict_profile": "green_baseline",
+      "selection_rationale": "Clean federal contract from a recognizable agency, meaningful value, all three EVG dimensions below threshold, demonstrating what 'no structural finding' looks like under SUNLIGHT analysis.",
+      "contract": {
+        "contract_id": "WE31",
+        "agency_name": "Department of Defense",
+        "vendor_name": "TETRA TECH INC",
+        "award_amount": 3080692.0,
+        "currency": "USD",
+        "award_date": "2017-05-26",
+        "description": "IGF::OT::IGF NWS EARLE FY17 BASEWIDE SUPPORT",
+        "procurement_method": "open",
+        "number_of_tenderers": null
+      },
+      "analysis": {
+        "evg_verdict": "green",
+        "gate_outcome": {
+          "verdict": "green",
+          "dimensions_fired": 0,
+          "dimension_results": [
+            {
+              "dimension": "cri_markup",
+              "fired": false,
+              "observed_value": -0.8759,
+              "threshold": 0.75,
+              "detail": "Markup ratio -0.8759 < MJPIS floor 0.7500"
+            },
+            {
+              "dimension": "cri_bribery_channel",
+              "fired": false,
+              "observed_value": null,
+              "threshold": null,
+              "detail": "Bribery-channel data not yet available in pipeline"
+            },
+            {
+              "dimension": "tca_typologies",
+              "fired": false,
+              "observed_value": 0.0,
+              "threshold": 2.0,
+              "detail": "0 distinct typologies < threshold 2"
+            }
+          ],
+          "global_params_version": "us_federal_v0",
+          "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+        },
+        "cri": {
+          "cri_tier": "GREEN",
+          "markup_pct": -87.59,
+          "markup_ci_lower": -87.7,
+          "markup_ci_upper": -87.5,
+          "bayesian_posterior": 0.0,
+          "bayesian_prior": 0.0375,
+          "bayesian_likelihood_ratio": 0.0,
+          "raw_pvalue": 1.0,
+          "bootstrap_percentile": 1.5,
+          "percentile_ci_lower": 1.3,
+          "percentile_ci_upper": 1.6,
+          "comparable_count": 23441,
+          "insufficient_comparables": false
+        },
+        "tca": {
+          "confidence": 0.95,
+          "verdict": "sound",
+          "contradictions": [],
+          "unproven": [
+            {
+              "from": "award",
+              "to": "oversight",
+              "description": "No review body identified in procurement record",
+              "rule": "PROC-003",
+              "evidence": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy"
+            }
+          ],
+          "verified": [
+            {
+              "from": "award",
+              "to": "budget",
+              "description": "Award timing shows no fiscal year-end pressure",
+              "rule": "TIME-003",
+              "evidence": "Baseline: absence of timing anomaly is a positive structural signal"
+            },
+            {
+              "from": "supplier_0",
+              "to": "award",
+              "description": "Supplier jurisdiction matches contract location",
+              "rule": "GEO-002",
+              "evidence": "Positive structural signal: local presence verified"
+            }
+          ],
+          "edge_distribution": {
+            "EXPRESSES": 2,
+            "BOUNDS": 3,
+            "SEEKS": 1,
+            "VERIFIES": 2
+          },
+          "graph_id": "d177eb332d28",
+          "rule_fire_log": {
+            "PROC-001": false,
+            "PROC-002": false,
+            "PROC-003": true,
+            "PROC-004": false,
+            "PROC-005": false,
+            "ENT-001": false,
+            "ENT-002": false,
+            "ENT-003": false,
+            "FIN-001": false,
+            "FIN-002": false,
+            "FIN-003": false,
+            "TIME-001": false,
+            "TIME-002": false,
+            "TIME-003": true,
+            "GEO-001": false,
+            "GEO-002": true
+          }
+        },
+        "rule_citations": {
+          "PROC-003": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy",
+          "TIME-003": "Baseline: absence of timing anomaly is a positive structural signal",
+          "GEO-002": "Positive structural signal: local presence verified"
+        },
+        "processing_time_ms": 1816.0,
+        "tca_processing_ms": 0.2
+      }
+    },
+    {
+      "case_number": 2,
+      "verdict_profile": "yellow_finding",
+      "selection_rationale": "Federal contract producing CRI YELLOW tier \u2014 statistical markup anomaly significant enough to warrant investigator review but below the RED threshold for multi-dimensional structural findings.",
+      "contract": {
+        "contract_id": "75N91020F00014",
+        "agency_name": "Department of Health and Human Services",
+        "vendor_name": "LEIDOS BIOMEDICAL RESEARCH INC",
+        "award_amount": 50000000.0,
+        "currency": "USD",
+        "award_date": "2020-06-30",
+        "description": "COVID ACTIV3 TASK ORDER SUPPORTS NIAID'S GOAL TO BETTER UNDERSTAND THE CORONAVIRUS WITH AN INITIAL FOCUS ON ACTIV3. THIS TASK ORDER WILL INITIATE THE MANAGEMENT , OVERSIGHT , AND CONDUCT OF THE NIAID  DCR CLINICAL TRIAL TITLED A MULTICENTER, ADA",
+        "procurement_method": "open",
+        "number_of_tenderers": null
+      },
+      "analysis": {
+        "evg_verdict": "yellow",
+        "gate_outcome": {
+          "verdict": "yellow",
+          "dimensions_fired": 1,
+          "dimension_results": [
+            {
+              "dimension": "cri_markup",
+              "fired": true,
+              "observed_value": 1.1092,
+              "threshold": 0.75,
+              "detail": "Markup ratio 1.1092 >= MJPIS floor 0.7500"
+            },
+            {
+              "dimension": "cri_bribery_channel",
+              "fired": false,
+              "observed_value": null,
+              "threshold": null,
+              "detail": "Bribery-channel data not yet available in pipeline"
+            },
+            {
+              "dimension": "tca_typologies",
+              "fired": false,
+              "observed_value": 1.0,
+              "threshold": 2.0,
+              "detail": "1 distinct typologies < threshold 2"
+            }
+          ],
+          "global_params_version": "us_federal_v0",
+          "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+        },
+        "cri": {
+          "cri_tier": "YELLOW",
+          "markup_pct": 110.92,
+          "markup_ci_lower": 103.4,
+          "markup_ci_upper": 117.8,
+          "bayesian_posterior": 0.666,
+          "bayesian_prior": 0.0525,
+          "bayesian_likelihood_ratio": 35.99,
+          "raw_pvalue": 0.0001,
+          "bootstrap_percentile": 83.2,
+          "percentile_ci_lower": 81.7,
+          "percentile_ci_upper": 84.8,
+          "comparable_count": 2312,
+          "insufficient_comparables": false
+        },
+        "tca": {
+          "confidence": 0.75,
+          "verdict": "concern",
+          "contradictions": [
+            {
+              "from": "price_inflation",
+              "to": "budget",
+              "description": "Award (USD 50,000,000) exceeds tender (USD 23,705,670) by 110.9%",
+              "rule": "FIN-001",
+              "evidence": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)"
+            }
+          ],
+          "unproven": [
+            {
+              "from": "award",
+              "to": "oversight",
+              "description": "No review body identified in procurement record",
+              "rule": "PROC-003",
+              "evidence": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy"
+            }
+          ],
+          "verified": [
+            {
+              "from": "award",
+              "to": "budget",
+              "description": "Award timing shows no fiscal year-end pressure",
+              "rule": "TIME-003",
+              "evidence": "Baseline: absence of timing anomaly is a positive structural signal"
+            },
+            {
+              "from": "supplier_0",
+              "to": "award",
+              "description": "Supplier jurisdiction matches contract location",
+              "rule": "GEO-002",
+              "evidence": "Positive structural signal: local presence verified"
+            }
+          ],
+          "edge_distribution": {
+            "EXPRESSES": 2,
+            "BOUNDS": 3,
+            "SEEKS": 1,
+            "REMOVES": 1,
+            "VERIFIES": 2
+          },
+          "graph_id": "ca277c19c356",
+          "rule_fire_log": {
+            "PROC-001": false,
+            "PROC-002": false,
+            "PROC-003": true,
+            "PROC-004": false,
+            "PROC-005": false,
+            "ENT-001": false,
+            "ENT-002": false,
+            "ENT-003": false,
+            "FIN-001": true,
+            "FIN-002": false,
+            "FIN-003": false,
+            "TIME-001": false,
+            "TIME-002": false,
+            "TIME-003": true,
+            "GEO-001": false,
+            "GEO-002": true
+          }
+        },
+        "rule_citations": {
+          "PROC-003": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy",
+          "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
+          "TIME-003": "Baseline: absence of timing anomaly is a positive structural signal",
+          "GEO-002": "Positive structural signal: local presence verified"
+        },
+        "processing_time_ms": 133.2,
+        "tca_processing_ms": 0.1
+      }
+    },
+    {
+      "case_number": 3,
+      "verdict_profile": "red_finding",
+      "selection_rationale": "Non-DOJ-prosecuted contract producing the highest confidence finding from the production database \u2014 demonstrates SUNLIGHT's ability to surface structural risk on contracts never previously flagged.",
+      "contract": {
+        "contract_id": "N0002417C2117",
+        "agency_name": "Department of Defense",
+        "vendor_name": "ELECTRIC BOAT CORPORATION",
+        "award_amount": 24313811834.0,
+        "currency": "USD",
+        "award_date": "2017-09-21",
+        "description": "COLUMBIA CLASS DESIGN COMPLETION",
+        "procurement_method": "open",
+        "number_of_tenderers": null
+      },
+      "analysis": {
+        "evg_verdict": "red",
+        "gate_outcome": {
+          "verdict": "red",
+          "dimensions_fired": 2,
+          "dimension_results": [
+            {
+              "dimension": "cri_markup",
+              "fired": true,
+              "observed_value": 11.565199999999999,
+              "threshold": 0.75,
+              "detail": "Markup ratio 11.5652 >= MJPIS floor 0.7500"
+            },
+            {
+              "dimension": "cri_bribery_channel",
+              "fired": false,
+              "observed_value": null,
+              "threshold": null,
+              "detail": "Bribery-channel data not yet available in pipeline"
+            },
+            {
+              "dimension": "tca_typologies",
+              "fired": true,
+              "observed_value": 2.0,
+              "threshold": 2.0,
+              "detail": "2 distinct typologies >= threshold 2"
+            }
+          ],
+          "global_params_version": "us_federal_v0",
+          "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+        },
+        "cri": {
+          "cri_tier": "RED",
+          "markup_pct": 1156.52,
+          "markup_ci_lower": 986.7,
+          "markup_ci_upper": 1254.2,
+          "bayesian_posterior": 0.7165,
+          "bayesian_prior": 0.0656,
+          "bayesian_likelihood_ratio": 35.99,
+          "raw_pvalue": 0.0001,
+          "bootstrap_percentile": 97.8,
+          "percentile_ci_lower": 96.2,
+          "percentile_ci_upper": 99.4,
+          "comparable_count": 319,
+          "insufficient_comparables": false
+        },
+        "tca": {
+          "confidence": 0.55,
+          "verdict": "compromised",
+          "contradictions": [
+            {
+              "from": "price_inflation",
+              "to": "budget",
+              "description": "Award (USD 24,313,811,834) exceeds tender (USD 1,935,011,925) by 1156.5%",
+              "rule": "FIN-001",
+              "evidence": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)"
+            },
+            {
+              "from": "fiscal_pressure",
+              "to": "award",
+              "description": "Award in final 2 weeks of fiscal period (month 9, day 21)",
+              "rule": "TIME-001",
+              "evidence": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)"
+            }
+          ],
+          "unproven": [
+            {
+              "from": "award",
+              "to": "oversight",
+              "description": "No review body identified in procurement record",
+              "rule": "PROC-003",
+              "evidence": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy"
+            }
+          ],
+          "verified": [
+            {
+              "from": "supplier_0",
+              "to": "award",
+              "description": "Supplier jurisdiction matches contract location",
+              "rule": "GEO-002",
+              "evidence": "Positive structural signal: local presence verified"
+            }
+          ],
+          "edge_distribution": {
+            "EXPRESSES": 2,
+            "BOUNDS": 3,
+            "SEEKS": 1,
+            "REMOVES": 2,
+            "VERIFIES": 1
+          },
+          "graph_id": "ad1cedfea734",
+          "rule_fire_log": {
+            "PROC-001": false,
+            "PROC-002": false,
+            "PROC-003": true,
+            "PROC-004": false,
+            "PROC-005": false,
+            "ENT-001": false,
+            "ENT-002": false,
+            "ENT-003": false,
+            "FIN-001": true,
+            "FIN-002": false,
+            "FIN-003": false,
+            "TIME-001": true,
+            "TIME-002": false,
+            "TIME-003": false,
+            "GEO-001": false,
+            "GEO-002": true
+          }
+        },
+        "rule_citations": {
+          "PROC-003": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy",
+          "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
+          "TIME-001": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)",
+          "GEO-002": "Positive structural signal: local presence verified"
+        },
+        "processing_time_ms": 38.3,
+        "tca_processing_ms": 0.1
+      }
+    },
+    {
+      "case_number": 4,
+      "verdict_profile": "doj_prosecuted_reference",
+      "selection_rationale": "DOJ-prosecuted Spare Parts Overcharging case (US_v_Boeing_2006). Documented markup: 450%. Settlement: $615,000,000. Credibility floor: prosecuted procurement fraud reliably lights up the engine.",
+      "contract": {
+        "contract_id": "US_v_Boeing_2006",
+        "agency_name": "Department of Defense",
+        "vendor_name": "Boeing Company",
+        "award_amount": 148287617.9675,
+        "currency": "USD",
+        "fraud_type": "Spare Parts Overcharging",
+        "documented_markup_pct": 450,
+        "settlement_amount": 615000000,
+        "description": "Charged Air Force 300-600% markup on standard aircraft spare parts with known commercial prices",
+        "procurement_method": "direct",
+        "number_of_tenderers": 1
+      },
+      "analysis": {
+        "evg_verdict": "red",
+        "gate_outcome": {
+          "verdict": "red",
+          "dimensions_fired": 2,
+          "dimension_results": [
+            {
+              "dimension": "cri_markup",
+              "fired": true,
+              "observed_value": 4.3268,
+              "threshold": 0.75,
+              "detail": "Markup ratio 4.3268 >= MJPIS floor 0.7500"
+            },
+            {
+              "dimension": "cri_bribery_channel",
+              "fired": false,
+              "observed_value": null,
+              "threshold": null,
+              "detail": "Bribery-channel data not yet available in pipeline"
+            },
+            {
+              "dimension": "tca_typologies",
+              "fired": true,
+              "observed_value": 2.0,
+              "threshold": 2.0,
+              "detail": "2 distinct typologies >= threshold 2"
+            }
+          ],
+          "global_params_version": "us_federal_v0",
+          "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+        },
+        "cri": {
+          "cri_tier": "RED",
+          "markup_pct": 432.68,
+          "markup_ci_lower": 427.2,
+          "markup_ci_upper": 438.6,
+          "bayesian_posterior": 0.7165,
+          "bayesian_prior": 0.0656,
+          "bayesian_likelihood_ratio": 35.99,
+          "raw_pvalue": 0.0001,
+          "bootstrap_percentile": 91.9,
+          "percentile_ci_lower": 91.6,
+          "percentile_ci_upper": 92.2,
+          "comparable_count": 26084,
+          "insufficient_comparables": false
+        },
+        "tca": {
+          "confidence": 0.55,
+          "verdict": "compromised",
+          "contradictions": [
+            {
+              "from": "award",
+              "to": "process",
+              "description": "Direct award of USD 27,838,030 exceeds competitive threshold (USD 100,000)",
+              "rule": "PROC-001",
+              "evidence": "UNCAC Art. 9(1) \u2014 Public procurement systems based on transparency, competition and objective criteria; UNCAC Art. 9(2) \u2014 Public finance management measures; UNCAC Art. 12 \u2014 Private sector measures against corruption; UNCAC Art. 15 \u2014 Bribery of national public officials; UNCAC Art. 16 \u2014 Bribery of foreign public officials and officials of public international organizations; UNCAC Art. 17 \u2014 Embezzlement, misappropriation or other diversion of property by a public official; UNCAC Art. 18 \u2014 Trading in influence; OECD Anti-Bribery Convention 1997 \u2014 Convention on Combating Bribery of Foreign Public Officials in International Business Transactions; OECD Recommendation on Public Procurement 2015 \u2014 OECD/LEGAL/0411; Federal Acquisition Regulation (FAR) Part 6 \u2014 Competition Requirements; FAR Part 15 \u2014 Contracting by Negotiation; FAR Part 13 \u2014 Simplified Acquisition Procedures"
+            },
+            {
+              "from": "price_inflation",
+              "to": "budget",
+              "description": "Award (USD 148,287,618) exceeds tender (USD 27,838,030) by 432.7%",
+              "rule": "FIN-001",
+              "evidence": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)"
+            }
+          ],
+          "unproven": [
+            {
+              "from": "award",
+              "to": "oversight",
+              "description": "No review body identified in procurement record",
+              "rule": "PROC-003",
+              "evidence": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy"
+            }
+          ],
+          "verified": [
+            {
+              "from": "supplier_0",
+              "to": "award",
+              "description": "Supplier jurisdiction matches contract location",
+              "rule": "GEO-002",
+              "evidence": "Positive structural signal: local presence verified"
+            }
+          ],
+          "edge_distribution": {
+            "EXPRESSES": 2,
+            "BOUNDS": 3,
+            "REMOVES": 2,
+            "SEEKS": 1,
+            "VERIFIES": 1
+          },
+          "graph_id": "ae04a98b0fe5",
+          "rule_fire_log": {
+            "PROC-001": true,
+            "PROC-002": false,
+            "PROC-003": true,
+            "PROC-004": false,
+            "PROC-005": false,
+            "ENT-001": false,
+            "ENT-002": false,
+            "ENT-003": false,
+            "FIN-001": true,
+            "FIN-002": false,
+            "FIN-003": false,
+            "TIME-001": false,
+            "TIME-002": false,
+            "TIME-003": false,
+            "GEO-001": false,
+            "GEO-002": true
+          }
+        },
+        "rule_citations": {
+          "PROC-001": "UNCAC Art. 9(1) \u2014 Public procurement systems based on transparency, competition and objective criteria; UNCAC Art. 9(2) \u2014 Public finance management measures; UNCAC Art. 12 \u2014 Private sector measures against corruption; UNCAC Art. 15 \u2014 Bribery of national public officials; UNCAC Art. 16 \u2014 Bribery of foreign public officials and officials of public international organizations; UNCAC Art. 17 \u2014 Embezzlement, misappropriation or other diversion of property by a public official; UNCAC Art. 18 \u2014 Trading in influence; OECD Anti-Bribery Convention 1997 \u2014 Convention on Combating Bribery of Foreign Public Officials in International Business Transactions; OECD Recommendation on Public Procurement 2015 \u2014 OECD/LEGAL/0411; Federal Acquisition Regulation (FAR) Part 6 \u2014 Competition Requirements; FAR Part 15 \u2014 Contracting by Negotiation; FAR Part 13 \u2014 Simplified Acquisition Procedures",
+          "PROC-003": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy",
+          "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
+          "GEO-002": "Positive structural signal: local presence verified"
+        },
+        "processing_time_ms": 50.1,
+        "tca_processing_ms": 0.1
+      }
+    },
+    {
+      "case_number": 5,
+      "verdict_profile": "jurisdiction_comparison",
+      "selection_rationale": "Contract dated in March (UK fiscal Q4 but US mid-fiscal-year), analyzed under both us_federal and uk_central_government profiles to demonstrate jurisdiction-correct behavioral delta without code change.",
+      "contract": {
+        "contract_id": "W9113M08C0031",
+        "agency_name": "Department of Defense",
+        "vendor_name": "CONCURRENT TECHNOLOGIES CORP",
+        "award_amount": 49985204.01,
+        "currency": "USD",
+        "award_date": "2008-03-24",
+        "description": "BASIC EFFORT - EXERCISED PORTION",
+        "procurement_method": "open",
+        "number_of_tenderers": null
+      },
+      "analysis": {
+        "evg_verdict": "yellow",
+        "gate_outcome": {
+          "verdict": "yellow",
+          "dimensions_fired": 1,
+          "dimension_results": [
+            {
+              "dimension": "cri_markup",
+              "fired": true,
+              "observed_value": 0.8187000000000001,
+              "threshold": 0.75,
+              "detail": "Markup ratio 0.8187 >= MJPIS floor 0.7500"
+            },
+            {
+              "dimension": "cri_bribery_channel",
+              "fired": false,
+              "observed_value": null,
+              "threshold": null,
+              "detail": "Bribery-channel data not yet available in pipeline"
+            },
+            {
+              "dimension": "tca_typologies",
+              "fired": false,
+              "observed_value": 1.0,
+              "threshold": 2.0,
+              "detail": "1 distinct typologies < threshold 2"
+            }
+          ],
+          "global_params_version": "us_federal_v0",
+          "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+        },
+        "cri": {
+          "cri_tier": "GREEN",
+          "markup_pct": 81.87,
+          "markup_ci_lower": 79.9,
+          "markup_ci_upper": 83.9,
+          "bayesian_posterior": 0.7165,
+          "bayesian_prior": 0.0656,
+          "bayesian_likelihood_ratio": 35.99,
+          "raw_pvalue": 0.0001,
+          "bootstrap_percentile": 76.7,
+          "percentile_ci_lower": 76.2,
+          "percentile_ci_upper": 77.2,
+          "comparable_count": 25853,
+          "insufficient_comparables": false
+        },
+        "tca": {
+          "confidence": 0.75,
+          "verdict": "concern",
+          "contradictions": [
+            {
+              "from": "price_inflation",
+              "to": "budget",
+              "description": "Award (USD 49,985,204) exceeds tender (USD 27,484,029) by 81.9%",
+              "rule": "FIN-001",
+              "evidence": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)"
+            }
+          ],
+          "unproven": [
+            {
+              "from": "award",
+              "to": "oversight",
+              "description": "No review body identified in procurement record",
+              "rule": "PROC-003",
+              "evidence": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy"
+            }
+          ],
+          "verified": [
+            {
+              "from": "supplier_0",
+              "to": "award",
+              "description": "Supplier jurisdiction matches contract location",
+              "rule": "GEO-002",
+              "evidence": "Positive structural signal: local presence verified"
+            }
+          ],
+          "edge_distribution": {
+            "EXPRESSES": 2,
+            "BOUNDS": 3,
+            "SEEKS": 1,
+            "REMOVES": 1,
+            "VERIFIES": 1
+          },
+          "graph_id": "f3719daef580",
+          "rule_fire_log": {
+            "PROC-001": false,
+            "PROC-002": false,
+            "PROC-003": true,
+            "PROC-004": false,
+            "PROC-005": false,
+            "ENT-001": false,
+            "ENT-002": false,
+            "ENT-003": false,
+            "FIN-001": true,
+            "FIN-002": false,
+            "FIN-003": false,
+            "TIME-001": false,
+            "TIME-002": false,
+            "TIME-003": false,
+            "GEO-001": false,
+            "GEO-002": true
+          }
+        },
+        "rule_citations": {
+          "PROC-003": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy",
+          "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
+          "GEO-002": "Positive structural signal: local presence verified"
+        },
+        "processing_time_ms": 2033.5,
+        "tca_processing_ms": 0.1
+      }
+    }
+  ],
+  "jurisdiction_comparison": {
+    "case_number": 5,
+    "contract_id": "W9113M08C0031",
+    "us_federal_analysis": {
+      "evg_verdict": "yellow",
+      "gate_outcome": {
+        "verdict": "yellow",
+        "dimensions_fired": 1,
+        "dimension_results": [
+          {
+            "dimension": "cri_markup",
+            "fired": true,
+            "observed_value": 0.8187000000000001,
+            "threshold": 0.75,
+            "detail": "Markup ratio 0.8187 >= MJPIS floor 0.7500"
+          },
+          {
+            "dimension": "cri_bribery_channel",
+            "fired": false,
+            "observed_value": null,
+            "threshold": null,
+            "detail": "Bribery-channel data not yet available in pipeline"
+          },
+          {
+            "dimension": "tca_typologies",
+            "fired": false,
+            "observed_value": 1.0,
+            "threshold": 2.0,
+            "detail": "1 distinct typologies < threshold 2"
+          }
+        ],
+        "global_params_version": "us_federal_v0",
+        "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+      },
+      "cri": {
+        "cri_tier": "GREEN",
+        "markup_pct": 81.87,
+        "markup_ci_lower": 79.9,
+        "markup_ci_upper": 83.9,
+        "bayesian_posterior": 0.7165,
+        "bayesian_prior": 0.0656,
+        "bayesian_likelihood_ratio": 35.99,
+        "raw_pvalue": 0.0001,
+        "bootstrap_percentile": 76.7,
+        "percentile_ci_lower": 76.2,
+        "percentile_ci_upper": 77.2,
+        "comparable_count": 25853,
+        "insufficient_comparables": false
+      },
+      "tca": {
+        "confidence": 0.75,
+        "verdict": "concern",
+        "contradictions": [
+          {
+            "from": "price_inflation",
+            "to": "budget",
+            "description": "Award (USD 49,985,204) exceeds tender (USD 27,484,029) by 81.9%",
+            "rule": "FIN-001",
+            "evidence": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)"
+          }
+        ],
+        "unproven": [
+          {
+            "from": "award",
+            "to": "oversight",
+            "description": "No review body identified in procurement record",
+            "rule": "PROC-003",
+            "evidence": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy"
+          }
+        ],
+        "verified": [
+          {
+            "from": "supplier_0",
+            "to": "award",
+            "description": "Supplier jurisdiction matches contract location",
+            "rule": "GEO-002",
+            "evidence": "Positive structural signal: local presence verified"
+          }
+        ],
+        "edge_distribution": {
+          "EXPRESSES": 2,
+          "BOUNDS": 3,
+          "SEEKS": 1,
+          "REMOVES": 1,
+          "VERIFIES": 1
+        },
+        "graph_id": "f3719daef580",
+        "rule_fire_log": {
+          "PROC-001": false,
+          "PROC-002": false,
+          "PROC-003": true,
+          "PROC-004": false,
+          "PROC-005": false,
+          "ENT-001": false,
+          "ENT-002": false,
+          "ENT-003": false,
+          "FIN-001": true,
+          "FIN-002": false,
+          "FIN-003": false,
+          "TIME-001": false,
+          "TIME-002": false,
+          "TIME-003": false,
+          "GEO-001": false,
+          "GEO-002": true
+        }
+      },
+      "rule_citations": {
+        "PROC-003": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy",
+        "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
+        "GEO-002": "Positive structural signal: local presence verified"
+      },
+      "processing_time_ms": 2033.5,
+      "tca_processing_ms": 0.1
+    },
+    "uk_central_government_analysis": {
+      "evg_verdict": "red",
+      "gate_outcome": {
+        "verdict": "red",
+        "dimensions_fired": 2,
+        "dimension_results": [
+          {
+            "dimension": "cri_markup",
+            "fired": true,
+            "observed_value": 0.8187000000000001,
+            "threshold": 0.75,
+            "detail": "Markup ratio 0.8187 >= MJPIS floor 0.7500"
+          },
+          {
+            "dimension": "cri_bribery_channel",
+            "fired": false,
+            "observed_value": null,
+            "threshold": null,
+            "detail": "Bribery-channel data not yet available in pipeline"
+          },
+          {
+            "dimension": "tca_typologies",
+            "fired": true,
+            "observed_value": 2.0,
+            "threshold": 2.0,
+            "detail": "2 distinct typologies >= threshold 2"
+          }
+        ],
+        "global_params_version": "us_federal_v0",
+        "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+      },
+      "cri": {
+        "cri_tier": "GREEN",
+        "markup_pct": 81.87,
+        "markup_ci_lower": 79.9,
+        "markup_ci_upper": 83.9,
+        "bayesian_posterior": 0.7165,
+        "bayesian_prior": 0.0656,
+        "bayesian_likelihood_ratio": 35.99,
+        "raw_pvalue": 0.0001,
+        "bootstrap_percentile": 76.7,
+        "percentile_ci_lower": 76.2,
+        "percentile_ci_upper": 77.2,
+        "comparable_count": 25853,
+        "insufficient_comparables": false
+      },
+      "tca": {
+        "confidence": 0.55,
+        "verdict": "compromised",
+        "contradictions": [
+          {
+            "from": "price_inflation",
+            "to": "budget",
+            "description": "Award (USD 49,985,204) exceeds tender (USD 27,484,029) by 81.9%",
+            "rule": "FIN-001",
+            "evidence": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)"
+          },
+          {
+            "from": "fiscal_pressure",
+            "to": "award",
+            "description": "Award in final 2 weeks of fiscal period (month 3, day 24)",
+            "rule": "TIME-001",
+            "evidence": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)"
+          }
+        ],
+        "unproven": [
+          {
+            "from": "award",
+            "to": "oversight",
+            "description": "No review body identified in procurement record",
+            "rule": "PROC-003",
+            "evidence": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy"
+          }
+        ],
+        "verified": [
+          {
+            "from": "supplier_0",
+            "to": "award",
+            "description": "Supplier jurisdiction matches contract location",
+            "rule": "GEO-002",
+            "evidence": "Positive structural signal: local presence verified"
+          }
+        ],
+        "edge_distribution": {
+          "EXPRESSES": 2,
+          "BOUNDS": 3,
+          "SEEKS": 1,
+          "REMOVES": 2,
+          "VERIFIES": 1
+        },
+        "graph_id": "f3719daef580",
+        "rule_fire_log": {
+          "PROC-001": false,
+          "PROC-002": false,
+          "PROC-003": true,
+          "PROC-004": false,
+          "PROC-005": false,
+          "ENT-001": false,
+          "ENT-002": false,
+          "ENT-003": false,
+          "FIN-001": true,
+          "FIN-002": false,
+          "FIN-003": false,
+          "TIME-001": true,
+          "TIME-002": false,
+          "TIME-003": false,
+          "GEO-001": false,
+          "GEO-002": true
+        }
+      },
+      "rule_citations": {
+        "PROC-003": "UNCAC Art. 9(1)(d); UNDP POPP Procurement Oversight policy",
+        "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
+        "TIME-001": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)",
+        "GEO-002": "Positive structural signal: local presence verified"
+      },
+      "processing_time_ms": 2017.0,
+      "tca_processing_ms": 0.1
+    },
+    "deltas_explicit": [
+      "Rules firing only under UK profile: ['TIME-001']",
+      "Structural confidence: US=0.75, UK=0.55",
+      "EVG verdict: US=yellow, UK=red",
+      "Legal citation deltas: 1 rules have different citations"
+    ],
+    "citation_deltas": [
+      {
+        "rule_id": "TIME-001",
+        "us_citation": "(not fired)",
+        "uk_citation": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)"
+      }
+    ],
+    "us_rules_fired": [
+      "FIN-001",
+      "GEO-002",
+      "PROC-003"
+    ],
+    "uk_rules_fired": [
+      "FIN-001",
+      "GEO-002",
+      "PROC-003",
+      "TIME-001"
+    ]
+  }
+}
