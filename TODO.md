@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
 **Last updated:** April 14, 2026
-**Current commit on main:** `a4e8b19`
+**Current commit on main:** `ac6581e`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -12,6 +12,7 @@
 - [x] **1. Canonical doc update.** Shipped at commit `9ad0ca4`. `SUNLIGHT_SYSTEM_REFERENCE.md` now reflects the architectural state of main through the REST API layer, including section 3.5 (REST API Layer), section 5.4 (REST API end-to-end validation), updated section 10 priorities, and corrected commit count.
 - [ ] **2. Project instructions re-paste.** Copy the updated `SUNLIGHT_SYSTEM_REFERENCE.md` contents into Claude project settings so future sessions auto-load correct state. 30-second UI action. (Rim's own action, not Claude Code.)
 - [ ] **3. Security baseline — 15 minutes.** Verify FileVault enabled on the Mac (`System Settings → Privacy & Security → FileVault`). Verify 2FA enabled on Rim's and Hugo's GitHub accounts. Verify `sunlight.db` and `prosecuted_cases.json` are not in any cloud sync folder (iCloud Drive, Google Drive, Dropbox). (Rim's own action, unblocked by anything else.)
+- [x] **3b. SQL allowlist hardening.** Defence-in-depth for all 11 f-string-interpolated SQL identifiers flagged by state audit. New module `code/sql_allowlist.py` with canonical ALLOWED_TABLES (16 tables), ALLOWED_COLUMNS (all schema columns), ALLOWED_DIRECTIONS, and four validator functions. All 7 affected files refactored to pass identifiers through validators before `cursor.execute()`. 16 new regression tests in `tests/test_sql_allowlist.py`. 682 passed, 7 skipped. DOJ regression byte-identical (33.3% / 100% / 9.0% / 0.746 / 129.2). Shipped at commit `ac6581e`. **Security audit: 8/8 checks now PASS.**
 - [x] **4. Stored memory cleanup decision.** Three stale items flagged in auto-loaded context: the Paraguay 500-contract validation that never happened, the "six engine builds" list that does not match current architecture, and the GitHub auth friction note that is no longer accurate. Decision: explicit cleanup via the memory tool, or leave to age out naturally.  Decision: leave stale items to age out naturally. No active purge.
 
 ---
