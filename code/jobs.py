@@ -235,6 +235,8 @@ def update_job_status(
         vals.append(now)
 
     vals.append(job_id)
+    # sets list contains hardcoded "column = ?" strings from the logic above;
+    # no user-controlled identifiers reach this interpolation.
     conn.execute(f"UPDATE scan_jobs SET {', '.join(sets)} WHERE job_id = ?", vals)
     conn.commit()
     conn.close()

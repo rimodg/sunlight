@@ -155,9 +155,10 @@ def log_governance_event(db_path: str, action: str, details: Dict,
     # Get previous hash
     prev_hash = '0' * 64
     if seq > 1:
+        from sql_allowlist import validate_column
         for col in ['entry_hash', 'current_log_hash']:
             try:
-                c.execute(f"SELECT {col} FROM audit_log WHERE sequence_number=?", (seq - 1,))
+                c.execute(f"SELECT {validate_column(col)} FROM audit_log WHERE sequence_number=?", (seq - 1,))
                 r = c.fetchone()
                 if r and r[0]:
                     prev_hash = r[0]

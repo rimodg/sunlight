@@ -28,10 +28,11 @@ def get_system_health(db_path: str) -> Dict[str, Any]:
 
     # Table counts
     tables = {}
+    from sql_allowlist import validate_table
     for table in ['contracts', 'contract_scores', 'analysis_runs', 'audit_log',
                   'political_donations', 'api_keys', 'api_usage', 'ingestion_jobs']:
         try:
-            c.execute(f"SELECT COUNT(*) FROM {table}")
+            c.execute(f"SELECT COUNT(*) FROM {validate_table(table)}")
             tables[table] = c.fetchone()[0]
         except sqlite3.OperationalError:
             tables[table] = 0
@@ -291,6 +292,8 @@ def get_flagged_queue(db_path: str, tier: Optional[str] = None,
         where_clauses.append("cs.run_id = ?")
         params.append(run_id)
 
+    # Safe by construction: where_clauses contains only hardcoded SQL fragments
+    # with parameterized "?" placeholders — no user-controlled identifiers.
     where_sql = " AND ".join(where_clauses)
 
     # Total count

@@ -84,13 +84,14 @@ _ALLOWED_JOB_COLUMNS = frozenset({
 
 def update_job(db_path: str, job_id: str, **kwargs):
     """Update job fields (only allowlisted columns)."""
+    from sql_allowlist import validate_column
     # Validate column names against allowlist to prevent SQL injection
     for key in kwargs:
         if key not in _ALLOWED_JOB_COLUMNS:
             raise ValueError(f"Invalid column name: {key}")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
-    sets = ", ".join(f"{k} = ?" for k in kwargs)
+    sets = ", ".join(f"{validate_column(k)} = ?" for k in kwargs)
     vals = list(kwargs.values()) + [job_id]
     c.execute(f"UPDATE ingestion_jobs SET {sets} WHERE job_id = ?", vals)
     conn.commit()

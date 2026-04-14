@@ -43,20 +43,23 @@ def connect_db(db_path):
 
 
 def compute_metrics(conn, table="contracts_clean"):
+    from sql_allowlist import validate_table, validate_column
+    tbl = validate_table(table)
     cursor = conn.cursor()
     metrics = {
         "timestamp": datetime.now().isoformat(),
-        "table": table,
+        "table": tbl,
     }
-    cursor.execute(f"SELECT COUNT(*) FROM {table}")
+    cursor.execute(f"SELECT COUNT(*) FROM {tbl}")
     metrics["row_count"] = cursor.fetchone()[0]
     metrics["null_rates"] = {}
     for field in CRITICAL_FIELDS:
+        col = validate_column(field)
         try:
             cursor.execute(f"""
                 SELECT COUNT(*) as total,
-                    SUM(CASE WHEN {field} IS NULL OR {field} = '' THEN 1 ELSE 0 END) as nulls
-                FROM {table}
+                    SUM(CASE WHEN {col} IS NULL OR {col} = '' THEN 1 ELSE 0 END) as nulls
+                FROM {tbl}
             """)
             total, nulls = cursor.fetchone()
             metrics["null_rates"][field] = round((nulls / total) * 100, 2) if total > 0 else 0
@@ -64,17 +67,17 @@ def compute_metrics(conn, table="contracts_clean"):
             metrics["null_rates"][field] = "FIELD_MISSING"
     cursor.execute(f"""
         SELECT AVG(award_amount) as mean, MIN(award_amount) as min, MAX(award_amount) as max
-        FROM {table} WHERE award_amount IS NOT NULL
+        FROM {tbl} WHERE award_amount IS NOT NULL
     """)
     row = cursor.fetchone()
     metrics["award_amount"] = {"mean": round(row[0], 2) if row[0] else 0, "min": row[1], "max": row[2]}
-    cursor.execute(f"SELECT DISTINCT agency_name FROM {table} WHERE agency_name IS NOT NULL")
+    cursor.execute(f"SELECT DISTINCT agency_name FROM {tbl} WHERE agency_name IS NOT NULL")
     metrics["agencies"] = sorted([r[0] for r in cursor.fetchall()])
     metrics["agency_count"] = len(metrics["agencies"])
-    cursor.execute(f"SELECT MIN(start_date), MAX(start_date) FROM {table} WHERE start_date IS NOT NULL")
+    cursor.execute(f"SELECT MIN(start_date), MAX(start_date) FROM {tbl} WHERE start_date IS NOT NULL")
     row = cursor.fetchone()
     metrics["date_range"] = {"min": row[0], "max": row[1]}
-    cursor.execute(f"SELECT COUNT(DISTINCT vendor_name) FROM {table}")
+    cursor.execute(f"SELECT COUNT(DISTINCT vendor_name) FROM {tbl}")
     metrics["vendor_count"] = cursor.fetchone()[0]
     return metrics
 

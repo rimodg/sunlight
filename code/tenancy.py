@@ -187,8 +187,9 @@ def update_tenant(db_path: str, tenant_id: str, updates: Dict) -> bool:
     if not filtered:
         return False
 
+    from sql_allowlist import validate_column
     filtered["updated_at"] = datetime.now(timezone.utc).isoformat()
-    sets = ", ".join(f"{k} = ?" for k in filtered)
+    sets = ", ".join(f"{validate_column(k)} = ?" for k in filtered)
     vals = list(filtered.values()) + [tenant_id]
 
     conn = sqlite3.connect(db_path)
