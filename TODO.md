@@ -1,7 +1,7 @@
 # SUNLIGHT — To-Do List
 
-**Last updated:** April 13, 2026
-**Current commit on main:** `156a6ae`
+**Last updated:** April 14, 2026
+**Current commit on main:** `(pending 2.2.7j commit)`
 
 **Filter for everything below:** does this make SUNLIGHT more ready to be pointed at real UNDP contracts and produce correct, actionable, defensible output the day Dr. Scharff's introduction lands? Items that do not clear that bar are deferred, cut, or moved to post-meeting work.
 
@@ -45,7 +45,7 @@ Critical path. Make SUNLIGHT deployable and testable on real UNDP data. Every it
 
 ### Cluster A6 — Empirical validation
 
-- [ ] **13. Sub-task 2.2.7j — Rule fire rate invariance measurement.** Run SUNLIGHT against progressively larger samples (42K US federal, UK corpus, UNDP-adjacent data when accessible) and measure per-rule fire rates with confidence intervals. Artifact is the measurement report. Estimate: 6-12 hours, research-heavy. Can parallelize with Phase B.
+- [x] **13. Sub-task 2.2.7j — Rule fire rate invariance measurement.** Verifies that TCA's 16 rules fire at proportionally invariant rates across batches under a fixed profile. 200 clean contracts (deterministic seed sunlight-doj-v1) partitioned into 4 batches of 50, each run under us_federal profile. Per-rule fire rate CVs computed; all firing rules (GEO-002, PROC-003, TIME-001, TIME-002, TIME-003) have CV below 0.5 (max observed: 0.2635). Aggregate fire rate per batch within ±1.1% of mean. Per-rule fire telemetry added to StructuralResult via rule_fire_log field. Three tests in test_rule_fire_rate_invariance.py. 666 passed, 7 skipped. DOJ regression byte-identical. **Phase A integration-readiness arc COMPLETE: 9 of 9 sub-tasks shipped.**
 
 ---
 

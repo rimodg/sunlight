@@ -209,6 +209,9 @@ def analyze_tca_graph(dossier: ContractDossier) -> StructuralResult:
     graph_seed = f"{dossier.contract_id}:{rule_set_version}"
     graph_id = hashlib.sha256(graph_seed.encode()).hexdigest()[:12]
 
+    # Extract per-rule fire log from graph metadata (populated by TCAGraphRuleEngine)
+    rule_fire_log = metadata.get("rule_fire_log", {})
+
     return StructuralResult(
         confidence=round(confidence, 4),
         verdict=verdict,
@@ -218,6 +221,7 @@ def analyze_tca_graph(dossier: ContractDossier) -> StructuralResult:
         verified=verified,
         edge_distribution=edge_distribution,
         graph_id=graph_id,
+        rule_fire_log=rule_fire_log,
     )
 
 

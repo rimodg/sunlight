@@ -767,6 +767,7 @@ class TCAGraphRuleEngine:
                 "rules_fired": self.last_report.rules_fired,
                 "layers_active": self.last_report.layers_active,
                 "deterministic": True,
+                "rule_fire_log": {r.rule_id: r.fired for r in results},
             }
         }
 

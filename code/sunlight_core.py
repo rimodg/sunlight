@@ -151,6 +151,7 @@ class StructuralResult:
     verified: List[Dict]            # VERIFIES edges (grounded)
     edge_distribution: Dict[str, int]
     graph_id: str = ""              # KD graph reference
+    rule_fire_log: Dict[str, bool] = field(default_factory=dict)  # rule_id → did_fire
 
 
 @dataclass
