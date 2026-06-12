@@ -51,3 +51,24 @@ Thumbs.db
 # Empirical calibration store — operational state accumulated at runtime,
 # not source-controlled. Each deployment maintains its own running state.
 calibration/
+
+# Development artifacts — analysis outputs, milestone markers, scratch files.
+# These were useful during early development but are not source material.
+DATABASE_AUDIT_REPORT.md
+READY_CHECK.md
+WEEK1_COMPLETE.md
+WEEK1_DAY3_COMPLETE.md
+TODO.md
+baseline_metrics.json
+bulletproof_analysis_results.json
+determinism_diff.txt
+fast_analysis_results.json
+fraud_analysis.json
+institutional_analysis.json
+institutional_analysis_full.json
+sensitivity_b500.txt
+smoke_test_output.txt
+smoke_test_replay.txt
+stage2_output.txt
+stage3_full_run.txt
+top5_evidence_data.json
