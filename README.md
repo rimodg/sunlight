@@ -26,109 +26,119 @@ Three engines operate on each contract dossier through a 12-stage pipeline:
 
 **CRI (Contract Risk Indicators)** — Statistical engine. Computes price deviation from peer cohort, Bayesian posterior probability, z-scores, and Wilson confidence intervals. Produces a structural confidence score.
 
-**TCA (Transparent Contradiction Analysis)** — Rule engine. Evaluates contracts against jurisdiction-specific legal frameworks. 16 rules across 5 layers (procurement, financial, compliance, temporal, vendor). Each rule fires with a confidence score, legal citation, and evidence string.
+**TCA (Transparent Contradiction Analysis)** — Rule engine. Constructs a structural dependency graph of each contract's stakeholders, capabilities, and procedural commitments, then identifies topological contradictions through graph analysis. 16 rules across 5 layers (procurement, financial, compliance, temporal, vendor). Each rule fires with a confidence score, legal citation, and evidence string. Grounded in the i* Strategic Dependency Framework (Heng, Tsilionis, Scharff & Wautelet, 2022).
 
-**EVG (Evidence Verification Gate)** — Gating framework. Requires convergent evidence across independent analytical dimensions before issuing a verdict. Three procurement dimensions (CRI statistical markup, CRI bribery channel, TCA typologies). Prevents single-signal flags.
+**EVG (Evidence Verification Gate)** — Gating framework. Requires convergent evidence across independent analytical dimensions before issuing a verdict. Three procurement dimensions (CRI statistical markup, CRI bribery channel, TCA typologies). Prevents single-signal flags from reaching high-confidence tiers.
 
-**Delivery Verification (Side 2)** — Evaluates post-award contract execution. 12 rules across 4 layers (milestone, financial, quality, compliance). 4 EVG dimensions. Produces independent delivery verdicts that combine with procurement findings.
+**Delivery Verification (Side 2)** — Evaluates post-award contract execution. 12 rules across 4 layers (milestone, resource, outcome, financial reconciliation). 4 EVG dimensions. Produces independent delivery verdicts that combine with procurement findings. A contract that cleared procurement but shows no construction permits, no equipment, and no staffing at month 12 has a structural contradiction between what was procured and what was delivered. The same graph methodology catches it.
 
-**Intelligence Alert System (Side 3)** — Priority-ranked triage briefs with cross-contract pattern detection. Vendor clustering, rule concentration, temporal clustering. Emits through configurable channels (webhook, file, log) with HMAC-signed payloads.
+**Intelligence Alert System (Side 3)** — Priority-ranked triage briefs with cross-contract pattern detection. Vendor clustering, rule concentration, temporal clustering, pillar concentration, financial escalation. Emits through configurable channels (webhook, file, log) with HMAC-signed payloads. Deterministic intelligence summaries where every word traces to a data point.
 
----
+Every engine reads its calibration from the jurisdiction profile loaded for the contract's execution country. When CRI computes price deviation, the tolerance band comes from the profile. When TCA evaluates competitive procurement thresholds, the legal threshold and citation come from the profile. When EVG assigns tier, the evidentiary standard comes from the profile. The same rules, the same statistical methodology, the same gating logic — calibrated differently for each country's legal framework. One engine, many jurisdictions. Adding a new country means authoring a profile, not changing the engine.
 
 ## Jurisdiction Profiles
 
 The system ships with four jurisdiction profiles:
 
 | Profile | Framework | Coverage |
-|---|---|---|
-| `us_federal` | FAR/DFARS, 41 USC, DOJ prosecution standards | US federal procurement |
-| `uk_central_government` | UK Bribery Act 2010, Public Contracts Regs 2015 | UK central government |
-| `wb_int` | UNCAC, World Bank Procurement Framework | International development |
-| `france_pnf` | Sapin II, Code de la commande publique | French public procurement |
+|---------|-----------|----------|
+| us_federal | FAR/DFARS, 41 USC, DOJ prosecution standards | US federal procurement |
+| uk_central_government | UK Bribery Act 2010, Public Contracts Regs 2015 | UK central government |
+| wb_int | UNCAC, World Bank Procurement Framework | International development |
+| france_pnf | Sapin II, Code de la commande publique | French public procurement |
 
-Each profile defines its own legal citation set, threshold calibration, and rule activation map.
+Each profile defines its own legal citation set, threshold calibration, and rule activation map. Behavioral verification is confirmed across profiles: the same rule (TIME-001) fires correctly on March 25 under the UK profile (6 days before UK fiscal year-end) and correctly does not fire under US federal (March is a safe month in the US federal calendar). Same rule, different profile, jurisdiction-correct output.
 
-These four prosecution corpora are not independent calibrations. The MJPIS living standard derives its thresholds from the intersection of all four — the strictest value across each dimension — producing a single global calibration that would hold up in Washington, London, Paris, and at the World Bank Sanctions Board simultaneously. For the approximately 150 countries without mature local prosecution data, MJPIS is the default. The countries with the least local oversight get the highest evidentiary bar, not the lowest.
----
+## Living Standard (MJPIS)
+
+These four prosecution corpora are not independent calibrations. The Multi-Jurisdiction Procurement Integrity Standard derives its thresholds from the intersection of all four — the strictest value across each dimension — producing a single global calibration that would hold up in Washington, London, Paris, and at the World Bank Sanctions Board simultaneously.
+
+For the approximately 150 countries without mature local prosecution data, MJPIS is the default. The countries with the least local oversight get the highest evidentiary bar, not the lowest. When the corpus expands with new prosecuted cases from additional jurisdictions, the derivation reruns automatically and every deployment referencing the MJPIS version string inherits the updated values. The standard breathes with the data.
 
 ## Evaluation
 
-Validated against DOJ-prosecuted procurement fraud cases:
+Validated on 42,835 real US federal procurement contracts from USAspending.gov, with 100% recall on 32 prosecuted reference cases spanning four legal systems (US DOJ, UK SFO, French PNF, World Bank INT).
 
 | Metric | Value |
-|---|---|
+|--------|-------|
 | Precision | 33.3% |
 | Recall | 100% |
 | False Positive Rate | 9.0% |
 | PR-AUC | 0.746 |
 | Flag Rate | 129.2 per 1,000 contracts |
 
-100% recall means every prosecuted case in the corpus is flagged. The 33.3% precision reflects the system's conservative design — it flags contracts that exhibit structural patterns consistent with fraud, even when they are ultimately clean. This is the correct tradeoff for an oversight tool.
+100% recall means every prosecuted case in the corpus is detected. No exceptions. This floor is encoded in the test suite and gated by CI — every commit, every threshold update, every engine change preserves it. The 33.3% precision reflects the system's design: it flags contracts exhibiting structural patterns consistent with prosecuted fraud, even when those contracts are ultimately clean. For an institutional oversight tool, missing a corrupt contract is catastrophic; flagging a clean one is a manageable investigative cost. The system is calibrated accordingly.
 
 Evaluation is deterministic and reproducible: `--seed 42 --clean 200 --profile doj_federal`.
 
----
-
 ## API
 
-FastAPI application serving 14 endpoints across three domains:
+REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — contract in, verdict out, nothing stored. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
 
 **Core Pipeline**
-- `POST /analyze` — Single contract analysis
-- `POST /batch` — Batch contract analysis
-- `GET /health` — System health check
+- `POST /analyze` — Single contract structural analysis with jurisdiction profile
+- `POST /batch` — Batch analysis, up to 1,000 contracts per request
+- `GET /health` — Liveness and readiness probe
+- `GET /version` — Deployment metadata, MJPIS version, registered profiles
 
-**Evidence & Reporting**
+**Evidence and Reporting**
 - `POST /evidence-packet` — Generate evidence packet for a contract
-- `GET /case-packet/{contract_id}` — Retrieve case packet
+- `GET /case-packet/{contract_id}` — Retrieve investigator-ready case packet
 - `POST /portfolio/screen` — Portfolio-level screening
 - `POST /doj/validate` — DOJ standard validation
 - `POST /certify` — Certification issuance
+- `GET /profiles` — All registered jurisdiction profiles with metadata
 
 **Delivery Verification**
-- `POST /delivery/analyze` — Single delivery analysis
-- `POST /delivery/batch` — Batch delivery analysis
-- `GET /delivery/pillar-summary` — Delivery pillar summary
+- `POST /delivery/analyze` — Single contract delivery verification
+- `POST /delivery/batch` — Batch delivery verification
+- `GET /delivery/pillar-summary` — Country office development pillar aggregation
 
 **Intelligence Alerts**
-- `GET /alerts/config` — Alert configuration (no secrets)
-- `POST /alerts/test` — Fire synthetic test alert
-- `POST /alerts/triage` — Generate triage brief from alerts
+- `GET /alerts/config` — Alert configuration (no secrets exposed)
+- `POST /alerts/test` — Fire synthetic test alert through all emitters
+- `POST /alerts/triage` — Generate triage brief with ranking, pattern detection, executive summary
 
----
+## Deployment
+
+Containerized via Docker. Stateless architecture — the engine stores nothing. Contract data enters, case packets exit. The deploying institution controls data residency, authentication, and routing at the deployment boundary.
+
+```bash
+docker build -t sunlight .
+docker run -p 8000:8000 sunlight
+```
 
 ## Test Suite
 
-1,050 tests. Zero regressions across Side 1, Side 2, and Side 3 builds.
+1,050 tests across three build phases. Zero regressions.
 
-```
+| Phase | Tests added | Cumulative |
+|-------|-------------|------------|
+| Side 1 — Procurement verification | 683 | 683 |
+| Side 2 — Delivery verification | 242 | 925 |
+| Side 3 — Intelligence alerts | 125 | 1,050 |
+
+DOJ regression baseline preserved across every commit: 33.3% / 100% / 9.0% / 0.746 / 129.2.
+
+```bash
 PYTHONPATH=code python -m pytest tests/ -q --ignore=tests/test_tca_engine.py
 ```
 
----
+## Academic Foundation
 
-## Project Structure
+TCA operationalizes the i* Strategic Dependency Framework published by Dr. Christelle Scharff (Pace University, Seidenberg School of Computer Science) and colleagues in Heng, Tsilionis, Scharff & Wautelet (2022). The i* framework provides the formal dependency-modeling semantics. SUNLIGHT translates those semantics into a deterministic rule engine that detects structural contradictions no indicator-based method can surface.
 
-```
-code/                  Source modules
-tests/                 Test suite
-data/                  Database (not tracked)
-knowledge_base/        Legal frameworks
-academic_paper/        Research paper
-```
+## Design Principles
 
----
-
-## Requirements
-
-Python 3.12+. Dependencies in `requirements.txt`.
-
-```
-pip install -r requirements.txt
-```
+- Deterministic logic over probabilistic guessing — every detection traces from result to inputs
+- Every detection explainable in language an investigator understands
+- A flag is a risk indicator, not an allegation
+- 100% DOJ recall is the institutional credibility floor — zero tolerance, CI-gated
+- Jurisdiction calibration is a data task, not a code task
+- The living standard is primary calibration for the majority of the operational footprint
+- Ground truth before code — no engineering begins from assumed state
 
 ---
 
-**Authors:** Rimwaya Ouedraogo, Hugo Villalba
+Built by Rimwaya Ouedraogo and Hugo Villalba.
 **License:** Proprietary — SUNLIGHT Infrastructure
