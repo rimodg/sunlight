@@ -49,6 +49,7 @@ The system ships with four jurisdiction profiles:
 
 Each profile defines its own legal citation set, threshold calibration, and rule activation map.
 
+These four prosecution corpora are not independent calibrations. The MJPIS living standard derives its thresholds from the intersection of all four — the strictest value across each dimension — producing a single global calibration that would hold up in Washington, London, Paris, and at the World Bank Sanctions Board simultaneously. For the approximately 150 countries without mature local prosecution data, MJPIS is the default. The countries with the least local oversight get the highest evidentiary bar, not the lowest.
 ---
 
 ## Evaluation
