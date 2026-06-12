@@ -8,9 +8,15 @@ Structural and statistical analysis for institutional procurement oversight.
 
 ## What It Does
 
-SUNLIGHT analyzes government contracts for procurement integrity risk. It combines statistical anomaly detection with structural rule evaluation to produce evidence-graded verdicts, then gates those verdicts through an evidence verification framework before flagging.
+SUNLIGHT verifies the structural integrity of public contracts before money is spent, then verifies whether that spending delivered the intended development outcome after money moves. Procurement integrity to development impact, end to end.
 
-The system is deterministic. Given the same input, it produces the same output. No machine learning models, no stochastic components. Every flag traces to a rule, every rule traces to a legal basis.
+Existing institutional tools measure statistical deviation — they flag contracts where the price looks unusual. SUNLIGHT looks at the structure behind the contract: whether the awarded entity has the required capability, whether a competitive process actually occurred, whether the stakeholder dependencies and procedural commitments are internally consistent. It detects structural contradictions that live in the topology of a contract's dependency graph, a class of finding that indicator-based methods are architecturally unable to produce. Contracts where the price was calibrated to look clean but the structure underneath is broken.
+
+After procurement verification, the delivery engine monitors whether clean contracts actually produce results. A hospital contract that cleared procurement but shows no construction permits, no equipment, and no staffing at month 12 has a structural contradiction between what was procured and what was delivered. The same graph methodology catches it.
+
+The system is deterministic. Given the same input, it produces the same output. No machine learning, no stochastic components. Every flag traces to a rule, every rule traces to a jurisdiction-specific legal citation, every finding is framed as a risk indicator, not an allegation.
+
+SUNLIGHT integrates once at the institutional level and covers an entire operational footprint. Each contract is analyzed against its execution country's legal framework through jurisdiction profiles. Adding a new country is a data task — authoring a profile — not a code change. The living multi-jurisdiction standard derives its thresholds from the intersection of US DOJ, UK SFO, French PNF, and World Bank INT prosecution corpora. For the approximately 150 countries without mature local prosecution data, that intersection is the default — stricter than any single jurisdiction's bar.
 
 ---
 
