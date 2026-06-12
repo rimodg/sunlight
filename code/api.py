@@ -65,6 +65,30 @@ from calibration_store import EmpiricalCalibrationStore, BatchObservation
 from input_adapters import build_default_registry
 from sunlight_logging import get_logger
 
+# SUNLIGHT Side 2 imports
+from delivery_schema import (
+    DeliveryDossier,
+    DeliveryVerdict,
+    DeliveryDimension,
+    Milestone,
+    ResourceRecord,
+    OutcomeRecord,
+    FinancialRecord,
+)
+from delivery_analyzer import DeliveryAnalyzer
+from alerts import (
+    AlertPriority,
+    IntelligenceAlert,
+    RuleCitation,
+    TriageBrief,
+    assemble_summary,
+    assemble_recommended_action,
+    assemble_triage_brief,
+    compute_priority,
+)
+from alert_emitter import AlertConfiguration, LogEmitter
+from alert_integration import AlertAssembler, AlertIntegration
+
 logger = get_logger("api")
 
 
@@ -909,6 +933,611 @@ async def list_input_formats():
             "an adapter explicitly, or omit it for automatic format detection."
         )
     }
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SIDE 2: DELIVERY VERIFICATION ENDPOINTS
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# ── Pydantic models for delivery endpoints ──
+
+class MilestoneInput(BaseModel):
+    """A contractual milestone with planned vs. actual dates."""
+    milestone_id: str = Field(..., description="Unique milestone identifier")
+    description: str = Field(..., description="Milestone description")
+    planned_date: Optional[str] = Field(None, description="Planned completion date (ISO 8601)")
+    actual_date: Optional[str] = Field(None, description="Actual completion date (ISO 8601)")
+    status: str = Field("", description="Status: completed, delayed, cancelled, pending")
+    delay_days: int = Field(0, description="Days of delay (actual - planned)")
+    deliverables_due: int = Field(0, description="Number of deliverables expected")
+    deliverables_accepted: int = Field(0, description="Number of deliverables accepted")
+
+
+class ResourceInput(BaseModel):
+    """A staffing or resource input record."""
+    resource_id: str = Field(..., description="Unique resource identifier")
+    role: str = Field(..., description="Role (e.g., project_manager, engineer)")
+    planned_fte: float = Field(0.0, description="Planned full-time equivalent")
+    actual_fte: float = Field(0.0, description="Actual FTE deployed")
+    qualification_required: str = Field("", description="Required qualification")
+    qualification_verified: bool = Field(False, description="Whether qualification was verified")
+    period_start: Optional[str] = Field(None, description="Assignment start (ISO 8601)")
+    period_end: Optional[str] = Field(None, description="Assignment end (ISO 8601)")
+
+
+class OutcomeInput(BaseModel):
+    """A deliverable or output record."""
+    outcome_id: str = Field(..., description="Unique outcome identifier")
+    description: str = Field(..., description="Deliverable description")
+    unit: str = Field("", description="Unit of measure (e.g., km_road, units)")
+    quantity_planned: float = Field(0.0, description="Planned quantity")
+    quantity_delivered: float = Field(0.0, description="Delivered quantity")
+    quality_score: Optional[float] = Field(None, description="Quality score 0.0-1.0")
+    inspection_date: Optional[str] = Field(None, description="Inspection date (ISO 8601)")
+    inspector_id: str = Field("", description="Inspector identifier")
+    defects_noted: int = Field(0, description="Number of defects found")
+
+
+class FinancialInput(BaseModel):
+    """A financial reconciliation line item."""
+    line_item_id: str = Field(..., description="Unique line item identifier")
+    description: str = Field(..., description="Line item description")
+    budgeted_amount: float = Field(0.0, description="Budgeted amount")
+    actual_amount: float = Field(0.0, description="Actual amount spent")
+    currency: str = Field("USD", description="ISO 4217 currency code")
+    variance_pct: float = Field(0.0, description="Variance percentage")
+    amendment_count: int = Field(0, description="Number of contract amendments")
+    justification: str = Field("", description="Justification for variance")
+
+
+class DeliveryAnalyzeRequest(BaseModel):
+    """Single delivery analysis request."""
+    contract_id: str = Field(..., description="Links to Side 1 ContractDossier")
+    milestones: List[MilestoneInput] = Field(default_factory=list, description="Milestone records")
+    resources: List[ResourceInput] = Field(default_factory=list, description="Resource records")
+    outcomes: List[OutcomeInput] = Field(default_factory=list, description="Outcome records")
+    financials: List[FinancialInput] = Field(default_factory=list, description="Financial records")
+    country_code: str = Field("", description="ISO 3166-1 alpha-2 code")
+    country_name: str = Field("", description="Full country name")
+    project_name: str = Field("", description="Project identifier")
+    procurement_verdict: str = Field("", description="Side 1 EVG verdict (GREEN/YELLOW/RED)")
+    profile: str = Field("us_federal", description="Jurisdiction profile name")
+
+
+class DeliveryBatchRequest(BaseModel):
+    """Batch delivery analysis request."""
+    deliveries: List[DeliveryAnalyzeRequest] = Field(..., description="Deliveries to analyze")
+    profile: str = Field("us_federal", description="Jurisdiction profile for all deliveries")
+
+
+class DeliveryDimensionResponse(BaseModel):
+    """Result of evaluating a single delivery EVG dimension."""
+    dimension: str = Field(..., description="Dimension name")
+    fired: bool = Field(..., description="Whether this dimension exceeded threshold")
+    observed_value: Optional[float] = Field(None, description="Observed value")
+    threshold: Optional[float] = Field(None, description="Threshold applied")
+    detail: str = Field("", description="Human-readable explanation")
+
+
+class DeliveryFiredRule(BaseModel):
+    """A delivery rule that fired."""
+    rule_id: str = Field(..., description="Rule identifier (e.g., DEL-MILE-001)")
+    layer: str = Field(..., description="Rule layer (milestone, resource, outcome, financial)")
+    evidence: str = Field(..., description="Evidence string")
+    legal_basis: str = Field("", description="Legal citation")
+    confidence: float = Field(0.0, description="Confidence score")
+
+
+class DeliveryAnalyzeResponse(BaseModel):
+    """Full delivery analysis result."""
+    delivery_id: str
+    contract_id: str
+    verdict: Optional[str] = Field(None, description="Delivery EVG verdict: green, yellow, red")
+    stage: str
+    dimensions_fired: int = 0
+    dimensions: List[DeliveryDimensionResponse] = Field(default_factory=list)
+    rules_evaluated: int = 0
+    rules_fired: int = 0
+    fired_rules: List[DeliveryFiredRule] = Field(default_factory=list)
+    layer_summary: Dict[str, int] = Field(default_factory=dict)
+    graph_summary: Optional[Dict[str, int]] = None
+    delivery_metrics: Dict[str, Any] = Field(default_factory=dict)
+    processing_ms: Dict[str, float] = Field(default_factory=dict)
+    procurement_verdict: str = ""
+    methodology_note: str = ""
+    methodology_version: str = ""
+    errors: List[Dict[str, Any]] = Field(default_factory=list)
+    profile_used: str = ""
+
+
+class DeliveryBatchResponse(BaseModel):
+    """Batch delivery analysis results."""
+    results: List[DeliveryAnalyzeResponse]
+    total_processed: int
+    total_errors: int
+    verdict_distribution: Dict[str, int]
+
+
+class DeliveryPillarSummaryResponse(BaseModel):
+    """Summary of delivery analysis capacity."""
+    total_analyzed: int
+    verdict_distribution: Dict[str, int]
+    profiles_available: List[str]
+    methodology_version: str
+
+
+# ── Module-level delivery analyzer (lazy init per profile) ──
+_delivery_analyzers: Dict[str, DeliveryAnalyzer] = {}
+
+
+def _get_delivery_analyzer(profile_name: str) -> DeliveryAnalyzer:
+    """Get or create a DeliveryAnalyzer for the given profile."""
+    if profile_name not in _delivery_analyzers:
+        profile = get_profile(profile_name)
+        _delivery_analyzers[profile_name] = DeliveryAnalyzer(profile=profile)
+    return _delivery_analyzers[profile_name]
+
+
+def _convert_delivery_request(req: DeliveryAnalyzeRequest) -> Dict[str, Any]:
+    """Convert a DeliveryAnalyzeRequest to kwargs for DeliveryAnalyzer.analyze()."""
+    return dict(
+        contract_id=req.contract_id,
+        milestones=[
+            Milestone(
+                milestone_id=m.milestone_id,
+                description=m.description,
+                planned_date=m.planned_date,
+                actual_date=m.actual_date,
+                status=m.status,
+                delay_days=m.delay_days,
+                deliverables_due=m.deliverables_due,
+                deliverables_accepted=m.deliverables_accepted,
+            )
+            for m in req.milestones
+        ],
+        resources=[
+            ResourceRecord(
+                resource_id=r.resource_id,
+                role=r.role,
+                planned_fte=r.planned_fte,
+                actual_fte=r.actual_fte,
+                qualification_required=r.qualification_required,
+                qualification_verified=r.qualification_verified,
+                period_start=r.period_start,
+                period_end=r.period_end,
+            )
+            for r in req.resources
+        ],
+        outcomes=[
+            OutcomeRecord(
+                outcome_id=o.outcome_id,
+                description=o.description,
+                unit=o.unit,
+                quantity_planned=o.quantity_planned,
+                quantity_delivered=o.quantity_delivered,
+                quality_score=o.quality_score,
+                inspection_date=o.inspection_date,
+                inspector_id=o.inspector_id,
+                defects_noted=o.defects_noted,
+            )
+            for o in req.outcomes
+        ],
+        financials=[
+            FinancialRecord(
+                line_item_id=f.line_item_id,
+                description=f.description,
+                budgeted_amount=f.budgeted_amount,
+                actual_amount=f.actual_amount,
+                currency=f.currency,
+                variance_pct=f.variance_pct,
+                amendment_count=f.amendment_count,
+                justification=f.justification,
+            )
+            for f in req.financials
+        ],
+        country_code=req.country_code,
+        country_name=req.country_name,
+        project_name=req.project_name,
+        procurement_verdict=req.procurement_verdict,
+    )
+
+
+def _format_delivery_response(result: Dict[str, Any], profile_name: str) -> DeliveryAnalyzeResponse:
+    """Convert analyzer result dict to DeliveryAnalyzeResponse."""
+    return DeliveryAnalyzeResponse(
+        delivery_id=result.get("delivery_id", ""),
+        contract_id=result.get("contract_id", ""),
+        verdict=result.get("verdict"),
+        stage=result.get("stage", ""),
+        dimensions_fired=result.get("dimensions_fired", 0),
+        dimensions=[
+            DeliveryDimensionResponse(**d)
+            for d in result.get("dimensions", [])
+        ],
+        rules_evaluated=result.get("rules_evaluated", 0),
+        rules_fired=result.get("rules_fired", 0),
+        fired_rules=[
+            DeliveryFiredRule(**r)
+            for r in result.get("fired_rules", [])
+        ],
+        layer_summary=result.get("layer_summary", {}),
+        graph_summary=result.get("graph_summary"),
+        delivery_metrics=result.get("delivery_metrics", {}),
+        processing_ms=result.get("processing_ms", {}),
+        procurement_verdict=result.get("procurement_verdict", ""),
+        methodology_note=result.get("methodology_note", ""),
+        methodology_version=result.get("methodology_version", ""),
+        errors=result.get("errors", []),
+        profile_used=profile_name,
+    )
+
+
+# ── Delivery endpoints ──
+
+@app.post("/delivery/analyze", response_model=DeliveryAnalyzeResponse)
+async def analyze_delivery(request: DeliveryAnalyzeRequest):
+    """
+    Analyze delivery integrity for a single contract.
+
+    Runs the Side 2 delivery verification pipeline (graph construction,
+    12-rule evaluation across 4 layers, delivery EVG gating) and returns
+    a tiered delivery integrity verdict with per-dimension traceability.
+    """
+    try:
+        profile_name = request.profile
+        profile = get_profile(profile_name)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    try:
+        analyzer = _get_delivery_analyzer(profile_name)
+        kwargs = _convert_delivery_request(request)
+        result = analyzer.analyze(**kwargs)
+        return _format_delivery_response(result, profile_name)
+    except Exception as e:
+        logger.error(f"Delivery analysis failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Delivery analysis failed: {str(e)}")
+
+
+@app.post("/delivery/batch", response_model=DeliveryBatchResponse)
+async def batch_analyze_deliveries(request: DeliveryBatchRequest):
+    """
+    Analyze delivery integrity for a batch of contracts.
+
+    Runs the Side 2 delivery verification pipeline for each delivery
+    and returns aggregate results with verdict distribution.
+    """
+    try:
+        profile_name = request.profile
+        profile = get_profile(profile_name)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    if len(request.deliveries) > 1000:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Batch size {len(request.deliveries)} exceeds maximum of 1000"
+        )
+
+    analyzer = _get_delivery_analyzer(profile_name)
+    results = []
+    errors = 0
+    verdict_dist: Dict[str, int] = {"green": 0, "yellow": 0, "red": 0}
+
+    for delivery_req in request.deliveries:
+        try:
+            kwargs = _convert_delivery_request(delivery_req)
+            result = analyzer.analyze(**kwargs)
+            response = _format_delivery_response(result, profile_name)
+            results.append(response)
+            verdict = result.get("verdict")
+            if verdict in verdict_dist:
+                verdict_dist[verdict] += 1
+        except Exception as e:
+            errors += 1
+            logger.error(f"Delivery batch item failed: {e}")
+            results.append(DeliveryAnalyzeResponse(
+                delivery_id="",
+                contract_id=delivery_req.contract_id,
+                verdict=None,
+                stage="delivery_failed",
+                errors=[{"error": str(e)}],
+                profile_used=profile_name,
+            ))
+
+    return DeliveryBatchResponse(
+        results=results,
+        total_processed=len(request.deliveries),
+        total_errors=errors,
+        verdict_distribution=verdict_dist,
+    )
+
+
+@app.get("/delivery/pillar-summary", response_model=DeliveryPillarSummaryResponse)
+async def delivery_pillar_summary():
+    """
+    Summary of Side 2 delivery verification capacity.
+
+    Returns the total number of deliveries analyzed across all profiles,
+    aggregate verdict distribution, and available profiles.
+    """
+    total = 0
+    verdict_dist: Dict[str, int] = {"green": 0, "yellow": 0, "red": 0}
+
+    for name, analyzer in _delivery_analyzers.items():
+        stats = analyzer.stats
+        total += stats.get("completed", 0)
+        for v in ("green", "yellow", "red"):
+            verdict_dist[v] += stats.get(v, 0)
+
+    return DeliveryPillarSummaryResponse(
+        total_analyzed=total,
+        verdict_distribution=verdict_dist,
+        profiles_available=list_profiles(),
+        methodology_version="SUNLIGHT Side 2 v1.0 | Delivery EVG v1.0",
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SIDE 3: INTELLIGENCE ALERT ENDPOINTS
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# ── Pydantic models for alert endpoints ──
+
+class AlertConfigResponse(BaseModel):
+    """Alert configuration (safe subset, no secrets)."""
+    enabled: bool
+    min_verdict: str
+    min_confidence: float
+    min_dimensions: int
+    delivery_alerts_enabled: bool
+    batch_mode: str
+    max_alerts_per_hour: int
+    cooldown_seconds: int
+    emitter_count: int
+    emitter_types: List[str]
+
+
+class AlertTestResponse(BaseModel):
+    """Result of firing a test alert."""
+    success: bool
+    emissions: List[Dict[str, Any]]
+
+
+class RuleCitationInput(BaseModel):
+    """Rule citation for triage request."""
+    rule_id: str
+    rule_name: str = ""
+    layer: str = ""
+    confidence: float = 0.0
+    legal_basis: str = ""
+    evidence: str = ""
+    recommendation: str = ""
+
+
+class AlertInput(BaseModel):
+    """Alert input for triage request."""
+    contract_id: str
+    verdict: str = "red"
+    confidence: float = 0.0
+    priority: str = "high"
+    dimensions_fired: int = 0
+    vendor: str = ""
+    contract_value: float = 0.0
+    currency: str = "USD"
+    award_date: str = ""
+    jurisdiction_profile: str = ""
+    typologies: List[str] = Field(default_factory=list)
+    rule_citations: List[RuleCitationInput] = Field(default_factory=list)
+    delivery_verdict: Optional[str] = None
+    delivery_dimensions_fired: Optional[int] = None
+    delivery_rule_citations: Optional[List[RuleCitationInput]] = None
+
+
+class TriageRequest(BaseModel):
+    """Request to generate a triage brief from alerts."""
+    alerts: List[AlertInput]
+    batch_id: Optional[str] = None
+    total_contracts: int = 0
+    jurisdiction_profile: str = "us_federal"
+    country_office: Optional[str] = None
+
+
+class AlertPatternResponse(BaseModel):
+    """Cross-contract pattern."""
+    pattern_type: str
+    description: str
+    severity: str
+    affected_contracts: List[str]
+
+
+class TriageBriefResponse(BaseModel):
+    """Triage brief response."""
+    brief_id: str
+    batch_id: Optional[str]
+    jurisdiction_profile: str
+    total_contracts_analyzed: int
+    total_alerts: int
+    alerts_by_priority: Dict[str, int]
+    alerts_by_dimension: Dict[str, int]
+    patterns: List[AlertPatternResponse]
+    executive_summary: str
+
+
+# ── Module-level alert configuration ──
+# Loaded once at startup. NOT modifiable via API.
+# In production, configure via environment variables or config file.
+_alert_config = AlertConfiguration(
+    enabled=False,  # Disabled by default; enable in deployment config
+    emitters=[LogEmitter()],  # Default: log emitter only
+)
+_alert_integration = AlertIntegration(_alert_config)
+
+
+# ── Alert endpoints ──
+
+@app.get("/alerts/config", response_model=AlertConfigResponse)
+async def get_alert_config():
+    """
+    Return current alert configuration.
+
+    Does NOT expose webhook URLs or shared secrets.
+    Configuration is set at deployment time; not modifiable via API.
+    """
+    safe = _alert_config.to_safe_dict()
+    return AlertConfigResponse(**safe)
+
+
+@app.post("/alerts/test", response_model=AlertTestResponse)
+async def test_alert():
+    """
+    Fire a test alert through all configured emitters.
+
+    Uses synthetic finding data. Useful for integration teams to verify
+    webhook receiver configuration.
+    """
+    assembler = AlertAssembler()
+    alert = assembler.assemble_procurement_alert(
+        contract_id="TEST-SYNTHETIC-001",
+        verdict="yellow",
+        confidence=0.65,
+        dimensions_fired=1,
+        rule_fires=[{
+            "rule_id": "TEST-001",
+            "description": "Synthetic test rule",
+            "layer": "test",
+            "confidence": 0.65,
+            "legal_citations": ["Test citation"],
+            "evidence": "Synthetic test evidence",
+        }],
+        profile_name="test",
+        contract_title="Synthetic Test Contract",
+        vendor="Test Vendor",
+        agency="Test Agency",
+        contract_value=100000.0,
+    )
+
+    if alert is None:
+        return AlertTestResponse(success=False, emissions=[])
+
+    emissions = []
+    for emitter in _alert_config.emitters:
+        try:
+            result = emitter.emit(alert)
+            emissions.append({
+                "emitter_type": result.emitter_type,
+                "success": result.success,
+                "error": result.error,
+            })
+        except Exception as e:
+            emissions.append({
+                "emitter_type": type(emitter).__name__,
+                "success": False,
+                "error": str(e),
+            })
+
+    all_success = all(e["success"] for e in emissions) if emissions else False
+    return AlertTestResponse(success=all_success, emissions=emissions)
+
+
+@app.post("/alerts/triage", response_model=TriageBriefResponse)
+async def generate_triage(request: TriageRequest):
+    """
+    Generate a TriageBrief from a list of alerts.
+
+    Takes pre-computed alerts and returns a structured triage brief
+    with ranking, cross-contract pattern detection, and executive summary.
+    Can be called independently of batch processing.
+    """
+    # Convert AlertInput to IntelligenceAlert
+    intel_alerts = []
+    for ai in request.alerts:
+        priority_map = {
+            "critical": AlertPriority.CRITICAL,
+            "high": AlertPriority.HIGH,
+            "elevated": AlertPriority.ELEVATED,
+            "advisory": AlertPriority.ADVISORY,
+        }
+        priority = priority_map.get(ai.priority.lower(), AlertPriority.HIGH)
+
+        citations = [
+            RuleCitation(
+                rule_id=rc.rule_id,
+                rule_name=rc.rule_name,
+                layer=rc.layer,
+                confidence=rc.confidence,
+                legal_basis=rc.legal_basis,
+                evidence=rc.evidence,
+                recommendation=rc.recommendation,
+            )
+            for rc in ai.rule_citations
+        ]
+
+        delivery_citations = None
+        if ai.delivery_rule_citations:
+            delivery_citations = [
+                RuleCitation(
+                    rule_id=rc.rule_id,
+                    rule_name=rc.rule_name,
+                    layer=rc.layer,
+                    confidence=rc.confidence,
+                    legal_basis=rc.legal_basis,
+                    evidence=rc.evidence,
+                    recommendation=rc.recommendation,
+                )
+                for rc in ai.delivery_rule_citations
+            ]
+
+        alert = IntelligenceAlert(
+            contract_id=ai.contract_id,
+            verdict=ai.verdict,
+            confidence=ai.confidence,
+            priority=priority,
+            dimensions_fired=ai.dimensions_fired,
+            vendor=ai.vendor,
+            contract_value=ai.contract_value,
+            currency=ai.currency,
+            award_date=ai.award_date,
+            jurisdiction_profile=ai.jurisdiction_profile,
+            typologies=ai.typologies,
+            rule_citations=citations,
+            delivery_verdict=ai.delivery_verdict,
+            delivery_dimensions_fired=ai.delivery_dimensions_fired,
+            delivery_rule_citations=delivery_citations,
+        )
+        alert.summary = assemble_summary(alert)
+        alert.recommended_action = assemble_recommended_action(alert)
+        intel_alerts.append(alert)
+
+    brief = assemble_triage_brief(
+        alerts=intel_alerts,
+        batch_id=request.batch_id,
+        total_contracts=request.total_contracts,
+        jurisdiction_profile=request.jurisdiction_profile,
+        country_office=request.country_office,
+    )
+
+    return TriageBriefResponse(
+        brief_id=brief.brief_id,
+        batch_id=brief.batch_id,
+        jurisdiction_profile=brief.jurisdiction_profile,
+        total_contracts_analyzed=brief.total_contracts_analyzed,
+        total_alerts=brief.total_alerts,
+        alerts_by_priority=brief.alerts_by_priority,
+        alerts_by_dimension=brief.alerts_by_dimension,
+        patterns=[
+            AlertPatternResponse(
+                pattern_type=p.pattern_type,
+                description=p.description,
+                severity=p.severity,
+                affected_contracts=p.affected_contracts,
+            )
+            for p in brief.patterns
+        ],
+        executive_summary=brief.executive_summary,
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════
