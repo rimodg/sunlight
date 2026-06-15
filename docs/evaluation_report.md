@@ -1,6 +1,6 @@
 # SUNLIGHT Evaluation Report
 
-**Date:** 2026-02-22
+**Date:** 2026-06-11
 **Rulepack Version:** 2.0.0
 **Reproducibility Seed:** 42
 
@@ -24,12 +24,12 @@
 
 | Metric | Value | 95% CI |
 |---|---|---|
-| **Precision** | 28.1% | [13.3%, 44.4%] |
+| **Precision** | 33.3% | [15.6%, 51.5%] |
 | **Recall** | 100.0% | [100.0%, 100.0%] |
-| **F1 Score** | 43.9% | [23.5%, 61.5%] |
-| **False Positive Rate** | 11.5% | [7.1%, 16.1%] |
-| **Specificity** | 88.5% | — |
-| **PR-AUC** | 0.656 | — |
+| **F1 Score** | 50.0% | [27.0%, 68.0%] |
+| **False Positive Rate** | 9.0% | [5.4%, 13.2%] |
+| **Specificity** | 91.0% | — |
+| **PR-AUC** | 0.746 | — |
 
 ---
 
@@ -38,7 +38,7 @@
 | | Predicted Flagged (RED/YELLOW) | Predicted Clean (GREEN/GRAY) |
 |---|---|---|
 | **Actual Fraud** (DOJ price cases) | TP = 9 | FN = 0 |
-| **Actual Clean** (below-median) | FP = 23 | TN = 177 |
+| **Actual Clean** (below-median) | FP = 18 | TN = 182 |
 
 ---
 
@@ -47,10 +47,10 @@
 | Metric | Value |
 |---|---|
 | Contracts scored | 209 |
-| Total flagged | 32 |
-| **Flags per 1,000 contracts** | 153.1 |
+| Total flagged | 27 |
+| **Flags per 1,000 contracts** | 129.2 |
 | Est. analyst minutes per flag | 45 |
-| **Est. total analyst hours** | 24.0 |
+| **Est. total analyst hours** | 20.2 |
 
 ---
 
@@ -68,10 +68,10 @@
 
 | Gate | Threshold | Actual | Result |
 |---|---|---|---|
-| Precision | >= 25% | 28.1% | PASS |
+| Precision | >= 25% | 33.3% | PASS |
 | Recall | >= 90% | 100.0% | PASS |
-| Flags/1K | <= 150 | 153.1 | FAIL |
-| **Overall** | | | **FAIL** |
+| Flags/1K | <= 150 | 129.2 | PASS |
+| **Overall** | | | **PASS** |
 
 ---
 
@@ -80,18 +80,18 @@
 | Threshold | Precision | Recall | F1 | Flags/1K | Flagged |
 |---|---|---|---|---|---|
 | 0 | 4.3% | 100.0% | 8.3% | 1000.0 | 209 |
-| 5 | 8.3% | 100.0% | 15.2% | 521.5 | 109 |
-| 10 | 8.3% | 100.0% | 15.2% | 521.5 | 109 |
-| 15 | 8.4% | 100.0% | 15.5% | 512.0 | 107 |
-| 20 | 8.5% | 100.0% | 15.7% | 507.2 | 106 |
-| 25 | 8.6% | 100.0% | 15.8% | 502.4 | 105 |
-| 30 | 8.7% | 100.0% | 16.1% | 492.8 | 103 |
-| 35 | 9.1% | 100.0% | 16.7% | 473.7 | 99 |
-| 40 | 14.5% | 88.9% | 25.0% | 263.2 | 55 |
-| 45 | 26.7% | 88.9% | 41.0% | 143.5 | 30 |
-| 50 | 47.1% | 88.9% | 61.5% | 81.3 | 17 |
-| 55 | 36.4% | 44.4% | 40.0% | 52.6 | 11 |
-| 60 | 66.7% | 44.4% | 53.3% | 28.7 | 6 |
+| 5 | 9.5% | 100.0% | 17.3% | 454.5 | 95 |
+| 10 | 9.6% | 100.0% | 17.5% | 449.8 | 94 |
+| 15 | 9.7% | 100.0% | 17.6% | 445.0 | 93 |
+| 20 | 9.7% | 100.0% | 17.6% | 445.0 | 93 |
+| 25 | 9.7% | 100.0% | 17.6% | 445.0 | 93 |
+| 30 | 10.0% | 100.0% | 18.2% | 430.6 | 90 |
+| 35 | 10.3% | 100.0% | 18.8% | 416.3 | 87 |
+| 40 | 17.4% | 88.9% | 29.1% | 220.1 | 46 |
+| 45 | 32.0% | 88.9% | 47.1% | 119.6 | 25 |
+| 50 | 57.1% | 88.9% | 69.6% | 67.0 | 14 |
+| 55 | 66.7% | 44.4% | 53.3% | 28.7 | 6 |
+| 60 | 100.0% | 44.4% | 61.5% | 19.1 | 4 |
 | 65 | 100.0% | 44.4% | 61.5% | 19.1 | 4 |
 | 70 | 100.0% | 22.2% | 36.4% | 9.6 | 2 |
 | 75 | 100.0% | 11.1% | 20.0% | 4.8 | 1 |
@@ -107,9 +107,9 @@
 
 ### What these metrics mean
 
-- **Precision 28.1%**: Of every 100 contracts flagged, ~28 are confirmed DOJ-grade fraud. The remainder are statistical anomalies that warrant investigation but may have legitimate explanations.
+- **Precision 33.3%**: Of every 100 contracts flagged, ~33 are confirmed DOJ-grade fraud. The remainder are statistical anomalies that warrant investigation but may have legitimate explanations.
 - **Recall 100.0%**: SUNLIGHT detects 100% of DOJ-prosecuted price-fraud patterns. No known price-inflation case in the validation set was missed.
-- **Flags per 1,000: 153**: At current thresholds, a portfolio of 1,000 contracts would generate ~153 flags requiring analyst review.
+- **Flags per 1,000: 129**: At current thresholds, a portfolio of 1,000 contracts would generate ~129 flags requiring analyst review.
 
 ### Limitations
 

@@ -53,6 +53,9 @@ Thumbs.db
 # not source-controlled. Each deployment maintains its own running state.
 calibration/
 
+# Stale duplicate of docs/ — evaluation outputs written here by older runs
+code/docs/
+
 # Development artifacts — analysis outputs, milestone markers, scratch files.
 # These were useful during early development but are not source material.
 DATABASE_AUDIT_REPORT.md

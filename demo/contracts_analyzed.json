@@ -4,7 +4,7 @@
     "head_commit": "244f991",
     "doj_regression_baseline": "69.2% / 100% / 8.0% / TP=9 FP=4 FN=0 TN=46",
     "test_suite_passing": 682,
-    "generated_at": "2026-04-14T12:38:58.912148+00:00",
+    "generated_at": "2026-04-14T13:57:59.702495+00:00",
     "mjpis_parameters": {
       "markup_floor_ratio": 0.501,
       "bribery_channel_ratio": 0.0058,
@@ -133,8 +133,8 @@
           "TIME-003": "Baseline: absence of timing anomaly is a positive structural signal",
           "GEO-002": "Positive structural signal: local presence verified"
         },
-        "processing_time_ms": 1816.0,
-        "tca_processing_ms": 0.2
+        "processing_time_ms": 1817.9,
+        "tca_processing_ms": 0.3
       }
     },
     {
@@ -268,7 +268,7 @@
           "TIME-003": "Baseline: absence of timing anomaly is a positive structural signal",
           "GEO-002": "Positive structural signal: local presence verified"
         },
-        "processing_time_ms": 133.2,
+        "processing_time_ms": 134.6,
         "tca_processing_ms": 0.1
       }
     },
@@ -403,7 +403,7 @@
           "TIME-001": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)",
           "GEO-002": "Positive structural signal: local presence verified"
         },
-        "processing_time_ms": 38.3,
+        "processing_time_ms": 38.7,
         "tca_processing_ms": 0.1
       }
     },
@@ -667,8 +667,8 @@
           "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
           "GEO-002": "Positive structural signal: local presence verified"
         },
-        "processing_time_ms": 2033.5,
-        "tca_processing_ms": 0.1
+        "processing_time_ms": 2020.7,
+        "tca_processing_ms": 0.3
       }
     }
   ],
@@ -783,8 +783,8 @@
         "FIN-001": "World Bank Procurement Framework; UNDP POPP Contract Modifications policy; MJPIS empirical markup floor (sub-task 2.3.7)",
         "GEO-002": "Positive structural signal: local presence verified"
       },
-      "processing_time_ms": 2033.5,
-      "tca_processing_ms": 0.1
+      "processing_time_ms": 2020.7,
+      "tca_processing_ms": 0.3
     },
     "uk_central_government_analysis": {
       "evg_verdict": "red",
@@ -902,8 +902,8 @@
         "TIME-001": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)",
         "GEO-002": "Positive structural signal: local presence verified"
       },
-      "processing_time_ms": 2017.0,
-      "tca_processing_ms": 0.1
+      "processing_time_ms": 2023.3,
+      "tca_processing_ms": 0.3
     },
     "deltas_explicit": [
       "Rules firing only under UK profile: ['TIME-001']",
