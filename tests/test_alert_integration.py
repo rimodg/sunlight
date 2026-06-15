@@ -21,6 +21,12 @@ Covers:
     Pipeline Invariance:
         - Alert integration does not modify pipeline data
         - Emitter crash does not affect pipeline output
+
+    Recovery Alerts:
+        - Assembler builds recovery-type alert
+        - Summary includes allocation details when provided
+        - Integration emits recovery event through configured emitters
+        - Disabled config returns None for recovery events
 """
 
 import sys
@@ -498,3 +504,88 @@ class TestPipelineInvariance:
         assert len(integration.emitted_alerts) == 1
         integration.reset()
         assert len(integration.emitted_alerts) == 0
+
+
+# ═══════════════════════════════════════════════════════════
+# RECOVERY ALERT TESTS
+# ═══════════════════════════════════════════════════════════
+
+
+class TestRecoveryAlerts:
+    def test_assembler_builds_recovery_alert(self):
+        """AlertAssembler produces recovery-type alert."""
+        assembler = AlertAssembler()
+        alert = assembler.assemble_recovery_alert(
+            recovery_id="R001",
+            source_contract_id="C001",
+            recovery_amount=500_000,
+            currency="USD",
+            country_office="Nigeria",
+            country_code="NG",
+            original_pillar="health",
+            source_verdict="red",
+            source_confidence=0.85,
+        )
+        assert alert.alert_type == "recovery"
+        assert alert.contract_id == "C001"
+        assert alert.priority == AlertPriority.ADVISORY
+        assert alert.contract_value == 500_000
+        assert "500,000" in alert.summary
+        assert "C001" in alert.summary
+        assert "Nigeria" in alert.summary
+
+    def test_assembler_includes_allocation_in_summary(self):
+        """When allocation details provided, summary includes them."""
+        assembler = AlertAssembler()
+        alert = assembler.assemble_recovery_alert(
+            recovery_id="R001",
+            source_contract_id="C001",
+            recovery_amount=500_000,
+            currency="USD",
+            country_office="Nigeria",
+            country_code="NG",
+            original_pillar="health",
+            allocation_pillar="education",
+            allocation_amount=300_000,
+            target_contract_id="NEW-001",
+        )
+        assert "education" in alert.summary
+        assert "300,000" in alert.summary
+        assert "NEW-001" in alert.summary
+
+    def test_integration_emits_recovery_event(self):
+        """on_recovery_event assembles and emits through configured emitters."""
+        config, mock = _make_config()
+        integration = AlertIntegration(config)
+        result = integration.on_recovery_event(
+            recovery_id="R001",
+            source_contract_id="C001",
+            recovery_amount=500_000,
+            currency="USD",
+            country_office="Nigeria",
+            country_code="NG",
+            original_pillar="health",
+            source_verdict="red",
+        )
+        assert result is not None
+        assert len(result) == 1
+        assert result[0].success is True
+        assert len(mock.emissions) == 1
+        assert mock.emissions[0].alert_type == "recovery"
+        assert len(integration.emitted_alerts) == 1
+
+    def test_integration_disabled_no_emission(self):
+        """Disabled config returns None for recovery events."""
+        config, mock = _make_config(enabled=False)
+        integration = AlertIntegration(config)
+        result = integration.on_recovery_event(
+            recovery_id="R001",
+            source_contract_id="C001",
+            recovery_amount=500_000,
+            currency="USD",
+            country_office="Nigeria",
+            country_code="NG",
+            original_pillar="health",
+        )
+        assert result is None
+        assert len(mock.emissions) == 0

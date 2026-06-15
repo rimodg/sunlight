@@ -89,6 +89,17 @@ from alerts import (
 from alert_emitter import AlertConfiguration, LogEmitter
 from alert_integration import AlertAssembler, AlertIntegration
 
+# SUNLIGHT Side 4 imports
+from recovery_ledger import RecoveryLedger, RecoveryRecord, RecoveryStatus, InvalidTransitionError
+from cpd_allocation import (
+    compute_gap_weighted_allocation,
+    load_cpd_profile,
+    load_cpd_profile_from_dict,
+    CountryProgrammeProfile,
+)
+from redirection import RedirectionRecord, RedirectionRegistry
+from impact_report import assemble_impact_report
+
 logger = get_logger("api")
 
 
@@ -1538,6 +1549,372 @@ async def generate_triage(request: TriageRequest):
         ],
         executive_summary=brief.executive_summary,
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SIDE 4: RECOVERY INTELLIGENCE ENDPOINTS
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# ── Pydantic models for recovery endpoints ──
+
+class RecoveryRecordRequest(BaseModel):
+    """Create a recovery record."""
+    source_contract_id: str
+    recovery_amount: float
+    currency: str = "USD"
+    country_office: str
+    country_code: str
+    original_pillar: str
+    source_verdict: str = "red"
+    source_confidence: float = 0.0
+    source_rule_fires: List[str] = Field(default_factory=list)
+    original_sdg: Optional[str] = None
+    notes: Optional[str] = None
+
+
+class RecoveryConfirmRequest(BaseModel):
+    """Confirm a recovery."""
+    recovery_id: str
+    confirmation_date: str  # ISO 8601 date string
+
+
+class RecoveryAllocateRequest(BaseModel):
+    """Request gap-weighted allocation for a recovery."""
+    recovery_id: str
+    cpd_profile: Dict[str, Any]  # CountryProgrammeProfile as dict
+
+
+class RecoveryRedirectRequest(BaseModel):
+    """Redirect recovered funds to a new contract."""
+    recovery_id: str
+    target_contract_id: str
+    target_pillar: str
+    target_sdg: str
+    target_output: Optional[str] = None
+    target_contract_value: float
+    target_contract_title: str = ""
+    currency: str = "USD"
+
+
+class ImpactReportRequest(BaseModel):
+    """Query parameters for impact report."""
+    country_office: str
+    period_start: str  # ISO 8601 date
+    period_end: str    # ISO 8601 date
+    jurisdiction_profile: str = ""
+    total_contracts_analyzed: int = 0
+    total_flagged_red: int = 0
+    total_flagged_yellow: int = 0
+    total_cleared_green: int = 0
+
+
+# ── Module-level recovery registries ──
+_recovery_ledger = RecoveryLedger()
+_redirection_registry = RedirectionRegistry()
+
+
+# ── Recovery endpoints ──
+
+@app.post("/recovery/record")
+async def create_recovery_record(request: RecoveryRecordRequest):
+    """
+    Create a recovery record when Side 1 flags a contract and the
+    institution confirms action. Returns a RecoveryRecord at IDENTIFIED status.
+    """
+    record = _recovery_ledger.create(
+        source_contract_id=request.source_contract_id,
+        recovery_amount=request.recovery_amount,
+        currency=request.currency,
+        country_office=request.country_office,
+        country_code=request.country_code,
+        original_pillar=request.original_pillar,
+        source_verdict=request.source_verdict,
+        source_confidence=request.source_confidence,
+        source_rule_fires=request.source_rule_fires,
+        original_sdg=request.original_sdg,
+        notes=request.notes,
+    )
+    return {
+        "recovery_id": record.recovery_id,
+        "source_contract_id": record.source_contract_id,
+        "status": record.status.value,
+        "recovery_amount": record.recovery_amount,
+        "currency": record.currency,
+        "country_office": record.country_office,
+        "country_code": record.country_code,
+        "original_pillar": record.original_pillar,
+    }
+
+
+@app.post("/recovery/confirm")
+async def confirm_recovery(request: RecoveryConfirmRequest):
+    """
+    Confirm a recovery — institution confirms contract cancellation/modification.
+    """
+    record = _recovery_ledger.get(request.recovery_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Recovery {request.recovery_id} not found")
+
+    try:
+        from datetime import date as date_type
+        conf_date = date_type.fromisoformat(request.confirmation_date)
+        record.confirm(conf_date)
+    except InvalidTransitionError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use ISO 8601 (YYYY-MM-DD).")
+
+    return {
+        "recovery_id": record.recovery_id,
+        "status": record.status.value,
+        "confirmation_date": str(record.confirmation_date),
+    }
+
+
+@app.post("/recovery/allocate")
+async def allocate_recovery(request: RecoveryAllocateRequest):
+    """
+    Compute gap-weighted allocation for recovered funds.
+
+    Reads the institution's own CPD and recommends where recovered
+    funds should go, proportional to gaps between stated targets and
+    actual spending.
+    """
+    record = _recovery_ledger.get(request.recovery_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Recovery {request.recovery_id} not found")
+
+    cpd = load_cpd_profile_from_dict(request.cpd_profile)
+    recommendation = compute_gap_weighted_allocation(
+        cpd=cpd,
+        recovery_amount=record.recovery_amount,
+        recovery_id=record.recovery_id,
+    )
+
+    return {
+        "recovery_id": recommendation.recovery_id,
+        "country_office": recommendation.country_office,
+        "recovery_amount": recommendation.recovery_amount,
+        "currency": recommendation.currency,
+        "methodology": recommendation.methodology,
+        "rationale": recommendation.rationale,
+        "pillar_allocations": [
+            {
+                "pillar": pa.pillar,
+                "sdg_targets": pa.sdg_targets,
+                "cpd_target_percentage": pa.cpd_target_percentage,
+                "actual_percentage": pa.actual_percentage,
+                "gap_percentage": pa.gap_percentage,
+                "allocation_percentage": pa.allocation_percentage,
+                "allocation_amount": pa.allocation_amount,
+                "rationale": pa.rationale,
+            }
+            for pa in recommendation.pillar_allocations
+        ],
+        "output_allocations": [
+            {
+                "output_id": oa.output_id,
+                "output_description": oa.output_description,
+                "pillar": oa.pillar,
+                "allocation_amount": oa.allocation_amount,
+                "rationale": oa.rationale,
+            }
+            for oa in recommendation.output_allocations
+        ],
+    }
+
+
+@app.post("/recovery/redirect")
+async def redirect_recovery(request: RecoveryRedirectRequest):
+    """
+    Link recovered funds to a specific new contract.
+
+    That new contract automatically enters Side 1 and Side 2
+    verification queues.
+    """
+    record = _recovery_ledger.get(request.recovery_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Recovery {request.recovery_id} not found")
+
+    redirection = _redirection_registry.create(
+        recovery_id=request.recovery_id,
+        target_contract_id=request.target_contract_id,
+        target_pillar=request.target_pillar,
+        target_sdg=request.target_sdg,
+        target_output=request.target_output,
+        target_contract_value=request.target_contract_value,
+        target_contract_title=request.target_contract_title,
+        currency=request.currency,
+    )
+    record.redirections.append(redirection.redirection_id)
+
+    return {
+        "redirection_id": redirection.redirection_id,
+        "recovery_id": redirection.recovery_id,
+        "target_contract_id": redirection.target_contract_id,
+        "target_pillar": redirection.target_pillar,
+        "target_sdg": redirection.target_sdg,
+        "target_contract_value": redirection.target_contract_value,
+        "allocation_source": redirection.allocation_source,
+    }
+
+
+@app.get("/recovery/status/{recovery_id}")
+async def get_recovery_status(recovery_id: str):
+    """
+    Full recovery lifecycle status including all linked redirections,
+    their procurement verdicts, and their delivery verdicts.
+    """
+    record = _recovery_ledger.get(recovery_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Recovery {recovery_id} not found")
+
+    redirections = _redirection_registry.list_by_recovery(recovery_id)
+
+    return {
+        "recovery_id": record.recovery_id,
+        "source_contract_id": record.source_contract_id,
+        "source_verdict": record.source_verdict,
+        "status": record.status.value,
+        "recovery_amount": record.recovery_amount,
+        "currency": record.currency,
+        "country_office": record.country_office,
+        "original_pillar": record.original_pillar,
+        "identification_date": str(record.identification_date) if record.identification_date else None,
+        "confirmation_date": str(record.confirmation_date) if record.confirmation_date else None,
+        "recovery_date": str(record.recovery_date) if record.recovery_date else None,
+        "redirections": [
+            {
+                "redirection_id": rd.redirection_id,
+                "target_contract_id": rd.target_contract_id,
+                "target_pillar": rd.target_pillar,
+                "target_sdg": rd.target_sdg,
+                "target_contract_value": rd.target_contract_value,
+                "procurement_verdict": rd.procurement_verdict,
+                "delivery_verdict": rd.delivery_verdict,
+                "beneficiaries_reached": rd.beneficiaries_reached,
+                "full_cycle_complete": rd.full_cycle_complete,
+            }
+            for rd in redirections
+        ],
+    }
+
+
+@app.get("/recovery/impact")
+async def get_recovery_impact(
+    country_office: str,
+    period_start: str,
+    period_end: str,
+    jurisdiction_profile: str = "",
+):
+    """
+    Impact report for a country office and period.
+
+    This is the endpoint that produces what goes on the Administrator's
+    desk at donor meetings.
+    """
+    from datetime import date as date_type
+    try:
+        start = date_type.fromisoformat(period_start)
+        end = date_type.fromisoformat(period_end)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use ISO 8601 (YYYY-MM-DD).")
+
+    recoveries = _recovery_ledger.list_by_country(country_office)
+    all_redirections = []
+    for rec in recoveries:
+        all_redirections.extend(
+            _redirection_registry.list_by_recovery(rec.recovery_id)
+        )
+
+    report = assemble_impact_report(
+        recoveries=recoveries,
+        redirections=all_redirections,
+        country_office=country_office,
+        country_code=recoveries[0].country_code if recoveries else "",
+        reporting_period_start=start,
+        reporting_period_end=end,
+        jurisdiction_profile=jurisdiction_profile,
+    )
+
+    return {
+        "report_id": report.report_id,
+        "country_office": report.country_office,
+        "reporting_period": f"{start} to {end}",
+        "total_recoveries": report.total_recoveries,
+        "total_amount_recovered": report.total_amount_recovered,
+        "currency": report.currency,
+        "total_redirections": report.total_redirections,
+        "total_amount_redirected": report.total_amount_redirected,
+        "redeployed_contracts_total": report.redeployed_contracts_total,
+        "redeployed_procurement_green": report.redeployed_procurement_green,
+        "redeployed_delivery_green": report.redeployed_delivery_green,
+        "redeployed_delivery_pending": report.redeployed_delivery_pending,
+        "total_beneficiaries_reached": report.total_beneficiaries_reached,
+        "gap_reduction_percentage": report.gap_reduction_percentage,
+        "executive_summary": report.executive_summary,
+        "cycle_records": [
+            {
+                "source_contract_id": c.source_contract_id,
+                "source_verdict": c.source_verdict,
+                "target_contract_id": c.target_contract_id,
+                "target_pillar": c.target_pillar,
+                "procurement_verdict": c.procurement_verdict,
+                "delivery_verdict": c.delivery_verdict,
+                "beneficiaries": c.beneficiaries,
+                "cycle_complete": c.cycle_complete,
+            }
+            for c in report.cycle_records
+        ],
+    }
+
+
+@app.get("/recovery/cycle/{source_contract_id}")
+async def get_recovery_cycle(source_contract_id: str):
+    """
+    Complete cycle trace for one flagged contract — from RED flag
+    through recovery, allocation, redirection, new procurement verdict,
+    delivery verdict, beneficiaries reached.
+    """
+    record = _recovery_ledger.get_by_contract(source_contract_id)
+    if record is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No recovery record for contract {source_contract_id}"
+        )
+
+    redirections = _redirection_registry.list_by_recovery(record.recovery_id)
+
+    return {
+        "source_contract_id": record.source_contract_id,
+        "source_verdict": record.source_verdict,
+        "source_confidence": record.source_confidence,
+        "recovery_id": record.recovery_id,
+        "recovery_amount": record.recovery_amount,
+        "currency": record.currency,
+        "status": record.status.value,
+        "country_office": record.country_office,
+        "original_pillar": record.original_pillar,
+        "redirections": [
+            {
+                "redirection_id": rd.redirection_id,
+                "target_contract_id": rd.target_contract_id,
+                "target_pillar": rd.target_pillar,
+                "target_sdg": rd.target_sdg,
+                "target_output": rd.target_output,
+                "target_contract_value": rd.target_contract_value,
+                "procurement_verdict": rd.procurement_verdict,
+                "delivery_verdict": rd.delivery_verdict,
+                "delivery_milestones_met": rd.delivery_milestones_met,
+                "delivery_milestones_total": rd.delivery_milestones_total,
+                "beneficiaries_reached": rd.beneficiaries_reached,
+                "full_cycle_complete": rd.full_cycle_complete,
+                "full_cycle_clean": rd.full_cycle_clean,
+            }
+            for rd in redirections
+        ],
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════════

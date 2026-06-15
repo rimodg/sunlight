@@ -253,6 +253,74 @@ class AlertAssembler:
             ))
         return citations
 
+    def assemble_recovery_alert(
+        self,
+        recovery_id: str,
+        source_contract_id: str,
+        recovery_amount: float,
+        currency: str,
+        country_office: str,
+        country_code: str,
+        original_pillar: str,
+        source_verdict: str = "red",
+        source_confidence: float = 0.0,
+        allocation_pillar: str = "",
+        allocation_amount: float = 0.0,
+        target_contract_id: str = "",
+    ) -> IntelligenceAlert:
+        """
+        Assemble a recovery event alert.
+
+        Recovery alerts are always ADVISORY priority — they are informational,
+        tracking fund recovery and redeployment, not flagging new risks.
+
+        Args:
+            recovery_id: Recovery record identifier.
+            source_contract_id: Original flagged contract.
+            recovery_amount: Total recovered amount.
+            currency: ISO 4217 currency code.
+            country_office: Country office name.
+            country_code: ISO 3166-1 alpha-2 code.
+            original_pillar: Development pillar of the original contract.
+            source_verdict: Original procurement verdict.
+            source_confidence: Original structural confidence.
+            allocation_pillar: Pillar receiving redirected funds.
+            allocation_amount: Amount redirected to this pillar.
+            target_contract_id: New contract receiving funds.
+
+        Returns:
+            IntelligenceAlert of type "recovery".
+        """
+        summary = (
+            f"Recovery event: {recovery_amount:,.0f} {currency} recovered "
+            f"from {source_contract_id} ({source_verdict.upper()}) in "
+            f"{country_office}."
+        )
+        if allocation_pillar and allocation_amount > 0:
+            summary += (
+                f" {allocation_amount:,.0f} {currency} redirected to "
+                f"{allocation_pillar}."
+            )
+        if target_contract_id:
+            summary += f" Target contract: {target_contract_id}."
+
+        alert = IntelligenceAlert(
+            alert_type="recovery",
+            contract_id=source_contract_id,
+            verdict=source_verdict,
+            confidence=source_confidence,
+            priority=AlertPriority.ADVISORY,
+            country_code=country_code,
+            contract_value=recovery_amount,
+            currency=currency,
+            summary=summary,
+            recommended_action=(
+                f"Track redeployment of recovered funds from {source_contract_id}. "
+                f"New contract enters Side 1 and Side 2 verification automatically."
+            ),
+        )
+        return alert
+
 
 # ═══════════════════════════════════════════════════════════
 # SECTION 2: ALERT INTEGRATION
@@ -411,6 +479,50 @@ class AlertIntegration:
                 result = self._emit(alert)
                 results.append(result)
             return results
+
+    def on_recovery_event(
+        self,
+        recovery_id: str,
+        source_contract_id: str,
+        recovery_amount: float,
+        currency: str,
+        country_office: str,
+        country_code: str,
+        original_pillar: str,
+        source_verdict: str = "red",
+        source_confidence: float = 0.0,
+        allocation_pillar: str = "",
+        allocation_amount: float = 0.0,
+        target_contract_id: str = "",
+    ) -> Optional[List[EmissionResult]]:
+        """
+        Called when recovered funds are allocated or redirected.
+
+        Recovery alerts are informational — they track fund recovery and
+        redeployment, not new risk flags. Always emitted as ADVISORY.
+
+        Returns None if disabled. Returns list of EmissionResult if emitted.
+        """
+        if not self.config.enabled:
+            return None
+
+        alert = self.assembler.assemble_recovery_alert(
+            recovery_id=recovery_id,
+            source_contract_id=source_contract_id,
+            recovery_amount=recovery_amount,
+            currency=currency,
+            country_office=country_office,
+            country_code=country_code,
+            original_pillar=original_pillar,
+            source_verdict=source_verdict,
+            source_confidence=source_confidence,
+            allocation_pillar=allocation_pillar,
+            allocation_amount=allocation_amount,
+            target_contract_id=target_contract_id,
+        )
+
+        self._emitted_alerts.append(alert)
+        return self._emit(alert)
 
     def _emit(
         self, payload: Union[IntelligenceAlert, TriageBrief]

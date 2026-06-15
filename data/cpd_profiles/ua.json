@@ -1,0 +1,88 @@
+{
+  "country_office": "Ukraine",
+  "country_code": "UA",
+  "programme_cycle": "2023-2027",
+  "total_programme_budget": 85000000,
+  "currency": "USD",
+  "source_document": "UNDP CPD Ukraine 2023-2027 (illustrative)",
+  "last_updated": "2026-01-01",
+  "pillars": [
+    {
+      "pillar": "recovery",
+      "sdg_targets": ["SDG 11.5", "SDG 9.1"],
+      "target_percentage": 0.35,
+      "target_amount": 29750000,
+      "actual_spend": 18000000,
+      "actual_percentage": 0.212
+    },
+    {
+      "pillar": "governance",
+      "sdg_targets": ["SDG 16.6", "SDG 16.7"],
+      "target_percentage": 0.25,
+      "target_amount": 21250000,
+      "actual_spend": 17000000,
+      "actual_percentage": 0.200
+    },
+    {
+      "pillar": "resilience",
+      "sdg_targets": ["SDG 1.5", "SDG 13.1"],
+      "target_percentage": 0.20,
+      "target_amount": 17000000,
+      "actual_spend": 14000000,
+      "actual_percentage": 0.165
+    },
+    {
+      "pillar": "energy",
+      "sdg_targets": ["SDG 7.1", "SDG 7.2"],
+      "target_percentage": 0.12,
+      "target_amount": 10200000,
+      "actual_spend": 8500000,
+      "actual_percentage": 0.100
+    },
+    {
+      "pillar": "social_cohesion",
+      "sdg_targets": ["SDG 10.2", "SDG 16.1"],
+      "target_percentage": 0.08,
+      "target_amount": 6800000,
+      "actual_spend": 5500000,
+      "actual_percentage": 0.065
+    }
+  ],
+  "outputs": [
+    {
+      "output_id": "UA-R-001",
+      "output_description": "Critical infrastructure reconstruction",
+      "pillar": "recovery",
+      "target_amount": 17000000,
+      "actual_spend": 10000000
+    },
+    {
+      "output_id": "UA-R-002",
+      "output_description": "Housing and community facility restoration",
+      "pillar": "recovery",
+      "target_amount": 12750000,
+      "actual_spend": 8000000
+    },
+    {
+      "output_id": "UA-G-001",
+      "output_description": "Anti-corruption and public procurement reform",
+      "pillar": "governance",
+      "target_amount": 11250000,
+      "actual_spend": 9000000
+    },
+    {
+      "output_id": "UA-G-002",
+      "output_description": "Decentralization and local governance",
+      "pillar": "governance",
+      "target_amount": 10000000,
+      "actual_spend": 8000000
+    },
+    {
+      "output_id": "UA-E-001",
+      "output_description": "Energy infrastructure and efficiency",
+      "pillar": "energy",
+      "target_amount": 10200000,
+      "actual_spend": 8500000
+    }
+  ]
+}

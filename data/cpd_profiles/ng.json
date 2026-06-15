@@ -1,0 +1,95 @@
+{
+  "country_office": "Nigeria",
+  "country_code": "NG",
+  "programme_cycle": "2023-2027",
+  "total_programme_budget": 120000000,
+  "currency": "USD",
+  "source_document": "UNDP CPD Nigeria 2023-2027 (illustrative)",
+  "last_updated": "2026-01-01",
+  "pillars": [
+    {
+      "pillar": "health",
+      "sdg_targets": ["SDG 3.1", "SDG 3.2", "SDG 3.8"],
+      "target_percentage": 0.28,
+      "target_amount": 33600000,
+      "actual_spend": 22400000,
+      "actual_percentage": 0.187
+    },
+    {
+      "pillar": "education",
+      "sdg_targets": ["SDG 4.1", "SDG 4.5"],
+      "target_percentage": 0.22,
+      "target_amount": 26400000,
+      "actual_spend": 20000000,
+      "actual_percentage": 0.167
+    },
+    {
+      "pillar": "governance",
+      "sdg_targets": ["SDG 16.5", "SDG 16.6"],
+      "target_percentage": 0.20,
+      "target_amount": 24000000,
+      "actual_spend": 19200000,
+      "actual_percentage": 0.160
+    },
+    {
+      "pillar": "resilience",
+      "sdg_targets": ["SDG 1.5", "SDG 13.1"],
+      "target_percentage": 0.18,
+      "target_amount": 21600000,
+      "actual_spend": 16800000,
+      "actual_percentage": 0.140
+    },
+    {
+      "pillar": "environment",
+      "sdg_targets": ["SDG 7.2", "SDG 13.2"],
+      "target_percentage": 0.12,
+      "target_amount": 14400000,
+      "actual_spend": 12000000,
+      "actual_percentage": 0.100
+    }
+  ],
+  "outputs": [
+    {
+      "output_id": "NG-H-001",
+      "output_description": "Primary health care access in underserved communities",
+      "pillar": "health",
+      "target_amount": 18000000,
+      "actual_spend": 12000000
+    },
+    {
+      "output_id": "NG-H-002",
+      "output_description": "Maternal and child health programme strengthening",
+      "pillar": "health",
+      "target_amount": 15600000,
+      "actual_spend": 10400000
+    },
+    {
+      "output_id": "NG-E-001",
+      "output_description": "Basic education quality and access expansion",
+      "pillar": "education",
+      "target_amount": 14400000,
+      "actual_spend": 11000000
+    },
+    {
+      "output_id": "NG-E-002",
+      "output_description": "Youth skills and vocational training",
+      "pillar": "education",
+      "target_amount": 12000000,
+      "actual_spend": 9000000
+    },
+    {
+      "output_id": "NG-G-001",
+      "output_description": "Anti-corruption and transparency institutions",
+      "pillar": "governance",
+      "target_amount": 12000000,
+      "actual_spend": 9600000
+    },
+    {
+      "output_id": "NG-G-002",
+      "output_description": "Public financial management capacity",
+      "pillar": "governance",
+      "target_amount": 12000000,
+      "actual_spend": 9600000
+    }
+  ]
+}

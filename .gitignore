@@ -14,6 +14,7 @@ env/
 
 # Data — large binary / sensitive
 data/
+!data/cpd_profiles/
 *.db
 
 # Sensitive ground-truth (contains case details)
