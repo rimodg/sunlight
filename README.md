@@ -1,28 +1,22 @@
 # SUNLIGHT
 
-Procurement Integrity Verification Infrastructure.
+**Procurement Integrity Verification Infrastructure**
 
 Structural and statistical analysis for institutional procurement oversight.
 
----
-
 ## What It Does
 
-SUNLIGHT verifies the structural integrity of public contracts before money is spent, then verifies whether that spending delivered the intended development outcome after money moves. Procurement integrity to development impact, end to end.
+SUNLIGHT verifies the structural integrity of public contracts before money is spent, then verifies whether that spending delivered the intended development outcome after money moves. When procurement corruption is caught, the system tracks recovered funds, maps them against the institution's own stated development goals, computes gap-weighted reallocation recommendations proportional to where the institution is furthest behind its own stated goals, and verifies that redeployed funds deliver results. Procurement integrity to development impact, end to end. Catch, redirect, verify, report.
 
 Existing institutional tools measure statistical deviation — they flag contracts where the price looks unusual. SUNLIGHT looks at the structure behind the contract: whether the awarded entity has the required capability, whether a competitive process actually occurred, whether the stakeholder dependencies and procedural commitments are internally consistent. It detects structural contradictions that live in the topology of a contract's dependency graph, a class of finding that indicator-based methods are architecturally unable to produce. Contracts where the price was calibrated to look clean but the structure underneath is broken.
 
-After procurement verification, the delivery engine monitors whether clean contracts actually produce results. A hospital contract that cleared procurement but shows no construction permits, no equipment, and no staffing at month 12 has a structural contradiction between what was procured and what was delivered. The same graph methodology catches it.
-
 The system is deterministic. Given the same input, it produces the same output. No machine learning, no stochastic components. Every flag traces to a rule, every rule traces to a jurisdiction-specific legal citation, every finding is framed as a risk indicator, not an allegation.
 
-SUNLIGHT integrates once at the institutional level and covers an entire operational footprint. Each contract is analyzed against its execution country's legal framework through jurisdiction profiles. Adding a new country is a data task — authoring a profile — not a code change. The living multi-jurisdiction standard derives its thresholds from the intersection of US DOJ, UK SFO, French PNF, and World Bank INT prosecution corpora. For the approximately 150 countries without mature local prosecution data, that intersection is the default — stricter than any single jurisdiction's bar.
-
----
+SUNLIGHT integrates once at the institutional level and covers an entire operational footprint. Each contract is analyzed against its execution country's legal framework through jurisdiction profiles. Adding a new country is a data task — authoring a profile — not a code change.
 
 ## Architecture
 
-Three engines operate on each contract dossier through a 12-stage pipeline:
+Four systems operate on each contract dossier:
 
 **CRI (Contract Risk Indicators)** — Statistical engine. Computes price deviation from peer cohort, Bayesian posterior probability, z-scores, and Wilson confidence intervals. Produces a structural confidence score.
 
@@ -34,11 +28,11 @@ Three engines operate on each contract dossier through a 12-stage pipeline:
 
 **Intelligence Alert System (Side 3)** — Priority-ranked triage briefs with cross-contract pattern detection. Vendor clustering, rule concentration, temporal clustering, pillar concentration, financial escalation. Emits through configurable channels (webhook, file, log) with HMAC-signed payloads. Deterministic intelligence summaries where every word traces to a data point.
 
+**Recovery Intelligence (Side 4)** — Closes the loop. Tracks recovered funds from flagged contracts, reads the institution's own Country Programme Document allocation targets, computes gap-weighted redirection recommendations proportional to where the institution is furthest behind its own stated goals, and verifies that redeployed funds deliver results through Side 1 and Side 2. Produces institutional impact reports tracing the full cycle from corruption caught to beneficiaries reached. The institution's own published commitments determine the allocation. SUNLIGHT reads the plan, identifies the gaps, and recommends. The institution decides.
+
 Every engine reads its calibration from the jurisdiction profile loaded for the contract's execution country. When CRI computes price deviation, the tolerance band comes from the profile. When TCA evaluates competitive procurement thresholds, the legal threshold and citation come from the profile. When EVG assigns tier, the evidentiary standard comes from the profile. The same rules, the same statistical methodology, the same gating logic — calibrated differently for each country's legal framework. One engine, many jurisdictions. Adding a new country means authoring a profile, not changing the engine.
 
 ## Jurisdiction Profiles
-
-The system ships with four jurisdiction profiles:
 
 | Profile | Framework | Coverage |
 |---------|-----------|----------|
@@ -80,6 +74,7 @@ REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — co
 - `POST /batch` — Batch analysis, up to 1,000 contracts per request
 - `GET /health` — Liveness and readiness probe
 - `GET /version` — Deployment metadata, MJPIS version, registered profiles
+- `GET /profiles` — All registered jurisdiction profiles with metadata
 
 **Evidence and Reporting**
 - `POST /evidence-packet` — Generate evidence packet for a contract
@@ -87,7 +82,6 @@ REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — co
 - `POST /portfolio/screen` — Portfolio-level screening
 - `POST /doj/validate` — DOJ standard validation
 - `POST /certify` — Certification issuance
-- `GET /profiles` — All registered jurisdiction profiles with metadata
 
 **Delivery Verification**
 - `POST /delivery/analyze` — Single contract delivery verification
@@ -98,6 +92,15 @@ REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — co
 - `GET /alerts/config` — Alert configuration (no secrets exposed)
 - `POST /alerts/test` — Fire synthetic test alert through all emitters
 - `POST /alerts/triage` — Generate triage brief with ranking, pattern detection, executive summary
+
+**Recovery Intelligence**
+- `POST /recovery/record` — Create recovery record when institution acts on a RED flag
+- `POST /recovery/confirm` — Confirm contract cancellation or modification
+- `POST /recovery/allocate` — Compute gap-weighted allocation from institution's CPD targets
+- `POST /recovery/redirect` — Link recovered funds to new contract (enters Side 1 and Side 2 automatically)
+- `GET /recovery/status/{recovery_id}` — Full recovery lifecycle with linked redirections and verdicts
+- `GET /recovery/impact` — Institutional impact report: caught, redirected, verified, beneficiaries reached
+- `GET /recovery/cycle/{source_contract_id}` — Complete traceability from RED flag to development outcome
 
 ## Deployment
 
@@ -110,13 +113,14 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-1,050 tests across three build phases. Zero regressions.
+1,133 tests across four build phases. Zero regressions.
 
-| Phase | Tests added | Cumulative |
-|-------|-------------|------------|
-| Side 1 — Procurement verification | 683 | 683 |
-| Side 2 — Delivery verification | 242 | 925 |
-| Side 3 — Intelligence alerts | 125 | 1,050 |
+| Phase | Description | Tests |
+|-------|-------------|-------|
+| Side 1 | Procurement verification (CRI + TCA + EVG) | 683 |
+| Side 2 | Delivery verification | 242 |
+| Side 3 | Intelligence alerts | 129 |
+| Side 4 | Recovery intelligence | 79 |
 
 DOJ regression baseline preserved across every commit: 33.3% / 100% / 9.0% / 0.746 / 129.2.
 
@@ -133,12 +137,13 @@ TCA operationalizes the i* Strategic Dependency Framework published by Dr. Chris
 - Deterministic logic over probabilistic guessing — every detection traces from result to inputs
 - Every detection explainable in language an investigator understands
 - A flag is a risk indicator, not an allegation
+- An allocation is a recommendation, not a directive
 - 100% DOJ recall is the institutional credibility floor — zero tolerance, CI-gated
 - Jurisdiction calibration is a data task, not a code task
 - The living standard is primary calibration for the majority of the operational footprint
+- Recovered funds are redirected using the institution's own published commitments, not external opinion
 - Ground truth before code — no engineering begins from assumed state
 
 ---
 
 Built by Rimwaya Ouedraogo and Hugo Villalba.
-**License:** Proprietary — SUNLIGHT Infrastructure
