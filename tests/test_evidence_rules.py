@@ -118,13 +118,14 @@ def src(pid, name=None, ptype="government_agency", linked=None, contract_party=F
     )
 
 
-def exp(eid, cls, required=True, queryable=True):
+def exp(eid, cls, required=True, queryable=True, by_month=None):
     return ExpectedEvidence(
         expectation_id=eid,
         evidence_class=cls,
         description=f"expected {eid}",
         required=required,
         queryable_in_jurisdiction=queryable,
+        expected_by_month=by_month,
     )
 
 
@@ -474,8 +475,14 @@ class TestExpectedAbsence:
 
 class TestContradictionDetection:
 
-    def test_con_001_fires_when_evidence_predates_claimed_completion(self):
+    def test_con_001_fires_outside_the_expected_window(self):
+        """Anchored on ExpectedEvidence.expected_by_month, measured from award.
+
+        A utility connection expected at month 12 but dated month 1.5 is
+        inconsistent with the build timeline it belongs to.
+        """
         d = dossier(
+            expectations=[exp("E1", EvidenceClass.THIRD_PARTY_ADMIN, by_month=12)],
             artifacts=[art("A1", EvidenceClass.THIRD_PARTY_ADMIN, party="UTILITY",
                            observed_date=date(2024, 3, 1),
                            desc="utility connection record")],
@@ -483,20 +490,52 @@ class TestContradictionDetection:
         )
         assert fired(d, "EVD-CON-001") is True
 
-    def test_con_001_silent_within_tolerance(self):
+    def test_con_001_silent_inside_the_expected_window(self):
         d = dossier(
+            expectations=[exp("E1", EvidenceClass.THIRD_PARTY_ADMIN, by_month=4)],
+            artifacts=[art("A1", EvidenceClass.THIRD_PARTY_ADMIN, party="PERMITS",
+                           observed_date=date(2024, 5, 1))],
+            sources=[src("PERMITS")],
+        )
+        assert fired(d, "EVD-CON-001") is False
+
+    def test_con_001_does_not_fire_merely_because_evidence_predates_completion(self):
+        """REGRESSION.
+
+        The first design anchored on the claimed completion date and fired on
+        anything dated materially before it. That condemns every genuine
+        facility: a construction permit is issued long before a building is
+        finished. The scenario suite caught it — a fully corroborated
+        hospital came back with a contradiction against it.
+
+        What is contradictory is not that evidence predates completion, but
+        that it falls outside the window where that KIND of evidence belongs.
+        """
+        d = dossier(
+            expectations=[exp("E1", EvidenceClass.THIRD_PARTY_ADMIN, by_month=4)],
+            artifacts=[art("A1", EvidenceClass.THIRD_PARTY_ADMIN, party="PERMITS",
+                           observed_date=date(2024, 5, 1),
+                           desc="construction permit, 10 months before completion")],
+            sources=[src("PERMITS")],
+        )
+        assert fired(d, "EVD-CON-001") is False
+
+    def test_con_001_silent_without_an_expected_window(self):
+        """No anchor, no finding."""
+        d = dossier(
+            expectations=[exp("E1", EvidenceClass.THIRD_PARTY_ADMIN)],
             artifacts=[art("A1", EvidenceClass.THIRD_PARTY_ADMIN, party="UTILITY",
-                           observed_date=date(2025, 1, 15))],
+                           observed_date=date(2019, 1, 1))],
             sources=[src("UTILITY")],
         )
         assert fired(d, "EVD-CON-001") is False
 
-    def test_con_001_silent_for_evidence_after_completion(self):
-        """Deliberately asymmetric. A utility connection recorded a year after
-        a hospital opens is expected, not contradictory."""
+    def test_con_001_silent_without_an_award_date(self):
         d = dossier(
+            award=None,
+            expectations=[exp("E1", EvidenceClass.THIRD_PARTY_ADMIN, by_month=12)],
             artifacts=[art("A1", EvidenceClass.THIRD_PARTY_ADMIN, party="UTILITY",
-                           observed_date=date(2026, 6, 1))],
+                           observed_date=date(2024, 3, 1))],
             sources=[src("UTILITY")],
         )
         assert fired(d, "EVD-CON-001") is False

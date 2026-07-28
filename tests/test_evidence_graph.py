@@ -216,6 +216,44 @@ class TestIndependenceCollapse:
         independent, _, _ = count_independent_corroborations(d)
         assert independent == 0
 
+    def test_a_monitor_chosen_by_a_contract_party_does_not_corroborate(self):
+        """Selection is linkage arrived at by a different route.
+
+        Detecting capture (EVD-SRC-003) is not enough on its own: if the
+        captured monitor still counted as outside corroboration, it would go
+        on inflating the very number it was chosen to inflate. So selected_by
+        collapses the monitor into the selector's group, and the monitor
+        inherits its contract-party status.
+        """
+        d = CorroborationDossier(
+            claim=make_claim(),
+            artifacts=[
+                artifact("A1", EvidenceClass.FIELD_VERIFICATION, party="MONITOR"),
+                artifact("A2", EvidenceClass.THIRD_PARTY_ADMIN, party="PERMITS"),
+            ],
+            source_registry=[
+                SourceIndependence("MONITOR", "Chosen Monitor", "civil_society",
+                                   selected_by="IP"),
+                source("IP", "Implementing Partner", "implementing_partner",
+                       contract_party=True),
+                source("PERMITS"),
+            ],
+        )
+        independent, _, _ = count_independent_corroborations(d)
+        assert independent == 1
+
+    def test_a_randomly_assigned_monitor_still_corroborates(self):
+        d = CorroborationDossier(
+            claim=make_claim(),
+            artifacts=[artifact("A1", EvidenceClass.FIELD_VERIFICATION, party="MONITOR")],
+            source_registry=[
+                SourceIndependence("MONITOR", "Independent Monitor", "civil_society",
+                                   randomly_assigned=True),
+            ],
+        )
+        independent, _, _ = count_independent_corroborations(d)
+        assert independent == 1
+
     def test_only_observed_artifacts_corroborate(self):
         """Absent, contradictory, unqueryable and stale evidence do not vouch."""
         d = CorroborationDossier(

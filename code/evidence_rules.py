@@ -783,40 +783,65 @@ def _missing_field_verification_evidence(d: CorroborationDossier, window_months:
     )
 
 
-def _timeline_contradiction(d: CorroborationDossier, tolerance_days: int) -> bool:
-    """Corroborating evidence dated materially BEFORE claimed completion.
+def _timeline_offenders(d: CorroborationDossier, tolerance_days: int):
+    """Artifacts dated outside the window their expectation places them in.
 
-    Deliberately asymmetric. Evidence postdating completion is normal — a
-    utility connection recorded a year after a hospital opens is expected.
-    Evidence of a completed facility dated months before it was claimed to
-    be completed is not, and is what this rule looks for.
+    Anchored on ExpectedEvidence.expected_by_month, measured from the award
+    date — NOT on the claimed completion date.
+
+    Anchoring on completion was the obvious first design and it is wrong: a
+    construction permit is issued long before a building is finished, so
+    every genuine facility would fire this rule. What is contradictory is not
+    that evidence predates completion, but that it falls outside the window
+    where that KIND of evidence belongs — a permit at month 4 is expected, an
+    operational certificate at month 4 on a 22-month build is not.
+
+    Where an expectation carries no expected_by_month there is no anchor, and
+    no anchor means no finding.
     """
-    completion = d.claim.claimed_completion_date
-    if completion is None:
-        return False
+    award = d.claim.award_date
+    if award is None:
+        return []
+
+    windows = {
+        exp.evidence_class: exp.expected_by_month
+        for exp in d.expected_evidence
+        if exp.expected_by_month is not None
+    }
+    if not windows:
+        return []
+
+    out = []
     for a in d.artifacts:
-        if a.status != EvidenceStatus.OBSERVED or a.observed_date is None:
+        if a.status not in (EvidenceStatus.OBSERVED, EvidenceStatus.CONTRADICTORY):
             continue
-        if (completion - a.observed_date).days > tolerance_days:
-            return True
-    return False
+        if a.observed_date is None:
+            continue
+        expected_month = windows.get(a.evidence_class)
+        if expected_month is None:
+            continue
+        expected_offset_days = expected_month * DAYS_PER_MONTH
+        actual_offset_days = (a.observed_date - award).days
+        drift = abs(actual_offset_days - expected_offset_days)
+        if drift > tolerance_days:
+            out.append((a, drift, expected_month))
+    return out
+
+
+def _timeline_contradiction(d: CorroborationDossier, tolerance_days: int) -> bool:
+    return bool(_timeline_offenders(d, tolerance_days))
 
 
 def _timeline_contradiction_evidence(d: CorroborationDossier, tolerance_days: int) -> str:
-    completion = d.claim.claimed_completion_date
-    offenders = [
-        (a, (completion - a.observed_date).days)
-        for a in d.artifacts
-        if a.status == EvidenceStatus.OBSERVED
-        and a.observed_date is not None
-        and (completion - a.observed_date).days > tolerance_days
-    ]
+    offenders = _timeline_offenders(d, tolerance_days)
     worst = max(offenders, key=lambda t: t[1])
+    artifact, drift, expected_month = worst
     return (
-        f"{len(offenders)} corroborating artifact(s) predate the claimed "
-        f"completion date {completion} by more than {tolerance_days} days; "
-        f"earliest is '{worst[0].description}' dated "
-        f"{worst[0].observed_date} ({worst[1]} days before)"
+        f"{len(offenders)} artifact(s) fall outside the window their evidence "
+        f"class is expected in; furthest is '{artifact.description}' dated "
+        f"{artifact.observed_date}, {drift:.0f} days from the expected "
+        f"month {expected_month} after award {d.claim.award_date} "
+        f"(tolerance {tolerance_days} days)"
     )
 
 
@@ -968,8 +993,16 @@ def _independence_violation_evidence(d: CorroborationDossier) -> str:
 
 
 def _custody_break_artifacts(d: CorroborationDossier) -> List[EvidenceArtifact]:
+    """Artifacts that cannot be vouched for, admitted or quarantined.
+
+    Scans rejected_artifacts as well as artifacts. Stage 13 quarantines
+    unsourced evidence so it cannot corroborate anything — but if this rule
+    only looked at the admitted set, quarantining would make the finding
+    disappear, silently converting a chain-of-custody problem into an absence
+    of evidence. The artifact is refused AND reported.
+    """
     out = []
-    for a in d.artifacts:
+    for a in list(d.artifacts) + list(d.rejected_artifacts):
         if a.integrity_verified is False:
             out.append(a)
         elif not is_ingestible(a):

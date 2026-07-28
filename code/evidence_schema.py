@@ -67,7 +67,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from enum import Enum
 from typing import Dict, List, Optional
 
@@ -186,6 +186,16 @@ class CorroborationVerdict(Enum):
     PARTIAL = "partial"
     UNVERIFIED = "unverified"
     CONTRADICTED = "contradicted"
+
+
+class EvidenceStage(Enum):
+    """Where a corroboration dossier is in the Side 5 pipeline."""
+    INGESTED = "evidence_ingested"                # Stage 13: artifacts admitted
+    RESOLVED = "evidence_resolved"                # Stage 14: expectations resolved
+    GRAPHED = "evidence_graphed"                  # Stage 15: graph + rules
+    GATED = "evidence_gated"                      # Stage 16: verdict issued
+    COMPLETE = "evidence_complete"
+    FAILED = "evidence_failed"
 
 
 class EvidenceDimension(Enum):
@@ -559,9 +569,25 @@ class CorroborationDossier:
     artifacts: List[EvidenceArtifact] = field(default_factory=list)
     source_registry: List[SourceIndependence] = field(default_factory=list)
 
+    # Artifacts refused at Stage 13 for want of valid provenance. They are
+    # kept, not deleted: they must not corroborate anything, and they must
+    # still be visible to EVD-SRC-002 and to whoever submitted them. Silent
+    # deletion would turn a chain-of-custody problem into an absence.
+    rejected_artifacts: List[EvidenceArtifact] = field(default_factory=list)
+
     # ── Graph and rules ──
     graph: Optional[EvidenceGraphResult] = None
     rules_result: Optional[EvidenceRulesResult] = None
+    gate_outcome: Optional["EvidenceGateOutcome"] = None
+
+    # ── Pipeline state ──
+    stage: EvidenceStage = EvidenceStage.INGESTED
+    errors: List[Dict] = field(default_factory=list)
+    created_at: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    )
+    updated_at: str = ""
+    processing_ms: Dict[str, float] = field(default_factory=dict)
 
     # ── Verdict ──
     verdict: Optional[CorroborationVerdict] = None
@@ -580,6 +606,23 @@ class CorroborationDossier:
         "inconsistent with the claim as recorded; it does not assert "
         "what did or did not physically occur."
     )
+
+    def advance(self, stage: EvidenceStage, duration_ms: float = 0):
+        """Move to the next pipeline stage. Records timing."""
+        self.stage = stage
+        self.updated_at = datetime.now(timezone.utc).isoformat()
+        if duration_ms > 0:
+            self.processing_ms[stage.value] = duration_ms
+
+    def fail(self, stage: EvidenceStage, error: str):
+        """Record a failure at a specific stage."""
+        self.stage = EvidenceStage.FAILED
+        self.errors.append({
+            "stage": stage.value,
+            "error": error,
+            "at": datetime.now(timezone.utc).isoformat(),
+        })
+        self.updated_at = datetime.now(timezone.utc).isoformat()
 
     @property
     def corroboration_capacity(self) -> float:

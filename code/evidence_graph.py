@@ -198,6 +198,19 @@ class IndependenceResolver:
                 self._add(linked)
                 self.union(source.party_id, linked)
 
+            # A monitor is not independent of whoever chose it. Selection is
+            # the same relationship linked_parties models, arrived at by a
+            # different route, so it collapses the same way — which means a
+            # monitor picked by the implementing partner inherits that
+            # party's contract-party status and stops counting as outside
+            # corroboration. Without this, capture is detectable (EVD-SRC-003)
+            # but the captured monitor still inflates the corroboration count
+            # it was chosen to inflate.
+            selector = getattr(source, "selected_by", None)
+            if selector:
+                self._add(selector)
+                self.union(source.party_id, selector)
+
     def _add(self, party_id: str) -> None:
         if party_id not in self._parent:
             self._parent[party_id] = party_id
