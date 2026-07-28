@@ -40,7 +40,7 @@ from __future__ import annotations
 
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Optional, List, Dict, Any
 
 from fastapi import FastAPI, HTTPException
@@ -1922,6 +1922,732 @@ async def get_recovery_cycle(source_contract_id: str):
             }
             for rd in redirections
         ],
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SIDE 5 — EVIDENCE CORROBORATION
+#
+# Six endpoints. Two of them exist to disclose limits rather than to produce
+# findings: /evidence/capacity says what SUNLIGHT cannot verify in a given
+# country, and /evidence/expected says what it will look for, before anything
+# is submitted. An institution is entitled to both in advance.
+#
+# What the responses never say: that a facility does not exist. SUNLIGHT
+# cannot inspect anything. Every corroboration response carries its
+# corroboration capacity beside its verdict, because UNVERIFIED at two of six
+# reachable evidence classes means something entirely different from
+# UNVERIFIED at six of six, and a verdict reported without its reach is
+# misleading by omission.
+# ═══════════════════════════════════════════════════════════════════════════
+
+from collections import OrderedDict as _OrderedDict
+
+from evidence_analyzer import EvidenceAnalyzer, summarise_capacity
+from evidence_maps import load_evidence_map
+from evidence_schema import (
+    CorroborationDossier as _CorroborationDossier,
+    EvidenceArtifact as _EvidenceArtifact,
+    EvidenceClass as _EvidenceClass,
+    EvidenceStatus as _EvidenceStatus,
+    OutcomeClaim as _OutcomeClaim,
+    OutcomeType as _OutcomeType,
+    Provenance as _Provenance,
+    SourceIndependence as _SourceIndependence,
+)
+from provenance import (
+    SUPPORTED_HASH_ALGORITHMS as _SUPPORTED_HASH_ALGORITHMS,
+    compute_hash as _compute_hash,
+)
+
+
+# ── Analyzer cache, keyed on the profile actually used ──
+
+_evidence_analyzers: Dict[str, EvidenceAnalyzer] = {}
+
+
+def _get_evidence_analyzer(profile_name: str, country_code: str = "") -> EvidenceAnalyzer:
+    """Get or create an EvidenceAnalyzer.
+
+    A country's evidence map takes precedence over the jurisdiction profile
+    when one exists, because Side 5's thresholds and — more importantly — its
+    reachable evidence classes are properties of the country, not of the
+    procurement regime.
+    """
+    key = f"{profile_name}:{country_code.lower()}"
+    if key not in _evidence_analyzers:
+        profile = None
+        label = profile_name
+        if country_code:
+            profile = load_evidence_map(country_code)
+            if profile is not None:
+                label = f"{profile_name}+{country_code.lower()}"
+        if profile is None:
+            profile = get_profile(profile_name)
+        _evidence_analyzers[key] = EvidenceAnalyzer(
+            profile=profile, profile_name=label)
+    return _evidence_analyzers[key]
+
+
+# ── Dossier store ──
+#
+# Bounded and in-process. This is a cache so that /evidence/dossier/{id} can
+# return the analysis just performed; it is NOT a database, and it does not
+# survive a restart. Unbounded growth in a long-running API is a defect, so
+# the oldest entries are evicted past the cap and the response says plainly
+# that retention is ephemeral.
+#
+# It stores dossiers, which hold provenance — source, digest, timestamp — and
+# never artifact CONTENT. Evidence bytes are hashed at ingestion and
+# discarded, so a compromised store leaks no underlying documents.
+
+_EVIDENCE_DOSSIER_CACHE_MAX = 500
+_evidence_dossiers: "_OrderedDict[str, _CorroborationDossier]" = _OrderedDict()
+
+
+def _remember_dossier(dossier: _CorroborationDossier) -> None:
+    _evidence_dossiers[dossier.dossier_id] = dossier
+    _evidence_dossiers.move_to_end(dossier.dossier_id)
+    while len(_evidence_dossiers) > _EVIDENCE_DOSSIER_CACHE_MAX:
+        _evidence_dossiers.popitem(last=False)
+
+
+# ── Request / response models ──
+
+
+class ProvenanceInput(BaseModel):
+    source_id: str = Field(..., description="Canonical identifier for the source system or organisation")
+    source_name: str = Field(..., description="Human-readable source name")
+    retrieval_timestamp: str = Field(..., description="When the source was queried (ISO 8601)")
+    content_hash: str = Field(..., description="Digest of the artifact, or of the empty response for a documented absence")
+    source_url: Optional[str] = Field(None, description="Where the artifact was retrieved from")
+    capture_timestamp: Optional[str] = Field(None, description="When a photograph was taken (ISO 8601)")
+    capture_latitude: Optional[float] = Field(None, description="Photograph capture latitude")
+    capture_longitude: Optional[float] = Field(None, description="Photograph capture longitude")
+    hash_algorithm: str = Field("sha256", description="Digest algorithm; md5 and sha1 are refused")
+
+
+class EvidenceArtifactInput(BaseModel):
+    artifact_id: str = Field(..., description="Unique artifact identifier")
+    evidence_class: str = Field(..., description="One of the six evidence classes")
+    description: str = Field(..., description="What this artifact is")
+    status: str = Field(..., description="observed, absent, contradictory, unqueryable, or stale")
+    observed_value: Optional[str] = Field(None, description="Free-text observed value")
+    observed_date: Optional[str] = Field(None, description="Date the evidence refers to (ISO 8601)")
+    observed_magnitude: Optional[float] = Field(None, description="Measured magnitude, where this artifact measures one")
+    source_party_id: Optional[str] = Field(None, description="Party that produced this artifact")
+    integrity_verified: Optional[bool] = Field(None, description="Result of re-verifying the hash; null means not checked")
+    notes: Optional[str] = Field(None, description="Additional notes")
+    provenance: Optional[ProvenanceInput] = Field(None, description="Chain of custody; artifacts without it are refused at ingestion")
+
+
+class SourceInput(BaseModel):
+    party_id: str = Field(..., description="Unique party identifier")
+    party_name: str = Field(..., description="Party name")
+    party_type: str = Field("", description="implementing_partner, government_agency, commercial_provider, civil_society, etc.")
+    linked_parties: List[str] = Field(default_factory=list, description="Parties this one is NOT independent of")
+    is_contract_party: bool = Field(False, description="Party to the contract under verification")
+    randomly_assigned: Optional[bool] = Field(None, description="Field monitors only: randomly assigned from an independent pool")
+    selected_by: Optional[str] = Field(None, description="Field monitors only: party that chose this monitor")
+
+
+class OutcomeClaimInput(BaseModel):
+    claim_id: str = Field(..., description="Unique claim identifier")
+    contract_id: str = Field(..., description="Contract this outcome was claimed under")
+    outcome_type: str = Field(..., description="Determines which expected-evidence map applies")
+    claim_description: str = Field(..., description="What was claimed, e.g. '200-bed hospital operational'")
+    claimed_completion_date: Optional[str] = Field(None, description="Claimed completion date (ISO 8601)")
+    claimed_magnitude: Optional[float] = Field(None, description="Claimed scale, e.g. 200")
+    claimed_magnitude_unit: Optional[str] = Field(None, description="Unit of the claimed scale, e.g. 'beds'")
+    site_latitude: Optional[float] = Field(None, description="Site latitude")
+    site_longitude: Optional[float] = Field(None, description="Site longitude")
+    country_code: Optional[str] = Field(None, description="ISO 3166-1 alpha-2 code")
+    country_office: Optional[str] = Field(None, description="Country office")
+    award_date: Optional[str] = Field(None, description="Contract award date, anchoring expected-evidence windows")
+    source_dossier_id: Optional[str] = Field(None, description="Originating Side 2 delivery dossier")
+    source_recovery_id: Optional[str] = Field(None, description="Originating Side 4 recovery record")
+
+
+class ExpectedEvidenceInput(BaseModel):
+    expectation_id: str = Field(..., description="Unique expectation identifier")
+    evidence_class: str = Field(..., description="Evidence class expected")
+    description: str = Field(..., description="What should exist if the claim is true")
+    required: bool = Field(True, description="Whether absence is a candidate finding")
+    expected_by_month: Optional[int] = Field(None, description="Months after award when this is expected")
+    queryable_in_jurisdiction: bool = Field(True, description="False where the source does not exist locally")
+
+
+class EvidenceAnalyzeRequest(BaseModel):
+    claim: OutcomeClaimInput = Field(..., description="The outcome claim to corroborate")
+    artifacts: List[EvidenceArtifactInput] = Field(default_factory=list, description="Submitted evidence, including documented absences")
+    source_registry: List[SourceInput] = Field(default_factory=list, description="Parties, with linkage and contract status")
+    expected_evidence: Optional[List[ExpectedEvidenceInput]] = Field(None, description="Explicit expectations; when omitted the jurisdiction map is used")
+    profile: str = Field("us_federal", description="Jurisdiction profile name")
+    country_code: Optional[str] = Field(None, description="Overrides the profile with that country's evidence map when one exists")
+
+
+class EvidenceBatchRequest(BaseModel):
+    claims: List[EvidenceAnalyzeRequest] = Field(..., description="Up to 1000 corroboration requests")
+    profile: str = Field("us_federal", description="Default jurisdiction profile")
+
+
+class VerifyIntegrityRequest(BaseModel):
+    artifact_id: str = Field(..., description="Artifact to verify")
+    dossier_id: Optional[str] = Field(None, description="Dossier holding the artifact; searched across the cache when omitted")
+    content_base64: Optional[str] = Field(None, description="Artifact content, base64-encoded. Preferred: binary-safe")
+    content: Optional[str] = Field(None, description="Artifact content as UTF-8 text. Convenience for text artifacts")
+
+
+# ── Conversion helpers ──
+
+
+def _parse_enum(enum_cls, value: str, field_name: str):
+    try:
+        return enum_cls(value)
+    except ValueError:
+        valid = ", ".join(sorted(m.value for m in enum_cls))
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown {field_name} '{value}'. Valid values: {valid}",
+        )
+
+
+def _parse_date(value: Optional[str], field_name: str):
+    if not value:
+        return None
+    try:
+        return date.fromisoformat(str(value)[:10])
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=400,
+            detail=f"{field_name} '{value}' is not an ISO 8601 date",
+        )
+
+
+def _parse_datetime(value: str, field_name: str):
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=400,
+            detail=f"{field_name} '{value}' is not an ISO 8601 timestamp",
+        )
+
+
+def _build_claim(data: OutcomeClaimInput) -> _OutcomeClaim:
+    return _OutcomeClaim(
+        claim_id=data.claim_id,
+        contract_id=data.contract_id,
+        outcome_type=_parse_enum(_OutcomeType, data.outcome_type, "outcome_type"),
+        claim_description=data.claim_description,
+        claimed_completion_date=_parse_date(data.claimed_completion_date, "claimed_completion_date"),
+        claimed_magnitude=data.claimed_magnitude,
+        claimed_magnitude_unit=data.claimed_magnitude_unit,
+        site_latitude=data.site_latitude,
+        site_longitude=data.site_longitude,
+        country_code=data.country_code,
+        country_office=data.country_office,
+        award_date=_parse_date(data.award_date, "award_date"),
+        source_dossier_id=data.source_dossier_id,
+        source_recovery_id=data.source_recovery_id,
+    )
+
+
+def _build_artifacts(items: List[EvidenceArtifactInput], claim_id: str) -> List[_EvidenceArtifact]:
+    out = []
+    for item in items:
+        provenance = None
+        if item.provenance is not None:
+            p = item.provenance
+            provenance = _Provenance(
+                source_id=p.source_id,
+                source_name=p.source_name,
+                retrieval_timestamp=_parse_datetime(p.retrieval_timestamp, "retrieval_timestamp"),
+                content_hash=p.content_hash,
+                source_url=p.source_url,
+                capture_timestamp=(
+                    _parse_datetime(p.capture_timestamp, "capture_timestamp")
+                    if p.capture_timestamp else None),
+                capture_latitude=p.capture_latitude,
+                capture_longitude=p.capture_longitude,
+                hash_algorithm=p.hash_algorithm,
+            )
+        out.append(_EvidenceArtifact(
+            artifact_id=item.artifact_id,
+            evidence_class=_parse_enum(_EvidenceClass, item.evidence_class, "evidence_class"),
+            claim_id=claim_id,
+            description=item.description,
+            status=_parse_enum(_EvidenceStatus, item.status, "status"),
+            observed_value=item.observed_value,
+            observed_date=_parse_date(item.observed_date, "observed_date"),
+            observed_magnitude=item.observed_magnitude,
+            provenance=provenance,
+            source_party_id=item.source_party_id,
+            integrity_verified=item.integrity_verified,
+            notes=item.notes,
+        ))
+    return out
+
+
+def _build_sources(items: List[SourceInput]) -> List[_SourceIndependence]:
+    return [
+        _SourceIndependence(
+            party_id=s.party_id,
+            party_name=s.party_name,
+            party_type=s.party_type,
+            linked_parties=list(s.linked_parties),
+            is_contract_party=s.is_contract_party,
+            randomly_assigned=s.randomly_assigned,
+            selected_by=s.selected_by,
+        )
+        for s in items
+    ]
+
+
+def _build_expectations(items: Optional[List[ExpectedEvidenceInput]]):
+    if items is None:
+        return None
+    from evidence_schema import ExpectedEvidence as _ExpectedEvidence
+    return [
+        _ExpectedEvidence(
+            expectation_id=e.expectation_id,
+            evidence_class=_parse_enum(_EvidenceClass, e.evidence_class, "evidence_class"),
+            description=e.description,
+            required=e.required,
+            expected_by_month=e.expected_by_month,
+            queryable_in_jurisdiction=e.queryable_in_jurisdiction,
+        )
+        for e in items
+    ]
+
+
+def _run_corroboration(request: EvidenceAnalyzeRequest) -> dict:
+    """Analyse one claim and cache the dossier for later retrieval."""
+    analyzer = _get_evidence_analyzer(request.profile, request.country_code or "")
+
+    claim = _build_claim(request.claim)
+    dossier = analyzer.pipeline.run(
+        claim=claim,
+        artifacts=_build_artifacts(request.artifacts, claim.claim_id),
+        source_registry=_build_sources(request.source_registry),
+        expected_evidence=_build_expectations(request.expected_evidence),
+    )
+    _remember_dossier(dossier)
+    return analyzer._format(dossier)
+
+
+# ── Endpoints ──
+
+
+@app.post("/evidence/analyze")
+async def analyze_evidence(request: EvidenceAnalyzeRequest):
+    """
+    Corroborate a claimed outcome against independent evidence.
+
+    Runs Side 5 stages 13-16: provenance-validated ingestion, expected-evidence
+    resolution, corroboration graph construction with source-independence
+    collapse, 16-rule evaluation, and the four-verdict evidence gate.
+
+    Returns the verdict alongside the corroboration capacity it was reached
+    at. The two are not separable: UNVERIFIED at two of six reachable
+    evidence classes is a statement about this jurisdiction's data sources,
+    while UNVERIFIED at six of six is a statement about this claim.
+
+    A CONTRADICTED verdict states that independent evidence is inconsistent
+    with the claim as recorded. It does not assert what did or did not
+    physically occur.
+    """
+    try:
+        get_profile(request.profile)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    try:
+        return _run_corroboration(request)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Evidence analysis failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Evidence analysis failed: {str(e)}")
+
+
+@app.post("/evidence/batch")
+async def batch_analyze_evidence(request: EvidenceBatchRequest):
+    """
+    Corroborate a batch of claims. Maximum 1000.
+
+    The aggregate reports UNVERIFIED as its own count and never merges it
+    with CONTRADICTED. They mean opposite things — evidence that could not be
+    reached against evidence that conflicts — and a portfolio summary that
+    combined them would show a pattern of contradicted claims in exactly the
+    country offices whose registries are thinnest.
+    """
+    if len(request.claims) > 1000:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Batch size {len(request.claims)} exceeds maximum of 1000",
+        )
+
+    results = []
+    errors = []
+    distribution: Dict[str, int] = {
+        "verified": 0, "partial": 0, "unverified": 0, "contradicted": 0}
+    capacity_total = 0.0
+
+    for i, item in enumerate(request.claims):
+        try:
+            result = _run_corroboration(item)
+        except HTTPException as e:
+            errors.append({"index": i, "claim_id": item.claim.claim_id,
+                           "error": e.detail})
+            continue
+        except Exception as e:
+            logger.error(f"Batch corroboration failed at index {i}: {e}")
+            errors.append({"index": i, "claim_id": item.claim.claim_id,
+                           "error": str(e)})
+            continue
+
+        results.append(result)
+        verdict = result.get("verdict")
+        if verdict in distribution:
+            distribution[verdict] += 1
+        capacity_total += result.get("corroboration_capacity", 0.0)
+
+    analysed = len(results)
+    return {
+        "results": results,
+        "errors": errors,
+        "total_submitted": len(request.claims),
+        "total_analyzed": analysed,
+        "total_failed": len(errors),
+        "verdict_distribution": distribution,
+        "average_corroboration_capacity": (
+            round(capacity_total / analysed, 4) if analysed else 0.0),
+        "profile": request.profile,
+        "note": (
+            "unverified is reported separately from contradicted and must not "
+            "be added to it. Unverified means the evidence could not be "
+            "reached in that jurisdiction; it is not an adverse finding."
+        ),
+    }
+
+
+@app.get("/evidence/expected/{outcome_type}")
+async def get_expected_evidence(outcome_type: str, country_code: str = ""):
+    """
+    What SUNLIGHT will look for, for this outcome type in this country.
+
+    Published deliberately and in advance. An institution is entitled to see
+    the expectations before submitting anything, rather than discovering them
+    in a finding — and an expectation that cannot survive being published is
+    one that should not be applied.
+
+    Expectations marked queryable_in_jurisdiction=false name sources that do
+    not exist in this country. Their absence can never produce a finding.
+    """
+    parsed = _parse_enum(_OutcomeType, outcome_type, "outcome_type")
+
+    country_profile = load_evidence_map(country_code) if country_code else None
+    if country_code and country_profile is None:
+        return {
+            "outcome_type": parsed.value,
+            "country_code": country_code.lower(),
+            "expectations": [],
+            "map_available": False,
+            "note": (
+                "No evidence map is declared for this country. SUNLIGHT "
+                "resolves no expectations here, so no absence finding can be "
+                "produced; analysis reports only what the submitted evidence "
+                "shows."
+            ),
+        }
+
+    expectations = (
+        country_profile.expectations_for(parsed.value) if country_profile else [])
+
+    return {
+        "outcome_type": parsed.value,
+        "country_code": (country_code or "").lower(),
+        "country_office": country_profile.country_office if country_profile else "",
+        "map_status": country_profile.status if country_profile else "none",
+        "map_validated": country_profile.is_validated() if country_profile else False,
+        "queryable_classes": (
+            sorted(country_profile.valid_queryable_classes()) if country_profile else []),
+        "expectations": expectations,
+        "expectation_count": len(expectations),
+        "map_available": country_profile is not None,
+        "outcome_types_covered": (
+            country_profile.outcome_types_covered() if country_profile else []),
+    }
+
+
+@app.get("/evidence/capacity/{country_code}")
+async def get_evidence_capacity(country_code: str):
+    """
+    What SUNLIGHT can and cannot verify in this jurisdiction.
+
+    Honest disclosure of the capability ceiling, and a feature rather than a
+    caveat. Where fewer evidence classes are reachable than the profile
+    minimum, no adverse conclusion is available and every verdict in that
+    country will be UNVERIFIED — which an institution should know before it
+    submits, not after.
+
+    Corroboration capacity is a property of the country's available data
+    sources. It says nothing about any project or claim within it.
+    """
+    profile = load_evidence_map(country_code)
+    summary = summarise_capacity(country_code.lower(), profile=profile)
+    summary["map_available"] = profile is not None
+    summary["map_status"] = profile.status if profile else "none"
+    summary["map_validated"] = profile.is_validated() if profile else False
+    if profile is None:
+        summary["note"] = (
+            "No evidence map is declared for this country, so no evidence "
+            "class is declared reachable. Reachability is then derived from "
+            "what submitted sources actually return. " + summary["note"]
+        )
+    return summary
+
+
+@app.get("/evidence/dossier/{dossier_id}")
+async def get_evidence_dossier(dossier_id: str):
+    """
+    Full corroboration dossier: graph, artifacts, and provenance chain.
+
+    Retention is EPHEMERAL. This is an in-process cache holding the most
+    recent analyses so a result can be inspected after the fact; it is not a
+    database and does not survive a restart. The response says so, so that no
+    institution builds an audit trail on it.
+
+    The dossier carries provenance — source, digest, timestamp — and never
+    artifact content. Evidence bytes are hashed at ingestion and discarded.
+    """
+    dossier = _evidence_dossiers.get(dossier_id)
+    if dossier is None:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"Dossier {dossier_id} is not in the analysis cache. Retention "
+                f"is ephemeral and bounded to the {_EVIDENCE_DOSSIER_CACHE_MAX} "
+                f"most recent analyses; re-run the analysis to regenerate it."
+            ),
+        )
+
+    def _artifact_view(a, refused: bool):
+        p = a.provenance
+        return {
+            "artifact_id": a.artifact_id,
+            "evidence_class": a.evidence_class.value,
+            "description": a.description,
+            "status": a.status.value,
+            "observed_value": a.observed_value,
+            "observed_date": a.observed_date.isoformat() if a.observed_date else None,
+            "observed_magnitude": a.observed_magnitude,
+            "source_party_id": a.source_party_id,
+            "integrity_verified": a.integrity_verified,
+            "admitted": not refused,
+            "provenance": None if p is None else {
+                "source_id": p.source_id,
+                "source_name": p.source_name,
+                "source_url": p.source_url,
+                "retrieval_timestamp": (
+                    p.retrieval_timestamp.isoformat()
+                    if hasattr(p.retrieval_timestamp, "isoformat")
+                    else str(p.retrieval_timestamp)),
+                "content_hash": p.content_hash,
+                "hash_algorithm": p.hash_algorithm,
+                "has_geotag": p.has_geotag,
+                "capture_latitude": p.capture_latitude,
+                "capture_longitude": p.capture_longitude,
+            },
+        }
+
+    outcome = dossier.gate_outcome
+    return {
+        "dossier_id": dossier.dossier_id,
+        "claim": {
+            "claim_id": dossier.claim.claim_id,
+            "contract_id": dossier.claim.contract_id,
+            "outcome_type": dossier.claim.outcome_type.value,
+            "claim_description": dossier.claim.claim_description,
+            "claimed_magnitude": dossier.claim.claimed_magnitude,
+            "claimed_magnitude_unit": dossier.claim.claimed_magnitude_unit,
+            "country_code": dossier.claim.country_code,
+            "source_dossier_id": dossier.claim.source_dossier_id,
+            "source_recovery_id": dossier.claim.source_recovery_id,
+        },
+        "verdict": dossier.verdict.value if dossier.verdict else None,
+        "confidence": dossier.confidence,
+        "corroboration_capacity": round(dossier.corroboration_capacity, 4),
+        "classes_queryable": dossier.classes_queryable,
+        "classes_total": dossier.classes_total,
+        "independent_classes_corroborating": dossier.independent_classes_corroborating,
+        "expected_evidence": [
+            {
+                "expectation_id": e.expectation_id,
+                "evidence_class": e.evidence_class.value,
+                "description": e.description,
+                "required": e.required,
+                "expected_by_month": e.expected_by_month,
+                "queryable_in_jurisdiction": e.queryable_in_jurisdiction,
+                "absence_is_meaningful": e.absence_is_meaningful,
+            }
+            for e in dossier.expected_evidence
+        ],
+        "artifacts": (
+            [_artifact_view(a, False) for a in dossier.artifacts]
+            + [_artifact_view(a, True) for a in dossier.rejected_artifacts]
+        ),
+        "source_registry": [
+            {
+                "party_id": s.party_id,
+                "party_name": s.party_name,
+                "party_type": s.party_type,
+                "linked_parties": s.linked_parties,
+                "is_contract_party": s.is_contract_party,
+                "randomly_assigned": s.randomly_assigned,
+                "selected_by": s.selected_by,
+            }
+            for s in dossier.source_registry
+        ],
+        "graph": {
+            "node_count": dossier.graph.node_count if dossier.graph else 0,
+            "edge_count": dossier.graph.edge_count if dossier.graph else 0,
+            "nodes": dossier.graph.nodes if dossier.graph else [],
+            "edges": dossier.graph.edges if dossier.graph else [],
+        },
+        "contradictions": dossier.contradictions,
+        "coverage_findings": outcome.coverage_findings if outcome else [],
+        "rules_fired": [
+            {
+                "rule_id": r.rule_id,
+                "layer": r.layer,
+                "evidence": r.evidence,
+                "legal_basis": r.legal_basis,
+                "confidence": r.confidence,
+                "recommendation": r.recommendation,
+            }
+            for r in (dossier.rules_result.rule_results if dossier.rules_result else [])
+            if r.fired
+        ],
+        "stage": dossier.stage.value,
+        "errors": dossier.errors,
+        "methodology_note": outcome.methodology_note if outcome else "",
+        "methodology_version": dossier.methodology_version,
+        "disclaimer": dossier.disclaimer,
+        "retention": (
+            f"Ephemeral. In-process cache of the {_EVIDENCE_DOSSIER_CACHE_MAX} "
+            f"most recent analyses; not a database, and not durable across a "
+            f"restart. Provenance is retained; artifact content is not stored."
+        ),
+    }
+
+
+@app.post("/evidence/verify-integrity")
+async def verify_evidence_integrity(request: VerifyIntegrityRequest):
+    """
+    Re-verify an artifact's content hash. Detects post-ingestion tampering.
+
+    Supply content_base64 (binary-safe, preferred) or content as UTF-8 text.
+    Exactly one is required: the encoding has to be explicit, because a
+    digest computed over differently-encoded bytes is a different digest, and
+    an ambiguous mismatch here would be indistinguishable from tampering.
+
+    A mismatch is reported, never raised. Integrity failure is a finding for
+    EVD-SRC-002 to carry, not an error to unwind.
+    """
+    if bool(request.content_base64) == bool(request.content):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Supply exactly one of content_base64 or content. The encoding "
+                "must be explicit — a digest over differently-encoded bytes is "
+                "a different digest."
+            ),
+        )
+
+    if request.content_base64:
+        import base64
+        try:
+            content = base64.b64decode(request.content_base64, validate=True)
+        except Exception:
+            raise HTTPException(
+                status_code=400, detail="content_base64 is not valid base64")
+    else:
+        content = request.content.encode("utf-8")
+
+    candidates = (
+        [_evidence_dossiers[request.dossier_id]]
+        if request.dossier_id and request.dossier_id in _evidence_dossiers
+        else list(_evidence_dossiers.values())
+    )
+    if request.dossier_id and request.dossier_id not in _evidence_dossiers:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Dossier {request.dossier_id} is not in the analysis cache",
+        )
+
+    artifact = None
+    holder = None
+    for dossier in reversed(candidates):
+        for candidate in list(dossier.artifacts) + list(dossier.rejected_artifacts):
+            if candidate.artifact_id == request.artifact_id:
+                artifact, holder = candidate, dossier
+                break
+        if artifact is not None:
+            break
+
+    if artifact is None:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"Artifact {request.artifact_id} is not in the analysis cache. "
+                f"Retention is ephemeral; re-run the analysis to regenerate it."
+            ),
+        )
+
+    if artifact.provenance is None:
+        return {
+            "artifact_id": artifact.artifact_id,
+            "dossier_id": holder.dossier_id,
+            "verified": False,
+            "reason": "artifact has no provenance and cannot be verified",
+            "recorded_hash": None,
+            "computed_hash": None,
+            "finding": "EVD-SRC-002",
+        }
+
+    algorithm = artifact.provenance.hash_algorithm
+    if algorithm not in _SUPPORTED_HASH_ALGORITHMS:
+        return {
+            "artifact_id": artifact.artifact_id,
+            "dossier_id": holder.dossier_id,
+            "verified": False,
+            "reason": f"unsupported hash algorithm '{algorithm}'",
+            "recorded_hash": artifact.provenance.content_hash,
+            "computed_hash": None,
+            "finding": "EVD-SRC-002",
+        }
+
+    computed = _compute_hash(content, algorithm=algorithm)
+    verified = artifact.provenance.verify_hash(content)
+
+    return {
+        "artifact_id": artifact.artifact_id,
+        "dossier_id": holder.dossier_id,
+        "verified": verified,
+        "reason": (
+            "content matches the hash recorded at ingestion" if verified
+            else "content does not match the hash recorded at ingestion — "
+                 "the artifact was modified after ingestion, or different "
+                 "content was submitted"
+        ),
+        "recorded_hash": artifact.provenance.content_hash,
+        "computed_hash": computed,
+        "hash_algorithm": algorithm,
+        "source_id": artifact.provenance.source_id,
+        "source_name": artifact.provenance.source_name,
+        "finding": None if verified else "EVD-SRC-002",
     }
 
 
