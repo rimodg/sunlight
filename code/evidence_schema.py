@@ -311,6 +311,21 @@ class EvidenceArtifact:
     source_party_id: Optional[str] = None   # for independence analysis
     notes: Optional[str] = None
 
+    # Magnitude as a number, when this artifact measures one — 50 observed
+    # beds against 200 claimed. Deliberately separate from observed_value:
+    # deriving a magnitude by parsing free text would make a contradiction
+    # finding depend on string formatting, and "2024" parses as a number.
+    # If it is not set here, no magnitude rule considers this artifact.
+    observed_magnitude: Optional[float] = None
+
+    # Result of re-verifying the content hash after ingestion.
+    #   None  — never re-checked
+    #   True  — re-checked and intact
+    #   False — hash mismatch; the artifact was modified after ingestion
+    # None and False are different: "not checked" is not "found sound", and
+    # only False is a chain-of-custody finding.
+    integrity_verified: Optional[bool] = None
+
     @property
     def corroborates(self) -> bool:
         """True only when this artifact actively supports the claim.
@@ -407,6 +422,16 @@ class SourceIndependence:
                                         # "commercial_provider", "civil_society", etc.
     linked_parties: List[str] = field(default_factory=list)  # party_ids NOT independent of this one
     is_contract_party: bool = False     # party to the contract being verified
+
+    # Field-verification monitors only. A monitor is Class 4 evidence — near
+    # the top of the manipulation-difficulty ranking — but ONLY when it was
+    # independently and randomly assigned. A monitor chosen by the party
+    # being monitored is Class 1 evidence wearing Class 4 clothing.
+    #   None  — not a monitor, or assignment method unrecorded
+    #   True  — randomly assigned from an independent pool
+    #   False — selected, not randomised
+    randomly_assigned: Optional[bool] = None
+    selected_by: Optional[str] = None   # party_id that chose this monitor, if any
 
     @property
     def can_corroborate_independently(self) -> bool:
