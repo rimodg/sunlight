@@ -143,9 +143,10 @@ class TestRedirectionRegistry:
     def test_multiple_redirections_from_single_recovery(self):
         """Recovered funds split across multiple new contracts."""
         registry = RedirectionRegistry()
-        r1 = registry.create("R001", "NEW-001", "health", "SDG 3", 150_000)
-        r2 = registry.create("R001", "NEW-002", "education", "SDG 4", 100_000)
-        r3 = registry.create("R001", "NEW-003", "governance", "SDG 16", 50_000)
+        # Created for their side effect; the assertions read them back from the registry
+        registry.create("R001", "NEW-001", "health", "SDG 3", 150_000)
+        registry.create("R001", "NEW-002", "education", "SDG 4", 100_000)
+        registry.create("R001", "NEW-003", "governance", "SDG 16", 50_000)
         from_recovery = registry.list_by_recovery("R001")
         assert len(from_recovery) == 3
         contract_ids = {r.target_contract_id for r in from_recovery}

@@ -338,11 +338,11 @@ class TestEVGIntegrationWithTCAOutput:
             assert "rule" in c, (
                 f"Contradiction missing 'rule' key. Keys present: "
                 f"{sorted(c.keys())}.  EVG reads c.get('rule') — if this "
-                f"key is absent, TCA_TYPOLOGIES will never fire."
+                "key is absent, TCA_TYPOLOGIES will never fire."
             )
             assert c["rule"] != "UNKNOWN", (
-                f"Contradiction has rule=UNKNOWN.  EVG counts distinct "
-                f"rule IDs; UNKNOWN values collapse typology count."
+                "Contradiction has rule=UNKNOWN.  EVG counts distinct "
+                "rule IDs; UNKNOWN values collapse typology count."
             )
 
         # (b) Count correctness: EVG's observed value matches independent count

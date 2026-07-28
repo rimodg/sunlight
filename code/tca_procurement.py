@@ -19,7 +19,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from code.tca import (
+from tca import (
     TCAEdge,
     TCAGraph,
     TCANode,

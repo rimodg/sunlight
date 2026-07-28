@@ -841,7 +841,9 @@ async def health():
             timestamp=datetime.now(timezone.utc).isoformat(),
         )
     except Exception as e:
-        # Service is running but degraded
+        # Service is running but degraded. Log the cause — a health endpoint that
+        # reports "degraded" and discards the reason cannot be diagnosed from outside.
+        logger.warning(f"Health check degraded: {e}")
         return HealthResponse(
             status="degraded",
             version="0.1.0",
@@ -1197,7 +1199,10 @@ async def analyze_delivery(request: DeliveryAnalyzeRequest):
     """
     try:
         profile_name = request.profile
-        profile = get_profile(profile_name)
+        # Validation guard: raises ValueError for an unknown profile, which becomes a
+        # 400 below. The profile OBJECT is not needed — _get_delivery_analyzer takes the
+        # name — so the return value is deliberately discarded rather than bound.
+        get_profile(profile_name)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -1221,7 +1226,10 @@ async def batch_analyze_deliveries(request: DeliveryBatchRequest):
     """
     try:
         profile_name = request.profile
-        profile = get_profile(profile_name)
+        # Validation guard: raises ValueError for an unknown profile, which becomes a
+        # 400 below. The profile OBJECT is not needed — _get_delivery_analyzer takes the
+        # name — so the return value is deliberately discarded rather than bound.
+        get_profile(profile_name)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

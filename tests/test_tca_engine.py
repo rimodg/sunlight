@@ -3,12 +3,12 @@ Tests for the TCA structural analysis engine and procurement graph builder.
 """
 
 import pytest
-from code.tca import (
+from tca import (
     TCAEdge, TCAGraph, TCANode, TCAResult,
     analyze, betweenness_centrality, build_graph, cascade_analysis,
     detect_cycles, solve, structural_delta, EDGE_TYPES,
 )
-from code.tca_procurement import (
+from tca_procurement import (
     build_procurement_graph, classify_procurement, run_tca,
 )
 

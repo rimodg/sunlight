@@ -1,8 +1,18 @@
 #!/usr/bin/env python3
-"""Test false positive rate on 100 high-competition contracts"""
+"""Measure the false-positive rate on 100 high-competition contracts."""
 
+import os
 import sqlite3
+import sys
 from pathlib import Path
+
+# Relocated from code/ during the institution-readiness pass: pytest collected
+# these as test modules (test_*.py) and errored, because their test_* functions
+# take positional arguments no fixture supplies. They are analysis scripts, not
+# tests. Living in code/ was also what made the bare import below work; from
+# scripts/ it needs the same bootstrap every other script here uses.
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'code'))
+
 from bulletproof_analyzer import BulletproofAnalyzer
 
 DB_PATH = Path.home() / "brain" / "SUNLIGHT" / "data" / "sunlight.db"

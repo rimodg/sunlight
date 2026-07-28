@@ -34,17 +34,34 @@ logger = logging.getLogger(__name__)
 # SECTION 1: RULE EVIDENCE LOOKUP
 # ═══════════════════════════════════════════════════════════
 
+# Markers that are deliberately NOT rule identifiers, and so must not be looked up in
+# the RULES registry. "BASE" tags the skeletal edges tca_rules.py lays down to represent
+# a procurement's normal structure — buyer→award, method→award, budget→award,
+# award→supplier. They are typed EXPRESSES/BOUNDS, never REMOVES/SEEKS/VERIFIES, so they
+# are ignored for scoring and never appear in a finding. Looking them up produced a
+# WARNING and a "Citation lookup failed" string on every single analysis — noise on
+# entirely normal structure, and in a system whose warnings are meant to mean something,
+# routine false warnings are how real ones come to be ignored.
+NON_RULE_MARKERS = frozenset({"BASE", "UNKNOWN"})
+
+
 def _get_rule_evidence(rule_id: str) -> str:
     """
     Look up a rule's legal evidence citation from the tca_rules.py Rule registry.
 
     Args:
-        rule_id: Rule identifier (e.g., "PROC-001", "FIN-001")
+        rule_id: Rule identifier (e.g., "PROC-001", "FIN-001"), or one of
+            NON_RULE_MARKERS for structural edges that carry no legal citation.
 
     Returns:
-        Legal citation string from the Rule.evidence field, or a fallback
-        error message if the rule cannot be found in the registry.
+        Legal citation string from the Rule.evidence field; a plain descriptor for
+        structural (non-rule) edges; or a fallback error message if a genuine rule
+        identifier cannot be found in the registry.
     """
+    # Structural scaffolding, not a rule finding. Not an error, and not warned about.
+    if rule_id in NON_RULE_MARKERS:
+        return "Structural edge — no legal citation applies (not a rule finding)"
+
     # Import here to avoid circular dependency at module load time
     try:
         from tca_rules import RULES
@@ -57,7 +74,9 @@ def _get_rule_evidence(rule_id: str) -> str:
         if rule.rule_id == rule_id:
             return rule.evidence
 
-    # Rule not found in registry
+    # A genuine rule identifier that is missing from the registry IS a real problem:
+    # a finding would carry no citation, and this system's findings are only worth
+    # anything if every one of them is traceable to its legal basis.
     logger.warning(f"Rule {rule_id} not found in tca_rules.py RULES registry")
     return f"Citation lookup failed for rule {rule_id}"
 
