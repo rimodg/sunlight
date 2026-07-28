@@ -6,7 +6,7 @@ Structural and statistical analysis for institutional procurement oversight.
 
 ## What It Does
 
-SUNLIGHT verifies the structural integrity of public contracts before money is spent, then verifies whether that spending delivered the intended development outcome after money moves. When procurement corruption is caught, the system tracks recovered funds, maps them against the institution's own stated development goals, computes gap-weighted reallocation recommendations proportional to where the institution is furthest behind its own stated goals, and verifies that redeployed funds deliver results. Procurement integrity to development impact, end to end. Catch, redirect, verify, report.
+SUNLIGHT verifies the structural integrity of public contracts before money is spent, then verifies whether that spending delivered the intended development outcome after money moves. When procurement corruption is caught, the system tracks recovered funds, maps them against the institution's own stated development goals, computes gap-weighted reallocation recommendations proportional to where the institution is furthest behind its own stated goals, verifies that redeployed funds deliver results, and corroborates the claimed outcome against independent evidence that never routes through the party being verified. Procurement integrity, delivery verification, intelligence alerting, recovery redirection, and independent evidence corroboration — the full lifecycle of institutional funds. Catch, redirect, verify, corroborate, report.
 
 Existing institutional tools measure statistical deviation — they flag contracts where the price looks unusual. SUNLIGHT looks at the structure behind the contract: whether the awarded entity has the required capability, whether a competitive process actually occurred, whether the stakeholder dependencies and procedural commitments are internally consistent. It detects structural contradictions that live in the topology of a contract's dependency graph, a class of finding that indicator-based methods are architecturally unable to produce. Contracts where the price was calibrated to look clean but the structure underneath is broken.
 
@@ -16,7 +16,7 @@ SUNLIGHT integrates once at the institutional level and covers an entire operati
 
 ## Architecture
 
-Four systems operate on each contract dossier:
+A 16-stage pipeline runs across five sides: stages 1-8 procurement, stages 9-12 delivery, stages 13-16 evidence corroboration. Seven engines operate on each dossier:
 
 **CRI (Contract Risk Indicators)** — Statistical engine. Computes price deviation from peer cohort, Bayesian posterior probability, z-scores, and Wilson confidence intervals. Produces a structural confidence score.
 
@@ -29,6 +29,8 @@ Four systems operate on each contract dossier:
 **Intelligence Alert System (Side 3)** — Priority-ranked triage briefs with cross-contract pattern detection. Vendor clustering, rule concentration, temporal clustering, pillar concentration, financial escalation. Emits through configurable channels (webhook, file, log) with HMAC-signed payloads. Deterministic intelligence summaries where every word traces to a data point.
 
 **Recovery Intelligence (Side 4)** — Closes the loop. Tracks recovered funds from flagged contracts, reads the institution's own Country Programme Document allocation targets, computes gap-weighted redirection recommendations proportional to where the institution is furthest behind its own stated goals, and verifies that redeployed funds deliver results through Side 1 and Side 2. Produces institutional impact reports tracing the full cycle from corruption caught to beneficiaries reached. The institution's own published commitments determine the allocation. SUNLIGHT reads the plan, identifies the gaps, and recommends. The institution decides.
+
+**Evidence Corroboration (Side 5)** — The final gate. Corroborates claimed outcomes against six independent evidence classes (institutional records, third-party administrative records, geospatial imagery, independent field verification, beneficiary-side signal, and adversarial/open signal) that do not route through the implementing partner. Detects the contradiction no documentary review can reach: a claim that passed every procurement and delivery gate but that independent evidence does not support. Produces four verdicts — VERIFIED, PARTIAL, UNVERIFIED, CONTRADICTED — and architecturally refuses to conflate UNVERIFIED (insufficient queryable evidence) with CONTRADICTED (evidence actively contradicts the claim), so a country with thin digital infrastructure is never flagged for fraud on absence alone. Every artifact carries a provenance chain (source, digest, timestamp); evidence content is hashed at ingestion and discarded, never stored. The recovery loop cannot close on an uncorroborated claim.
 
 Every engine reads its calibration from the jurisdiction profile loaded for the contract's execution country. When CRI computes price deviation, the tolerance band comes from the profile. When TCA evaluates competitive procurement thresholds, the legal threshold and citation come from the profile. When EVG assigns tier, the evidentiary standard comes from the profile. The same rules, the same statistical methodology, the same gating logic — calibrated differently for each country's legal framework. One engine, many jurisdictions. Adding a new country means authoring a profile, not changing the engine.
 
@@ -67,7 +69,7 @@ Evaluation is deterministic and reproducible: `--seed 42 --clean 200 --profile d
 
 ## API
 
-REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — contract in, verdict out, nothing stored. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
+REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — contract in, verdict out, nothing persisted. The one exception is deliberate and bounded: corroboration dossiers are held in an in-process cache so a result can be inspected after the fact. That cache is capped, evicts oldest-first, does not survive a restart, and says so in its own responses — it is not a database, and no audit trail should be built on it. It retains provenance (source, digest, timestamp) and never artifact content. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
 
 **Core Pipeline**
 - `POST /analyze` — Single contract structural analysis with jurisdiction profile
@@ -102,9 +104,17 @@ REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — co
 - `GET /recovery/impact` — Institutional impact report: caught, redirected, verified, beneficiaries reached
 - `GET /recovery/cycle/{source_contract_id}` — Complete traceability from RED flag to development outcome
 
+**Evidence Corroboration**
+- `POST /evidence/analyze` — Corroborate a claimed outcome across six independent evidence classes
+- `POST /evidence/batch` — Batch corroboration, up to 1,000 claims
+- `GET /evidence/expected/{outcome_type}` — Publish what evidence SUNLIGHT will look for, before submission
+- `GET /evidence/capacity/{country_code}` — Honest disclosure of which evidence classes are queryable in a jurisdiction and the resulting confidence ceiling
+- `GET /evidence/dossier/{dossier_id}` — Retrieve a corroboration dossier (ephemeral cache, not a database)
+- `POST /evidence/verify-integrity` — Detect post-ingestion tampering via provenance hash
+
 ## Deployment
 
-Containerized via Docker. Stateless architecture — the engine stores nothing. Contract data enters, case packets exit. The deploying institution controls data residency, authentication, and routing at the deployment boundary.
+Containerized via Docker. Stateless architecture — the engine persists nothing across a restart, and evidence content is hashed at ingestion and discarded rather than stored. Contract data enters, case packets exit. The deploying institution controls data residency, authentication, and routing at the deployment boundary.
 
 ```bash
 docker build -t sunlight .
@@ -113,7 +123,7 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-1,133 tests across four build phases. Zero regressions.
+1,745 tests across five build phases. Zero regressions.
 
 | Phase | Description | Tests |
 |-------|-------------|-------|
@@ -121,11 +131,14 @@ docker run -p 8000:8000 sunlight
 | Side 2 | Delivery verification | 242 |
 | Side 3 | Intelligence alerts | 129 |
 | Side 4 | Recovery intelligence | 79 |
+| Side 5 | Evidence corroboration | 563 |
+
+The pre-Side-5 baseline was 1,182, which includes an institution-readiness pass beyond the original 1,133.
 
 DOJ regression baseline preserved across every commit: 33.3% / 100% / 9.0% / 0.746 / 129.2.
 
 ```bash
-PYTHONPATH=code python -m pytest tests/ -q --ignore=tests/test_tca_engine.py
+PYTHONPATH=code python -m pytest tests/ -q
 ```
 
 ## Academic Foundation
@@ -142,6 +155,9 @@ TCA operationalizes the i* Strategic Dependency Framework published by Dr. Chris
 - Jurisdiction calibration is a data task, not a code task
 - The living standard is primary calibration for the majority of the operational footprint
 - Recovered funds are redirected using the institution's own published commitments, not external opinion
+- Absence of evidence is not evidence of fraud — UNVERIFIED is never CONTRADICTED
+- Every claim is corroborated against evidence that does not route through the party being verified
+- The system publishes what it will look for before it looks, and discloses what it cannot verify
 - Ground truth before code — no engineering begins from assumed state
 
 ---
