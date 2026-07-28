@@ -28,6 +28,24 @@ Schema Version: JP-2026-04-001
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
+
+
+# The six Side 5 evidence classes, as literal values.
+#
+# Deliberately NOT imported from evidence_schema. This module is Side 1
+# infrastructure and every other side reads it; importing Side 5 here would
+# invert the dependency and make Side 5 impossible to remove. The cost is
+# that these two definitions can drift, so
+# tests/test_evidence_maps.py::test_profile_class_values_match_the_enum
+# fails if they ever do.
+_EVIDENCE_CLASS_VALUES = frozenset({
+    "institutional",
+    "third_party_admin",
+    "geospatial",
+    "field_verification",
+    "beneficiary_side",
+    "adversarial_open",
+})
 import json
 import os
 
@@ -347,6 +365,78 @@ class JurisdictionProfile:
 
 
     # ═══════════════════════════════════════════════════════════
+    # SIDE 5 — EVIDENCE CORROBORATION PARAMETERS
+    #
+    # All optional, all defaulted. A profile that predates Side 5 behaves
+    # exactly as it did before, and Side 5 reads these through
+    # evidence_rules._get_evidence_param (getattr with the same conservative
+    # defaults), so any profile-like object works too.
+    #
+    # The defaults here are the institutional credibility floor, not a
+    # detection-maximising setting. Where a country office has validated
+    # different values, they belong in that country's evidence map.
+    # ═══════════════════════════════════════════════════════════
+
+    min_independent_classes: int = 3
+    # Independent corroborating sources required for VERIFIED, counted AFTER
+    # linked sources collapse. Consumed by: EVD-CORR-001, evidence EVG.
+
+    min_queryable_classes: int = 3
+    # Below this many reachable evidence classes, EVD-COV-001 fires and the
+    # verdict is UNVERIFIED. Consumed by: EVD-COV-001.
+
+    min_corroboration_capacity: float = 0.5
+    # Fraction of the evidence space that must be reachable before ANY
+    # adverse conclusion is available. Checked before any finding is
+    # consulted. This is the parameter that stops thin national
+    # infrastructure from producing findings against a country.
+    # Consumed by: evidence_evg.assign_verdict.
+
+    timeline_tolerance_days: int = 90
+    # Permitted drift between an artifact's date and the window its evidence
+    # class is expected in. Consumed by: EVD-CON-001.
+
+    magnitude_tolerance: float = 0.20
+    # Permitted deviation between claimed and observed scale.
+    # Consumed by: EVD-CON-002.
+
+    beneficiary_tolerance: float = 0.25
+    # Permitted divergence between claimed beneficiaries and recipient-side
+    # records. Wider than magnitude_tolerance because counting bases differ
+    # legitimately — unique beneficiaries against service contacts.
+    # Consumed by: EVD-CON-004.
+
+    field_verification_window_months: int = 6
+    # Window around the reference date in which an independent monitor visit
+    # is expected. Consumed by: EVD-ABS-004.
+
+    evidence_freshness_months: int = 18
+    # Age beyond which evidence is stale, measured against the claim's own
+    # dates rather than today. Consumed by: EVD-COV-002.
+
+    geotag_tolerance_meters: float = 250.0
+    # Distance within which a field photograph's capture point is treated as
+    # matching the claimed site. Consumed by: provenance.validate_geotag.
+
+    evidence_legal_citations: Dict[str, str] = field(default_factory=dict)
+    # Keys: evaluation_standards, verification, results_reporting, audit,
+    # coverage_disclosure. Empty falls back to UNEG / OECD-DAC / UNCAC /
+    # INTOSAI defaults in evidence_rules.
+
+    queryable_classes: List[str] = field(default_factory=list)
+    # EvidenceClass values reachable in this jurisdiction. EMPTY MEANS
+    # UNKNOWN, NOT NONE: an empty list leaves reachability to be derived from
+    # the evidence actually returned, rather than declaring the country
+    # unverifiable. Consumed by: evidence_pipeline.resolve_expected_evidence.
+
+    expected_evidence_maps: Dict[str, List[dict]] = field(default_factory=dict)
+    # outcome_type value → list of expected-evidence definitions. The heart
+    # of jurisdiction-awareness: a facility in a country with a digital land
+    # registry leaves traces the same facility elsewhere cannot, and
+    # expecting the second to produce the first's evidence would manufacture
+    # a false absence. Ships as JSON in data/evidence_maps/.
+
+    # ═══════════════════════════════════════════════════════════
     # METADATA
     # ═══════════════════════════════════════════════════════════
 
@@ -433,6 +523,46 @@ class JurisdictionProfile:
             warnings.append(
                 f"bootstrap_n_resamples={self.bootstrap_n_resamples} is low. "
                 f"Minimum 1,000 recommended; 10,000 for production."
+            )
+
+        # ── Side 5 evidence parameters ──
+
+        if not 0.0 <= self.min_corroboration_capacity <= 1.0:
+            warnings.append(
+                f"min_corroboration_capacity={self.min_corroboration_capacity} "
+                f"outside [0.0, 1.0]. This is a fraction of the six evidence classes."
+            )
+
+        if self.min_corroboration_capacity == 0.0:
+            warnings.append(
+                "min_corroboration_capacity=0.0 disables the capacity floor. "
+                "Adverse corroboration verdicts would then be available in "
+                "jurisdictions where no evidence class is reachable, which "
+                "means finding against a country for the state of its "
+                "registries. Set deliberately or not at all."
+            )
+
+        if self.min_independent_classes > 6:
+            warnings.append(
+                f"min_independent_classes={self.min_independent_classes} exceeds "
+                f"the six evidence classes. VERIFIED would be unreachable."
+            )
+
+        if self.min_queryable_classes > 6:
+            warnings.append(
+                f"min_queryable_classes={self.min_queryable_classes} exceeds the "
+                f"six evidence classes. EVD-COV-001 would fire on every claim."
+            )
+
+        unknown_classes = [
+            c for c in self.queryable_classes
+            if c not in _EVIDENCE_CLASS_VALUES
+        ]
+        if unknown_classes:
+            warnings.append(
+                f"queryable_classes contains unrecognised value(s) {unknown_classes}. "
+                f"Valid: {sorted(_EVIDENCE_CLASS_VALUES)}. Unrecognised entries are "
+                f"ignored, which silently reduces corroboration capacity."
             )
 
         return warnings

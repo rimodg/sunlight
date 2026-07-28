@@ -1,0 +1,183 @@
+{
+  "country_code": "ng",
+  "country_office": "Nigeria",
+  "status": "illustrative",
+  "last_updated": "2026-07-28",
+  "source_note": "ILLUSTRATIVE. This map encodes a plausible evidence landscape for Nigeria, not a validated one. The named registries and systems are real institutions, but their coverage, accessibility to a verifying party, and update cadence have NOT been confirmed with the country office. queryable_classes drives corroboration capacity, which decides whether an adverse conclusion is available at all — so an unvalidated map that overstates reachability would unlock findings the evidence base cannot support. Set status to 'validated' only after the country office confirms each source is genuinely queryable.",
+
+  "queryable_classes": [
+    "institutional",
+    "third_party_admin",
+    "geospatial",
+    "field_verification",
+    "beneficiary_side",
+    "adversarial_open"
+  ],
+
+  "parameters": {
+    "min_independent_classes": 3,
+    "min_queryable_classes": 3,
+    "min_corroboration_capacity": 0.5,
+    "timeline_tolerance_days": 90,
+    "magnitude_tolerance": 0.20,
+    "beneficiary_tolerance": 0.25,
+    "field_verification_window_months": 6,
+    "evidence_freshness_months": 18,
+    "geotag_tolerance_meters": 250.0
+  },
+
+  "expected_evidence_maps": {
+    "facility_construction": [
+      {
+        "expectation_id": "NG-FC-01",
+        "evidence_class": "institutional",
+        "description": "Implementing partner completion report and disbursement record",
+        "required": true,
+        "expected_by_month": 24,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-FC-02",
+        "evidence_class": "third_party_admin",
+        "description": "State or FCT development control construction permit",
+        "required": true,
+        "expected_by_month": 4,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-FC-03",
+        "evidence_class": "third_party_admin",
+        "description": "Distribution company electricity connection record for the parcel",
+        "required": true,
+        "expected_by_month": 20,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-FC-04",
+        "evidence_class": "third_party_admin",
+        "description": "Professional register entries for clinical staff attached to the facility",
+        "required": false,
+        "expected_by_month": 26,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-FC-05",
+        "evidence_class": "geospatial",
+        "description": "Satellite change detection over the site polygon across the build window",
+        "required": true,
+        "expected_by_month": 22,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-FC-06",
+        "evidence_class": "field_verification",
+        "description": "Independent monitor site visit with geotagged, hashed photographs",
+        "required": true,
+        "expected_by_month": 24,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-FC-07",
+        "evidence_class": "beneficiary_side",
+        "description": "Health information system patient encounter records for the facility",
+        "required": true,
+        "expected_by_month": 30,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-FC-08",
+        "evidence_class": "adversarial_open",
+        "description": "Local reporting, civil society monitoring, or community complaint records",
+        "required": false,
+        "expected_by_month": 30,
+        "queryable_in_jurisdiction": true
+      }
+    ],
+
+    "infrastructure_linear": [
+      {
+        "expectation_id": "NG-IL-01",
+        "evidence_class": "institutional",
+        "description": "Implementing partner progress reports against the routed alignment",
+        "required": true,
+        "expected_by_month": 18,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-IL-02",
+        "evidence_class": "third_party_admin",
+        "description": "Right-of-way approval and environmental impact clearance",
+        "required": true,
+        "expected_by_month": 6,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-IL-03",
+        "evidence_class": "geospatial",
+        "description": "Imagery time-series along the full alignment, not sampled endpoints",
+        "required": true,
+        "expected_by_month": 18,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-IL-04",
+        "evidence_class": "field_verification",
+        "description": "Independent monitor traverse with geotagged photographs at intervals",
+        "required": true,
+        "expected_by_month": 20,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-IL-05",
+        "evidence_class": "adversarial_open",
+        "description": "Community complaint mechanism records along the corridor",
+        "required": false,
+        "expected_by_month": 24,
+        "queryable_in_jurisdiction": true
+      }
+    ],
+
+    "service_delivery": [
+      {
+        "expectation_id": "NG-SD-01",
+        "evidence_class": "institutional",
+        "description": "Implementing partner activity reports and attendance registers",
+        "required": true,
+        "expected_by_month": 12,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-SD-02",
+        "evidence_class": "third_party_admin",
+        "description": "Facilitator or provider professional licensing records",
+        "required": false,
+        "expected_by_month": 6,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-SD-03",
+        "evidence_class": "field_verification",
+        "description": "Independent monitor attendance at a randomly selected session",
+        "required": true,
+        "expected_by_month": 12,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-SD-04",
+        "evidence_class": "beneficiary_side",
+        "description": "Recipient-side system records, or SMS spot survey to a random beneficiary sample",
+        "required": true,
+        "expected_by_month": 14,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "NG-SD-05",
+        "evidence_class": "adversarial_open",
+        "description": "Community complaint mechanism and local reporting",
+        "required": false,
+        "expected_by_month": 16,
+        "queryable_in_jurisdiction": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "country_code": "ua",
+  "country_office": "Ukraine",
+  "status": "illustrative",
+  "last_updated": "2026-07-28",
+  "source_note": "ILLUSTRATIVE. This map encodes a plausible evidence landscape for Ukraine, not a validated one, and it differs from ng.json in a way worth understanding rather than copying. Ukraine's procurement and administrative record-keeping are unusually accessible, which raises what institutional and open-source evidence can establish. Independent field verification is treated as NOT reachable here, because monitor access to sites is subject to security constraints that no verification system can wish away. That single unqueryable class is why capacity is 5/6 rather than 6/6, and it correctly makes the absence of a monitor visit a non-finding — a genuine facility in a contested oblast cannot produce one. Confirm every line with the country office, and re-confirm queryable_classes as conditions change, before setting status to 'validated'.",
+
+  "queryable_classes": [
+    "institutional",
+    "third_party_admin",
+    "geospatial",
+    "beneficiary_side",
+    "adversarial_open"
+  ],
+
+  "parameters": {
+    "min_independent_classes": 3,
+    "min_queryable_classes": 3,
+    "min_corroboration_capacity": 0.5,
+    "timeline_tolerance_days": 90,
+    "magnitude_tolerance": 0.20,
+    "beneficiary_tolerance": 0.25,
+    "field_verification_window_months": 9,
+    "evidence_freshness_months": 12,
+    "geotag_tolerance_meters": 250.0
+  },
+
+  "expected_evidence_maps": {
+    "facility_construction": [
+      {
+        "expectation_id": "UA-FC-01",
+        "evidence_class": "institutional",
+        "description": "Implementing partner completion report and disbursement record",
+        "required": true,
+        "expected_by_month": 18,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-FC-02",
+        "evidence_class": "third_party_admin",
+        "description": "State architectural and construction control commissioning record",
+        "required": true,
+        "expected_by_month": 4,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-FC-03",
+        "evidence_class": "third_party_admin",
+        "description": "Utility connection record for the parcel",
+        "required": true,
+        "expected_by_month": 16,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-FC-04",
+        "evidence_class": "geospatial",
+        "description": "Satellite change detection over the site polygon across the build window",
+        "required": true,
+        "expected_by_month": 16,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-FC-05",
+        "evidence_class": "field_verification",
+        "description": "Independent monitor site visit — not reachable where site access is security-constrained",
+        "required": true,
+        "expected_by_month": 18,
+        "queryable_in_jurisdiction": false
+      },
+      {
+        "expectation_id": "UA-FC-06",
+        "evidence_class": "beneficiary_side",
+        "description": "National health system encounter records for the facility",
+        "required": true,
+        "expected_by_month": 22,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-FC-07",
+        "evidence_class": "adversarial_open",
+        "description": "Procurement protest filings, investigative reporting, civil society monitoring",
+        "required": false,
+        "expected_by_month": 22,
+        "queryable_in_jurisdiction": true
+      }
+    ],
+
+    "infrastructure_linear": [
+      {
+        "expectation_id": "UA-IL-01",
+        "evidence_class": "institutional",
+        "description": "Implementing partner progress reports against the routed alignment",
+        "required": true,
+        "expected_by_month": 14,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-IL-02",
+        "evidence_class": "third_party_admin",
+        "description": "Right-of-way and construction control approvals",
+        "required": true,
+        "expected_by_month": 5,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-IL-03",
+        "evidence_class": "geospatial",
+        "description": "Imagery time-series along the full alignment, not sampled endpoints",
+        "required": true,
+        "expected_by_month": 14,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-IL-04",
+        "evidence_class": "adversarial_open",
+        "description": "Procurement protest filings and investigative reporting on the corridor",
+        "required": false,
+        "expected_by_month": 18,
+        "queryable_in_jurisdiction": true
+      }
+    ],
+
+    "service_delivery": [
+      {
+        "expectation_id": "UA-SD-01",
+        "evidence_class": "institutional",
+        "description": "Implementing partner activity reports and attendance registers",
+        "required": true,
+        "expected_by_month": 9,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-SD-02",
+        "evidence_class": "third_party_admin",
+        "description": "Provider licensing or accreditation records",
+        "required": false,
+        "expected_by_month": 4,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-SD-03",
+        "evidence_class": "beneficiary_side",
+        "description": "Recipient-side system records, or SMS spot survey to a random beneficiary sample",
+        "required": true,
+        "expected_by_month": 11,
+        "queryable_in_jurisdiction": true
+      },
+      {
+        "expectation_id": "UA-SD-04",
+        "evidence_class": "adversarial_open",
+        "description": "Complaint mechanism records and local reporting",
+        "required": false,
+        "expected_by_month": 12,
+        "queryable_in_jurisdiction": true
+      }
+    ]
+  }
+}

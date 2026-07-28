@@ -15,6 +15,11 @@ env/
 # Data — large binary / sensitive
 data/
 !data/cpd_profiles/
+# Side 5 jurisdiction evidence maps. Small, reviewed, version-controlled
+# configuration — country offices correct these, so their history matters.
+# Git will not descend into an excluded directory, so these negations are a
+# statement of intent; the files are added explicitly, as cpd_profiles was.
+!data/evidence_maps/
 *.db
 
 # Sensitive ground-truth (contains case details)
