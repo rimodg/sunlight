@@ -188,6 +188,21 @@ class CorroborationVerdict(Enum):
     CONTRADICTED = "contradicted"
 
 
+class EvidenceDimension(Enum):
+    """Dimensions evaluated by the evidence EVG gate.
+
+    FOUR dimensions, mapped to the first four rule layers. There is
+    deliberately no COVERAGE dimension: Layer 5 measures how much of the
+    evidence space was reachable, which is a fact about SUNLIGHT rather than
+    about the claim, and giving it a dimension would give it a path to an
+    adverse verdict.
+    """
+    CORROBORATION_SUFFICIENCY = "corroboration_sufficiency"
+    EXPECTED_ABSENCE = "expected_absence"
+    CONTRADICTION = "contradiction"
+    SOURCE_INTEGRITY = "source_integrity"
+
+
 class EvidenceRuleLayer(Enum):
     """The five evidence rule layers.
 
@@ -479,6 +494,38 @@ class EvidenceRulesResult:
     rules_fired: int = 0
     rule_results: List[EvidenceRuleResult] = field(default_factory=list)
     layer_summary: Dict[str, int] = field(default_factory=dict)  # layer → count fired
+
+
+@dataclass
+class EvidenceDimensionResult:
+    """Result of evaluating a single evidence EVG dimension."""
+    dimension: EvidenceDimension
+    fired: bool
+    observed_value: Optional[float] = None
+    threshold: Optional[float] = None
+    detail: str = ""
+
+
+@dataclass
+class EvidenceGateOutcome:
+    """Full evidence EVG outcome with per-dimension traceability.
+
+    Carries the capacity figures alongside the verdict because a Side 5
+    verdict is not interpretable without them. "UNVERIFIED" means something
+    entirely different at 2 of 6 classes reachable than at 6 of 6, and a
+    report that states the verdict without the reach is misleading by
+    omission.
+    """
+    verdict: CorroborationVerdict
+    dimensions_fired: int
+    dimension_results: List[EvidenceDimensionResult] = field(default_factory=list)
+    coverage_findings: List[str] = field(default_factory=list)   # fired Layer 5 rule ids
+    contradictions: List[Dict] = field(default_factory=list)
+    confidence: float = 0.0
+    corroboration_capacity: float = 0.0
+    classes_queryable: int = 0
+    independent_classes_corroborating: int = 0
+    methodology_note: str = ""
 
 
 # ═══════════════════════════════════════════════════════════
