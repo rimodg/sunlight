@@ -133,6 +133,16 @@ class IntelligenceAlert:
     delivery_dimensions_fired: Optional[int] = None
     delivery_rule_citations: Optional[List[RuleCitation]] = None
 
+    # Evidence corroboration (Side 5). All optional; an alert raised without
+    # the evidence engine carries none of these and is unchanged.
+    #
+    # Held as plain strings and numbers rather than Side 5 types, so this
+    # module needs no import of Side 5 and Side 5 stays removable.
+    corroboration_verdict: Optional[str] = None       # verified/partial/unverified/contradicted
+    corroboration_confidence: Optional[float] = None
+    corroboration_capacity: Optional[float] = None    # fraction of classes reachable
+    corroboration_citations: Optional[List[RuleCitation]] = None
+
 
 # ═══════════════════════════════════════════════════════════
 # SECTION 3: PRIORITY COMPUTATION
@@ -144,6 +154,7 @@ def compute_priority(
     confidence: float,
     dimensions_fired: int,
     delivery_verdict: Optional[str] = None,
+    corroboration_verdict: Optional[str] = None,
 ) -> Optional[AlertPriority]:
     """
     Compute alert priority from pipeline verdicts.
@@ -151,7 +162,8 @@ def compute_priority(
     Returns None for GREEN verdicts (no alert generated).
 
     Priority tiers:
-        CRITICAL — RED + confidence >= 85% + 3+ dims,
+        CRITICAL — corroboration CONTRADICTED (any procurement/delivery state),
+                   OR RED + confidence >= 85% + 3+ dims,
                    OR procurement RED + delivery RED
         HIGH     — RED + confidence >= 70% + 2+ dims,
                    OR delivery-only RED (procurement GREEN)
@@ -164,12 +176,34 @@ def compute_priority(
         confidence: Structural confidence (0.0-1.0).
         dimensions_fired: Number of EVG dimensions that fired.
         delivery_verdict: Delivery EVG verdict, if available.
+        corroboration_verdict: Side 5 verdict, if available. Only
+            "contradicted" changes priority. UNVERIFIED deliberately does
+            NOT raise an alert: it means the evidence could not be reached,
+            which is a fact about the jurisdiction rather than about the
+            contract, and alerting on it would generate a permanent alert
+            stream against country offices with thin registries.
 
     Returns:
         AlertPriority or None if no alert warranted.
     """
     v = verdict.lower() if verdict else ""
     dv = delivery_verdict.lower() if delivery_verdict else ""
+    cv = corroboration_verdict.lower() if corroboration_verdict else ""
+
+    # Independent evidence contradicting the claim → always CRITICAL.
+    #
+    # Checked FIRST, and deliberately so. The highest-value finding in the
+    # whole system is a contract whose paperwork is clean at every stage and
+    # whose claimed outcome independent evidence does not support: delivery
+    # GREEN plus corroboration CONTRADICTED. Every earlier gate is reading
+    # documents produced by parties with an interest in the answer, so a
+    # clean procurement and delivery record is exactly what a well-executed
+    # false claim looks like.
+    #
+    # If this test sat below the GREEN early-return, that finding would be
+    # silently dropped — the one case the evidence engine exists to catch.
+    if cv == "contradicted":
+        return AlertPriority.CRITICAL
 
     # GREEN procurement + GREEN/absent delivery → no alert
     if v == "green" and dv in ("", "green"):

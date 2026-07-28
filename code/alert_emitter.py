@@ -83,6 +83,12 @@ class AlertConfiguration:
     # Delivery alerts
     delivery_alerts_enabled: bool = True
 
+    # Evidence corroboration alerts (Side 5). Only a CONTRADICTED verdict
+    # ever raises one; UNVERIFIED never does, because it describes what the
+    # jurisdiction's sources could answer rather than anything about the
+    # contract.
+    corroboration_alerts_enabled: bool = True
+
     # Batch behavior
     batch_mode: str = "brief"  # "brief" or "individual"
 
@@ -128,6 +134,7 @@ class AlertConfiguration:
             "min_confidence": self.min_confidence,
             "min_dimensions": self.min_dimensions,
             "delivery_alerts_enabled": self.delivery_alerts_enabled,
+            "corroboration_alerts_enabled": self.corroboration_alerts_enabled,
             "batch_mode": self.batch_mode,
             "max_alerts_per_hour": self.max_alerts_per_hour,
             "cooldown_seconds": self.cooldown_seconds,

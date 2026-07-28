@@ -75,6 +75,29 @@ class InvalidTransitionError(Exception):
     pass
 
 
+class UncorroboratedClosureError(Exception):
+    """Raised when a cycle is closed on claims independent evidence has not supported.
+
+    Distinct from InvalidTransitionError: the transition is legal, the
+    evidence is not. Closing a recovery cycle is the moment SUNLIGHT asserts
+    that recovered money produced a real outcome, and that assertion is only
+    as good as the corroboration behind it.
+    """
+    pass
+
+
+# Corroboration verdicts that permit a cycle to close.
+#
+# VERIFIED and PARTIAL both mean independent evidence is consistent with the
+# claim. UNVERIFIED and CONTRADICTED do not, for opposite reasons — one
+# because the evidence could not be reached, the other because it conflicts —
+# and neither supports declaring the loop closed.
+#
+# Held as lowercase strings rather than imported from evidence_schema on
+# purpose: Side 4 must not depend on Side 5, or Side 5 stops being removable.
+CLOSURE_PERMITTING_VERDICTS = frozenset({"verified", "partial"})
+
+
 # ═══════════════════════════════════════════════════════════
 # SECTION 2: RECOVERY RECORD
 # ═══════════════════════════════════════════════════════════
@@ -158,9 +181,68 @@ class RecoveryRecord:
         """Side 2 confirmed delivery on redeployed contracts."""
         self._transition(RecoveryStatus.VERIFIED)
 
-    def close(self) -> None:
-        """Full cycle complete."""
+    def close(self, corroboration_resolver=None) -> None:
+        """Full cycle complete.
+
+        Args:
+            corroboration_resolver: optional callable taking a redirection id
+                and returning that redirection's corroboration verdict as a
+                string ("verified" / "partial" / "unverified" /
+                "contradicted"), or None when no corroboration exists.
+
+        Behaviour is deliberately split:
+
+            No resolver — identical to the behaviour before Side 5 existed.
+                This is what keeps Side 5 purely additive: with the evidence
+                engine absent or disabled, Side 4 produces exactly the output
+                it always did, and no existing caller breaks.
+
+            Resolver supplied — every linked redirection must resolve to
+                VERIFIED or PARTIAL. Supplying a resolver is how a deployment
+                opts into the stronger guarantee: that the loop cannot be
+                declared closed on claims independent evidence has not
+                supported. This is what makes the impact report defensible.
+
+        A record with no redirections closes either way. Nothing was
+        redeployed, so there is no outcome claim to corroborate.
+
+        Raises:
+            InvalidTransitionError: if the record is not at VERIFIED.
+            UncorroboratedClosureError: if a resolver is supplied and any
+                redirection lacks a supporting corroboration verdict.
+        """
+        if corroboration_resolver is not None:
+            self._require_corroboration(corroboration_resolver)
         self._transition(RecoveryStatus.CLOSED)
+
+    def _require_corroboration(self, resolver) -> None:
+        """Check every redirection has a corroboration verdict that permits closure."""
+        blocking = []
+        for redirection_id in self.redirections:
+            try:
+                verdict = resolver(redirection_id)
+            except Exception as e:  # noqa: BLE001 — a failing resolver blocks, never passes
+                blocking.append((redirection_id, f"resolver error: {e}"))
+                continue
+
+            if verdict is None:
+                blocking.append((redirection_id, "no corroboration on record"))
+                continue
+
+            normalised = str(getattr(verdict, "value", verdict)).lower()
+            if normalised not in CLOSURE_PERMITTING_VERDICTS:
+                blocking.append((redirection_id, normalised))
+
+        if blocking:
+            detail = "; ".join(f"{rid}: {reason}" for rid, reason in blocking)
+            raise UncorroboratedClosureError(
+                f"Recovery {self.recovery_id} cannot close: "
+                f"{len(blocking)} of {len(self.redirections)} redirection(s) "
+                f"lack a corroboration verdict of "
+                f"{' or '.join(sorted(CLOSURE_PERMITTING_VERDICTS))} — {detail}. "
+                f"A cycle declared closed on uncorroborated outcomes asserts "
+                f"an impact the evidence does not support."
+            )
 
 
 # ═══════════════════════════════════════════════════════════

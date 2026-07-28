@@ -108,10 +108,52 @@ class ImpactReport:
     redeployed_delivery_pending: int = 0
     total_beneficiaries_reached: int = 0
 
+    # Evidence corroboration (Side 5).
+    #
+    # Every field defaults to zero, so a report assembled without
+    # corroboration data is byte-identical to one produced before Side 5
+    # existed. Populated, they qualify every outcome claim in this report.
+    #
+    # unverified_outcomes is reported SEPARATELY from contradicted_outcomes
+    # and must never be added to it. They mean opposite things: one is
+    # evidence we could not reach, the other is evidence that conflicts.
+    # A country office with thin registries accumulates the first, and
+    # merging the two would read as a pattern of contradicted claims in
+    # exactly the offices least able to answer the charge.
+    corroborated_outcomes: int = 0
+    partially_corroborated_outcomes: int = 0
+    unverified_outcomes: int = 0
+    contradicted_outcomes: int = 0
+    average_corroboration_capacity: float = 0.0
+
     # CPD alignment
     cpd_gaps_before: List[dict] = field(default_factory=list)
     cpd_gaps_after: List[dict] = field(default_factory=list)
     gap_reduction_percentage: float = 0.0
+
+    @property
+    def has_corroboration_data(self) -> bool:
+        """Whether any outcome in this report carries a corroboration verdict.
+
+        Gates the corroboration clause in the executive summary. With no
+        Side 5 data the summary is unchanged, which is what keeps the
+        addition non-breaking for existing reports.
+        """
+        return (
+            self.corroborated_outcomes
+            + self.partially_corroborated_outcomes
+            + self.unverified_outcomes
+            + self.contradicted_outcomes
+        ) > 0
+
+    @property
+    def outcomes_with_verdicts(self) -> int:
+        return (
+            self.corroborated_outcomes
+            + self.partially_corroborated_outcomes
+            + self.unverified_outcomes
+            + self.contradicted_outcomes
+        )
 
     # Narrative
     executive_summary: str = ""
@@ -139,6 +181,7 @@ def assemble_impact_report(
     total_flagged_yellow: int = 0,
     total_cleared_green: int = 0,
     cpd: Optional[CountryProgrammeProfile] = None,
+    corroboration: Optional[dict] = None,
 ) -> ImpactReport:
     """
     Assemble a full-cycle impact report from recovery and redirection data.
@@ -157,6 +200,16 @@ def assemble_impact_report(
         total_flagged_yellow: Total YELLOW flags in period.
         total_cleared_green: Total GREEN contracts in period.
         cpd: Optional CPD profile for gap reduction calculation.
+        corroboration: Optional Side 5 summary, as produced by
+            evidence_integration.corroboration_summary(). Recognised keys:
+            corroborated_outcomes, partially_corroborated_outcomes,
+            unverified_outcomes, contradicted_outcomes,
+            average_corroboration_capacity.
+
+            Passed as a plain dict rather than typed objects so that this
+            module — Side 4 — needs no import of Side 5. If it is omitted,
+            the report is identical in every field to one produced before
+            the evidence engine existed.
 
     Returns:
         ImpactReport with all aggregates and executive summary.
@@ -318,6 +371,18 @@ def assemble_impact_report(
         cycle_records=cycle_records,
     )
 
+    if corroboration:
+        report.corroborated_outcomes = int(
+            corroboration.get("corroborated_outcomes", 0))
+        report.partially_corroborated_outcomes = int(
+            corroboration.get("partially_corroborated_outcomes", 0))
+        report.unverified_outcomes = int(
+            corroboration.get("unverified_outcomes", 0))
+        report.contradicted_outcomes = int(
+            corroboration.get("contradicted_outcomes", 0))
+        report.average_corroboration_capacity = float(
+            corroboration.get("average_corroboration_capacity", 0.0))
+
     report.executive_summary = assemble_executive_summary(report)
     return report
 
@@ -380,9 +445,59 @@ def assemble_executive_summary(report: ImpactReport) -> str:
         f"{report.redeployed_contracts_total} redeployed contracts verified: "
         f"{report.redeployed_procurement_green} procurement clean, "
         f"{report.redeployed_delivery_green} delivery confirmed. "
-        f"{report.total_beneficiaries_reached:,} beneficiaries reached. "
+    )
+
+    # Beneficiary counts are stated with their corroboration status, never
+    # bare — but only when corroboration data exists. With no Side 5 data
+    # the sentence is exactly what it was before the evidence engine
+    # existed, which is what keeps this addition non-breaking.
+    if report.has_corroboration_data:
+        summary += _corroboration_clause(report)
+    else:
+        summary += f"{report.total_beneficiaries_reached:,} beneficiaries reached. "
+
+    summary += (
         f"CPD alignment improved by {report.gap_reduction_percentage:.1f} "
         f"percentage points across the programme cycle."
     )
 
     return summary
+
+
+def _corroboration_clause(report: ImpactReport) -> str:
+    """State beneficiary reach alongside what independent evidence supports.
+
+    A bare beneficiary number invites the reader to treat it as established
+    fact. It is a claimed figure, and the honest presentation says how much
+    of it independent evidence actually reaches.
+
+    UNVERIFIED is reported in its own words — "could not be verified from
+    available sources" — and never folded into the contradicted count. In a
+    country whose registries are thin, most outcomes will land there, and
+    that is a statement about the available evidence rather than about the
+    programme or the people running it. The clause names the average
+    corroboration capacity for the same reason: the reader needs to know how
+    far SUNLIGHT could see before weighing what it found.
+    """
+    parts = [
+        f"{report.total_beneficiaries_reached:,} beneficiaries reported across "
+        f"{report.outcomes_with_verdicts} outcome claims, of which "
+        f"{report.corroborated_outcomes} corroborated by independent evidence, "
+        f"{report.partially_corroborated_outcomes} partially corroborated, "
+        f"{report.unverified_outcomes} could not be verified from available "
+        f"sources, and {report.contradicted_outcomes} structurally contradicted "
+        f"by independent evidence. "
+    ]
+
+    parts.append(
+        f"Average corroboration capacity {report.average_corroboration_capacity:.0%} "
+        f"of the six evidence classes. "
+    )
+
+    if report.unverified_outcomes:
+        parts.append(
+            "Unverified outcomes reflect the evidence reachable in this "
+            "jurisdiction and are not adverse findings. "
+        )
+
+    return "".join(parts)

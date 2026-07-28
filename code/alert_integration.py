@@ -253,6 +253,116 @@ class AlertAssembler:
             ))
         return citations
 
+    def assemble_corroboration_alert(
+        self,
+        contract_id: str,
+        corroboration_verdict: str,
+        corroboration_confidence: float,
+        corroboration_capacity: float,
+        rule_fires: List[Dict[str, Any]],
+        profile_name: str,
+        claim_description: str = "",
+        country_code: str = "",
+        delivery_verdict: str = "green",
+        procurement_verdict: str = "green",
+        procurement_confidence: float = 0.0,
+        procurement_dimensions_fired: int = 0,
+        contract_title: str = "",
+        vendor: str = "",
+        agency: str = "",
+        contract_value: float = 0.0,
+        currency: str = "USD",
+        award_date: str = "",
+        case_packet_url: str = "",
+    ) -> Optional[IntelligenceAlert]:
+        """
+        Assemble an alert from Side 5 corroboration output.
+
+        Only CONTRADICTED produces an alert. UNVERIFIED does not, and that is
+        a deliberate design decision rather than an omission: UNVERIFIED means
+        the evidence could not be reached in this jurisdiction, so alerting on
+        it would generate a permanent, unactionable alert stream against
+        exactly the country offices with the thinnest registries — punishing
+        them for the state of their national data infrastructure.
+
+        The summary states the corroboration capacity alongside the verdict,
+        because a contradiction found with five of six evidence classes
+        reachable is a different claim from one found with three.
+        """
+        cv = (corroboration_verdict or "").lower()
+        if cv != "contradicted":
+            return None
+
+        priority = compute_priority(
+            procurement_verdict,
+            procurement_confidence,
+            procurement_dimensions_fired,
+            delivery_verdict=delivery_verdict,
+            corroboration_verdict=cv,
+        )
+        if priority is None:
+            return None
+
+        citations = self._extract_delivery_citations(rule_fires)
+
+        dv = (delivery_verdict or "green").lower()
+        pv = (procurement_verdict or "green").lower()
+        paperwork_clean = dv == "green" and pv == "green"
+
+        if paperwork_clean:
+            summary = (
+                f"Structural contradiction between claimed outcome and "
+                f"independent evidence, on a contract clean at every earlier "
+                f"stage. Procurement GREEN, delivery GREEN, corroboration "
+                f"CONTRADICTED. {claim_description or 'Claimed outcome'} is not "
+                f"supported by {len(citations)} independent finding(s) across "
+                f"{corroboration_capacity:.0%} of the evidence space. "
+                f"Documentary review would not have surfaced this."
+            )
+            action = (
+                "Commission independent site verification with a randomly "
+                "assigned monitor before any further disbursement on this "
+                "outcome. This is a structural finding with a documented "
+                "evidence chain, not an allegation."
+            )
+        else:
+            summary = (
+                f"Independent evidence contradicts the claimed outcome. "
+                f"Procurement {pv.upper()}, delivery {dv.upper()}, "
+                f"corroboration CONTRADICTED across "
+                f"{corroboration_capacity:.0%} of the evidence space."
+            )
+            action = (
+                "Review alongside the procurement and delivery findings on "
+                "this contract; the evidence chain is attached to each "
+                "corroboration finding."
+            )
+
+        return IntelligenceAlert(
+            alert_type="outcome_contradicted",
+            contract_id=contract_id,
+            contract_title=contract_title,
+            vendor=vendor,
+            agency=agency,
+            contract_value=contract_value,
+            currency=currency,
+            award_date=award_date,
+            verdict=pv,
+            confidence=procurement_confidence,
+            priority=priority,
+            jurisdiction_profile=profile_name,
+            country_code=country_code,
+            dimensions_fired=procurement_dimensions_fired,
+            summary=summary,
+            recommended_action=action,
+            case_packet_url=case_packet_url,
+            delivery_verdict=dv,
+            corroboration_verdict=cv,
+            corroboration_confidence=corroboration_confidence,
+            corroboration_capacity=corroboration_capacity,
+            corroboration_citations=citations,
+        )
+
     def assemble_recovery_alert(
         self,
         recovery_id: str,
@@ -433,6 +543,62 @@ class AlertIntegration:
             procurement_confidence=procurement_confidence,
             procurement_dimensions_fired=procurement_dimensions_fired,
             procurement_rule_fires=procurement_rule_fires,
+            **kwargs,
+        )
+
+        if alert is None:
+            return None
+
+        self._emitted_alerts.append(alert)
+        self._rate_limiter.record(contract_id)
+        return self._emit(alert)
+
+    def on_corroboration_verdict(
+        self,
+        contract_id: str,
+        corroboration_verdict: str,
+        corroboration_confidence: float,
+        corroboration_capacity: float,
+        rule_fires: List[Dict[str, Any]],
+        profile_name: str,
+        delivery_verdict: str = "green",
+        procurement_verdict: str = "green",
+        **kwargs,
+    ) -> Optional[List[EmissionResult]]:
+        """
+        Called after Stage 16. Emits an alert when independent evidence
+        contradicts a claimed outcome.
+
+        Follows the same gate sequence as on_delivery_verdict: master switch,
+        feature switch, verdict threshold, rate limiter, assemble, emit.
+
+        Delivery GREEN plus corroboration CONTRADICTED is the highest-value
+        finding the system can produce, and it is the one every earlier gate
+        is structurally unable to see: Sides 1 and 2 read documents produced
+        by parties with an interest in the answer, so a clean record is
+        exactly what a well-executed false claim looks like.
+        """
+        if not self.config.enabled:
+            return None
+
+        if not getattr(self.config, "corroboration_alerts_enabled", True):
+            return None
+
+        if (corroboration_verdict or "").lower() != "contradicted":
+            return None
+
+        if not self._rate_limiter.allow(contract_id):
+            return None
+
+        alert = self.assembler.assemble_corroboration_alert(
+            contract_id=contract_id,
+            corroboration_verdict=corroboration_verdict,
+            corroboration_confidence=corroboration_confidence,
+            corroboration_capacity=corroboration_capacity,
+            rule_fires=rule_fires,
+            profile_name=profile_name,
+            delivery_verdict=delivery_verdict,
+            procurement_verdict=procurement_verdict,
             **kwargs,
         )
 
