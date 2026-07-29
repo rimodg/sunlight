@@ -1,0 +1,44 @@
+{
+  "ocid": "ocds-sunlight-sample-GREEN-001",
+  "stage": "complete",
+  "profile_used": "us_federal",
+  "structure": {
+    "confidence": 0.95,
+    "verdict": "sound",
+    "contradictions": [],
+    "feedback_traps": []
+  },
+  "gate_verdict": "green",
+  "gate_outcome": {
+    "verdict": "green",
+    "dimensions_fired": 0,
+    "dimension_results": [
+      {
+        "dimension": "cri_markup",
+        "fired": false,
+        "observed_value": 0.0,
+        "threshold": 0.75,
+        "detail": "Markup ratio 0.0000 < MJPIS floor 0.7500"
+      },
+      {
+        "dimension": "cri_bribery_channel",
+        "fired": false,
+        "observed_value": null,
+        "threshold": null,
+        "detail": "Bribery-channel data not yet available in pipeline"
+      },
+      {
+        "dimension": "tca_typologies",
+        "fired": false,
+        "observed_value": 0.0,
+        "threshold": 2.0,
+        "detail": "0 distinct typologies < threshold 2"
+      }
+    ],
+    "global_params_version": "us_federal_v0",
+    "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+  },
+  "errors": [],
+  "recommended_for_investigation": false,
+  "_note": "Volatile fields removed for deterministic comparison: processing_time_ms. Everything else below must match byte-for-byte on a correct deployment."
+}

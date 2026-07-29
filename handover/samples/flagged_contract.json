@@ -1,0 +1,67 @@
+{
+  "contract": {
+    "ocid": "ocds-sunlight-sample-RED-001",
+    "buyer": {
+      "name": "Defense Procurement Office",
+      "id": "DPO-01"
+    },
+    "tender": {
+      "title": "Emergency aircraft component resupply",
+      "value": {
+        "amount": 48500000,
+        "currency": "USD"
+      },
+      "procurementMethod": "limited",
+      "procurementMethodRationale": "urgency",
+      "numberOfTenderers": 1,
+      "submissionMethod": [
+        "written"
+      ]
+    },
+    "awards": [
+      {
+        "id": "A1",
+        "date": "2024-09-29",
+        "value": {
+          "amount": 48500000,
+          "currency": "USD"
+        },
+        "suppliers": [
+          {
+            "name": "Zenith Infrastructure Ltd",
+            "id": "V-9001"
+          }
+        ]
+      }
+    ],
+    "parties": [
+      {
+        "id": "V-9001",
+        "name": "Zenith Infrastructure Ltd",
+        "roles": [
+          "supplier"
+        ]
+      },
+      {
+        "id": "DPO-01",
+        "name": "Defense Procurement Office",
+        "roles": [
+          "buyer"
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "id": "C1",
+        "awardID": "A1",
+        "value": {
+          "amount": 48500000,
+          "currency": "USD"
+        },
+        "dateSigned": "2024-09-30"
+      }
+    ]
+  },
+  "profile": "us_federal",
+  "include_graph": true
+}

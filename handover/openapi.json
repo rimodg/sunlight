@@ -1,0 +1,3465 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SUNLIGHT \u2014 Procurement Integrity Analysis API",
+    "description": "REST API for SUNLIGHT's structural procurement integrity analysis engine. Exposes multi-jurisdiction contract analysis with topological contradiction detection (TCA), statistical risk indicators (CRI), and evidence verification gates (EVG). Designed for integration into institutional procurement pipelines (UNDP, World Bank, regional development banks, national audit offices). Returns explainable, tiered risk assessments with full legal citations and investigation-ready evidence packages.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root",
+        "description": "Root endpoint \u2014 points to API documentation.",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyze": {
+      "post": {
+        "summary": "Analyze Contract",
+        "description": "Analyze a single contract with jurisdiction calibration.\n\nRuns the full SUNLIGHT pipeline (ingestion, normalization, TCA graph\nconstruction, structural analysis, evidence gating) and returns tiered\nrisk assessment with legal citations and investigation-ready evidence.\n\nThe profile parameter selects the jurisdiction calibration (fiscal calendar,\ncompetitive thresholds, legal framework citations, evidentiary standards).",
+        "operationId": "analyze_contract_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batch": {
+      "post": {
+        "summary": "Batch Analyze",
+        "description": "Analyze multiple contracts in batch with jurisdiction calibration and\ncapacity-calibrated thresholds.\n\nMaximum batch size: 1000 contracts. Returns individual analysis results\nplus aggregate statistics (verdict distribution, total errors, threshold\nmetadata).\n\nWhen capacity_budget is provided, the batch response includes at most\ncapacity_budget contracts recommended for investigation, selected as the\nhighest-risk contracts that also clear the statistical precision floor.",
+        "operationId": "batch_analyze_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchAnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchAnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "description": "Service health and readiness check.\n\nReturns 200 OK if the service is operational. Never raises exceptions \u2014\ndegraded states are indicated via status field (\"ok\" or \"degraded\").",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Version",
+        "description": "Deployment metadata and version information.\n\nReturns SUNLIGHT version, MJPIS version, git commit (if available),\nand list of registered jurisdiction profiles.",
+        "operationId": "version_version_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles": {
+      "get": {
+        "summary": "Profiles",
+        "description": "List all available jurisdiction profiles with key metadata.\n\nReturns profile names, country codes, currencies, fiscal year ends,\nand descriptions for all registered jurisdiction calibrations.",
+        "operationId": "profiles_profiles_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calibration/{profile_name}": {
+      "get": {
+        "summary": "Get Calibration State",
+        "description": "Return the current empirical calibration state for a jurisdiction\nprofile. The state accumulates observations from every batch analysis\nthat has used this profile, providing a live running view of what\nnormal looks like in this jurisdiction.\n\nReturns fresh zero-initialized state if no observations have been\nrecorded yet (not a 404) \u2014 absence means 'no observations yet', not\n'profile does not exist'. For the latter, clients should check\nGET /profiles.",
+        "operationId": "get_calibration_state_calibration__profile_name__get",
+        "parameters": [
+          {
+            "name": "profile_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Profile Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalibrationStateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/input-formats": {
+      "get": {
+        "summary": "List Input Formats",
+        "description": "List all registered input format adapters.\n\nReturns the format names that can be passed to the input_format field\nin POST /analyze and POST /batch requests. Each format name corresponds\nto an adapter that converts source-format payloads to canonical OCDS\nrelease dict shape.\n\nNote: 'undp_quantum' and 'undp_compass' are placeholder adapters that\nraise NotImplementedError until the UNDP institutional schemas are\nintegrated during Phase B onboarding work.",
+        "operationId": "list_input_formats_input_formats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delivery/analyze": {
+      "post": {
+        "summary": "Analyze Delivery",
+        "description": "Analyze delivery integrity for a single contract.\n\nRuns the Side 2 delivery verification pipeline (graph construction,\n12-rule evaluation across 4 layers, delivery EVG gating) and returns\na tiered delivery integrity verdict with per-dimension traceability.",
+        "operationId": "analyze_delivery_delivery_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeliveryAnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryAnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delivery/batch": {
+      "post": {
+        "summary": "Batch Analyze Deliveries",
+        "description": "Analyze delivery integrity for a batch of contracts.\n\nRuns the Side 2 delivery verification pipeline for each delivery\nand returns aggregate results with verdict distribution.",
+        "operationId": "batch_analyze_deliveries_delivery_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeliveryBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryBatchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delivery/pillar-summary": {
+      "get": {
+        "summary": "Delivery Pillar Summary",
+        "description": "Summary of Side 2 delivery verification capacity.\n\nReturns the total number of deliveries analyzed across all profiles,\naggregate verdict distribution, and available profiles.",
+        "operationId": "delivery_pillar_summary_delivery_pillar_summary_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryPillarSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alerts/config": {
+      "get": {
+        "summary": "Get Alert Config",
+        "description": "Return current alert configuration.\n\nDoes NOT expose webhook URLs or shared secrets.\nConfiguration is set at deployment time; not modifiable via API.",
+        "operationId": "get_alert_config_alerts_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertConfigResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alerts/test": {
+      "post": {
+        "summary": "Test Alert",
+        "description": "Fire a test alert through all configured emitters.\n\nUses synthetic finding data. Useful for integration teams to verify\nwebhook receiver configuration.",
+        "operationId": "test_alert_alerts_test_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertTestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alerts/triage": {
+      "post": {
+        "summary": "Generate Triage",
+        "description": "Generate a TriageBrief from a list of alerts.\n\nTakes pre-computed alerts and returns a structured triage brief\nwith ranking, cross-contract pattern detection, and executive summary.\nCan be called independently of batch processing.",
+        "operationId": "generate_triage_alerts_triage_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TriageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriageBriefResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recovery/record": {
+      "post": {
+        "summary": "Create Recovery Record",
+        "description": "Create a recovery record when Side 1 flags a contract and the\ninstitution confirms action. Returns a RecoveryRecord at IDENTIFIED status.",
+        "operationId": "create_recovery_record_recovery_record_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryRecordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recovery/confirm": {
+      "post": {
+        "summary": "Confirm Recovery",
+        "description": "Confirm a recovery \u2014 institution confirms contract cancellation/modification.",
+        "operationId": "confirm_recovery_recovery_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryConfirmRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recovery/allocate": {
+      "post": {
+        "summary": "Allocate Recovery",
+        "description": "Compute gap-weighted allocation for recovered funds.\n\nReads the institution's own CPD and recommends where recovered\nfunds should go, proportional to gaps between stated targets and\nactual spending.",
+        "operationId": "allocate_recovery_recovery_allocate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryAllocateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recovery/redirect": {
+      "post": {
+        "summary": "Redirect Recovery",
+        "description": "Link recovered funds to a specific new contract.\n\nThat new contract automatically enters Side 1 and Side 2\nverification queues.",
+        "operationId": "redirect_recovery_recovery_redirect_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryRedirectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recovery/status/{recovery_id}": {
+      "get": {
+        "summary": "Get Recovery Status",
+        "description": "Full recovery lifecycle status including all linked redirections,\ntheir procurement verdicts, and their delivery verdicts.",
+        "operationId": "get_recovery_status_recovery_status__recovery_id__get",
+        "parameters": [
+          {
+            "name": "recovery_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Recovery Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recovery/impact": {
+      "get": {
+        "summary": "Get Recovery Impact",
+        "description": "Impact report for a country office and period.\n\nThis is the endpoint that produces what goes on the Administrator's\ndesk at donor meetings.",
+        "operationId": "get_recovery_impact_recovery_impact_get",
+        "parameters": [
+          {
+            "name": "country_office",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Country Office"
+            }
+          },
+          {
+            "name": "period_start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Period Start"
+            }
+          },
+          {
+            "name": "period_end",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Period End"
+            }
+          },
+          {
+            "name": "jurisdiction_profile",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Jurisdiction Profile"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recovery/cycle/{source_contract_id}": {
+      "get": {
+        "summary": "Get Recovery Cycle",
+        "description": "Complete cycle trace for one flagged contract \u2014 from RED flag\nthrough recovery, allocation, redirection, new procurement verdict,\ndelivery verdict, beneficiaries reached.",
+        "operationId": "get_recovery_cycle_recovery_cycle__source_contract_id__get",
+        "parameters": [
+          {
+            "name": "source_contract_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Source Contract Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/evidence/analyze": {
+      "post": {
+        "summary": "Analyze Evidence",
+        "description": "Corroborate a claimed outcome against independent evidence.\n\nRuns Side 5 stages 13-16: provenance-validated ingestion, expected-evidence\nresolution, corroboration graph construction with source-independence\ncollapse, 16-rule evaluation, and the four-verdict evidence gate.\n\nReturns the verdict alongside the corroboration capacity it was reached\nat. The two are not separable: UNVERIFIED at two of six reachable\nevidence classes is a statement about this jurisdiction's data sources,\nwhile UNVERIFIED at six of six is a statement about this claim.\n\nA CONTRADICTED verdict states that independent evidence is inconsistent\nwith the claim as recorded. It does not assert what did or did not\nphysically occur.",
+        "operationId": "analyze_evidence_evidence_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvidenceAnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/evidence/batch": {
+      "post": {
+        "summary": "Batch Analyze Evidence",
+        "description": "Corroborate a batch of claims. Maximum 1000.\n\nThe aggregate reports UNVERIFIED as its own count and never merges it\nwith CONTRADICTED. They mean opposite things \u2014 evidence that could not be\nreached against evidence that conflicts \u2014 and a portfolio summary that\ncombined them would show a pattern of contradicted claims in exactly the\ncountry offices whose registries are thinnest.",
+        "operationId": "batch_analyze_evidence_evidence_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvidenceBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/evidence/expected/{outcome_type}": {
+      "get": {
+        "summary": "Get Expected Evidence",
+        "description": "What SUNLIGHT will look for, for this outcome type in this country.\n\nPublished deliberately and in advance. An institution is entitled to see\nthe expectations before submitting anything, rather than discovering them\nin a finding \u2014 and an expectation that cannot survive being published is\none that should not be applied.\n\nExpectations marked queryable_in_jurisdiction=false name sources that do\nnot exist in this country. Their absence can never produce a finding.",
+        "operationId": "get_expected_evidence_evidence_expected__outcome_type__get",
+        "parameters": [
+          {
+            "name": "outcome_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Outcome Type"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Country Code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/evidence/capacity/{country_code}": {
+      "get": {
+        "summary": "Get Evidence Capacity",
+        "description": "What SUNLIGHT can and cannot verify in this jurisdiction.\n\nHonest disclosure of the capability ceiling, and a feature rather than a\ncaveat. Where fewer evidence classes are reachable than the profile\nminimum, no adverse conclusion is available and every verdict in that\ncountry will be UNVERIFIED \u2014 which an institution should know before it\nsubmits, not after.\n\nCorroboration capacity is a property of the country's available data\nsources. It says nothing about any project or claim within it.",
+        "operationId": "get_evidence_capacity_evidence_capacity__country_code__get",
+        "parameters": [
+          {
+            "name": "country_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Country Code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/evidence/dossier/{dossier_id}": {
+      "get": {
+        "summary": "Get Evidence Dossier",
+        "description": "Full corroboration dossier: graph, artifacts, and provenance chain.\n\nRetention is EPHEMERAL. This is an in-process cache holding the most\nrecent analyses so a result can be inspected after the fact; it is not a\ndatabase and does not survive a restart. The response says so, so that no\ninstitution builds an audit trail on it.\n\nThe dossier carries provenance \u2014 source, digest, timestamp \u2014 and never\nartifact content. Evidence bytes are hashed at ingestion and discarded.",
+        "operationId": "get_evidence_dossier_evidence_dossier__dossier_id__get",
+        "parameters": [
+          {
+            "name": "dossier_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dossier Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/evidence/verify-integrity": {
+      "post": {
+        "summary": "Verify Evidence Integrity",
+        "description": "Re-verify an artifact's content hash. Detects post-ingestion tampering.\n\nSupply content_base64 (binary-safe, preferred) or content as UTF-8 text.\nExactly one is required: the encoding has to be explicit, because a\ndigest computed over differently-encoded bytes is a different digest, and\nan ambiguous mismatch here would be indistinguishable from tampering.\n\nA mismatch is reported, never raised. Integrity failure is a finding for\nEVD-SRC-002 to carry, not an error to unwind.",
+        "operationId": "verify_evidence_integrity_evidence_verify_integrity_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyIntegrityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AlertConfigResponse": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "min_verdict": {
+            "type": "string",
+            "title": "Min Verdict"
+          },
+          "min_confidence": {
+            "type": "number",
+            "title": "Min Confidence"
+          },
+          "min_dimensions": {
+            "type": "integer",
+            "title": "Min Dimensions"
+          },
+          "delivery_alerts_enabled": {
+            "type": "boolean",
+            "title": "Delivery Alerts Enabled"
+          },
+          "batch_mode": {
+            "type": "string",
+            "title": "Batch Mode"
+          },
+          "max_alerts_per_hour": {
+            "type": "integer",
+            "title": "Max Alerts Per Hour"
+          },
+          "cooldown_seconds": {
+            "type": "integer",
+            "title": "Cooldown Seconds"
+          },
+          "emitter_count": {
+            "type": "integer",
+            "title": "Emitter Count"
+          },
+          "emitter_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Emitter Types"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled",
+          "min_verdict",
+          "min_confidence",
+          "min_dimensions",
+          "delivery_alerts_enabled",
+          "batch_mode",
+          "max_alerts_per_hour",
+          "cooldown_seconds",
+          "emitter_count",
+          "emitter_types"
+        ],
+        "title": "AlertConfigResponse",
+        "description": "Alert configuration (safe subset, no secrets)."
+      },
+      "AlertInput": {
+        "properties": {
+          "contract_id": {
+            "type": "string",
+            "title": "Contract Id"
+          },
+          "verdict": {
+            "type": "string",
+            "title": "Verdict",
+            "default": "red"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.0
+          },
+          "priority": {
+            "type": "string",
+            "title": "Priority",
+            "default": "high"
+          },
+          "dimensions_fired": {
+            "type": "integer",
+            "title": "Dimensions Fired",
+            "default": 0
+          },
+          "vendor": {
+            "type": "string",
+            "title": "Vendor",
+            "default": ""
+          },
+          "contract_value": {
+            "type": "number",
+            "title": "Contract Value",
+            "default": 0.0
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "USD"
+          },
+          "award_date": {
+            "type": "string",
+            "title": "Award Date",
+            "default": ""
+          },
+          "jurisdiction_profile": {
+            "type": "string",
+            "title": "Jurisdiction Profile",
+            "default": ""
+          },
+          "typologies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Typologies"
+          },
+          "rule_citations": {
+            "items": {
+              "$ref": "#/components/schemas/RuleCitationInput"
+            },
+            "type": "array",
+            "title": "Rule Citations"
+          },
+          "delivery_verdict": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Verdict"
+          },
+          "delivery_dimensions_fired": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Dimensions Fired"
+          },
+          "delivery_rule_citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RuleCitationInput"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Rule Citations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "contract_id"
+        ],
+        "title": "AlertInput",
+        "description": "Alert input for triage request."
+      },
+      "AlertPatternResponse": {
+        "properties": {
+          "pattern_type": {
+            "type": "string",
+            "title": "Pattern Type"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "affected_contracts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Contracts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pattern_type",
+          "description",
+          "severity",
+          "affected_contracts"
+        ],
+        "title": "AlertPatternResponse",
+        "description": "Cross-contract pattern."
+      },
+      "AlertTestResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "emissions": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Emissions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "emissions"
+        ],
+        "title": "AlertTestResponse",
+        "description": "Result of firing a test alert."
+      },
+      "AnalyzeRequest": {
+        "properties": {
+          "contract": {
+            "$ref": "#/components/schemas/ContractInput",
+            "description": "Contract to analyze"
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "description": "Jurisdiction profile name (e.g., 'us_federal', 'uk_central_government')",
+            "default": "us_federal"
+          },
+          "include_graph": {
+            "type": "boolean",
+            "title": "Include Graph",
+            "description": "Include full TCA structural graph in response (for debugging)",
+            "default": false
+          },
+          "input_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Format",
+            "description": "Optional explicit input format specifier. When provided, SUNLIGHT uses the named adapter to convert the payload to canonical OCDS shape. When None (default), automatic routing detects the format by shape. Supported formats: 'ocds_release', 'undp_quantum', 'undp_compass'. Quantum and Compass adapters are placeholders pending schema integration."
+          }
+        },
+        "type": "object",
+        "required": [
+          "contract"
+        ],
+        "title": "AnalyzeRequest",
+        "description": "Single contract analysis request."
+      },
+      "AnalyzeResponse": {
+        "properties": {
+          "ocid": {
+            "type": "string",
+            "title": "Ocid"
+          },
+          "stage": {
+            "type": "string",
+            "title": "Stage",
+            "description": "Final pipeline stage reached"
+          },
+          "profile_used": {
+            "type": "string",
+            "title": "Profile Used"
+          },
+          "structure": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StructuralFindings"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gate_verdict": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gate Verdict",
+            "description": "EVG evidence verdict: green, yellow, or red"
+          },
+          "gate_outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EVGGateOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Full EVG gate outcome with per-dimension traceability. Contains the verdict, count of dimensions fired, and detailed per-dimension results showing observed values versus MJPIS thresholds."
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "processing_time_ms": {
+            "type": "number",
+            "title": "Processing Time Ms"
+          },
+          "recommended_for_investigation": {
+            "type": "boolean",
+            "title": "Recommended For Investigation",
+            "description": "True when this contract clears both the statistical threshold (structural verdict at or above CONCERN) and the capacity-calibrated threshold for the batch it was analyzed in. For single-contract analysis via POST /analyze, this field reflects only the statistical threshold since no batch capacity context exists.",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "ocid",
+          "stage",
+          "profile_used",
+          "processing_time_ms"
+        ],
+        "title": "AnalyzeResponse",
+        "description": "Full analysis result for a single contract."
+      },
+      "BatchAnalyzeRequest": {
+        "properties": {
+          "contracts": {
+            "items": {
+              "$ref": "#/components/schemas/ContractInput"
+            },
+            "type": "array",
+            "title": "Contracts",
+            "description": "List of contracts to analyze"
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "description": "Jurisdiction profile for all contracts",
+            "default": "us_federal"
+          },
+          "capacity_budget": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capacity Budget",
+            "description": "Optional analyst investigation capacity for this batch. When provided, SUNLIGHT will recommend at most capacity_budget contracts for investigation, selected as the highest-risk contracts in the batch that also clear the statistical precision floor. When None, no capacity ceiling is applied and all contracts clearing the statistical floor are recommended. Must be a non-negative integer."
+          },
+          "input_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Format",
+            "description": "Optional explicit input format specifier. When provided, SUNLIGHT uses the named adapter to convert all payloads to canonical OCDS shape. When None (default), automatic routing detects the format by shape. Supported formats: 'ocds_release', 'undp_quantum', 'undp_compass'. Quantum and Compass adapters are placeholders pending schema integration."
+          }
+        },
+        "type": "object",
+        "required": [
+          "contracts"
+        ],
+        "title": "BatchAnalyzeRequest",
+        "description": "Batch contract analysis request."
+      },
+      "BatchAnalyzeResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/AnalyzeResponse"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "total_processed": {
+            "type": "integer",
+            "title": "Total Processed"
+          },
+          "total_errors": {
+            "type": "integer",
+            "title": "Total Errors"
+          },
+          "verdict_distribution": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Verdict Distribution"
+          },
+          "threshold_metadata": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Threshold Metadata",
+            "description": "Metadata describing the thresholds applied to this batch. Contains: statistical_threshold (float, the minimum risk score for investigation recommendation), capacity_budget (Optional[int], the requested capacity or None), capacity_threshold (Optional[float], the computed risk score quantile corresponding to capacity or None if no capacity specified), binding_threshold (float, the actual threshold applied, equal to max(statistical, capacity)), recommended_count (int, the number of contracts recommended for investigation in this batch)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "results",
+          "total_processed",
+          "total_errors",
+          "verdict_distribution"
+        ],
+        "title": "BatchAnalyzeResponse",
+        "description": "Batch analysis results with aggregate statistics."
+      },
+      "CalibrationStateResponse": {
+        "properties": {
+          "profile_name": {
+            "type": "string",
+            "title": "Profile Name"
+          },
+          "total_contracts_analyzed": {
+            "type": "integer",
+            "title": "Total Contracts Analyzed"
+          },
+          "verdict_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Verdict Counts"
+          },
+          "rule_fire_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Rule Fire Counts"
+          },
+          "mean_risk_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mean Risk Score"
+          },
+          "variance_risk_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variance Risk Score"
+          },
+          "risk_score_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Score Min"
+          },
+          "risk_score_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Score Max"
+          },
+          "first_observation_utc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Observation Utc"
+          },
+          "last_observation_utc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Observation Utc"
+          },
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_name",
+          "total_contracts_analyzed",
+          "verdict_counts",
+          "rule_fire_counts",
+          "mean_risk_score",
+          "variance_risk_score",
+          "risk_score_min",
+          "risk_score_max",
+          "first_observation_utc",
+          "last_observation_utc",
+          "schema_version"
+        ],
+        "title": "CalibrationStateResponse",
+        "description": "Empirical calibration state response."
+      },
+      "ContractInput": {
+        "properties": {
+          "ocid": {
+            "type": "string",
+            "title": "Ocid",
+            "description": "OCDS contract identifier (required)"
+          },
+          "buyer": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Buyer",
+            "description": "Buyer information"
+          },
+          "tender": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tender",
+            "description": "Tender details including value, currency, method"
+          },
+          "awards": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Awards",
+            "description": "Award information"
+          },
+          "parties": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parties",
+            "description": "All involved parties"
+          },
+          "planning": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planning",
+            "description": "Planning phase data"
+          },
+          "contracts": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contracts",
+            "description": "Contract phase data"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "description": "Language code",
+            "default": "en"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ocid"
+        ],
+        "title": "ContractInput",
+        "description": "Flexible JSON representation of a contract.\n\nAccepts canonical OCDS release package shape. The structure is deliberately\nflexible to accommodate different OCDS publisher formats while maintaining\nthe core required fields for structural analysis."
+      },
+      "Contradiction": {
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "title": "Rule Id"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "evidence": {
+            "type": "string",
+            "title": "Evidence"
+          },
+          "legal_citations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Legal Citations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_id",
+          "severity",
+          "description",
+          "evidence",
+          "legal_citations"
+        ],
+        "title": "Contradiction",
+        "description": "One structural contradiction finding."
+      },
+      "DeliveryAnalyzeRequest": {
+        "properties": {
+          "contract_id": {
+            "type": "string",
+            "title": "Contract Id",
+            "description": "Links to Side 1 ContractDossier"
+          },
+          "milestones": {
+            "items": {
+              "$ref": "#/components/schemas/MilestoneInput"
+            },
+            "type": "array",
+            "title": "Milestones",
+            "description": "Milestone records"
+          },
+          "resources": {
+            "items": {
+              "$ref": "#/components/schemas/ResourceInput"
+            },
+            "type": "array",
+            "title": "Resources",
+            "description": "Resource records"
+          },
+          "outcomes": {
+            "items": {
+              "$ref": "#/components/schemas/OutcomeInput"
+            },
+            "type": "array",
+            "title": "Outcomes",
+            "description": "Outcome records"
+          },
+          "financials": {
+            "items": {
+              "$ref": "#/components/schemas/FinancialInput"
+            },
+            "type": "array",
+            "title": "Financials",
+            "description": "Financial records"
+          },
+          "country_code": {
+            "type": "string",
+            "title": "Country Code",
+            "description": "ISO 3166-1 alpha-2 code",
+            "default": ""
+          },
+          "country_name": {
+            "type": "string",
+            "title": "Country Name",
+            "description": "Full country name",
+            "default": ""
+          },
+          "project_name": {
+            "type": "string",
+            "title": "Project Name",
+            "description": "Project identifier",
+            "default": ""
+          },
+          "procurement_verdict": {
+            "type": "string",
+            "title": "Procurement Verdict",
+            "description": "Side 1 EVG verdict (GREEN/YELLOW/RED)",
+            "default": ""
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "description": "Jurisdiction profile name",
+            "default": "us_federal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "contract_id"
+        ],
+        "title": "DeliveryAnalyzeRequest",
+        "description": "Single delivery analysis request."
+      },
+      "DeliveryAnalyzeResponse": {
+        "properties": {
+          "delivery_id": {
+            "type": "string",
+            "title": "Delivery Id"
+          },
+          "contract_id": {
+            "type": "string",
+            "title": "Contract Id"
+          },
+          "verdict": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict",
+            "description": "Delivery EVG verdict: green, yellow, red"
+          },
+          "stage": {
+            "type": "string",
+            "title": "Stage"
+          },
+          "dimensions_fired": {
+            "type": "integer",
+            "title": "Dimensions Fired",
+            "default": 0
+          },
+          "dimensions": {
+            "items": {
+              "$ref": "#/components/schemas/DeliveryDimensionResponse"
+            },
+            "type": "array",
+            "title": "Dimensions"
+          },
+          "rules_evaluated": {
+            "type": "integer",
+            "title": "Rules Evaluated",
+            "default": 0
+          },
+          "rules_fired": {
+            "type": "integer",
+            "title": "Rules Fired",
+            "default": 0
+          },
+          "fired_rules": {
+            "items": {
+              "$ref": "#/components/schemas/DeliveryFiredRule"
+            },
+            "type": "array",
+            "title": "Fired Rules"
+          },
+          "layer_summary": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Layer Summary"
+          },
+          "graph_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Graph Summary"
+          },
+          "delivery_metrics": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Delivery Metrics"
+          },
+          "processing_ms": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Processing Ms"
+          },
+          "procurement_verdict": {
+            "type": "string",
+            "title": "Procurement Verdict",
+            "default": ""
+          },
+          "methodology_note": {
+            "type": "string",
+            "title": "Methodology Note",
+            "default": ""
+          },
+          "methodology_version": {
+            "type": "string",
+            "title": "Methodology Version",
+            "default": ""
+          },
+          "errors": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "profile_used": {
+            "type": "string",
+            "title": "Profile Used",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "delivery_id",
+          "contract_id",
+          "stage"
+        ],
+        "title": "DeliveryAnalyzeResponse",
+        "description": "Full delivery analysis result."
+      },
+      "DeliveryBatchRequest": {
+        "properties": {
+          "deliveries": {
+            "items": {
+              "$ref": "#/components/schemas/DeliveryAnalyzeRequest"
+            },
+            "type": "array",
+            "title": "Deliveries",
+            "description": "Deliveries to analyze"
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "description": "Jurisdiction profile for all deliveries",
+            "default": "us_federal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "deliveries"
+        ],
+        "title": "DeliveryBatchRequest",
+        "description": "Batch delivery analysis request."
+      },
+      "DeliveryBatchResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/DeliveryAnalyzeResponse"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "total_processed": {
+            "type": "integer",
+            "title": "Total Processed"
+          },
+          "total_errors": {
+            "type": "integer",
+            "title": "Total Errors"
+          },
+          "verdict_distribution": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Verdict Distribution"
+          }
+        },
+        "type": "object",
+        "required": [
+          "results",
+          "total_processed",
+          "total_errors",
+          "verdict_distribution"
+        ],
+        "title": "DeliveryBatchResponse",
+        "description": "Batch delivery analysis results."
+      },
+      "DeliveryDimensionResponse": {
+        "properties": {
+          "dimension": {
+            "type": "string",
+            "title": "Dimension",
+            "description": "Dimension name"
+          },
+          "fired": {
+            "type": "boolean",
+            "title": "Fired",
+            "description": "Whether this dimension exceeded threshold"
+          },
+          "observed_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed Value",
+            "description": "Observed value"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold",
+            "description": "Threshold applied"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "description": "Human-readable explanation",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "dimension",
+          "fired"
+        ],
+        "title": "DeliveryDimensionResponse",
+        "description": "Result of evaluating a single delivery EVG dimension."
+      },
+      "DeliveryFiredRule": {
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "title": "Rule Id",
+            "description": "Rule identifier (e.g., DEL-MILE-001)"
+          },
+          "layer": {
+            "type": "string",
+            "title": "Layer",
+            "description": "Rule layer (milestone, resource, outcome, financial)"
+          },
+          "evidence": {
+            "type": "string",
+            "title": "Evidence",
+            "description": "Evidence string"
+          },
+          "legal_basis": {
+            "type": "string",
+            "title": "Legal Basis",
+            "description": "Legal citation",
+            "default": ""
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "description": "Confidence score",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_id",
+          "layer",
+          "evidence"
+        ],
+        "title": "DeliveryFiredRule",
+        "description": "A delivery rule that fired."
+      },
+      "DeliveryPillarSummaryResponse": {
+        "properties": {
+          "total_analyzed": {
+            "type": "integer",
+            "title": "Total Analyzed"
+          },
+          "verdict_distribution": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Verdict Distribution"
+          },
+          "profiles_available": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Profiles Available"
+          },
+          "methodology_version": {
+            "type": "string",
+            "title": "Methodology Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_analyzed",
+          "verdict_distribution",
+          "profiles_available",
+          "methodology_version"
+        ],
+        "title": "DeliveryPillarSummaryResponse",
+        "description": "Summary of delivery analysis capacity."
+      },
+      "EVGDimensionResult": {
+        "properties": {
+          "dimension": {
+            "type": "string",
+            "title": "Dimension",
+            "description": "Dimension name (cri_markup, cri_bribery_channel, tca_typologies)"
+          },
+          "fired": {
+            "type": "boolean",
+            "title": "Fired",
+            "description": "Whether this dimension exceeded its threshold"
+          },
+          "observed_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed Value",
+            "description": "Observed value for this dimension"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold",
+            "description": "MJPIS-derived threshold for this dimension"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "description": "Human-readable explanation of the evaluation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dimension",
+          "fired",
+          "detail"
+        ],
+        "title": "EVGDimensionResult",
+        "description": "Result of evaluating a single EVG dimension."
+      },
+      "EVGGateOutcome": {
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "title": "Verdict",
+            "description": "Evidence verdict: green, yellow, or red"
+          },
+          "dimensions_fired": {
+            "type": "integer",
+            "title": "Dimensions Fired",
+            "description": "Number of dimensions that exceeded their threshold"
+          },
+          "dimension_results": {
+            "items": {
+              "$ref": "#/components/schemas/EVGDimensionResult"
+            },
+            "type": "array",
+            "title": "Dimension Results",
+            "description": "Per-dimension evaluation results"
+          },
+          "global_params_version": {
+            "type": "string",
+            "title": "Global Params Version",
+            "description": "Global parameters version used for thresholds"
+          },
+          "methodology_note": {
+            "type": "string",
+            "title": "Methodology Note",
+            "description": "Methodology description",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "verdict",
+          "dimensions_fired",
+          "dimension_results",
+          "global_params_version"
+        ],
+        "title": "EVGGateOutcome",
+        "description": "Full EVG gate outcome with per-dimension traceability."
+      },
+      "EvidenceAnalyzeRequest": {
+        "properties": {
+          "claim": {
+            "$ref": "#/components/schemas/OutcomeClaimInput",
+            "description": "The outcome claim to corroborate"
+          },
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceArtifactInput"
+            },
+            "type": "array",
+            "title": "Artifacts",
+            "description": "Submitted evidence, including documented absences"
+          },
+          "source_registry": {
+            "items": {
+              "$ref": "#/components/schemas/SourceInput"
+            },
+            "type": "array",
+            "title": "Source Registry",
+            "description": "Parties, with linkage and contract status"
+          },
+          "expected_evidence": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ExpectedEvidenceInput"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Evidence",
+            "description": "Explicit expectations; when omitted the jurisdiction map is used"
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "description": "Jurisdiction profile name",
+            "default": "us_federal"
+          },
+          "country_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Code",
+            "description": "Overrides the profile with that country's evidence map when one exists"
+          }
+        },
+        "type": "object",
+        "required": [
+          "claim"
+        ],
+        "title": "EvidenceAnalyzeRequest"
+      },
+      "EvidenceArtifactInput": {
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "title": "Artifact Id",
+            "description": "Unique artifact identifier"
+          },
+          "evidence_class": {
+            "type": "string",
+            "title": "Evidence Class",
+            "description": "One of the six evidence classes"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "What this artifact is"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "observed, absent, contradictory, unqueryable, or stale"
+          },
+          "observed_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed Value",
+            "description": "Free-text observed value"
+          },
+          "observed_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed Date",
+            "description": "Date the evidence refers to (ISO 8601)"
+          },
+          "observed_magnitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed Magnitude",
+            "description": "Measured magnitude, where this artifact measures one"
+          },
+          "source_party_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Party Id",
+            "description": "Party that produced this artifact"
+          },
+          "integrity_verified": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Integrity Verified",
+            "description": "Result of re-verifying the hash; null means not checked"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes",
+            "description": "Additional notes"
+          },
+          "provenance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProvenanceInput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Chain of custody; artifacts without it are refused at ingestion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "artifact_id",
+          "evidence_class",
+          "description",
+          "status"
+        ],
+        "title": "EvidenceArtifactInput"
+      },
+      "EvidenceBatchRequest": {
+        "properties": {
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceAnalyzeRequest"
+            },
+            "type": "array",
+            "title": "Claims",
+            "description": "Up to 1000 corroboration requests"
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "description": "Default jurisdiction profile",
+            "default": "us_federal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "claims"
+        ],
+        "title": "EvidenceBatchRequest"
+      },
+      "ExpectedEvidenceInput": {
+        "properties": {
+          "expectation_id": {
+            "type": "string",
+            "title": "Expectation Id",
+            "description": "Unique expectation identifier"
+          },
+          "evidence_class": {
+            "type": "string",
+            "title": "Evidence Class",
+            "description": "Evidence class expected"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "What should exist if the claim is true"
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "description": "Whether absence is a candidate finding",
+            "default": true
+          },
+          "expected_by_month": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected By Month",
+            "description": "Months after award when this is expected"
+          },
+          "queryable_in_jurisdiction": {
+            "type": "boolean",
+            "title": "Queryable In Jurisdiction",
+            "description": "False where the source does not exist locally",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "expectation_id",
+          "evidence_class",
+          "description"
+        ],
+        "title": "ExpectedEvidenceInput"
+      },
+      "FinancialInput": {
+        "properties": {
+          "line_item_id": {
+            "type": "string",
+            "title": "Line Item Id",
+            "description": "Unique line item identifier"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Line item description"
+          },
+          "budgeted_amount": {
+            "type": "number",
+            "title": "Budgeted Amount",
+            "description": "Budgeted amount",
+            "default": 0.0
+          },
+          "actual_amount": {
+            "type": "number",
+            "title": "Actual Amount",
+            "description": "Actual amount spent",
+            "default": 0.0
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "description": "ISO 4217 currency code",
+            "default": "USD"
+          },
+          "variance_pct": {
+            "type": "number",
+            "title": "Variance Pct",
+            "description": "Variance percentage",
+            "default": 0.0
+          },
+          "amendment_count": {
+            "type": "integer",
+            "title": "Amendment Count",
+            "description": "Number of contract amendments",
+            "default": 0
+          },
+          "justification": {
+            "type": "string",
+            "title": "Justification",
+            "description": "Justification for variance",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "line_item_id",
+          "description"
+        ],
+        "title": "FinancialInput",
+        "description": "A financial reconciliation line item."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "profiles_available": {
+            "type": "integer",
+            "title": "Profiles Available"
+          },
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "profiles_available",
+          "timestamp"
+        ],
+        "title": "HealthResponse",
+        "description": "Service health check response."
+      },
+      "MilestoneInput": {
+        "properties": {
+          "milestone_id": {
+            "type": "string",
+            "title": "Milestone Id",
+            "description": "Unique milestone identifier"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Milestone description"
+          },
+          "planned_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planned Date",
+            "description": "Planned completion date (ISO 8601)"
+          },
+          "actual_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actual Date",
+            "description": "Actual completion date (ISO 8601)"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Status: completed, delayed, cancelled, pending",
+            "default": ""
+          },
+          "delay_days": {
+            "type": "integer",
+            "title": "Delay Days",
+            "description": "Days of delay (actual - planned)",
+            "default": 0
+          },
+          "deliverables_due": {
+            "type": "integer",
+            "title": "Deliverables Due",
+            "description": "Number of deliverables expected",
+            "default": 0
+          },
+          "deliverables_accepted": {
+            "type": "integer",
+            "title": "Deliverables Accepted",
+            "description": "Number of deliverables accepted",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "milestone_id",
+          "description"
+        ],
+        "title": "MilestoneInput",
+        "description": "A contractual milestone with planned vs. actual dates."
+      },
+      "OutcomeClaimInput": {
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "title": "Claim Id",
+            "description": "Unique claim identifier"
+          },
+          "contract_id": {
+            "type": "string",
+            "title": "Contract Id",
+            "description": "Contract this outcome was claimed under"
+          },
+          "outcome_type": {
+            "type": "string",
+            "title": "Outcome Type",
+            "description": "Determines which expected-evidence map applies"
+          },
+          "claim_description": {
+            "type": "string",
+            "title": "Claim Description",
+            "description": "What was claimed, e.g. '200-bed hospital operational'"
+          },
+          "claimed_completion_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claimed Completion Date",
+            "description": "Claimed completion date (ISO 8601)"
+          },
+          "claimed_magnitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claimed Magnitude",
+            "description": "Claimed scale, e.g. 200"
+          },
+          "claimed_magnitude_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claimed Magnitude Unit",
+            "description": "Unit of the claimed scale, e.g. 'beds'"
+          },
+          "site_latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Site Latitude",
+            "description": "Site latitude"
+          },
+          "site_longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Site Longitude",
+            "description": "Site longitude"
+          },
+          "country_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Code",
+            "description": "ISO 3166-1 alpha-2 code"
+          },
+          "country_office": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Office",
+            "description": "Country office"
+          },
+          "award_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Award Date",
+            "description": "Contract award date, anchoring expected-evidence windows"
+          },
+          "source_dossier_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Dossier Id",
+            "description": "Originating Side 2 delivery dossier"
+          },
+          "source_recovery_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Recovery Id",
+            "description": "Originating Side 4 recovery record"
+          }
+        },
+        "type": "object",
+        "required": [
+          "claim_id",
+          "contract_id",
+          "outcome_type",
+          "claim_description"
+        ],
+        "title": "OutcomeClaimInput"
+      },
+      "OutcomeInput": {
+        "properties": {
+          "outcome_id": {
+            "type": "string",
+            "title": "Outcome Id",
+            "description": "Unique outcome identifier"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Deliverable description"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit",
+            "description": "Unit of measure (e.g., km_road, units)",
+            "default": ""
+          },
+          "quantity_planned": {
+            "type": "number",
+            "title": "Quantity Planned",
+            "description": "Planned quantity",
+            "default": 0.0
+          },
+          "quantity_delivered": {
+            "type": "number",
+            "title": "Quantity Delivered",
+            "description": "Delivered quantity",
+            "default": 0.0
+          },
+          "quality_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quality Score",
+            "description": "Quality score 0.0-1.0"
+          },
+          "inspection_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inspection Date",
+            "description": "Inspection date (ISO 8601)"
+          },
+          "inspector_id": {
+            "type": "string",
+            "title": "Inspector Id",
+            "description": "Inspector identifier",
+            "default": ""
+          },
+          "defects_noted": {
+            "type": "integer",
+            "title": "Defects Noted",
+            "description": "Number of defects found",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "outcome_id",
+          "description"
+        ],
+        "title": "OutcomeInput",
+        "description": "A deliverable or output record."
+      },
+      "ProfileListResponse": {
+        "properties": {
+          "profiles": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Profiles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profiles"
+        ],
+        "title": "ProfileListResponse",
+        "description": "Jurisdiction profile listing response."
+      },
+      "ProvenanceInput": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id",
+            "description": "Canonical identifier for the source system or organisation"
+          },
+          "source_name": {
+            "type": "string",
+            "title": "Source Name",
+            "description": "Human-readable source name"
+          },
+          "retrieval_timestamp": {
+            "type": "string",
+            "title": "Retrieval Timestamp",
+            "description": "When the source was queried (ISO 8601)"
+          },
+          "content_hash": {
+            "type": "string",
+            "title": "Content Hash",
+            "description": "Digest of the artifact, or of the empty response for a documented absence"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url",
+            "description": "Where the artifact was retrieved from"
+          },
+          "capture_timestamp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capture Timestamp",
+            "description": "When a photograph was taken (ISO 8601)"
+          },
+          "capture_latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capture Latitude",
+            "description": "Photograph capture latitude"
+          },
+          "capture_longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capture Longitude",
+            "description": "Photograph capture longitude"
+          },
+          "hash_algorithm": {
+            "type": "string",
+            "title": "Hash Algorithm",
+            "description": "Digest algorithm; md5 and sha1 are refused",
+            "default": "sha256"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id",
+          "source_name",
+          "retrieval_timestamp",
+          "content_hash"
+        ],
+        "title": "ProvenanceInput"
+      },
+      "RecoveryAllocateRequest": {
+        "properties": {
+          "recovery_id": {
+            "type": "string",
+            "title": "Recovery Id"
+          },
+          "cpd_profile": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Cpd Profile"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recovery_id",
+          "cpd_profile"
+        ],
+        "title": "RecoveryAllocateRequest",
+        "description": "Request gap-weighted allocation for a recovery."
+      },
+      "RecoveryConfirmRequest": {
+        "properties": {
+          "recovery_id": {
+            "type": "string",
+            "title": "Recovery Id"
+          },
+          "confirmation_date": {
+            "type": "string",
+            "title": "Confirmation Date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recovery_id",
+          "confirmation_date"
+        ],
+        "title": "RecoveryConfirmRequest",
+        "description": "Confirm a recovery."
+      },
+      "RecoveryRecordRequest": {
+        "properties": {
+          "source_contract_id": {
+            "type": "string",
+            "title": "Source Contract Id"
+          },
+          "recovery_amount": {
+            "type": "number",
+            "title": "Recovery Amount"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "USD"
+          },
+          "country_office": {
+            "type": "string",
+            "title": "Country Office"
+          },
+          "country_code": {
+            "type": "string",
+            "title": "Country Code"
+          },
+          "original_pillar": {
+            "type": "string",
+            "title": "Original Pillar"
+          },
+          "source_verdict": {
+            "type": "string",
+            "title": "Source Verdict",
+            "default": "red"
+          },
+          "source_confidence": {
+            "type": "number",
+            "title": "Source Confidence",
+            "default": 0.0
+          },
+          "source_rule_fires": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Rule Fires"
+          },
+          "original_sdg": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Sdg"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_contract_id",
+          "recovery_amount",
+          "country_office",
+          "country_code",
+          "original_pillar"
+        ],
+        "title": "RecoveryRecordRequest",
+        "description": "Create a recovery record."
+      },
+      "RecoveryRedirectRequest": {
+        "properties": {
+          "recovery_id": {
+            "type": "string",
+            "title": "Recovery Id"
+          },
+          "target_contract_id": {
+            "type": "string",
+            "title": "Target Contract Id"
+          },
+          "target_pillar": {
+            "type": "string",
+            "title": "Target Pillar"
+          },
+          "target_sdg": {
+            "type": "string",
+            "title": "Target Sdg"
+          },
+          "target_output": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Output"
+          },
+          "target_contract_value": {
+            "type": "number",
+            "title": "Target Contract Value"
+          },
+          "target_contract_title": {
+            "type": "string",
+            "title": "Target Contract Title",
+            "default": ""
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "USD"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recovery_id",
+          "target_contract_id",
+          "target_pillar",
+          "target_sdg",
+          "target_contract_value"
+        ],
+        "title": "RecoveryRedirectRequest",
+        "description": "Redirect recovered funds to a new contract."
+      },
+      "ResourceInput": {
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "title": "Resource Id",
+            "description": "Unique resource identifier"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "Role (e.g., project_manager, engineer)"
+          },
+          "planned_fte": {
+            "type": "number",
+            "title": "Planned Fte",
+            "description": "Planned full-time equivalent",
+            "default": 0.0
+          },
+          "actual_fte": {
+            "type": "number",
+            "title": "Actual Fte",
+            "description": "Actual FTE deployed",
+            "default": 0.0
+          },
+          "qualification_required": {
+            "type": "string",
+            "title": "Qualification Required",
+            "description": "Required qualification",
+            "default": ""
+          },
+          "qualification_verified": {
+            "type": "boolean",
+            "title": "Qualification Verified",
+            "description": "Whether qualification was verified",
+            "default": false
+          },
+          "period_start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period Start",
+            "description": "Assignment start (ISO 8601)"
+          },
+          "period_end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period End",
+            "description": "Assignment end (ISO 8601)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resource_id",
+          "role"
+        ],
+        "title": "ResourceInput",
+        "description": "A staffing or resource input record."
+      },
+      "RuleCitationInput": {
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "title": "Rule Id"
+          },
+          "rule_name": {
+            "type": "string",
+            "title": "Rule Name",
+            "default": ""
+          },
+          "layer": {
+            "type": "string",
+            "title": "Layer",
+            "default": ""
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.0
+          },
+          "legal_basis": {
+            "type": "string",
+            "title": "Legal Basis",
+            "default": ""
+          },
+          "evidence": {
+            "type": "string",
+            "title": "Evidence",
+            "default": ""
+          },
+          "recommendation": {
+            "type": "string",
+            "title": "Recommendation",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_id"
+        ],
+        "title": "RuleCitationInput",
+        "description": "Rule citation for triage request."
+      },
+      "SourceInput": {
+        "properties": {
+          "party_id": {
+            "type": "string",
+            "title": "Party Id",
+            "description": "Unique party identifier"
+          },
+          "party_name": {
+            "type": "string",
+            "title": "Party Name",
+            "description": "Party name"
+          },
+          "party_type": {
+            "type": "string",
+            "title": "Party Type",
+            "description": "implementing_partner, government_agency, commercial_provider, civil_society, etc.",
+            "default": ""
+          },
+          "linked_parties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Linked Parties",
+            "description": "Parties this one is NOT independent of"
+          },
+          "is_contract_party": {
+            "type": "boolean",
+            "title": "Is Contract Party",
+            "description": "Party to the contract under verification",
+            "default": false
+          },
+          "randomly_assigned": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Randomly Assigned",
+            "description": "Field monitors only: randomly assigned from an independent pool"
+          },
+          "selected_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected By",
+            "description": "Field monitors only: party that chose this monitor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "party_id",
+          "party_name"
+        ],
+        "title": "SourceInput"
+      },
+      "StructuralFindings": {
+        "properties": {
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "description": "Structural confidence (0-1)"
+          },
+          "verdict": {
+            "type": "string",
+            "title": "Verdict",
+            "description": "SOUND, CONCERN, COMPROMISED, or CRITICAL"
+          },
+          "contradictions": {
+            "items": {
+              "$ref": "#/components/schemas/Contradiction"
+            },
+            "type": "array",
+            "title": "Contradictions",
+            "description": "REMOVES edges (structural contradictions)"
+          },
+          "feedback_traps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Feedback Traps",
+            "description": "Self-reinforcing loops detected"
+          }
+        },
+        "type": "object",
+        "required": [
+          "confidence",
+          "verdict"
+        ],
+        "title": "StructuralFindings",
+        "description": "Structural analysis portion of result."
+      },
+      "TriageBriefResponse": {
+        "properties": {
+          "brief_id": {
+            "type": "string",
+            "title": "Brief Id"
+          },
+          "batch_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Batch Id"
+          },
+          "jurisdiction_profile": {
+            "type": "string",
+            "title": "Jurisdiction Profile"
+          },
+          "total_contracts_analyzed": {
+            "type": "integer",
+            "title": "Total Contracts Analyzed"
+          },
+          "total_alerts": {
+            "type": "integer",
+            "title": "Total Alerts"
+          },
+          "alerts_by_priority": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Alerts By Priority"
+          },
+          "alerts_by_dimension": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Alerts By Dimension"
+          },
+          "patterns": {
+            "items": {
+              "$ref": "#/components/schemas/AlertPatternResponse"
+            },
+            "type": "array",
+            "title": "Patterns"
+          },
+          "executive_summary": {
+            "type": "string",
+            "title": "Executive Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "brief_id",
+          "batch_id",
+          "jurisdiction_profile",
+          "total_contracts_analyzed",
+          "total_alerts",
+          "alerts_by_priority",
+          "alerts_by_dimension",
+          "patterns",
+          "executive_summary"
+        ],
+        "title": "TriageBriefResponse",
+        "description": "Triage brief response."
+      },
+      "TriageRequest": {
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/AlertInput"
+            },
+            "type": "array",
+            "title": "Alerts"
+          },
+          "batch_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Batch Id"
+          },
+          "total_contracts": {
+            "type": "integer",
+            "title": "Total Contracts",
+            "default": 0
+          },
+          "jurisdiction_profile": {
+            "type": "string",
+            "title": "Jurisdiction Profile",
+            "default": "us_federal"
+          },
+          "country_office": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Office"
+          }
+        },
+        "type": "object",
+        "required": [
+          "alerts"
+        ],
+        "title": "TriageRequest",
+        "description": "Request to generate a triage brief from alerts."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VerifyIntegrityRequest": {
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "title": "Artifact Id",
+            "description": "Artifact to verify"
+          },
+          "dossier_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dossier Id",
+            "description": "Dossier holding the artifact; searched across the cache when omitted"
+          },
+          "content_base64": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Base64",
+            "description": "Artifact content, base64-encoded. Preferred: binary-safe"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content",
+            "description": "Artifact content as UTF-8 text. Convenience for text artifacts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "artifact_id"
+        ],
+        "title": "VerifyIntegrityRequest"
+      },
+      "VersionResponse": {
+        "properties": {
+          "sunlight_version": {
+            "type": "string",
+            "title": "Sunlight Version"
+          },
+          "mjpis_version": {
+            "type": "string",
+            "title": "Mjpis Version"
+          },
+          "profiles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Profiles"
+          },
+          "api_version": {
+            "type": "string",
+            "title": "Api Version",
+            "default": "v1"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sunlight_version",
+          "mjpis_version",
+          "profiles"
+        ],
+        "title": "VersionResponse",
+        "description": "Deployment metadata response."
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "ocid": "ocds-sunlight-sample-RED-001",
+  "stage": "complete",
+  "profile_used": "us_federal",
+  "structure": {
+    "confidence": 0.55,
+    "verdict": "compromised",
+    "contradictions": [
+      {
+        "rule_id": "",
+        "severity": "unknown",
+        "description": "Direct award of USD 48,500,000 exceeds competitive threshold (USD 100,000)",
+        "evidence": "UNCAC Art. 9(1) \u2014 Public procurement systems based on transparency, competition and objective criteria; UNCAC Art. 9(2) \u2014 Public finance management measures; UNCAC Art. 12 \u2014 Private sector measures against corruption; UNCAC Art. 15 \u2014 Bribery of national public officials; UNCAC Art. 16 \u2014 Bribery of foreign public officials and officials of public international organizations; UNCAC Art. 17 \u2014 Embezzlement, misappropriation or other diversion of property by a public official; UNCAC Art. 18 \u2014 Trading in influence; OECD Anti-Bribery Convention 1997 \u2014 Convention on Combating Bribery of Foreign Public Officials in International Business Transactions; OECD Recommendation on Public Procurement 2015 \u2014 OECD/LEGAL/0411; Federal Acquisition Regulation (FAR) Part 6 \u2014 Competition Requirements; FAR Part 15 \u2014 Contracting by Negotiation; FAR Part 13 \u2014 Simplified Acquisition Procedures",
+        "legal_citations": []
+      },
+      {
+        "rule_id": "",
+        "severity": "unknown",
+        "description": "Award in final 2 weeks of fiscal period (month 9, day 29)",
+        "evidence": "Fazekas fiscal pressure research; OECD public procurement timing analysis; Senegal case (award 8 days before fiscal close)",
+        "legal_citations": []
+      }
+    ],
+    "feedback_traps": []
+  },
+  "gate_verdict": "yellow",
+  "gate_outcome": {
+    "verdict": "yellow",
+    "dimensions_fired": 1,
+    "dimension_results": [
+      {
+        "dimension": "cri_markup",
+        "fired": false,
+        "observed_value": 0.0,
+        "threshold": 0.75,
+        "detail": "Markup ratio 0.0000 < MJPIS floor 0.7500"
+      },
+      {
+        "dimension": "cri_bribery_channel",
+        "fired": false,
+        "observed_value": null,
+        "threshold": null,
+        "detail": "Bribery-channel data not yet available in pipeline"
+      },
+      {
+        "dimension": "tca_typologies",
+        "fired": true,
+        "observed_value": 2.0,
+        "threshold": 2.0,
+        "detail": "2 distinct typologies >= threshold 2"
+      }
+    ],
+    "global_params_version": "us_federal_v0",
+    "methodology_note": "EVG v1.0: GREEN=0 dims fired, YELLOW=1 dim, RED=2+ dims. Thresholds from us_federal_v0."
+  },
+  "errors": [],
+  "recommended_for_investigation": true,
+  "_note": "Volatile fields removed for deterministic comparison: processing_time_ms. Everything else below must match byte-for-byte on a correct deployment."
+}

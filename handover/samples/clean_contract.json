@@ -1,0 +1,66 @@
+{
+  "contract": {
+    "ocid": "ocds-sunlight-sample-GREEN-001",
+    "buyer": {
+      "name": "Ministry of Education",
+      "id": "MOE-01"
+    },
+    "tender": {
+      "title": "Primary school desk supply",
+      "value": {
+        "amount": 85000,
+        "currency": "USD"
+      },
+      "procurementMethod": "open",
+      "numberOfTenderers": 6,
+      "submissionMethod": [
+        "electronicSubmission"
+      ]
+    },
+    "awards": [
+      {
+        "id": "A1",
+        "date": "2024-03-14",
+        "value": {
+          "amount": 85000,
+          "currency": "USD"
+        },
+        "suppliers": [
+          {
+            "name": "Volta Medical Supplies",
+            "id": "V-2201"
+          }
+        ]
+      }
+    ],
+    "parties": [
+      {
+        "id": "V-2201",
+        "name": "Volta Medical Supplies",
+        "roles": [
+          "supplier"
+        ]
+      },
+      {
+        "id": "MOE-01",
+        "name": "Ministry of Education",
+        "roles": [
+          "buyer"
+        ]
+      }
+    ],
+    "contracts": [
+      {
+        "id": "C1",
+        "awardID": "A1",
+        "value": {
+          "amount": 85000,
+          "currency": "USD"
+        },
+        "dateSigned": "2024-03-20"
+      }
+    ]
+  },
+  "profile": "us_federal",
+  "include_graph": true
+}
