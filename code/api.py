@@ -38,6 +38,7 @@ Version: 0.1.0
 
 from __future__ import annotations
 
+import os
 import subprocess
 import time
 from datetime import date, datetime, timezone
@@ -182,6 +183,57 @@ class BatchAnalyzeRequest(BaseModel):
 # ═══════════════════════════════════════════════════════════════════════════
 
 
+def _band_cutoffs_from_env():
+    """Band cutoffs for this deployment.
+
+    Read from the environment so an institution sets its own lines without a
+    code change or a redeploy of the image. Invalid values fall back to the
+    documented defaults with a warning rather than failing the request —
+    a misconfigured cutoff must not take the analysis endpoint down.
+    """
+    from structural_scoring import DEFAULT_CUTOFFS, BandCutoffs
+
+    raw_green = os.environ.get("SUNLIGHT_BAND_GREEN_BELOW")
+    raw_red = os.environ.get("SUNLIGHT_BAND_RED_AT_OR_ABOVE")
+    if raw_green is None and raw_red is None:
+        return DEFAULT_CUTOFFS
+
+    try:
+        cutoffs = BandCutoffs(
+            green_below=float(raw_green) if raw_green is not None
+            else DEFAULT_CUTOFFS.green_below,
+            red_at_or_above=float(raw_red) if raw_red is not None
+            else DEFAULT_CUTOFFS.red_at_or_above,
+        )
+    except (TypeError, ValueError):
+        logger.warning("Invalid band cutoff environment values; using defaults")
+        return DEFAULT_CUTOFFS
+
+    problems = cutoffs.validate()
+    if problems:
+        logger.warning(f"Band cutoffs rejected ({'; '.join(problems)}); using defaults")
+        return DEFAULT_CUTOFFS
+    return cutoffs
+
+
+def _build_structural_scoring(structure) -> Optional[Dict[str, Any]]:
+    """Three-tier scoring over already-attributed findings.
+
+    Never raises into the response path. This is an output layer, and a
+    failure to re-express findings must not take down an analysis that
+    otherwise succeeded — the verdict does not depend on it.
+    """
+    if structure is None:
+        return None
+    try:
+        from structural_scoring import score_findings
+        findings = [c.model_dump() for c in (structure.contradictions or [])]
+        return score_findings(findings, cutoffs=_band_cutoffs_from_env())
+    except Exception as e:  # noqa: BLE001 — logged, never surfaced as a 500
+        logger.error(f"Structural scoring failed (analysis unaffected): {e}")
+        return None
+
+
 _RULE_REGISTRY_CACHE: Optional[Dict[str, Any]] = None
 
 
@@ -306,6 +358,18 @@ class AnalyzeResponse(BaseModel):
             "Full EVG gate outcome with per-dimension traceability. "
             "Contains the verdict, count of dimensions fired, and detailed "
             "per-dimension results showing observed values versus MJPIS thresholds."
+        ),
+    )
+    structural_scoring: Optional[Dict[str, Any]] = Field(
+        None,
+        description=(
+            "Three-tier structural scoring: a composite 0-1 score, the four "
+            "sub-scores it averages, the interpretation band under the "
+            "institution's configured cutoffs, and every finding's "
+            "correspondence to the Fazekas CRI seven-flag index. Additive — "
+            "an output layer over findings the engines already produced, "
+            "consulted by no verdict. Always present, whether or not any "
+            "band cutoff is crossed."
         ),
     )
     errors: List[str] = Field(default_factory=list)
@@ -677,6 +741,7 @@ async def analyze_contract(request: AnalyzeRequest):
             structure=structure,
             gate_verdict=gate_verdict,
             gate_outcome=gate_outcome,
+            structural_scoring=_build_structural_scoring(structure),
             errors=errors,
             processing_time_ms=processing_time_ms,
             recommended_for_investigation=recommended,
