@@ -1,16 +1,52 @@
-"""SUNLIGHT Investigator Evidence Packet Generator - PDF + CSV"""
+"""SUNLIGHT Investigator Evidence Packet Generator - PDF + CSV
+
+reportlab is an OPTIONAL dependency, required only for PDF output.
+
+It is imported defensively so that this module always imports cleanly. Two
+of the three entry points here — load_run_data() and export_csv() — do not
+touch reportlab at all, and holding a working CSV export hostage to an
+uninstalled PDF library serves nobody. The failure is deferred to
+build_pdf(), which is the only function that genuinely needs it, and raises
+there with an actionable message instead of an import traceback at startup.
+
+Install with:  pip install reportlab
+"""
 import sqlite3, json, os, sys, csv
 from datetime import datetime, timezone
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
-from reportlab.lib.colors import HexColor, black, white, gray
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_LEFT, TA_CENTER
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, HRFlowable
 
-GOLD = HexColor('#D4A017')
-DARK = HexColor('#1a1a2e')
-TCOL = {'RED': HexColor('#CC0000'), 'YELLOW': HexColor('#CC9900'), 'GREEN': HexColor('#339933'), 'GRAY': HexColor('#888888')}
+try:
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib.units import inch
+    from reportlab.lib.colors import HexColor, black, white, gray
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.enums import TA_LEFT, TA_CENTER
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, HRFlowable
+    _REPORTLAB_IMPORT_ERROR = None
+except ImportError as _exc:  # pragma: no cover - depends on install state
+    _REPORTLAB_IMPORT_ERROR = _exc
+
+REPORTLAB_AVAILABLE = _REPORTLAB_IMPORT_ERROR is None
+
+if REPORTLAB_AVAILABLE:
+    GOLD = HexColor('#D4A017')
+    DARK = HexColor('#1a1a2e')
+    TCOL = {'RED': HexColor('#CC0000'), 'YELLOW': HexColor('#CC9900'), 'GREEN': HexColor('#339933'), 'GRAY': HexColor('#888888')}
+else:
+    # Palette is reportlab-typed and only ever read inside build_pdf().
+    GOLD = DARK = None
+    TCOL = {}
+
+
+def _require_reportlab():
+    """Raise an actionable error if PDF generation is attempted without reportlab."""
+    if _REPORTLAB_IMPORT_ERROR is not None:
+        raise ImportError(
+            "PDF evidence packet generation requires the optional 'reportlab' "
+            "dependency, which is not installed in this environment.\n\n"
+            "    pip install reportlab\n\n"
+            "CSV export (export_csv) and data loading (load_run_data) do not "
+            "require it and work without installing anything."
+        ) from _REPORTLAB_IMPORT_ERROR
 
 def load_run_data(db_path, run_id):
     conn = sqlite3.connect(db_path); c = conn.cursor()
@@ -32,6 +68,7 @@ def load_run_data(db_path, run_id):
     return {'run':run,'scores':scores,'tc':tc,'audit':audit,'reds':[s for s in scores if s['tier']=='RED']}
 
 def build_pdf(data, path):
+    _require_reportlab()
     doc = SimpleDocTemplate(path, pagesize=letter, leftMargin=0.75*inch, rightMargin=0.75*inch, topMargin=0.75*inch, bottomMargin=0.75*inch)
     S = getSampleStyleSheet()
     S.add(ParagraphStyle('ST', parent=S['Title'], fontSize=22, textColor=DARK, spaceAfter=6))

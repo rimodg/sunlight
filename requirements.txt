@@ -4,3 +4,11 @@ uvicorn[standard]>=0.24.0
 pydantic>=2.5.0
 httpx>=0.25.0
 certifi>=2023.0.0
+
+# ── Optional — PDF case packet generation ──────────────────────────────
+# Required only by code/evidence_packet.py build_pdf(). The module imports
+# and its CSV export works without this; PDF generation raises an
+# actionable ImportError if it is missing. Uncomment, or install directly
+# with `pip install reportlab`, to enable investigator PDF packets.
+#
+# reportlab>=4.0.0
