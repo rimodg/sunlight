@@ -123,11 +123,11 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-1,745 tests across five build phases. Zero regressions.
+1,747 tests across five build phases. Zero regressions.
 
 | Phase | Description | Tests |
 |-------|-------------|-------|
-| Side 1 | Procurement verification (CRI + TCA + EVG) | 683 |
+| Side 1 | Procurement verification (CRI + TCA + EVG) | 685 |
 | Side 2 | Delivery verification | 242 |
 | Side 3 | Intelligence alerts | 129 |
 | Side 4 | Recovery intelligence | 79 |
