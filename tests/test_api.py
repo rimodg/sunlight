@@ -221,6 +221,44 @@ class TestBatch:
         assert meta["capacity_threshold"] is not None
         assert meta["binding_threshold"] >= meta["statistical_threshold"]
 
+    def test_the_second_pass_demotes_as_well_as_promotes(self, client):
+        """The second pass ASSIGNS from the binding threshold, it does not only promote.
+
+        Previously it set recommended_for_investigation=True and never False, so a
+        contract flagged against the statistical threshold in pass one stayed flagged
+        even when a capacity budget raised the binding threshold above it. The ceiling
+        silently did nothing to those contracts.
+
+        This pins the fix: whatever is reported as recommended must agree with the
+        binding threshold in both directions, and never exceed recommended_count.
+        """
+        contracts = [contract(f"ocds-demote-{i:03d}", award_amount=1_000_000 + i * 400_000)
+                     for i in range(10)]
+        body = client.post("/batch",
+                           json={"contracts": contracts, "capacity_budget": 1}).json()
+        meta = body["threshold_metadata"]
+        flagged = [r for r in body["results"] if r.get("recommended_for_investigation")]
+
+        # The count in metadata and the flags on the results must be the same set.
+        assert len(flagged) == meta["recommended_count"]
+        # A raised binding threshold must not leave stale first-pass flags behind.
+        assert meta["binding_threshold"] >= meta["statistical_threshold"]
+
+    def test_zero_capacity_recommends_nothing(self, client):
+        """The strongest form of the ceiling: budget 0 must flag nothing at all.
+
+        This is the one capacity case ties cannot corrupt, because the threshold is
+        +inf rather than a score drawn from the batch — so it holds today and would
+        have caught a promote-only second pass immediately.
+        """
+        contracts = [contract(f"ocds-zero-{i:03d}", award_amount=1_000_000 + i * 400_000)
+                     for i in range(5)]
+        body = client.post("/batch",
+                           json={"contracts": contracts, "capacity_budget": 0}).json()
+        flagged = [r for r in body["results"] if r.get("recommended_for_investigation")]
+        assert flagged == []
+        assert body["threshold_metadata"]["recommended_count"] == 0
+
     @pytest.mark.xfail(
         strict=True,
         reason="KNOWN DEFECT — capacity_budget does not bind under ties. "
@@ -231,12 +269,17 @@ class TestBatch:
                "admitted. Measured: capacity_budget=2 over 10 contracts scoring "
                "[1.95, 2.75 x 9] yields binding_threshold=2.75 and 9 recommendations. "
                "An investigator with capacity for 2 is handed 9. "
-               "Second, independent defect in the same block (code/api.py ~778): the "
-               "second pass only ever sets recommended_for_investigation=True and never "
-               "False, so a contract above the statistical threshold but below a higher "
-               "binding capacity threshold stays flagged from the first pass. "
-               "NOT fixed here: changing thresholding alters detection output, which "
-               "carries a DOJ regression baseline, and is the owner's call.")
+               "The second, independent defect in this block — the promote-only second "
+               "pass — IS now fixed; it assigns from the binding threshold in both "
+               "directions and is pinned by "
+               "test_the_second_pass_demotes_as_well_as_promotes. "
+               "This tie defect remains DELIBERATELY DEFERRED, not forgotten: breaking "
+               "the tie means deciding which 2 of 9 identically-scored contracts an "
+               "investigator receives, and every available answer is arbitrary. Picking "
+               "by original batch order would make the output depend on submission "
+               "sequence; picking none would discard real signal. The honest fix is "
+               "probably to report the tied group and let the institution choose, which "
+               "is a product decision rather than a code change. Owner's call.")
     def test_a_capacity_budget_is_honoured_as_a_ceiling_on_flags(self, client):
         """The behaviour the feature exists to provide: never recommend more cases than
         the investigator can actually take. When this starts passing, the defect above is

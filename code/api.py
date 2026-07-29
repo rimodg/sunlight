@@ -775,11 +775,24 @@ async def batch_analyze(request: BatchAnalyzeRequest):
     # Binding threshold is max of statistical and capacity thresholds
     binding_threshold = max(DEFAULT_STATISTICAL_THRESHOLD, capacity_threshold_value)
 
-    # SECOND PASS: Update recommended_for_investigation based on binding threshold
+    # SECOND PASS: Set recommended_for_investigation from the binding threshold.
+    #
+    # Assigns rather than promotes. The first pass flags against the statistical
+    # threshold alone; when a capacity budget raises the binding threshold above
+    # it, contracts between the two thresholds must be UNflagged. The previous
+    # form only ever set True, so those stayed flagged from the first pass and
+    # the capacity ceiling silently did nothing to them — an investigator with
+    # capacity for 2 could still be handed everything above the statistical bar.
+    #
+    # Isolated from the DOJ scoring path: recommended_for_investigation exists
+    # only in this module, and neither doj_validation.py nor evaluation.py
+    # references it, the /batch endpoint, or capacity_budget. Verdicts,
+    # confidence and gate outcomes are untouched by this block.
     recommended_count = 0
     for i, result in enumerate(results):
-        if risk_scores[i] >= binding_threshold:
-            result.recommended_for_investigation = True
+        recommended = risk_scores[i] >= binding_threshold
+        result.recommended_for_investigation = recommended
+        if recommended:
             recommended_count += 1
 
     # Populate threshold metadata
