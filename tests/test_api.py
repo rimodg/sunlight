@@ -343,3 +343,94 @@ class TestCalibration:
                                     "profile": "us_federal"})
         after = client.get("/calibration/us_federal").json()["total_contracts_analyzed"]
         assert after > before
+
+
+# ═══════════════════════════════════════════════════════════
+# FINDING ATTRIBUTION
+# ═══════════════════════════════════════════════════════════
+
+
+class TestFindingAttribution:
+    """Every finding must be able to name the rule that produced it.
+
+    SUNLIGHT's central claim is that every flag traces to a rule and every
+    rule traces to a legal citation. The engine writes findings keyed `rule`;
+    the API read `rule_id`, which the engine never writes. So rule_id was ""
+    on every finding in every response, severity was "unknown", and
+    legal_citations was []. The claim was true internally and unobservable
+    externally — and no test covered the field, which is why it survived.
+    """
+
+    HIGH_RISK = {
+        "contract": {
+            "ocid": "ocds-attribution-001",
+            "buyer": {"name": "Defense Procurement Office", "id": "DPO-01"},
+            "tender": {"title": "Emergency aircraft component resupply",
+                       "value": {"amount": 48_500_000, "currency": "USD"},
+                       "procurementMethod": "limited",
+                       "procurementMethodRationale": "urgency",
+                       "numberOfTenderers": 1},
+            "awards": [{"id": "A1", "date": "2024-09-29",
+                        "value": {"amount": 48_500_000, "currency": "USD"},
+                        "suppliers": [{"name": "Zenith Infrastructure Ltd", "id": "V-9001"}]}],
+            "parties": [{"id": "V-9001", "name": "Zenith Infrastructure Ltd",
+                         "roles": ["supplier"]}],
+        },
+        "profile": "us_federal",
+    }
+
+    def _findings(self, client):
+        d = client.post("/analyze", json=self.HIGH_RISK).json()
+        return d["structure"]["contradictions"]
+
+    def test_findings_are_produced(self, client):
+        assert len(self._findings(client)) > 0
+
+    def test_all_six_attribution_fields_are_populated(self, client):
+        """The prerequisite: rule_id, rule_name, layer, legal_citation,
+        evidence and severity present and non-empty on every finding."""
+        for f in self._findings(client):
+            for field in ("rule_id", "rule_name", "layer",
+                          "legal_citation", "evidence", "severity"):
+                assert field in f, f"{field} missing"
+                assert str(f[field]).strip(), f"{field} empty on {f.get('rule_id')!r}"
+
+    def test_rule_id_is_a_real_registry_rule(self, client):
+        """Not merely non-empty — it must name a rule that actually exists."""
+        import os
+        import sys
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'code'))
+        from tca_rules import RULES
+        known = {r.rule_id for r in RULES}
+        for f in self._findings(client):
+            assert f["rule_id"] in known, f"unknown rule {f['rule_id']}"
+
+    def test_rule_name_and_layer_match_the_registry(self, client):
+        import os
+        import sys
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'code'))
+        from tca_rules import RULES
+        by_id = {r.rule_id: r for r in RULES}
+        for f in self._findings(client):
+            rule = by_id[f["rule_id"]]
+            assert f["rule_name"] == rule.name
+            assert f["layer"] == rule.layer
+
+    def test_evidence_is_the_observed_fact_not_the_citation(self, client):
+        """The correction. `evidence` held the legal citation, which is what
+        `legal_citation` is for. Sides 2, 3 and 5 always named these two
+        things this way; Side 1 was the outlier."""
+        for f in self._findings(client):
+            assert not f["evidence"].startswith("UNCAC"), \
+                "evidence is carrying a citation again"
+            assert f["evidence"] == f["description"]
+
+    def test_legal_citation_is_populated_and_listed(self, client):
+        for f in self._findings(client):
+            assert f["legal_citation"]
+            assert f["legal_citations"] == [f["legal_citation"]]
+
+    def test_severity_reports_the_finding_class(self, client):
+        for f in self._findings(client):
+            assert f["severity"] in ("high", "medium"), f["severity"]
+            assert f["severity"] != "unknown"

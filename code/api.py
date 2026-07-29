@@ -182,13 +182,78 @@ class BatchAnalyzeRequest(BaseModel):
 # ═══════════════════════════════════════════════════════════════════════════
 
 
+_RULE_REGISTRY_CACHE: Optional[Dict[str, Any]] = None
+
+
+def _rule_registry() -> Dict[str, Any]:
+    """rule_id -> Rule, built once. Lazy, mirroring tca_analyzer's deferred import.
+
+    Imported inside the function because tca_rules pulls in the jurisdiction
+    layer; tca_analyzer defers it for the same reason.
+    """
+    global _RULE_REGISTRY_CACHE
+    if _RULE_REGISTRY_CACHE is None:
+        try:
+            from tca_rules import RULES
+            _RULE_REGISTRY_CACHE = {r.rule_id: r for r in RULES}
+        except ImportError:
+            logger.error("Failed to import RULES from tca_rules for finding attribution")
+            _RULE_REGISTRY_CACHE = {}
+    return _RULE_REGISTRY_CACHE
+
+
+def _build_contradiction(finding: dict, severity: str) -> "Contradiction":
+    """Attribute one engine finding to its rule.
+
+    The engine writes `rule`; this reads `rule` and falls back to `rule_id`
+    so a future engine change to the canonical name cannot silently
+    re-break attribution.
+
+    `evidence` (the citation, as the engine names it) is looked up from the
+    registry when the finding does not carry it, so a citation is present
+    even if the engine's inline copy is ever dropped.
+    """
+    rule_id = finding.get("rule") or finding.get("rule_id") or ""
+    rule = _rule_registry().get(rule_id)
+
+    citation = finding.get("evidence") or (getattr(rule, "evidence", "") if rule else "")
+    observed = finding.get("description", "")
+
+    return Contradiction(
+        rule_id=rule_id,
+        rule_name=getattr(rule, "name", "") if rule else "",
+        layer=getattr(rule, "layer", "") if rule else "",
+        severity=severity,
+        description=observed,
+        evidence=observed,
+        legal_citation=citation,
+        legal_citations=[citation] if citation else [],
+    )
+
+
 class Contradiction(BaseModel):
-    """One structural contradiction finding."""
-    rule_id: str
-    severity: str
-    description: str
-    evidence: str
-    legal_citations: List[str]
+    """One structural finding, fully attributed to the rule that produced it.
+
+    Field semantics, corrected. The engine emits findings keyed `rule`,
+    `description` (the observed fact) and `evidence` (the legal citation).
+    This model previously read `rule_id`, which the engine never writes, so
+    every response carried an empty rule id, an "unknown" severity and an
+    empty citation list — the system's "every flag traces to a rule, every
+    rule traces to a legal citation" property was not observable through the
+    API at all.
+
+    `evidence` now carries the OBSERVED FACT and `legal_citation` the
+    statutory basis, which is how Sides 2, 3 and 5 have always named these
+    two things. Side 1 was the outlier. `description` is unchanged.
+    """
+    rule_id: str = Field(..., description="Rule that produced this finding, e.g. PROC-001")
+    rule_name: str = Field("", description="Human-readable rule name from the registry")
+    layer: str = Field("", description="TCA rule layer: procurement, entity, financial, temporal, network")
+    severity: str = Field(..., description="high (contradiction) or medium (unproven dependency)")
+    description: str = Field(..., description="What was found, in the analyst's terms")
+    evidence: str = Field(..., description="The observed fact supporting this finding")
+    legal_citation: str = Field("", description="Statutory/regulatory basis for this rule")
+    legal_citations: List[str] = Field(default_factory=list, description="Citations as a list")
 
 
 class StructuralFindings(BaseModel):
@@ -441,16 +506,17 @@ def structural_result_to_findings(dossier: ContractDossier) -> Optional[Structur
     if dossier.structure is None:
         return None
 
-    # Convert contradictions to Contradiction models
-    contradictions = []
-    for c in dossier.structure.contradictions:
-        contradictions.append(Contradiction(
-            rule_id=c.get("rule_id", ""),
-            severity=c.get("severity", "unknown"),
-            description=c.get("description", ""),
-            evidence=c.get("evidence", ""),
-            legal_citations=c.get("legal_citations", []),
-        ))
+    # Convert contradictions to Contradiction models.
+    #
+    # SEVERITY IS DERIVED, and derived from the graph rather than invented.
+    # The registry carries no severity field, so rather than author per-rule
+    # weights the API has no basis for, severity reports the finding CLASS:
+    # a contradiction is a REMOVES edge (the structure actively conflicts) and
+    # an unproven dependency is a SEEKS edge (a required relationship is not
+    # evidenced). Those are engine facts, not editorial judgement.
+    contradictions = [
+        _build_contradiction(c, "high") for c in dossier.structure.contradictions
+    ]
 
     # Convert feedback traps to string descriptions
     feedback_traps = [str(trap) for trap in dossier.structure.feedback_traps]
