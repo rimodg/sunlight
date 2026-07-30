@@ -786,8 +786,8 @@ async def analyze_contract(request: AnalyzeRequest):
             # comparison set, and the output must announce that rather than
             # let a consumer assume corpus context it never had.
             structural_scoring=_build_structural_scoring(
-                structure, dossier=dossier,
-                profile_name=request.profile, isolation=True),
+                structure, dossier=dossier, profile_name=request.profile,
+                isolation=not bool(getattr(dossier, "comparables", None))),
             errors=errors,
             processing_time_ms=processing_time_ms,
             recommended_for_investigation=recommended,
@@ -907,6 +907,13 @@ async def batch_analyze(request: BatchAnalyzeRequest):
                 structure=structure,
                 gate_verdict=gate_verdict,
                 gate_outcome=gate_outcome,
+                # Populated on the batch path too. The same response model
+                # returning a scored result from /analyze and a null from
+                # /batch would make the field's meaning depend on which
+                # endpoint a consumer happened to call.
+                structural_scoring=_build_structural_scoring(
+                    structure, dossier=dossier, profile_name=request.profile,
+                    isolation=not bool(getattr(dossier, "comparables", None))),
                 errors=errors,
                 processing_time_ms=processing_time_ms,
                 recommended_for_investigation=False,  # Placeholder

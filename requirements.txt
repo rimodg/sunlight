@@ -1,14 +1,53 @@
-# SUNLIGHT API dependencies
+# SUNLIGHT dependencies
+#
+# Grouped by what breaks without them. Verified against actual imports by
+# walking the AST of every module in code/ and resolving transitively from
+# api.py, doj_validation.py and evaluation.py — not by memory.
+
+# ── API surface ────────────────────────────────────────────────────────
+# Required to serve any endpoint.
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 pydantic>=2.5.0
 httpx>=0.25.0
 certifi>=2023.0.0
 
-# ── Optional — PDF case packet generation ──────────────────────────────
+# ── Statistical core ──────────────────────────────────────────────────
+# REQUIRED. numpy is reachable from both DOJ validators
+# (doj_validation.py, evaluation.py) and from
+# institutional_statistical_rigor / institutional_pipeline, which compute the
+# bootstrap confidence intervals, z-scores and Bayesian posteriors the
+# regression floor rests on.
+#
+# This was missing from the manifest. A fresh install could serve /analyze
+# but could NOT run the DOJ regression — so a receiving institution following
+# the handover instruction to re-confirm 33.3/100/9.0/0.746/129.2 on its own
+# machine would have hit an ImportError instead of a number.
+numpy>=1.24.0
+
+# ── Extended analysis ─────────────────────────────────────────────────
+# Not reachable from api.py or the DOJ validators. Required by the deeper
+# analysis modules: scipy for statistical_rigor_v2 and bulletproof_analyzer,
+# networkx for vendor/entity network analysis.
+scipy>=1.10.0
+networkx>=3.0
+
+# ── Data acquisition ──────────────────────────────────────────────────
+# Required only to INGEST new data, not to analyse what is already ingested.
+# A deployment fed by an existing corpus does not need these.
+requests>=2.31.0
+pdfplumber>=0.10.0
+
+# ── Optional — PDF case packet generation ─────────────────────────────
 # Required only by code/evidence_packet.py build_pdf(). The module imports
 # and its CSV export works without this; PDF generation raises an
 # actionable ImportError if it is missing. Uncomment, or install directly
 # with `pip install reportlab`, to enable investigator PDF packets.
 #
 # reportlab>=4.0.0
+
+# ── Optional — load testing ───────────────────────────────────────────
+# Required only by scripts/load_test.py. Absent by default, which is why
+# that file is the one collection error in a repo-wide pytest run.
+#
+# locust>=2.15.0
