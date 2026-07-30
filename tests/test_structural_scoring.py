@@ -821,3 +821,143 @@ class TestCorpusStamp:
         diff = {k for k in a["corpus_stamp"]
                 if a["corpus_stamp"][k] != b["corpus_stamp"][k]}
         assert diff <= {"computed_at"}
+
+
+# ═══════════════════════════════════════════════════════════
+# FAZEKAS AS A LIVE OUTPUT FIELD ON EVERY SIDE
+# ═══════════════════════════════════════════════════════════
+
+
+class TestFazekasFieldOnEverySide:
+    """The mapping ships as queryable output, not only as methodology prose.
+
+    An institution reading ANY finding — procurement, delivery, corroboration —
+    is entitled to the same answer: does my existing CRI index already cover
+    this, or is this something it cannot see? The second case is the valuable
+    one, and it must be stated explicitly rather than left as a null.
+    """
+
+    FLAGGED = {
+        "ocid": "faz-side-1",
+        "tender": {"value": {"amount": 48_500_000, "currency": "USD"},
+                   "procurementMethod": "limited", "numberOfTenderers": 1},
+        "awards": [{"id": "A", "date": "2024-09-29",
+                    "value": {"amount": 48_500_000, "currency": "USD"},
+                    "suppliers": [{"name": "V", "id": "V1"}]}],
+    }
+
+    def _shape_ok(self, fm):
+        assert fm is not None, "fazekas_mapping absent"
+        for k in ("flags", "flag_names", "relationship", "note"):
+            assert k in fm, f"{k} missing"
+        assert fm["relationship"] in ("confirms", "related", "none")
+        assert fm["note"].strip()
+        # A confirmation with nothing to confirm would be incoherent.
+        if not fm["flags"]:
+            assert fm["relationship"] == "none"
+
+    def test_side1_analyze_findings_carry_the_field(self, client):
+        d = client.post("/analyze", json={"contract": self.FLAGGED}).json()
+        findings = d["structure"]["contradictions"]
+        assert findings
+        for f in findings:
+            self._shape_ok(f["fazekas_mapping"])
+
+    def test_side1_batch_findings_carry_the_field(self, client):
+        """Parity: the field must not depend on which endpoint was called."""
+        b = client.post("/batch", json={"contracts": [self.FLAGGED]}).json()
+        findings = b["results"][0]["structure"]["contradictions"]
+        assert findings
+        for f in findings:
+            self._shape_ok(f["fazekas_mapping"])
+
+    def test_side1_confirms_the_expected_flags(self, client):
+        d = client.post("/analyze", json={"contract": self.FLAGGED}).json()
+        by_rule = {f["rule_id"]: f["fazekas_mapping"]
+                   for f in d["structure"]["contradictions"]}
+        assert set(by_rule["PROC-001"]["flags"]) == {"F1", "F3"}
+        assert by_rule["PROC-001"]["relationship"] == "confirms"
+        assert by_rule["TIME-001"]["flags"] == ["F6"]
+        assert by_rule["TIME-001"]["relationship"] == "related"
+
+    def test_side2_delivery_findings_map_to_none(self, client):
+        """By construction: the index describes a procurement event, delivery
+        findings describe what happened after it."""
+        r = client.post("/delivery/analyze", json={
+            "contract_id": "faz-del-1",
+            "milestones": [{"milestone_id": "M1", "description": "phase 1",
+                            "planned_date": "2025-01-01", "actual_date": "2025-06-01",
+                            "status": "completed", "delay_days": 150}]}).json()
+        fired = r.get("fired_rules") or []
+        assert fired
+        for f in fired:
+            fm = f["fazekas_mapping"]
+            self._shape_ok(fm)
+            assert fm["flags"] == []
+            assert fm["relationship"] == "none"
+            assert "beyond the indicator paradigm" in fm["note"]
+
+    def test_side5_evidence_findings_map_to_none(self, client):
+        r = client.post("/evidence/analyze", json={
+            "claim": {"claim_id": "C1", "contract_id": "K1",
+                      "outcome_type": "facility_construction",
+                      "claim_description": "clinic operational"},
+            "artifacts": [], "source_registry": [], "profile": "us_federal"}).json()
+        fires = r.get("rule_fires") or []
+        assert fires
+        for f in fires:
+            fm = f["fazekas_mapping"]
+            self._shape_ok(fm)
+            assert fm["flags"] == []
+            assert fm["relationship"] == "none"
+            assert "beyond the indicator paradigm" in fm["note"]
+
+    def test_the_exact_mapping_table(self):
+        """The whole table, pinned. Its value is entirely in being
+        conservative, so a change here must be deliberate."""
+        expected = {
+            "PROC-001": (("F1", "F3"), "confirms"),
+            "PROC-002": (("F1",), "confirms"),
+            "PROC-003": ((), "none"),
+            "PROC-004": ((), "none"),
+            "PROC-005": (("F1",), "related"),
+            "ENT-001": ((), "none"),
+            "ENT-002": ((), "none"),
+            "ENT-003": ((), "none"),
+            "FIN-001": ((), "none"),
+            "FIN-002": ((), "none"),
+            "FIN-003": ((), "none"),
+            "TIME-001": (("F6",), "related"),
+            "TIME-002": (("F6",), "related"),
+            "TIME-003": ((), "none"),
+            "GEO-001": ((), "none"),
+            "GEO-002": ((), "none"),
+        }
+        for rule_id, (flags, rel) in expected.items():
+            m = fazekas_mapping_for(rule_id)
+            assert m.flags == flags, f"{rule_id} flags {m.flags} != {flags}"
+            assert m.relationship == rel, f"{rule_id} rel {m.relationship} != {rel}"
+
+    def test_only_two_flags_are_ever_confirmed(self):
+        """F1 and F3. Anything more is overclaiming; a due-diligence team will
+        check this against the rules."""
+        confirmed = {f for m in RULE_FAZEKAS_MAP.values()
+                     if m.relationship == RELATIONSHIP_CONFIRMS for f in m.flags}
+        assert confirmed == {"F1", "F3"}
+
+    def test_side4_recovery_rule_ids_map_to_none(self):
+        """Side 4 has no rule engine of its own, but any REC- prefixed
+        identifier must route to 'beyond the paradigm' rather than fall
+        through to a default."""
+        m = fazekas_mapping_for("REC-001")
+        assert m.flags == ()
+        assert m.relationship == RELATIONSHIP_NONE
+        assert "beyond the indicator paradigm" in m.note
+
+    def test_a_missing_capability_style_finding_maps_to_none(self):
+        """No rule measures capability. PROC-003 (no oversight body) is the
+        nearest structural analogue and maps to nothing, as specified."""
+        m = fazekas_mapping_for("PROC-003")
+        assert m.flags == ()
+        assert m.relationship == RELATIONSHIP_NONE
+        assert "NO corresponding CRI indicator" in m.note

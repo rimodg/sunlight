@@ -321,7 +321,27 @@ def _build_contradiction(finding: dict, severity: str) -> "Contradiction":
         evidence=observed,
         legal_citation=citation,
         legal_citations=[citation] if citation else [],
+        fazekas_mapping=_fazekas_field(rule_id),
     )
+
+
+def _fazekas_field(rule_id: str) -> Optional[Dict[str, Any]]:
+    """The CRI correspondence for one rule, as a response field.
+
+    Attached to EVERY finding on EVERY side, not only to the structural
+    scoring block. An institution reading a delivery or evidence finding is
+    entitled to the same answer as one reading a procurement finding: does my
+    existing index already cover this, or is this something it cannot see?
+
+    Returns None only if the mapping table itself is unavailable, so a
+    failure here degrades one field rather than the response.
+    """
+    try:
+        from structural_scoring import fazekas_mapping_for
+        return fazekas_mapping_for(rule_id).as_dict()
+    except Exception as e:  # noqa: BLE001 — one field, never the response
+        logger.warning(f"Fazekas mapping unavailable for {rule_id}: {e}")
+        return None
 
 
 class Contradiction(BaseModel):
@@ -347,6 +367,17 @@ class Contradiction(BaseModel):
     evidence: str = Field(..., description="The observed fact supporting this finding")
     legal_citation: str = Field("", description="Statutory/regulatory basis for this rule")
     legal_citations: List[str] = Field(default_factory=list, description="Citations as a list")
+    fazekas_mapping: Optional[Dict[str, Any]] = Field(
+        None,
+        description=(
+            "Correspondence to the Fazekas & Kocsis (2020) seven-flag CRI index "
+            "that UNDP/GTI standardised on in 2024. Either the specific flag(s) "
+            "this finding structurally confirms (with a confirms/related label), "
+            "or an explicit statement that no CRI indicator corresponds — which "
+            "is the more valuable case, because it names a risk the "
+            "institution's existing index cannot see."
+        ),
+    )
 
 
 class StructuralFindings(BaseModel):
@@ -1237,6 +1268,16 @@ class DeliveryFiredRule(BaseModel):
     evidence: str = Field(..., description="Evidence string")
     legal_basis: str = Field("", description="Legal citation")
     confidence: float = Field(0.0, description="Confidence score")
+    fazekas_mapping: Optional[Dict[str, Any]] = Field(
+        None,
+        description=(
+            "CRI correspondence. Every delivery finding maps to NONE by "
+            "construction: the Fazekas index describes a procurement event, "
+            "and delivery findings describe what happened after it. That is "
+            "the point, not a gap — these are risks no indicator-based "
+            "method can reach."
+        ),
+    )
 
 
 class DeliveryAnalyzeResponse(BaseModel):
@@ -1368,7 +1409,10 @@ def _format_delivery_response(result: Dict[str, Any], profile_name: str) -> Deli
         rules_evaluated=result.get("rules_evaluated", 0),
         rules_fired=result.get("rules_fired", 0),
         fired_rules=[
-            DeliveryFiredRule(**r)
+            DeliveryFiredRule(
+                **r,
+                fazekas_mapping=_fazekas_field(r.get("rule_id", "")),
+            )
             for r in result.get("fired_rules", [])
         ],
         layer_summary=result.get("layer_summary", {}),

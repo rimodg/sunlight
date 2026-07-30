@@ -43,6 +43,20 @@ from evidence_schema import (
 )
 
 
+def _fazekas_mapping_field(rule_id: str) -> Optional[Dict[str, Any]]:
+    """CRI correspondence for one evidence rule.
+
+    Imported lazily. structural_scoring is an output layer over Side 1
+    findings; importing it at module scope would make Side 5 depend on it,
+    and Side 5's independence from every other side is enforced by test.
+    """
+    try:
+        from structural_scoring import fazekas_mapping_for
+        return fazekas_mapping_for(rule_id).as_dict()
+    except Exception:
+        return None
+
+
 class EvidenceAnalyzer:
     """Runs corroboration analysis and formats the result.
 
@@ -173,6 +187,13 @@ class EvidenceAnalyzer:
                     "legal_basis": r.legal_basis,
                     "confidence": r.confidence,
                     "recommendation": r.recommendation,
+                    # Every Side 5 finding maps to NONE by construction. The
+                    # Fazekas index describes attributes of a procurement
+                    # event; corroboration asks whether the claimed outcome
+                    # actually happened, according to evidence that never
+                    # routed through the party being verified. No indicator
+                    # in the index asks that question at all.
+                    "fazekas_mapping": _fazekas_mapping_field(r.rule_id),
                 }
                 for r in (dossier.rules_result.rule_results if dossier.rules_result else [])
                 if r.fired

@@ -391,6 +391,8 @@ What this sweep cannot close. Each named, each explained, none buried.
 | 6 | **UNDP data agreement** | No agreement covering procurement data access, residency, or retention. Side 5's provenance model assumes the institution supplies evidence artifacts. | UNDP / institution legal |
 | 7 | **Container path unverified in CI** | The 7 Docker tests skip without Docker (§4.6). The handover quickstart leads with `docker build`. | CI with Docker available |
 | 8 | **MJPIS derivation not shipped** | The handover describes MJPIS architecture but excludes `research/corpus/` and the derivation implementation. A deployment needing the living standard must request it. | Founders' disclosure decision |
+| 9 | **Zero-funded-pillar recovery edge** | A pillar with a **zero CPD target** still receives the documented 5% minimum floor when recovered funds are allocated. Measured: a zero-target pillar took 4,761.90 of a 100,000 recovery alongside a genuinely underfunded pillar at 95,238.10. Conservation is exact and the floor is documented behaviour, so this is not a computational error — but whether a pillar the CPD does not fund should receive recovered money at all is a policy question, not a technical one. **Risk:** an auditor could reasonably ask why money was allocated to a pillar with no programme target. | Institution — same class of decision as the capacity-budget tie (§4.4) |
+| 10 | **Confidence vs determinateness are distinct and could be conflated** | Two different quantities are reported side by side. `confidence` is a noisy-OR over fired rules scaled by reach — it answers *how strongly do the findings support this verdict*. `determinate` / `context_level` answers *how much of the evidence space had any basis for assessment*. A single-axis result can carry high confidence in what it found while resting on one quarter of the evidence space, and nothing in the field names prevents a reader from treating high confidence as broad coverage. The output states both, but does not yet fuse them into one reported figure or forbid the misreading. **Risk:** a dashboard surfacing `confidence` alone would present a narrow finding as a strong one. **Deliberately not fused** — collapsing two honest numbers into one composite would lose the distinction the isolation work exists to preserve. | Design decision, then output-layer work |
 
 ---
 
@@ -420,6 +422,27 @@ confirmation would overclaim.
 This is a smaller number than an earlier draft of the mapping asserted, and it
 is the honest one (§2.7). **It is also a better position to walk an institution
 through**, because it is defensible line by line.
+
+### 6.1a The mapping ships as live output, not only as methodology
+
+Every finding in every API response carries a `fazekas_mapping` field. Verified
+across all four surfaces:
+
+| Surface | Field present | Mapping |
+|---|---|---|
+| `POST /analyze` → `structure.contradictions[]` | yes | per rule |
+| `POST /analyze` → `structural_scoring.findings[]` | yes | per rule |
+| `POST /batch` → `results[].structure.contradictions[]` | yes | per rule |
+| `POST /delivery/analyze` → `fired_rules[]` | yes | all `none` |
+| `POST /evidence/analyze` → `rule_fires[]` | yes | all `none` |
+
+Each entry carries `flags`, `flag_names`, `relationship`
+(`confirms` / `related` / `none`) and a `note` stating the reasoning. A finding
+with no correspondence says so explicitly rather than returning null — the
+absence of a flag is the informative case and must not look like missing data.
+
+The full 16-rule table is pinned by test, as is the invariant that a mapping
+with no flags can never carry a `confirms` label.
 
 ### 6.2 What SUNLIGHT sees that no CRI indicator can
 
