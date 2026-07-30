@@ -93,7 +93,136 @@ SEVERITY_WEIGHTS: Dict[str, float] = {
 }
 DEFAULT_SEVERITY_WEIGHT = 0.5
 
-COMPOSITE_FORMULA = "mean(procedural_score, financial_score, temporal_score, network_score)"
+# Decimal places for every published score. Rounding happens once, at
+# computation, so the composite is the exact mean of the published
+# sub-scores and an evaluator with a calculator reaches the same number.
+SCORE_PRECISION = 6
+
+COMPOSITE_FORMULA = (
+    "round(mean(determinate sub-scores), 6) — indeterminate axes are excluded "
+    "from the mean, never counted as zero"
+)
+
+# ═══════════════════════════════════════════════════════════
+# DETERMINACY — WHICH AXES HAD A BASIS FOR ASSESSMENT
+#
+# A sub-score of 0.0 and an axis that could not be assessed are epistemically
+# opposite, and displaying them identically is the single most misleading
+# thing this output layer could do. "Compared against context and found
+# clean" is a finding. "No basis to look" is not a finding at all.
+#
+# CRITICAL DISTINCTION, established by reading every rule condition: the four
+# structural sub-scores do NOT use corpus comparables. The word "comparable"
+# does not appear in tca_rules.py. Every contradiction-capable condition reads
+# intra-contract fields — procurement method, bidder count, the contract's own
+# tender-vs-award values, its own party list, its own award date.
+#
+# Comparables belong to the CRI price engine (institutional_pipeline), which
+# is a DIFFERENT axis and is not one of these four. So determinacy here is
+# INPUT AVAILABILITY, not peer availability: an axis is determinate when the
+# fields its rules read are actually present on the contract.
+#
+# Each axis lists the feature keys its contradiction-capable rules read. Any
+# one of them present makes the axis assessable, because a rule that can fire
+# has something to fire on.
+# ═══════════════════════════════════════════════════════════
+
+STATUS_DETERMINATE = "RELATIONALLY-DERIVED WITH SUFFICIENT CONTEXT"
+STATUS_INDETERMINATE = "INDETERMINATE (insufficient context)"
+
+CONTEXT_FULL = "full"
+CONTEXT_REDUCED = "reduced"
+CONTEXT_SINGLE_AXIS = "single-axis"
+CONTEXT_NONE = "none"
+
+# Determinacy is per-axis and mirrors what that axis's rules genuinely
+# require, not mere key presence. A generic "any field non-empty" test is too
+# permissive and produces exactly the false clean-zero this section exists to
+# prevent: a contract with one supplier and no addresses has NOTHING for the
+# entity rules to evaluate, yet carries a non-empty country_code.
+#
+# Each entry names the requirement in the rules' own terms and the rules that
+# depend on it, so the check can be audited against the registry by eye.
+AXIS_REQUIREMENTS: Dict[str, Dict[str, Any]] = {
+    "procedural_score": {
+        "rules": ("PROC-001", "PROC-002", "PROC-003"),
+        "requires": "oversight flag, or procurement method, or bidder count",
+        # PROC-003 evaluates `not has_review_body`, so oversight is assessable
+        # from any contract at all. This axis is therefore effectively always
+        # determinate — which is correct, not a loophole: whether a
+        # procurement record names a review body is always a fact about it.
+        "check": lambda f: (
+            f.get("has_review_body") is not None
+            or bool(f.get("procurement_method"))
+            or f.get("number_of_tenderers") is not None
+        ),
+    },
+    "financial_score": {
+        "rules": ("FIN-001",),
+        "requires": "both tender_value and award_value present and non-zero",
+        # FIN-001 compares the two. One value alone compares to nothing.
+        "check": lambda f: (f.get("tender_value") or 0) > 0
+                           and (f.get("award_value") or 0) > 0,
+    },
+    "temporal_score": {
+        "rules": ("TIME-001",),
+        "requires": "an award date (month and day)",
+        "check": lambda f: (f.get("award_month") is not None
+                            and f.get("award_day") is not None),
+    },
+    "network_score": {
+        "rules": ("ENT-001", "ENT-002", "GEO-001"),
+        "requires": ("two or more supplier addresses, or two or more supplier "
+                     "identifiers, or both a contract country and supplier "
+                     "countries"),
+        # Every network rule needs a RELATIONSHIP — a pair to compare. One
+        # supplier with no address and no country is not a clean network, it
+        # is an unassessable one.
+        "check": lambda f: (
+            len(f.get("supplier_addresses") or []) >= 2
+            or len(f.get("supplier_ids") or []) >= 2
+            or (bool(f.get("country_code")) and bool(f.get("supplier_countries")))
+        ),
+    },
+}
+
+
+def assess_determinacy(features: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    """Per-axis determinacy from the same features the rules read.
+
+    With no features supplied at all, every axis is INDETERMINATE. That is the
+    honest default: a caller that did not tell us what the contract contains
+    has given us no basis to assess anything, and defaulting to determinate
+    would manufacture confidence.
+    """
+    out: Dict[str, Dict[str, Any]] = {}
+    for axis, spec in AXIS_REQUIREMENTS.items():
+        if not features:
+            out[axis] = {
+                "determinate": False,
+                "status": STATUS_INDETERMINATE,
+                "requires": spec["requires"],
+                "rules_on_axis": list(spec["rules"]),
+                "reason": "no contract features supplied to the scoring layer",
+            }
+            continue
+        try:
+            determinate = bool(spec["check"](features))
+        except Exception:
+            determinate = False
+        out[axis] = {
+            "determinate": determinate,
+            "status": STATUS_DETERMINATE if determinate else STATUS_INDETERMINATE,
+            "requires": spec["requires"],
+            "rules_on_axis": list(spec["rules"]),
+            "reason": (
+                f"inputs present: {spec['requires']}" if determinate else
+                f"this contract carries none of: {spec['requires']} — "
+                f"no rule on this axis ({', '.join(spec['rules'])}) has "
+                f"anything to evaluate"
+            ),
+        }
+    return out
 
 
 # ═══════════════════════════════════════════════════════════
@@ -363,17 +492,31 @@ class ScoredFinding:
 @dataclass
 class SubScore:
     name: str
-    score: float
+    score: Optional[float]          # None when INDETERMINATE — never 0.0
     raw_weight: float
     denominator: int
+    determinate: bool = True
+    status: str = STATUS_DETERMINATE
+    reason: str = ""
+    requires: str = ""
+    rules_on_axis: List[str] = field(default_factory=list)
     findings: List[ScoredFinding] = field(default_factory=list)
 
     def as_dict(self) -> Dict[str, Any]:
         return {
-            "score": round(self.score, 6),
+            # None, not 0.0, when the axis had no basis for assessment. A
+            # consumer that treats null as zero is making a claim the data
+            # does not support, and the status field says so in words.
+            "score": self.score,
+            "determinate": self.determinate,
+            "status": self.status,
+            "reason": self.reason,
+            "requires_for_assessment": self.requires,
+            "rules_on_axis": self.rules_on_axis,
             "raw_weight": round(self.raw_weight, 6),
             "denominator": self.denominator,
-            "formula": "min(1.0, raw_weight / denominator)",
+            "formula": ("min(1.0, raw_weight / denominator)" if self.determinate
+                        else "not computed — axis indeterminate"),
             "rules_fired": len(self.findings),
             "decomposition": [f.as_dict() for f in self.findings],
         }
@@ -398,6 +541,7 @@ def _layer_rule_counts() -> Dict[str, int]:
 def compute_sub_scores(
     findings: List[Dict[str, Any]],
     layer_counts: Optional[Dict[str, int]] = None,
+    determinacy: Optional[Dict[str, Dict[str, Any]]] = None,
 ) -> Dict[str, SubScore]:
     """Four sub-scores from attributed findings.
 
@@ -441,40 +585,210 @@ def compute_sub_scores(
                 fazekas=fazekas_mapping_for(rule_id),
             ))
 
-        score = 0.0 if denominator <= 0 else min(1.0, raw / denominator)
-        out[name] = SubScore(name=name, score=score, raw_weight=raw,
-                             denominator=denominator, findings=scored)
+        det = (determinacy or {}).get(name)
+        # No determinacy supplied means the caller made no claim about input
+        # availability. Treat the axis as determinate so behaviour matches the
+        # pre-determinacy layer for callers that pass findings alone.
+        is_det = True if det is None else bool(det.get("determinate"))
+
+        # A rule that fired is itself proof its inputs were present. An axis
+        # cannot be indeterminate while carrying evidence.
+        if scored:
+            is_det = True
+
+        if not is_det:
+            score = None
+        elif denominator <= 0:
+            score = 0.0
+        else:
+            # Rounded HERE, once, so the value used in the composite is the
+            # same value published in the response. Rounding independently at
+            # serialisation made the published sub-scores fail to reconstruct
+            # the published composite in the 7th decimal — which quietly
+            # breaks the "verify the rollup by hand" property the formula is
+            # published for.
+            score = round(min(1.0, raw / denominator), SCORE_PRECISION)
+
+        out[name] = SubScore(
+            name=name, score=score, raw_weight=raw, denominator=denominator,
+            determinate=is_det,
+            status=STATUS_DETERMINATE if is_det else STATUS_INDETERMINATE,
+            reason=(det or {}).get("reason", "") if det else "",
+            requires=(det or {}).get("requires", "") if det else "",
+            rules_on_axis=(det or {}).get("rules_on_axis", []) if det else [],
+            findings=scored,
+        )
 
     return out
 
 
-def compute_composite(sub_scores: Dict[str, SubScore]) -> float:
-    """Simple arithmetic mean of the four sub-scores.
+def compute_composite(sub_scores: Dict[str, SubScore]) -> Optional[float]:
+    """Arithmetic mean over DETERMINATE axes only.
 
-    Deliberately the plainest possible rollup. A weighted composite would
-    encode a claim about which kind of structural risk matters most, which is
-    an institutional judgement rather than a technical finding, and it would
-    make the number impossible to check by hand. Fazekas averages its flags
-    the same way.
+    Still the plainest possible rollup — a weighted composite would encode a
+    claim about which kind of structural risk matters most, which is an
+    institutional judgement rather than a technical finding, and would make
+    the number impossible to check by hand.
+
+    What changed: an axis with no basis for assessment is EXCLUDED from the
+    mean rather than entered as zero. Entering it as zero would let the
+    absence of information pull the score toward clean, which is the same
+    error in the opposite direction from treating absence as guilt. An
+    unassessable axis should move the score neither way; it should narrow the
+    claim the score is making, and the context qualification is what carries
+    that.
+
+    Returns None when NO axis is determinate. There is no honest number to
+    report in that case, and a zero would be a fabricated clean bill.
     """
-    if not sub_scores:
-        return 0.0
-    return sum(s.score for s in sub_scores.values()) / len(sub_scores)
+    determinate = [s.score for s in sub_scores.values()
+                   if s.determinate and s.score is not None]
+    if not determinate:
+        return None
+    return round(sum(determinate) / len(determinate), SCORE_PRECISION)
+
+
+def assess_context(sub_scores: Dict[str, SubScore]) -> Dict[str, Any]:
+    """How much of the evidence space the composite actually rests on.
+
+    THE GUARD. A composite over one axis is not the same epistemic object as a
+    composite over four, and must never present as though it were. A
+    single-axis result is explicitly qualified as low-context so no consumer
+    can read it as a whole-contract assessment.
+    """
+    total = len(sub_scores)
+    populated = [n for n, s in sub_scores.items() if s.determinate and s.score is not None]
+    n = len(populated)
+
+    if n == 0:
+        level, note = CONTEXT_NONE, (
+            "No axis had a basis for assessment. No composite is reported: a "
+            "score here would be fabricated, not conservative.")
+    elif n == 1:
+        level, note = CONTEXT_SINGLE_AXIS, (
+            f"LOW CONTEXT — the composite rests on ONE axis ({populated[0]}) of "
+            f"{total}. This is not a whole-contract assessment and must not be "
+            f"read as one. A score derived from a single axis is a different "
+            f"epistemic object from one derived from four.")
+    elif n < total:
+        level, note = CONTEXT_REDUCED, (
+            f"REDUCED CONTEXT — computed on {n} of {total} axes. The "
+            f"{total - n} indeterminate axis/axes are excluded from the mean, "
+            f"not counted as zero.")
+    else:
+        level, note = CONTEXT_FULL, (
+            f"FULL CONTEXT — all {total} axes had a basis for assessment.")
+
+    return {
+        "context_level": level,
+        "axes_total": total,
+        "axes_populated": n,
+        "axes_determinate": sorted(populated),
+        "axes_indeterminate": sorted(n_ for n_, s in sub_scores.items()
+                                     if not (s.determinate and s.score is not None)),
+        "low_context": n <= 1,
+        "note": note,
+    }
+
+
+# The only field in the scoring output that varies between identical runs.
+#
+# computed_at is provenance — WHEN the score was produced — not part of the
+# corpus state the score depends on. Determinism is therefore asserted over
+# everything else, exactly as the handover expected-outputs strip
+# processing_time_ms. Naming it here rather than leaving callers to discover
+# it means a consumer diffing two results knows which difference is meaningless.
+VOLATILE_STAMP_FIELDS = ("computed_at",)
+
+
+def strip_volatile(scoring: Dict[str, Any]) -> Dict[str, Any]:
+    """A copy of the scoring output with volatile provenance removed.
+
+    The canonical form for determinism checks and for storing expected
+    outputs. Same contract + same corpus state + same profile must produce a
+    byte-identical result under this transform.
+    """
+    import copy
+    out = copy.deepcopy(scoring)
+    stamp = out.get("corpus_stamp")
+    if isinstance(stamp, dict):
+        for f in VOLATILE_STAMP_FIELDS:
+            stamp.pop(f, None)
+    return out
+
+
+def corpus_stamp(
+    comparable_count: int = 0,
+    comparable_ids: Optional[List[str]] = None,
+    profile_name: str = "",
+    profile_version: str = "",
+    computed_at: Optional[str] = None,
+) -> Dict[str, Any]:
+    """The corpus state a score was computed against.
+
+    A score is only reproducible against the comparison set that produced it.
+    Without this stamp, the same contract scoring differently next quarter is
+    indistinguishable from drift — and "the corpus grew" and "the engine
+    changed" are very different explanations to owe an institution.
+
+    The fingerprint is a digest of the sorted comparison-set identifiers, so
+    it is stable under reordering and changes when membership changes. Empty
+    comparison set yields a NULL fingerprint rather than the digest of an
+    empty string, so "no corpus" cannot be confused with "a corpus that
+    happened to hash to that".
+    """
+    import hashlib
+
+    ids = sorted(comparable_ids or [])
+    if ids:
+        digest = hashlib.sha256("\x1f".join(ids).encode("utf-8")).hexdigest()[:16]
+    else:
+        digest = None
+
+    return {
+        "comparison_set_size": comparable_count,
+        "corpus_fingerprint": digest,
+        "fingerprint_basis": ("sha256 of sorted comparison-set identifiers, "
+                              "first 16 hex chars"),
+        "jurisdiction_profile": profile_name,
+        "jurisdiction_profile_version": profile_version,
+        "computed_at": computed_at,
+        "volatile_fields": list(VOLATILE_STAMP_FIELDS),
+        "note": (
+            "A score is reproducible only against the corpus state recorded "
+            "here. A later score change for the same contract must be "
+            "attributable to a documented change in this stamp, never left "
+            "indistinguishable from drift."
+        ),
+    }
 
 
 def score_findings(
     findings: List[Dict[str, Any]],
     cutoffs: Optional[BandCutoffs] = None,
     layer_counts: Optional[Dict[str, int]] = None,
+    features: Optional[Dict[str, Any]] = None,
+    stamp: Optional[Dict[str, Any]] = None,
+    isolation: bool = False,
 ) -> Dict[str, Any]:
     """Full three-tier output for a set of attributed findings.
 
     `findings` are dicts carrying at least rule_id, layer and severity — the
     shape the API's Contradiction model produces after rule attribution.
+
+    `features` is the same feature dict the rules read. Supplying it enables
+    per-axis determinacy; omitting it treats all axes as determinate, which
+    preserves behaviour for callers that pass findings alone.
+
+    `isolation` marks a single-contract assessment, so the output announces
+    its own context rather than leaving a consumer to infer it.
     """
     cutoffs = cutoffs or DEFAULT_CUTOFFS
-    subs = compute_sub_scores(findings, layer_counts=layer_counts)
+    determinacy = assess_determinacy(features) if features is not None else None
+    subs = compute_sub_scores(findings, layer_counts=layer_counts,
+                              determinacy=determinacy)
     composite = compute_composite(subs)
+    context = assess_context(subs)
 
     scored = [f for s in subs.values() for f in s.findings]
 
@@ -493,10 +807,28 @@ def score_findings(
             })
 
     return {
-        "composite_structural_score": round(composite, 6),
+        "composite_structural_score": None if composite is None else round(composite, 6),
         "composite_formula": COMPOSITE_FORMULA,
+        "composite_computed_over": context["axes_determinate"],
+        "assessment_context": context,
+        "assessment_mode": "isolation (single contract)" if isolation else "corpus-contextual",
+        "isolation_assessment": isolation,
+        "isolation_note": (
+            "SINGLE-CONTRACT (ISOLATION) ASSESSMENT. Axes whose rules require "
+            "party, value or date fields absent from this contract are reported "
+            "INDETERMINATE and excluded from the composite — not scored zero. "
+            "Note that the four structural axes do not use corpus comparables; "
+            "the CRI price axis does, and is reported separately in "
+            "gate_outcome."
+        ) if isolation else None,
+        "corpus_stamp": stamp if stamp is not None else corpus_stamp(),
         "sub_scores": {name: s.as_dict() for name, s in subs.items()},
-        "interpretation_band": cutoffs.band_for(composite),
+        "interpretation_band": (None if composite is None
+                                else cutoffs.band_for(composite)),
+        "band_qualification": (
+            "NOT REPORTED — no axis was determinate" if composite is None
+            else "LOW CONTEXT — band rests on a single axis" if context["low_context"]
+            else f"computed on {context['axes_populated']} of {context['axes_total']} axes"),
         "band_cutoffs": cutoffs.as_dict(),
         "findings": [f.as_dict() for f in scored],
         "cri_confirmed_flags": [
@@ -512,8 +844,11 @@ def score_findings(
             "the detection engines already produced and does not participate "
             "in detection: no verdict, threshold or gate consults it. "
             "composite = " + COMPOSITE_FORMULA + ", so the rollup can be "
-            "verified by hand from the four sub-scores, each sub-score from "
-            "its decomposition, and each finding from its rule. "
-            "A score is a structural risk measurement, not an allegation."
+            "verified by hand from the determinate sub-scores, each sub-score "
+            "from its decomposition, and each finding from its rule. "
+            "An INDETERMINATE axis reports null, never 0.0: no basis to assess "
+            "is not the same as assessed and found clean, and the two must "
+            "never render alike. A score is a structural risk measurement, "
+            "not an allegation."
         ),
     }

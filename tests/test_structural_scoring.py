@@ -26,6 +26,11 @@ from fastapi.testclient import TestClient
 from api import app
 from structural_scoring import (
     COMPOSITE_FORMULA,
+    STATUS_INDETERMINATE,
+    assess_context,
+    assess_determinacy,
+    corpus_stamp,
+    strip_volatile,
     DEFAULT_CUTOFFS,
     FAZEKAS_FLAGS,
     RELATIONSHIP_CONFIRMS,
@@ -138,18 +143,23 @@ class TestSubScores:
 class TestComposite:
 
     def test_composite_is_the_exact_arithmetic_mean(self):
+        """Exact to the published precision. The by-hand procedure is fully
+        specified in composite_formula: add the published sub-scores, divide by
+        the count, round to 6 decimals. Rounding happens once at computation so
+        the published sub-scores reconstruct the published composite exactly —
+        without that, an evaluator adding the numbers lands 2.5e-7 off."""
         findings = [finding("PROC-001", "procurement"), finding("TIME-001", "temporal")]
         subs = compute_sub_scores(findings)
-        expected = sum(s.score for s in subs.values()) / 4
-        assert compute_composite(subs) == pytest.approx(expected)
+        expected = round(sum(s.score for s in subs.values()) / 4, 6)
+        assert compute_composite(subs) == expected
 
     def test_composite_matches_a_hand_calculation(self):
         """The property the formula is published for: an evaluator with a
         calculator must reach the same number."""
         findings = [finding("PROC-001", "procurement"), finding("TIME-001", "temporal")]
         out = score_findings(findings)
-        by_hand = (1 / 5 + 0.0 + 1 / 3 + 0.0) / 4
-        assert out["composite_structural_score"] == pytest.approx(by_hand, abs=1e-6)
+        by_hand = round((round(1 / 5, 6) + 0.0 + round(1 / 3, 6) + 0.0) / 4, 6)
+        assert out["composite_structural_score"] == by_hand
 
     def test_formula_is_published_in_the_output(self):
         out = score_findings([])
@@ -390,11 +400,13 @@ class TestBoeingDemoCase:
         confirmed = {f["flag"] for f in s["cri_confirmed_flags"]}
         assert {"F1", "F3"} <= confirmed
 
-    def test_the_composite_is_the_mean_of_its_vector(self, client):
+    def test_the_composite_is_the_mean_of_its_determinate_vector(self, client):
+        """Indeterminate axes are excluded from the mean, not entered as zero."""
         s = self._scoring(client)
-        vector = [v["score"] for v in s["sub_scores"].values()]
+        determinate = [v["score"] for v in s["sub_scores"].values()
+                       if v["determinate"] and v["score"] is not None]
         assert s["composite_structural_score"] == pytest.approx(
-            sum(vector) / len(vector), abs=1e-6)
+            sum(determinate) / len(determinate), abs=1e-6)
 
     def test_every_finding_names_its_rule_and_citation(self, client):
         """The pitch depends on this: a score an institution can trace to a
@@ -408,9 +420,10 @@ class TestBoeingDemoCase:
             assert f["contribution"] > 0
 
     def test_it_is_deterministic(self, client):
-        a = self._scoring(client)
-        b = self._scoring(client)
-        assert a == b
+        """Byte-identical under the canonical form. computed_at is provenance
+        (when the score ran), not corpus state, and is the single declared
+        volatile field."""
+        assert strip_volatile(self._scoring(client)) == strip_volatile(self._scoring(client))
 
     def test_boeing_scores_low_structurally_and_that_is_correct(self, client):
         """THE SCOPE BOUNDARY, pinned so nobody mistakes it for a defect.
@@ -488,9 +501,10 @@ class TestMultiLayerDemoCase:
 
     def test_composite_is_the_mean_and_reconstructable(self, client):
         s = self._scoring(client)
-        vector = [v["score"] for v in s["sub_scores"].values()]
+        determinate = [v["score"] for v in s["sub_scores"].values()
+                       if v["determinate"] and v["score"] is not None]
         assert s["composite_structural_score"] == pytest.approx(
-            sum(vector) / len(vector), abs=1e-6)
+            sum(determinate) / len(determinate), abs=1e-6)
 
     def test_every_finding_is_fully_attributed(self, client):
         for f in self._scoring(client)["findings"]:
@@ -498,7 +512,7 @@ class TestMultiLayerDemoCase:
             assert f["fazekas_mapping"]["relationship"] in ("confirms", "related", "none")
 
     def test_it_is_deterministic(self, client):
-        assert self._scoring(client) == self._scoring(client)
+        assert strip_volatile(self._scoring(client)) == strip_volatile(self._scoring(client))
 
 
 # ═══════════════════════════════════════════════════════════
@@ -556,3 +570,237 @@ class TestAdditive:
         s = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
         assert "not participate in detection" in s["methodology_note"]
         assert "not an allegation" in s["methodology_note"]
+
+
+# ═══════════════════════════════════════════════════════════
+# PHASE 1A — ISOLATION-ZERO vs COMPARED-ZERO
+# ═══════════════════════════════════════════════════════════
+
+
+class TestDeterminacy:
+    """An axis with no basis for assessment must never render as 0.0.
+
+    "Assessed against context and found clean" and "no basis to look" are
+    epistemically opposite. Displaying them identically is the most
+    misleading thing this output layer could do, and it is what it did
+    before this change.
+    """
+
+    RICH = {"procurement_method": "open", "number_of_tenderers": 3,
+            "has_review_body": True, "tender_value": 100.0, "award_value": 120.0,
+            "award_month": 9, "award_day": 29,
+            "supplier_addresses": ["a", "a"], "supplier_ids": ["x", "y"],
+            "supplier_countries": ["US"], "country_code": "US"}
+
+    BARE = {"procurement_method": "", "number_of_tenderers": None,
+            "has_review_body": None, "tender_value": 0, "award_value": 0,
+            "award_month": None, "award_day": None,
+            "supplier_addresses": [], "supplier_ids": [], "supplier_countries": [],
+            "country_code": ""}
+
+    def test_rich_contract_is_determinate_on_all_axes(self):
+        d = assess_determinacy(self.RICH)
+        assert all(v["determinate"] for v in d.values())
+
+    def test_bare_contract_is_indeterminate_on_all_axes(self):
+        d = assess_determinacy(self.BARE)
+        assert not any(v["determinate"] for v in d.values())
+
+    def test_no_features_means_indeterminate_not_determinate(self):
+        """The honest default. A caller who told us nothing about the contract
+        gave us no basis to assess it; defaulting to determinate would
+        manufacture confidence."""
+        d = assess_determinacy(None)
+        assert not any(v["determinate"] for v in d.values())
+
+    def test_single_supplier_no_addresses_is_indeterminate_on_network(self):
+        """THE FALSE CLEAN-ZERO, caught. One supplier with no addresses and no
+        countries has NOTHING for ENT-001/ENT-002/GEO-001 to evaluate. Before
+        this fix it reported network_score 0.0 with sufficient context."""
+        f = dict(self.RICH, supplier_addresses=[], supplier_ids=["only-one"],
+                 supplier_countries=[], country_code="")
+        assert assess_determinacy(f)["network_score"]["determinate"] is False
+
+    def test_one_value_alone_cannot_assess_financial(self):
+        """FIN-001 compares tender against award. One value compares to nothing."""
+        f = dict(self.RICH, tender_value=100.0, award_value=0)
+        assert assess_determinacy(f)["financial_score"]["determinate"] is False
+
+    def test_indeterminate_score_is_none_never_zero(self):
+        subs = compute_sub_scores([], determinacy=assess_determinacy(self.BARE))
+        for name, s in subs.items():
+            assert s.score is None, f"{name} rendered {s.score} instead of None"
+            assert s.determinate is False
+
+    def test_indeterminate_axis_says_so_in_words(self):
+        out = score_findings([], features=self.BARE)
+        for sub in out["sub_scores"].values():
+            assert sub["score"] is None
+            assert sub["status"] == STATUS_INDETERMINATE
+            assert sub["requires_for_assessment"]
+            assert sub["rules_on_axis"]
+
+    def test_a_fired_rule_proves_its_axis_determinate(self):
+        """Evidence outranks the availability check. An axis cannot be
+        indeterminate while carrying a finding — the rule fired, so its
+        inputs were plainly present."""
+        subs = compute_sub_scores([finding("PROC-001", "procurement")],
+                                  determinacy=assess_determinacy(self.BARE))
+        assert subs["procedural_score"].determinate is True
+        assert subs["procedural_score"].score is not None
+
+    def test_determinate_zero_and_indeterminate_are_distinguishable(self):
+        """The whole point: a consumer must be able to tell them apart."""
+        clean = score_findings([], features=self.RICH)
+        unknown = score_findings([], features=self.BARE)
+        clean_fin = clean["sub_scores"]["financial_score"]
+        unknown_fin = unknown["sub_scores"]["financial_score"]
+        assert clean_fin["score"] == 0.0 and clean_fin["determinate"] is True
+        assert unknown_fin["score"] is None and unknown_fin["determinate"] is False
+        assert clean_fin["status"] != unknown_fin["status"]
+
+
+class TestCompositeOverDeterminateAxes:
+
+    def test_indeterminate_axes_are_excluded_not_zeroed(self):
+        """A contract determinate only on procedural, scoring 0.2 there, must
+        report 0.2 — not 0.05 from averaging three phantom zeros."""
+        f = dict(TestDeterminacy.BARE, procurement_method="limited")
+        out = score_findings([finding("PROC-001", "procurement")], features=f)
+        assert out["composite_structural_score"] == pytest.approx(0.2)
+
+    def test_composite_is_mean_over_determinate_only(self):
+        out = score_findings([finding("PROC-001", "procurement"),
+                              finding("TIME-001", "temporal")],
+                             features=TestDeterminacy.RICH)
+        det = [v["score"] for v in out["sub_scores"].values()
+               if v["determinate"] and v["score"] is not None]
+        assert out["composite_structural_score"] == round(sum(det) / len(det), 6)
+
+    def test_no_determinate_axis_yields_no_composite(self):
+        """None, not 0.0. A zero here would be a fabricated clean bill."""
+        out = score_findings([], features=TestDeterminacy.BARE)
+        assert out["composite_structural_score"] is None
+        assert out["interpretation_band"] is None
+        assert "no axis was determinate" in out["band_qualification"]
+
+    def test_composite_names_the_axes_it_used(self):
+        out = score_findings([], features=TestDeterminacy.RICH)
+        assert set(out["composite_computed_over"]) == set(out["sub_scores"])
+
+
+class TestSingleAxisGuard:
+    """A score from one axis is not the same epistemic object as one from four,
+    and the output must say so rather than let a consumer assume otherwise."""
+
+    def test_single_determinate_axis_is_flagged_low_context(self):
+        f = dict(TestDeterminacy.BARE, procurement_method="limited")
+        out = score_findings([finding("PROC-001", "procurement")], features=f)
+        ctx = out["assessment_context"]
+        assert ctx["axes_populated"] == 1
+        assert ctx["low_context"] is True
+        assert ctx["context_level"] == "single-axis"
+        assert "LOW CONTEXT" in ctx["note"]
+        assert "not a whole-contract assessment" in ctx["note"]
+
+    def test_band_carries_the_low_context_qualification(self):
+        f = dict(TestDeterminacy.BARE, procurement_method="limited")
+        out = score_findings([finding("PROC-001", "procurement")], features=f)
+        assert "LOW CONTEXT" in out["band_qualification"]
+
+    def test_full_context_is_not_flagged_low(self):
+        out = score_findings([], features=TestDeterminacy.RICH)
+        ctx = out["assessment_context"]
+        assert ctx["context_level"] == "full"
+        assert ctx["low_context"] is False
+
+    def test_reduced_context_is_named_but_not_low(self):
+        f = dict(TestDeterminacy.RICH, supplier_addresses=[], supplier_ids=["one"],
+                 supplier_countries=[], country_code="")
+        ctx = score_findings([], features=f)["assessment_context"]
+        assert ctx["context_level"] == "reduced"
+        assert ctx["low_context"] is False
+        assert ctx["axes_populated"] == 3
+
+    def test_context_lists_both_sides(self):
+        f = dict(TestDeterminacy.RICH, supplier_addresses=[], supplier_ids=["one"],
+                 supplier_countries=[], country_code="")
+        ctx = score_findings([], features=f)["assessment_context"]
+        assert "network_score" in ctx["axes_indeterminate"]
+        assert "network_score" not in ctx["axes_determinate"]
+        assert len(ctx["axes_determinate"]) + len(ctx["axes_indeterminate"]) == 4
+
+
+class TestIsolationAnnouncement:
+
+    def test_single_contract_analyze_declares_isolation(self, client):
+        s = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
+        assert s["isolation_assessment"] is True
+        assert "isolation" in s["assessment_mode"]
+        assert "SINGLE-CONTRACT (ISOLATION) ASSESSMENT" in s["isolation_note"]
+
+    def test_isolation_note_corrects_the_comparables_misconception(self, client):
+        """The four structural axes do not use comparables; the CRI price axis
+        does. Stating it prevents a reader inferring the wrong reason for an
+        indeterminate axis."""
+        s = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
+        assert "do not use corpus comparables" in s["isolation_note"]
+
+    def test_non_isolation_carries_no_isolation_note(self):
+        out = score_findings([], features=TestDeterminacy.RICH, isolation=False)
+        assert out["isolation_assessment"] is False
+        assert out["isolation_note"] is None
+
+
+# ═══════════════════════════════════════════════════════════
+# PHASE 1B — CORPUS-STATE STAMPING
+# ═══════════════════════════════════════════════════════════
+
+
+class TestCorpusStamp:
+
+    def test_stamp_is_present_on_every_result(self, client):
+        s = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
+        st = s["corpus_stamp"]
+        for k in ("comparison_set_size", "corpus_fingerprint",
+                  "jurisdiction_profile", "jurisdiction_profile_version",
+                  "computed_at"):
+            assert k in st
+
+    def test_fingerprint_is_stable_under_reordering(self):
+        a = corpus_stamp(3, ["c", "a", "b"])
+        b = corpus_stamp(3, ["a", "b", "c"])
+        assert a["corpus_fingerprint"] == b["corpus_fingerprint"]
+
+    def test_fingerprint_changes_when_membership_changes(self):
+        """The property that makes drift attributable rather than mysterious."""
+        a = corpus_stamp(3, ["a", "b", "c"])
+        b = corpus_stamp(4, ["a", "b", "c", "d"])
+        assert a["corpus_fingerprint"] != b["corpus_fingerprint"]
+
+    def test_empty_comparison_set_yields_null_not_a_digest(self):
+        """So "no corpus" cannot be confused with "a corpus that happened to
+        hash to that value"."""
+        assert corpus_stamp(0, [])["corpus_fingerprint"] is None
+
+    def test_profile_version_is_recorded(self, client):
+        st = client.post("/analyze", json=BOEING_LIKE).json()[
+            "structural_scoring"]["corpus_stamp"]
+        assert st["jurisdiction_profile"] == "us_federal"
+        assert st["jurisdiction_profile_version"]
+
+    def test_volatile_field_is_declared(self):
+        assert corpus_stamp(0, [])["volatile_fields"] == ["computed_at"]
+
+    def test_determinism_holds_under_the_canonical_form(self, client):
+        """Same contract + same corpus state + same profile -> byte-identical."""
+        a = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
+        b = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
+        assert strip_volatile(a) == strip_volatile(b)
+
+    def test_only_computed_at_differs_between_runs(self, client):
+        a = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
+        b = client.post("/analyze", json=BOEING_LIKE).json()["structural_scoring"]
+        diff = {k for k in a["corpus_stamp"]
+                if a["corpus_stamp"][k] != b["corpus_stamp"][k]}
+        assert diff <= {"computed_at"}

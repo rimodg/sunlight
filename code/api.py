@@ -216,8 +216,18 @@ def _band_cutoffs_from_env():
     return cutoffs
 
 
-def _build_structural_scoring(structure) -> Optional[Dict[str, Any]]:
+def _build_structural_scoring(
+    structure,
+    dossier=None,
+    profile_name: str = "",
+    isolation: bool = False,
+) -> Optional[Dict[str, Any]]:
     """Three-tier scoring over already-attributed findings.
+
+    Determinacy is derived from the SAME feature extraction the rules use
+    (tca_rules._extract), so what the output calls assessable cannot drift
+    from what the rules actually read. Deriving it independently would be a
+    second source of truth about the same question.
 
     Never raises into the response path. This is an output layer, and a
     failure to re-express findings must not take down an analysis that
@@ -226,9 +236,40 @@ def _build_structural_scoring(structure) -> Optional[Dict[str, Any]]:
     if structure is None:
         return None
     try:
-        from structural_scoring import score_findings
+        from structural_scoring import corpus_stamp, score_findings
+
         findings = [c.model_dump() for c in (structure.contradictions or [])]
-        return score_findings(findings, cutoffs=_band_cutoffs_from_env())
+
+        features = None
+        if dossier is not None:
+            try:
+                from tca_rules import _extract
+                features = _extract(dossier)
+            except Exception as e:  # noqa: BLE001
+                logger.warning(f"Feature extraction for determinacy failed: {e}")
+
+        comparables = list(getattr(dossier, "comparables", None) or []) if dossier else []
+        profile_obj = None
+        try:
+            profile_obj = get_profile(profile_name) if profile_name else None
+        except ValueError:
+            profile_obj = None
+
+        stamp = corpus_stamp(
+            comparable_count=len(comparables),
+            comparable_ids=[str(x) for x in comparables],
+            profile_name=profile_name,
+            profile_version=getattr(profile_obj, "global_params_version", ""),
+            computed_at=datetime.now(timezone.utc).isoformat(),
+        )
+
+        return score_findings(
+            findings,
+            cutoffs=_band_cutoffs_from_env(),
+            features=features,
+            stamp=stamp,
+            isolation=isolation,
+        )
     except Exception as e:  # noqa: BLE001 — logged, never surfaced as a 500
         logger.error(f"Structural scoring failed (analysis unaffected): {e}")
         return None
@@ -741,7 +782,12 @@ async def analyze_contract(request: AnalyzeRequest):
             structure=structure,
             gate_verdict=gate_verdict,
             gate_outcome=gate_outcome,
-            structural_scoring=_build_structural_scoring(structure),
+            # isolation=True: POST /analyze is a single contract with no
+            # comparison set, and the output must announce that rather than
+            # let a consumer assume corpus context it never had.
+            structural_scoring=_build_structural_scoring(
+                structure, dossier=dossier,
+                profile_name=request.profile, isolation=True),
             errors=errors,
             processing_time_ms=processing_time_ms,
             recommended_for_investigation=recommended,
