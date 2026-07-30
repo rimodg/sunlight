@@ -311,11 +311,31 @@ RULE_FAZEKAS_MAP: Dict[str, FazekasMapping] = {
 
     "PROC-004": _NONE_STRUCTURAL,
 
-    # ── Concentration → F7 ──
+    # ── ENT-003 maps to NOTHING, and this was wrong before ──
+    #
+    # Originally mapped to F7 (spending/market concentration) as CONFIRMS, on
+    # the strength of its name, "Single supplier dominance". Reading the rule
+    # rather than its title shows that is not what it detects:
+    #
+    #   condition : supplier_count == 1 and number_of_tenderers >= 3
+    #   edge      : EXPRESSES  (not REMOVES/SEEKS/VERIFIES — ignored for scoring)
+    #   its own description: "Single supplier won against N bidders —
+    #                        normal competitive outcome"
+    #
+    # It marks a NORMAL competitive result: one winner among three or more
+    # genuine bidders. Mapping it to a corruption-risk flag as a confirmation
+    # would have told an institution SUNLIGHT structurally confirms market
+    # concentration when nothing in the engine measures concentration at all.
+    #
+    # No output was ever wrong, because the EXPRESSES edge means this rule
+    # cannot reach the scoring layer. The published mapping table would have
+    # been, which is worse: the table is the artefact an institution reads.
     "ENT-003": FazekasMapping(
-        ("F7",), RELATIONSHIP_CONFIRMS,
-        CONFIRMS_LABEL + " Supplier dominance is the concentration F7 "
-        "measures."),
+        (), RELATIONSHIP_NONE,
+        NO_CRI_LABEL + " Despite its name, this rule marks a NORMAL "
+        "competitive outcome — a single winner among three or more bidders — "
+        "not concentration. No TCA rule measures spending or market "
+        "concentration, so SUNLIGHT does not confirm F7."),
 
     # ── Entity-relationship findings: structural-only ──
     "ENT-001": FazekasMapping(

@@ -20,7 +20,7 @@ A 16-stage pipeline runs across five sides: stages 1-8 procurement, stages 9-12 
 
 **CRI (Contract Risk Indicators)** — Statistical engine. Computes price deviation from peer cohort, Bayesian posterior probability, z-scores, and Wilson confidence intervals. Produces a structural confidence score.
 
-**TCA (Transparent Contradiction Analysis)** — Rule engine. Constructs a structural dependency graph of each contract's stakeholders, capabilities, and procedural commitments, then identifies topological contradictions through graph analysis. 16 rules across 5 layers (procurement, financial, compliance, temporal, vendor). Each rule fires with a confidence score, legal citation, and evidence string. Grounded in the i* Strategic Dependency Framework (Heng, Tsilionis, Scharff & Wautelet, 2022).
+**TCA (Transparent Contradiction Analysis)** — Rule engine. Constructs a structural dependency graph of each contract's stakeholders, capabilities, and procedural commitments, then identifies topological contradictions through graph analysis. 16 rules across 5 layers (procurement 5, entity 3, financial 3, temporal 3, network 2). Each rule fires with a confidence score, legal citation, and evidence string. Grounded in the i* Strategic Dependency Framework (Heng, Tsilionis, Scharff & Wautelet, 2022).
 
 **EVG (Evidence Verification Gate)** — Gating framework. Requires convergent evidence across independent analytical dimensions before issuing a verdict. Three procurement dimensions (CRI statistical markup, CRI bribery channel, TCA typologies). Prevents single-signal flags from reaching high-confidence tiers.
 
@@ -123,17 +123,20 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-1,747 tests across five build phases. Zero regressions.
+1,889 tests across five build phases plus two cross-cutting suites. Zero regressions.
 
 | Phase | Description | Tests |
 |-------|-------------|-------|
-| Side 1 | Procurement verification (CRI + TCA + EVG) | 685 |
+| Side 1 | Procurement verification (CRI + TCA + EVG) | 734 |
 | Side 2 | Delivery verification | 242 |
 | Side 3 | Intelligence alerts | 129 |
 | Side 4 | Recovery intelligence | 79 |
-| Side 5 | Evidence corroboration | 563 |
+| Side 5 | Evidence corroboration | 570 |
+| Output layer | Three-tier structural scoring + Fazekas mapping | 96 |
+| Hardening | Volume, determinism, no-silent-drop, edge honesty | 39 |
 
-The pre-Side-5 baseline was 1,182, which includes an institution-readiness pass beyond the original 1,133.
+Every number above is measured, not estimated. The pre-Side-5 baseline was 1,182,
+itself above the original 1,133 after an institution-readiness pass.
 
 DOJ regression baseline preserved across every commit: 33.3% / 100% / 9.0% / 0.746 / 129.2.
 

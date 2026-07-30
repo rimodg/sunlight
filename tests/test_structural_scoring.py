@@ -260,10 +260,24 @@ class TestFazekasMapping:
         assert m.flags == ("F1",)
         assert m.relationship == RELATIONSHIP_CONFIRMS
 
-    def test_concentration_confirms_f7(self):
+    def test_no_rule_confirms_f7_because_none_measures_concentration(self):
+        """CORRECTED MAPPING. ENT-003 was mapped to F7 as CONFIRMS on the
+        strength of its name, "Single supplier dominance". The rule itself
+        detects a single winner among three or more bidders and its own
+        description calls that a "normal competitive outcome"; it emits an
+        EXPRESSES edge and cannot even reach the scoring layer.
+
+        Claiming it confirms F7 would have told an institution SUNLIGHT
+        structurally verifies market concentration when no rule in the engine
+        measures concentration at all.
+        """
         m = fazekas_mapping_for("ENT-003")
-        assert m.flags == ("F7",)
-        assert m.relationship == RELATIONSHIP_CONFIRMS
+        assert m.flags == ()
+        assert m.relationship == RELATIONSHIP_NONE
+        assert "normal" in m.note.lower()
+        confirmed = {f for mm in RULE_FAZEKAS_MAP.values()
+                     if mm.relationship == RELATIONSHIP_CONFIRMS for f in mm.flags}
+        assert "F7" not in confirmed
 
     def test_fiscal_clustering_is_related_to_f6_not_identical(self):
         """Do not overclaim. F6 measures the decision interval; TIME-001
@@ -330,17 +344,20 @@ class TestFazekasMapping:
         F2, F4 and F5 concern publication and evaluation-criteria attributes
         the structural engine does not model at all: no rule touches them.
 
+        F7 has no rule either, after the ENT-003 correction: nothing in the
+        engine measures spending or market concentration.
+
         F6 is different. Two temporal rules map to it, but only as RELATED —
         F6 measures the decision interval while SUNLIGHT measures
         fiscal-calendar clustering. Deliberately not upgraded to a
         confirmation, per the conservative mapping discipline.
         """
         never = flags_never_confirmed()
-        assert set(never) == {"F2", "F4", "F5", "F6"}
+        assert set(never) == {"F2", "F4", "F5", "F6", "F7"}
 
         unmapped = {f for f in FAZEKAS_FLAGS
                     if not any(f in m.flags for m in RULE_FAZEKAS_MAP.values())}
-        assert unmapped == {"F2", "F4", "F5"}
+        assert unmapped == {"F2", "F4", "F5", "F7"}
 
         related_only = set(never) - unmapped
         assert related_only == {"F6"}
