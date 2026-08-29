@@ -270,3 +270,89 @@ def test_real_ng_profile_degrades_honestly():
     assert r.absence_duration_days is None
     assert "no planned delivery date stated" in r.duration_reason
     assert r.cpd_citation == "UNDP CPD Nigeria 2023-2027 (illustrative)"
+
+
+# ── Increment 3: heart wiring, report gate, golden invariance ────────
+
+from datetime import date as _date
+
+from impact_report import assemble_impact_report, assemble_executive_summary
+
+
+def _assembled_report():
+    return assemble_impact_report(
+        recoveries=[_recovery()],
+        redirections=[],
+        country_office="Testland CO",
+        country_code="TL",
+        reporting_period_start=_date(2026, 1, 1),
+        reporting_period_end=_date(2026, 8, 29),
+        jurisdiction_profile="us_federal",
+        currency="USD",
+    )
+
+
+def test_golden_no_absence_summary_byte_identical():
+    """The pre-ledger summary is untouched: with absence None the new code
+    path never executes, and attaching absence only ever appends."""
+    report = _assembled_report()
+    before = report.executive_summary
+    assert "Confirmed diversions:" not in before
+    assert "unfunded" not in before
+    report.absence = roll_up([
+        compute_absence_record(_recovery(), _profile(), "TL-H-001", _date(2026, 8, 29)),
+    ])
+    after = assemble_executive_summary(report)
+    assert after.startswith(before)
+    assert "Confirmed diversions: 1" in after
+    assert "30,000 stated" in after
+
+
+def test_absence_gate_semantics():
+    report = _assembled_report()
+    assert report.has_absence_data is False
+    report.absence = {}
+    assert report.has_absence_data is False
+    report.absence = roll_up([
+        compute_absence_record(_recovery(RecoveryStatus.IDENTIFIED), _profile(),
+                               "TL-H-001", _date(2026, 8, 29)),
+    ])
+    assert report.has_absence_data is False  # at-risk only: nothing confirmed
+    report.absence = roll_up([
+        compute_absence_record(_recovery(), _profile(), "TL-H-001", _date(2026, 8, 29)),
+    ])
+    assert report.has_absence_data is True
+
+
+def test_at_risk_only_summary_unchanged():
+    report = _assembled_report()
+    before = report.executive_summary
+    report.absence = roll_up([
+        compute_absence_record(_recovery(RecoveryStatus.IDENTIFIED), _profile(),
+                               "TL-H-001", _date(2026, 8, 29)),
+    ])
+    assert assemble_executive_summary(report) == before
+
+
+def test_recovery_record_carries_absence_id():
+    rec = _recovery()
+    assert rec.absence_id is None
+    rec.absence_id = "absence:rec-001:TL-H-001"
+    assert rec.absence_id == "absence:rec-001:TL-H-001"
+
+
+def test_clause_reports_unstated_count():
+    report = _assembled_report()
+    report.absence = roll_up([
+        compute_absence_record(_recovery(), _profile(), "TL-H-001", _date(2026, 8, 29)),
+        compute_absence_record(RecoveryRecord(
+            recovery_id="rec-003", source_contract_id="C-003",
+            recovery_amount=500000.0, currency="USD",
+            country_office="Testland CO", country_code="TL",
+            original_pillar="education", status=RecoveryStatus.CONFIRMED,
+        ), _profile(), "TL-E-001", _date(2026, 8, 29)),
+    ])
+    s = assemble_executive_summary(report)
+    assert "Confirmed diversions: 2" in s
+    assert "4,700,000 USD" in s
+    assert "(1 affected outputs state no figure)" in s

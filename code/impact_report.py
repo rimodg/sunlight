@@ -475,6 +475,12 @@ def assemble_executive_summary(report: ImpactReport) -> str:
         f"percentage points across the programme cycle."
     )
 
+    # Absence Ledger clause (additive). Rendered only when confirmed
+    # absence data exists, so the no-absence summary is byte-identical
+    # to pre-ledger output, mirroring the corroboration precedent.
+    if report.has_absence_data:
+        summary += _absence_clause(report)
+
     return summary
 
 
