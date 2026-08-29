@@ -140,6 +140,9 @@ class RecoveryRecord:
     # Linked redirections
     redirections: List[str] = field(default_factory=list)
 
+    # Linked absence record (Absence Ledger growth, additive)
+    absence_id: Optional[str] = None
+
     # Metadata
     notes: Optional[str] = None
     created_at: str = field(

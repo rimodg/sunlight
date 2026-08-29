@@ -126,6 +126,20 @@ class ImpactReport:
     contradicted_outcomes: int = 0
     average_corroboration_capacity: float = 0.0
 
+    # Absence Ledger (additive). Populated only when absence data is
+    # supplied; None keeps reports byte-identical to pre-absence output.
+    absence: Optional[dict] = None
+
+    @property
+    def has_absence_data(self) -> bool:
+        """Whether this report carries confirmed Absence Ledger data.
+
+        Gates the absence clause in the executive summary. With no absence
+        data, or none confirmed, the summary is byte-identical to one
+        produced before the Absence Ledger existed.
+        """
+        return bool(self.absence) and self.absence.get("confirmed_diversions", 0) > 0
+
     # CPD alignment
     cpd_gaps_before: List[dict] = field(default_factory=list)
     cpd_gaps_after: List[dict] = field(default_factory=list)
@@ -501,3 +515,22 @@ def _corroboration_clause(report: ImpactReport) -> str:
         )
 
     return "".join(parts)
+
+
+def _absence_clause(report: ImpactReport) -> str:
+    """State what confirmed diversions left unfunded, in the CPD's own terms.
+
+    Sums only CPD-stated beneficiary figures and names the count of affected
+    outputs stating no figure, so the number is never mistaken for a total.
+    Every figure traces to the absence roll_up, which traces to the CPD.
+    """
+    a = report.absence or {}
+    n = a.get("confirmed_diversions", 0)
+    amt = a.get("total_diverted_confirmed", 0.0)
+    m = a.get("stated_planned_beneficiaries_total", 0)
+    k = a.get("outputs_without_stated_beneficiaries", 0)
+    return (
+        f"Confirmed diversions: {n}, totalling {amt:,.0f} {report.currency}, "
+        f"left CPD-planned capacity unfunded for a combined {m:,} stated "
+        f"planned beneficiaries ({k} affected outputs state no figure). "
+    )
