@@ -175,7 +175,7 @@ def test_profile_propagation_differential(sunlight_container):
             "procurementMethod": "selective",
             "numberOfTenderers": 2
         },
-        "awards": [{"value": {"amount": 4500000, "currency": "USD"}}]
+        "awards": [{"value": {"amount": 4500000, "currency": "USD"}, "date": "2026-03-25T12:00:00Z"}]
     }
 
     # Analyze under US federal profile
