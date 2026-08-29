@@ -2908,3 +2908,87 @@ async def not_found_handler(request, exc):
             "documentation": "/docs",
         }
     )
+
+
+# ── Absence Ledger endpoints (additive growth on Side 4) ──
+# Framing gate enforced here at the HTTP layer: an unconfirmed recovery
+# yields the at-risk payload with its note, never the deprived table.
+# as_of is REQUIRED: defaulting to the server clock would smuggle the
+# wall clock back in after the module banned it.
+
+from absence_ledger import (
+    compute_absence_record,
+    absence_table,
+    roll_up as _absence_roll_up,
+)
+
+
+def _parse_as_of(as_of: str):
+    from datetime import date as date_type
+    try:
+        return date_type.fromisoformat(as_of)
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid as_of date format. Use ISO 8601 (YYYY-MM-DD).",
+        )
+
+
+@app.get("/recovery/absence/{recovery_id}")
+async def get_recovery_absence(
+    recovery_id: str,
+    as_of: str,
+    cpd_output_id: Optional[str] = None,
+):
+    """
+    The single-case absence table: what this diversion left unfunded, in
+    the institution's own CPD terms, every populated figure citing the CPD.
+
+    Honest degradation is built in: missing CPD profile, unknown output id,
+    or absent output id each yield a stated reason, never a crash. The
+    deterministic absence_id is written back onto the recovery record so
+    the summary endpoint can recover the linkage.
+    """
+    record = _recovery_ledger.get(recovery_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Recovery {recovery_id} not found")
+
+    as_of_date = _parse_as_of(as_of)
+    cpd = load_cpd_profile(record.country_code.lower()) if record.country_code else None
+    absence = compute_absence_record(record, cpd, cpd_output_id, as_of_date)
+
+    # Idempotent linkage: the id is deterministic, rewriting is harmless.
+    record.absence_id = absence.absence_id
+
+    return absence_table(absence)
+
+
+@app.get("/absence/summary")
+async def get_absence_summary(country_office: str, as_of: str):
+    """
+    The roll-up: confirmed diversions for a country office, in CPD terms.
+    Sums only CPD-stated beneficiary figures and reports the count of
+    outputs stating none alongside, so the sum is never read as a total.
+    Recoveries never linked via /recovery/absence roll up with output id
+    None and degrade honestly ("no CPD output id supplied").
+    """
+    as_of_date = _parse_as_of(as_of)
+    recoveries = _recovery_ledger.list_by_country(country_office)
+
+    records = []
+    for rec in recoveries:
+        output_id = None
+        if rec.absence_id:
+            # absence_id shape: "absence:{recovery_id}:{output_id}".
+            # recovery ids are UUIDs or colon-free test ids, so two splits
+            # recover the output id; the literal "none" means unlinked.
+            parts = rec.absence_id.split(":", 2)
+            if len(parts) == 3 and parts[2] != "none":
+                output_id = parts[2]
+        cpd = load_cpd_profile(rec.country_code.lower()) if rec.country_code else None
+        records.append(compute_absence_record(rec, cpd, output_id, as_of_date))
+
+    summary = _absence_roll_up(records)
+    summary["country_office"] = country_office
+    summary["as_of"] = as_of_date.isoformat()
+    return summary

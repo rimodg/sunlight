@@ -356,3 +356,199 @@ def test_clause_reports_unstated_count():
     assert "Confirmed diversions: 2" in s
     assert "4,700,000 USD" in s
     assert "(1 affected outputs state no figure)" in s
+
+
+# ── Increment 4: HTTP layer, framing gate at the API boundary ────────
+
+from fastapi.testclient import TestClient
+
+import api as _api_module
+from api import app as _app
+
+_client = TestClient(_app)
+
+
+def _seed_recovery(confirm: bool):
+    _api_module._recovery_ledger.reset()
+    rec = _api_module._recovery_ledger.create(
+        source_contract_id="C-API-1",
+        recovery_amount=2000000.0,
+        currency="USD",
+        country_office="Nigeria",
+        country_code="NG",
+        original_pillar="health",
+    )
+    if confirm:
+        from datetime import date as d
+        rec.confirm(d(2026, 6, 1))
+    return rec
+
+
+def test_api_absence_unknown_recovery_404():
+    _api_module._recovery_ledger.reset()
+    r = _client.get("/recovery/absence/no-such-id", params={"as_of": "2026-08-29"})
+    assert r.status_code == 404
+
+
+def test_api_absence_missing_as_of_422():
+    rec = _seed_recovery(confirm=True)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}")
+    assert r.status_code == 422
+
+
+def test_api_absence_malformed_as_of_400():
+    rec = _seed_recovery(confirm=True)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}",
+                    params={"as_of": "29/08/2026"})
+    assert r.status_code == 400
+    assert "ISO 8601" in r.json()["detail"]
+
+
+def test_api_framing_gate_at_http_layer():
+    rec = _seed_recovery(confirm=False)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}",
+                    params={"as_of": "2026-08-29", "cpd_output_id": "NG-H-001"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["framing"] == "at_risk"
+    assert "note" in body
+    assert "planned_beneficiaries" not in body
+    assert "absence_duration_days" not in body
+
+
+def test_api_confirmed_returns_deprived_table_and_links():
+    rec = _seed_recovery(confirm=True)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}",
+                    params={"as_of": "2026-08-29", "cpd_output_id": "NG-H-001"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["framing"] == "deprived"
+    assert body["cpd_output_found"] is True
+    assert body["cpd_citation"] == "UNDP CPD Nigeria 2023-2027 (illustrative)"
+    assert body["planned_beneficiaries"] is None  # ng.json states no figure yet
+    assert "no planned delivery date stated" in body["duration_reason"]
+    assert rec.absence_id == f"absence:{rec.recovery_id}:NG-H-001"
+
+
+def test_api_summary_rolls_up_with_linkage():
+    rec = _seed_recovery(confirm=True)
+    _client.get(f"/recovery/absence/{rec.recovery_id}",
+                params={"as_of": "2026-08-29", "cpd_output_id": "NG-H-001"})
+    r = _client.get("/absence/summary",
+                    params={"country_office": "Nigeria", "as_of": "2026-08-29"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["confirmed_diversions"] == 1
+    assert body["total_diverted_confirmed"] == 2000000.0
+    assert body["outputs_without_stated_beneficiaries"] == 1
+    assert body["by_pillar"]["health"]["outputs_affected"] == 1
+    assert body["country_office"] == "Nigeria"
+    assert body["as_of"] == "2026-08-29"
+
+
+def test_api_summary_unlinked_recovery_degrades_honestly():
+    _seed_recovery(confirm=True)  # never touched /recovery/absence
+    r = _client.get("/absence/summary",
+                    params={"country_office": "Nigeria", "as_of": "2026-08-29"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["confirmed_diversions"] == 1
+    assert body["outputs_without_stated_beneficiaries"] == 1
+
+
+# ── Increment 4: HTTP layer, framing gate at the API boundary ────────
+
+from fastapi.testclient import TestClient
+
+import api as _api_module
+from api import app as _app
+
+_client = TestClient(_app)
+
+
+def _seed_recovery(confirm: bool):
+    _api_module._recovery_ledger.reset()
+    rec = _api_module._recovery_ledger.create(
+        source_contract_id="C-API-1",
+        recovery_amount=2000000.0,
+        currency="USD",
+        country_office="Nigeria",
+        country_code="NG",
+        original_pillar="health",
+    )
+    if confirm:
+        from datetime import date as d
+        rec.confirm(d(2026, 6, 1))
+    return rec
+
+
+def test_api_absence_unknown_recovery_404():
+    _api_module._recovery_ledger.reset()
+    r = _client.get("/recovery/absence/no-such-id", params={"as_of": "2026-08-29"})
+    assert r.status_code == 404
+
+
+def test_api_absence_missing_as_of_422():
+    rec = _seed_recovery(confirm=True)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}")
+    assert r.status_code == 422
+
+
+def test_api_absence_malformed_as_of_400():
+    rec = _seed_recovery(confirm=True)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}",
+                    params={"as_of": "29/08/2026"})
+    assert r.status_code == 400
+    assert "ISO 8601" in r.json()["detail"]
+
+
+def test_api_framing_gate_at_http_layer():
+    rec = _seed_recovery(confirm=False)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}",
+                    params={"as_of": "2026-08-29", "cpd_output_id": "NG-H-001"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["framing"] == "at_risk"
+    assert "note" in body
+    assert "planned_beneficiaries" not in body
+    assert "absence_duration_days" not in body
+
+
+def test_api_confirmed_returns_deprived_table_and_links():
+    rec = _seed_recovery(confirm=True)
+    r = _client.get(f"/recovery/absence/{rec.recovery_id}",
+                    params={"as_of": "2026-08-29", "cpd_output_id": "NG-H-001"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["framing"] == "deprived"
+    assert body["cpd_output_found"] is True
+    assert body["cpd_citation"] == "UNDP CPD Nigeria 2023-2027 (illustrative)"
+    assert body["planned_beneficiaries"] is None  # ng.json states no figure yet
+    assert "no planned delivery date stated" in body["duration_reason"]
+    assert rec.absence_id == f"absence:{rec.recovery_id}:NG-H-001"
+
+
+def test_api_summary_rolls_up_with_linkage():
+    rec = _seed_recovery(confirm=True)
+    _client.get(f"/recovery/absence/{rec.recovery_id}",
+                params={"as_of": "2026-08-29", "cpd_output_id": "NG-H-001"})
+    r = _client.get("/absence/summary",
+                    params={"country_office": "Nigeria", "as_of": "2026-08-29"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["confirmed_diversions"] == 1
+    assert body["total_diverted_confirmed"] == 2000000.0
+    assert body["outputs_without_stated_beneficiaries"] == 1
+    assert body["by_pillar"]["health"]["outputs_affected"] == 1
+    assert body["country_office"] == "Nigeria"
+    assert body["as_of"] == "2026-08-29"
+
+
+def test_api_summary_unlinked_recovery_degrades_honestly():
+    _seed_recovery(confirm=True)  # never touched /recovery/absence
+    r = _client.get("/absence/summary",
+                    params={"country_office": "Nigeria", "as_of": "2026-08-29"})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["confirmed_diversions"] == 1
+    assert body["outputs_without_stated_beneficiaries"] == 1
