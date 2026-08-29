@@ -68,6 +68,14 @@ class CPDOutputTarget:
     actual_delivery: Optional[str] = None
     delivery_verdict: Optional[str] = None
 
+    # Absence Ledger growth (additive). What the CPD itself states this
+    # output was planned to become. None means "not stated in CPD" and
+    # must never be conflated with zero.
+    planned_capacity_description: Optional[str] = None
+    planned_beneficiaries: Optional[int] = None
+    planned_delivery_date: Optional[str] = None  # ISO date string as stated in CPD
+    source_document_citation: Optional[str] = None
+
     @property
     def gap_amount(self) -> float:
         return self.target_amount - self.actual_spend
@@ -324,6 +332,10 @@ def _parse_cpd_profile(data: dict) -> CountryProgrammeProfile:
             actual_spend=o.get("actual_spend", 0.0),
             actual_delivery=o.get("actual_delivery"),
             delivery_verdict=o.get("delivery_verdict"),
+            planned_capacity_description=o.get("planned_capacity_description"),
+            planned_beneficiaries=o.get("planned_beneficiaries"),
+            planned_delivery_date=o.get("planned_delivery_date"),
+            source_document_citation=o.get("source_document_citation"),
         ))
 
     return CountryProgrammeProfile(
