@@ -36,7 +36,7 @@ networkx>=3.0
 # Required only to INGEST new data, not to analyse what is already ingested.
 # A deployment fed by an existing corpus does not need these.
 requests>=2.31.0
-pdfplumber>=0.10.0
+pdfplumber>=0.11.10
 
 # ── Optional — PDF case packet generation ─────────────────────────────
 # Required only by code/evidence_packet.py build_pdf(). The module imports
