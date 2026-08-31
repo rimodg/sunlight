@@ -23,7 +23,7 @@ certifi>=2023.0.0
 # but could NOT run the DOJ regression — so a receiving institution following
 # the handover instruction to re-confirm 33.3/100/9.0/0.746/129.2 on its own
 # machine would have hit an ImportError instead of a number.
-numpy>=1.24.0
+numpy>=2.5.2
 
 # ── Extended analysis ─────────────────────────────────────────────────
 # Not reachable from api.py or the DOJ validators. Required by the deeper
