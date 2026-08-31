@@ -2,8 +2,6 @@
 # Single-service deployment for the REST API
 # For full stack with postgres/prometheus/grafana, see docker-compose.full.yml
 
-version: '3.8'
-
 services:
   api:
     build:
