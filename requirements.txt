@@ -6,7 +6,7 @@
 
 # ── API surface ────────────────────────────────────────────────────────
 # Required to serve any endpoint.
-fastapi>=0.104.0
+fastapi>=0.141.1
 uvicorn[standard]>=0.24.0
 pydantic>=2.5.0
 httpx>=0.25.0
