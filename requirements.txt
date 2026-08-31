@@ -7,7 +7,7 @@
 # ── API surface ────────────────────────────────────────────────────────
 # Required to serve any endpoint.
 fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
+uvicorn[standard]>=0.52.4
 pydantic>=2.5.0
 httpx>=0.25.0
 certifi>=2023.0.0
