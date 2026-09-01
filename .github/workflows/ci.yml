@@ -6,10 +6,17 @@ on:
   pull_request:
     branches: [main]
 
+# One run per ref: a newer push cancels the superseded run instead of
+# letting stale or refused runs stack.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   suite:
     name: Suite (py${{ matrix.python }})
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -39,6 +46,7 @@ jobs:
   container:
     name: Container tests (build + live API)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -61,6 +69,7 @@ jobs:
   determinism:
     name: Determinism proof (double run, byte-identical)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
