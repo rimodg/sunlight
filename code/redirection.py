@@ -64,6 +64,15 @@ class RedirectionRecord:
     delivery_milestones_total: Optional[int] = None
     beneficiaries_reached: Optional[int] = None
 
+    # Reprogramming feasibility (additive, Phase 4). None means the
+    # assessment has not been run; the assessor is optional and the
+    # feasibility field is honest reporting, never a downrank.
+    feasibility_verdict: Optional[str] = None
+    feasibility_rationale: Optional[str] = None
+    feasibility_threshold_usd: Optional[float] = None
+    feasibility_months_min: Optional[int] = None
+    feasibility_months_max: Optional[int] = None
+
     # Metadata
     created_at: str = field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
