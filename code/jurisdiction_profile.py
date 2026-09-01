@@ -424,6 +424,16 @@ class JurisdictionProfile:
     # INTOSAI defaults in evidence_rules.
 
     queryable_classes: List[str] = field(default_factory=list)
+
+    # ── Reprogramming feasibility (additive, Phase 4) ──
+    # Delegation thresholds vary by institution and by pillar. Absent = the
+    # profile has not authored feasibility data; the assessor returns
+    # UNASSESSABLE with a stated reason rather than guessing.
+    delegated_authority_threshold_usd: Optional[float] = None
+    pillar_reallocation_delegated: bool = False
+    cross_pillar_requires_hq: bool = True
+    hq_approval_process_months_min: Optional[int] = None
+    hq_approval_process_months_max: Optional[int] = None
     # EvidenceClass values reachable in this jurisdiction. EMPTY MEANS
     # UNKNOWN, NOT NONE: an empty list leaves reachability to be derived from
     # the evidence actually returned, rather than declaring the country
