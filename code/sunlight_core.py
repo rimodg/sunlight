@@ -277,6 +277,12 @@ class ContractDossier:
     methodology_version: str = "SUNLIGHT v4.0 | TCA v4.0 | CRI v2.3 | EVG v1.0"
     disclaimer: str = "Structural finding — not an allegation"
 
+    # ── Ingestion Quality (Phase 1, additive) ──
+    # Populated by assess_ingestion_quality() after ingest builds the
+    # dossier. Reports what the engines saw at input; never modifies
+    # composite math (constitutionally asserted in tests).
+    ingestion_quality: Optional[Any] = None
+
     def advance(self, stage: PipelineStage, duration_ms: float = 0):
         """Move to the next pipeline stage. Records timing."""
         self.stage = stage

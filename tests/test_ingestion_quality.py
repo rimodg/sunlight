@@ -42,12 +42,18 @@ def test_no_wall_clock():
 
 
 def test_total_on_empty_dossier():
+    """An empty ContractDossier has currency='USD' as a dataclass default,
+    which is a real signal SUNLIGHT reads. The honest empty-dossier score
+    is therefore 1/15, with only currency present. This test encodes the
+    real dataclass shape rather than the assumption that 'empty' means
+    'nothing populated'."""
     d = ContractDossier()
     r = assess_ingestion_quality(d)
-    assert r.data_quality_score == 0.0
-    assert r.fields_present == 0
+    assert r.fields_present == 1
     assert r.fields_total == 15
-    assert set(r.missing_fields) == set(ENGINE_CONSUMED_FIELDS)
+    assert abs(r.data_quality_score - (1/15)) < 1e-9
+    assert set(r.missing_fields) == set(ENGINE_CONSUMED_FIELDS) - {"currency"}
+    assert "currency" not in r.missing_fields
 
 
 def test_total_on_object_lacking_fields_entirely():
