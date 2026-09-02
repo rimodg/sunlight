@@ -4,8 +4,10 @@
     "description": "ILLUSTRATIVE SAMPLE - UNDP Compass Aggregate Programme Data",
     "purpose": "Fixture for adapter development and testing during institutional onboarding",
     "status": "illustrative",
+    "is_illustrative": true,
     "note": "This schema is a placeholder based on typical results-based management structures. Actual Compass schema will be provided by UNDP integration teams during onboarding. See TODO.md Cluster A4.",
-    "contact": "UNDP Results-Based Management Team"
+    "contact": "UNDP Results-Based Management Team",
+    "country_code_note": "Using reserved code XX to prevent accidental association with real countries"
   },
   "reporting_period": {
     "start_date": "2023-01-01",
@@ -14,24 +16,24 @@
     "fiscal_year": "2023"
   },
   "programme_data": {
-    "programme_id": "NG-UNDP-SDG-2023",
+    "programme_id": "XX-UNDP-SDG-2023",
     "title": "Sustainable Development Goals Implementation Programme",
     "description": "Multi-year programme supporting SDG localization and implementation",
     "budget_utilized": {
       "total_allocated": 10000000,
       "total_spent": 8500000,
       "remaining": 1500000,
-      "currency": "NGN",
+      "currency": "XXX",
       "utilization_rate": 0.85
     },
     "outputs_delivered": [
       {
-        "output_id": "NG-OUTPUT-001",
+        "output_id": "XX-OUTPUT-001",
         "title": "Enhanced agricultural productivity in target communities",
         "description": "Support to smallholder farmers through training and input provision",
         "indicators": [
           {
-            "indicator_id": "NG-IND-001",
+            "indicator_id": "XX-IND-001",
             "name": "Number of farmers trained",
             "definition": "Total number of unique smallholder farmers completing training programme",
             "target_value": 5000,
@@ -46,7 +48,7 @@
             }
           },
           {
-            "indicator_id": "NG-IND-002",
+            "indicator_id": "XX-IND-002",
             "name": "Hectares of land under improved farming practices",
             "definition": "Total hectares adopting climate-smart agriculture techniques",
             "target_value": 1000,
@@ -65,12 +67,12 @@
         }
       },
       {
-        "output_id": "NG-OUTPUT-002",
+        "output_id": "XX-OUTPUT-002",
         "title": "Strengthened local governance capacity",
         "description": "Training and support to local government authorities",
         "indicators": [
           {
-            "indicator_id": "NG-IND-003",
+            "indicator_id": "XX-IND-003",
             "name": "Number of LGA officials trained",
             "target_value": 200,
             "actual_value": 185,
@@ -78,7 +80,7 @@
             "achievement_rate": 0.925
           },
           {
-            "indicator_id": "NG-IND-004",
+            "indicator_id": "XX-IND-004",
             "name": "Development plans approved",
             "target_value": 10,
             "actual_value": 8,
@@ -98,13 +100,13 @@
             "type": "financial_report",
             "source": "M&E system",
             "verification_status": "verified",
-            "reference": "NG-FIN-2023-Q4"
+            "reference": "XX-FIN-2023-Q4"
           },
           {
             "type": "survey_data",
             "source": "Baseline and endline surveys",
             "verification_status": "verified",
-            "reference": "NG-SURV-2023-001"
+            "reference": "XX-SURV-2023-001"
           }
         ]
       },
@@ -117,7 +119,7 @@
             "type": "official_documents",
             "source": "LGA records",
             "verification_status": "verified",
-            "reference": "NG-LGA-2023-PLANS"
+            "reference": "XX-LGA-2023-PLANS"
           }
         ]
       }
@@ -157,7 +159,7 @@
     "source_system": "Compass",
     "ingestion_timestamp": "2023-10-01T10:00:00Z",
     "validation_status": "pending",
-    "record_owner": "UNDP Nigeria Country Office",
+    "record_owner": "UNDP [Country Office]",
     "last_modified": "2023-10-01T10:00:00Z",
     "version": "1.0",
     "report_submitted_by": "Programme Analyst",

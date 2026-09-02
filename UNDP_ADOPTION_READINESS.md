@@ -115,7 +115,9 @@ Fixture loading utilities:
 
 ## Integration Sequence
 
-### Phase 1: Schema Handoff (Weeks 1-2)
+**Note**: The following sequence represents the logical dependency chain for integration. Specific timelines are contingent upon UNDP schema handoff speed, country office availability, and institutional approval cycles. Week estimates are illustrative only and will be adjusted based on actual progress.
+
+### Phase 1: Schema Handoff
 **Actors**: UNDP Digital Transformation Team, SUNLIGHT Core Team
 
 **Deliverables**:
@@ -130,7 +132,9 @@ Fixture loading utilities:
 - [ ] Update fixtures with actual schema examples
 - [ ] Add adapter-specific tests
 
-### Phase 2: Adapter Implementation (Weeks 3-4)
+**Constraint**: Cannot proceed without official schema documentation from UNDP
+
+### Phase 2: Adapter Implementation
 **Actors**: SUNLIGHT Engineering Team
 
 **Deliverables**:
@@ -145,7 +149,9 @@ python3 -m pytest tests/test_input_adapters.py -v -k quantum
 python3 -m pytest tests/test_input_adapters.py -v -k compass
 ```
 
-### Phase 3: Evidence Map Validation (Weeks 5-8)
+**Dependency**: Completed Phase 1
+
+### Phase 3: Evidence Map Validation
 **Actors**: Country Offices, SUNLIGHT Jurisdiction Team
 
 **Process**:
@@ -158,7 +164,9 @@ python3 -m pytest tests/test_input_adapters.py -v -k compass
 
 **Per-Country Timeline**: 2-4 weeks depending on office capacity
 
-### Phase 4: Pilot Deployment (Weeks 9-12)
+**Dependency**: Functional adapters from Phase 2
+
+### Phase 4: Pilot Deployment
 **Actors**: Pilot Country Office, UNDP Oversight Team
 
 **Scope**:
@@ -173,7 +181,9 @@ python3 -m pytest tests/test_input_adapters.py -v -k compass
 - [ ] Country office confidence in findings
 - [ ] Operational workflow integration
 
-### Phase 5: Scale-Up (Week 13+)
+**Dependency**: Validated evidence maps from Phase 3
+
+### Phase 5: Scale-Up
 **Actors**: Multiple Country Offices, UNDP Regional Teams
 
 **Expansion Path**:
@@ -182,50 +192,53 @@ python3 -m pytest tests/test_input_adapters.py -v -k compass
 3. Regional training and support
 4. Full institutional deployment
 
+**Dependency**: Successful pilot completion from Phase 4
+
 ---
 
-## Constitutional Compliance Verification
+## Constitutional Compliance Relationship Matrix
 
-### Line 1: Determinism ✓
-- Adapters are stateless transforms
-- Same input → same canonical OCDS → same analysis
-- No LLM, no stochastic sampling in analytical path
+This section describes how this change relates to each constitutional line. Compliance verification is performed by the gate during code review and test execution, not by self-declaration.
 
-### Line 2: Risk Indicator, Not Allegation ✓
-- Side 5 verdicts report structural inconsistency
-- "Evidence contradicts claim" not "Fraud occurred"
-- Humans determine intent
+### Line 1: Determinism
+**Relationship**: Adapters are stateless transforms with no stochastic elements
+**Verification Point**: Test suite validates identical output for identical input
+**Status**: Architecture supports determinism; actual compliance verified in test execution
 
-### Line 3: DOJ Recall Floor ✓
-- Live validation after any core-touching commit
-- Reference cases shipped with test suite
-- `[skip ci]` tag for billing-blocked CI
+### Line 2: Risk Indicator, Not Allegation
+**Relationship**: Side 5 verdicts report structural inconsistency, not intent
+**Verification Point**: Output schema uses "evidence contradicts claim" framing
+**Status**: Framing enforced in evidence_schema.py; adapters do not alter verdict language
 
-### Line 4: Absence ≠ Evidence of Absence ✓
-- Five-place enforcement in Side 5
-- UNQUERYABLE prevents absence findings
-- Capacity ceiling disclosed upfront
+### Line 3: DOJ Recall Floor
+**Relationship**: This change does not modify detection logic
+**Verification Point**: Reference case tests continue to pass after adapter implementation
+**Status**: Live validation required when real adapters are implemented
 
-### Line 5: Core Integrity ✓
-- Core touched only on proven computation defect
-- Composite math changes require:
-  - Proven necessity
-  - Scoped fix
-  - Live floor re-validation
-  - Revert on any digit movement
+### Line 4: Absence ≠ Evidence of Absence
+**Relationship**: Fixtures include fields that may be absent; adapters must preserve None vs 0 distinction
+**Verification Point**: Test asserts explicit-null fields load as None, not 0
+**Status**: Guard implemented in fixtures; requires enforcement in real adapter transformation logic
 
-### Line 6: None is Not Zero ✓
-- Missing data reports as `None` with reason
-- Never rendered as zero
-- Explicit in schema and rendering
+### Line 5: Core Integrity
+**Relationship**: This change is entirely external to the core analysis pipeline
+**Verification Point**: No modifications to evidence_pipeline.py, evidence_analyzer.py, or Side 5 logic
+**Status**: Compliant - purely additive scaffolding
 
-### Line 7: Framing Gates ✓
-- Unconfirmed diversion = "at risk", never "deprived"
-- Discipline flows through dataclass, module, API, rendering
+### Line 6: None is Not Zero
+**Relationship**: Fixtures demonstrate proper null encoding; adapters must preserve this
+**Verification Point**: Test suite includes explicit assertion for None vs 0 boundary
+**Status**: Fixture structure enforces distinction; adapter implementation must maintain it
 
-### Line 8: No Em-Dashes ✓
-- Standard hyphens throughout codebase
-- Enforced in code, chat, documents
+### Line 7: Framing Gates
+**Relationship**: This change does not modify finding language or rendering
+**Verification Point**: No changes to dataclass field names or API response structure
+**Status**: Compliant - no framing modifications
+
+### Line 8: No Em-Dashes
+**Relationship**: Document and code use standard hyphens only
+**Verification Point**: Grep verification for em-dash characters
+**Status**: Compliant - verified in all delivered files
 
 ---
 
