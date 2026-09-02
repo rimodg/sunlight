@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0",
+  "_metadata": {
+    "description": "ILLUSTRATIVE SAMPLE - UNDP Quantum ERP Contract Data",
+    "purpose": "Fixture for adapter development and testing during institutional onboarding",
+    "status": "illustrative",
+    "note": "This schema is a placeholder based on typical ERP procurement structures. Actual Quantum ERP schema will be provided by UNDP integration teams during onboarding. See TODO.md Cluster A4.",
+    "contact": "UNDP Digital Transformation Team"
+  },
+  "contract_id": "NG-CONTRACT-2023-001",
+  "project_details": {
+    "title": "Infrastructure Development Project",
+    "description": "Road construction and maintenance project in Lagos State",
+    "budget": {
+      "total_amount": 5000000,
+      "currency": "NGN",
+      "breakdown": [
+        {
+          "category": "construction",
+          "amount": 3000000,
+          "percentage": 60
+        },
+        {
+          "category": "maintenance",
+          "amount": 2000000,
+          "percentage": 40
+        }
+      ]
+    },
+    "timeline": {
+      "start_date": "2023-01-01",
+      "end_date": "2024-12-31",
+      "duration_months": 24
+    },
+    "procuring_entity": {
+      "name": "Ministry of Works",
+      "id": "NG-MOW-001",
+      "type": "government_ministry",
+      "contact": {
+        "email": "procurement@mow.gov.ng",
+        "phone": "+234-9-123-4567"
+      }
+    },
+    "awardees": [
+      {
+        "name": "ABC Construction Ltd",
+        "id": "NG-ABC-001",
+        "award_amount": 3000000,
+        "registration_number": "RC-123456",
+        "tax_id": "TAX-987654"
+      }
+    ],
+    "implementation_locations": [
+      {
+        "region": "Lagos",
+        "state": "Lagos State",
+        "coordinates": {
+          "latitude": 6.5244,
+          "longitude": 3.3792
+        },
+        "lga": "Ikeja"
+      }
+    ]
+  },
+  "compliance_status": {
+    "environmental_clearance": {
+      "status": true,
+      "certificate_number": "ENV-2022-NG-001",
+      "issued_date": "2022-11-15",
+      "valid_until": "2025-11-15"
+    },
+    "procurement_compliance": {
+      "status": true,
+      "method": "open_competitive_bidding",
+      "review_date": "2022-12-01"
+    },
+    "financial_audits": [
+      {
+        "audit_date": "2023-06-15",
+        "status": "passed",
+        "auditor": "Office of the Auditor General",
+        "findings": []
+      },
+      {
+        "audit_date": "2023-12-15",
+        "status": "passed_with_qualifications",
+        "auditor": "Office of the Auditor General",
+        "findings": [
+          {
+            "finding_id": "AUD-2023-001",
+            "severity": "low",
+            "description": "Minor documentation delays",
+            "remediated": true
+          }
+        ]
+      }
+    ]
+  },
+  "procurement_process": {
+    "solicitation_date": "2022-10-01",
+    "bid_opening_date": "2022-11-01",
+    "evaluation_date": "2022-11-15",
+    "award_date": "2022-12-01",
+    "contract_signature_date": "2022-12-15",
+    "number_of_bids": 5,
+    "bidding_method": "international_competitive_bidding"
+  },
+  "disbursements": [
+    {
+      "disbursement_id": "DISB-001",
+      "date": "2023-01-15",
+      "amount": 1500000,
+      "currency": "NGN",
+      "tranche": "first",
+      "conditions_met": ["contract_signed", "performance_bond_submitted"]
+    },
+    {
+      "disbursement_id": "DISB-002",
+      "date": "2023-07-15",
+      "amount": 1500000,
+      "currency": "NGN",
+      "tranche": "second",
+      "conditions_met": ["milestone_1_completed", "interim_report_submitted"]
+    }
+  ],
+  "outcomes_claimed": {
+    "facility_construction": {
+      "claimed": true,
+      "description": "Construction of 2km access road with drainage",
+      "completion_date": "2024-06-30",
+      "beneficiaries": 15000
+    }
+  },
+  "metadata": {
+    "source_system": "Quantum ERP",
+    "ingestion_timestamp": "2023-10-01T10:00:00Z",
+    "validation_status": "pending",
+    "record_owner": "UNDP Nigeria Country Office",
+    "last_modified": "2023-10-01T10:00:00Z",
+    "version": "1.0"
+  }
+}
