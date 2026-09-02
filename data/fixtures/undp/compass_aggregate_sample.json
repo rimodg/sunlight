@@ -1,0 +1,168 @@
+{
+  "schema_version": "1.0",
+  "_metadata": {
+    "description": "ILLUSTRATIVE SAMPLE - UNDP Compass Aggregate Programme Data",
+    "purpose": "Fixture for adapter development and testing during institutional onboarding",
+    "status": "illustrative",
+    "is_illustrative": true,
+    "note": "This schema is a placeholder based on typical results-based management structures. Actual Compass schema will be provided by UNDP integration teams during onboarding. See TODO.md Cluster A4.",
+    "contact": "UNDP Results-Based Management Team",
+    "country_code_note": "Using reserved code XX to prevent accidental association with real countries"
+  },
+  "reporting_period": {
+    "start_date": "2023-01-01",
+    "end_date": "2023-12-31",
+    "frequency": "annual",
+    "fiscal_year": "2023"
+  },
+  "programme_data": {
+    "programme_id": "XX-UNDP-SDG-2023",
+    "title": "Sustainable Development Goals Implementation Programme",
+    "description": "Multi-year programme supporting SDG localization and implementation",
+    "budget_utilized": {
+      "total_allocated": 10000000,
+      "total_spent": 8500000,
+      "remaining": 1500000,
+      "currency": "XXX",
+      "utilization_rate": 0.85
+    },
+    "outputs_delivered": [
+      {
+        "output_id": "XX-OUTPUT-001",
+        "title": "Enhanced agricultural productivity in target communities",
+        "description": "Support to smallholder farmers through training and input provision",
+        "indicators": [
+          {
+            "indicator_id": "XX-IND-001",
+            "name": "Number of farmers trained",
+            "definition": "Total number of unique smallholder farmers completing training programme",
+            "target_value": 5000,
+            "actual_value": 4200,
+            "unit": "persons",
+            "achievement_rate": 0.84,
+            "disaggregation": {
+              "male": 2100,
+              "female": 2100,
+              "youth": 1680,
+              "adults": 2520
+            }
+          },
+          {
+            "indicator_id": "XX-IND-002",
+            "name": "Hectares of land under improved farming practices",
+            "definition": "Total hectares adopting climate-smart agriculture techniques",
+            "target_value": 1000,
+            "actual_value": 850,
+            "unit": "hectares",
+            "achievement_rate": 0.85
+          }
+        ],
+        "outcomes_claimed": {
+          "service_delivery": {
+            "claimed": true,
+            "description": "Agricultural extension services delivered to 4200 farmers",
+            "completion_date": "2023-11-30",
+            "beneficiaries": 4200
+          }
+        }
+      },
+      {
+        "output_id": "XX-OUTPUT-002",
+        "title": "Strengthened local governance capacity",
+        "description": "Training and support to local government authorities",
+        "indicators": [
+          {
+            "indicator_id": "XX-IND-003",
+            "name": "Number of LGA officials trained",
+            "target_value": 200,
+            "actual_value": 185,
+            "unit": "persons",
+            "achievement_rate": 0.925
+          },
+          {
+            "indicator_id": "XX-IND-004",
+            "name": "Development plans approved",
+            "target_value": 10,
+            "actual_value": 8,
+            "unit": "plans",
+            "achievement_rate": 0.80
+          }
+        ]
+      }
+    ],
+    "sdg_alignment": [
+      {
+        "sdg_target": "SDG 2.3",
+        "description": "Double the agricultural productivity and incomes of small-scale food producers",
+        "contribution": "Increased small-scale producer income by 25% through improved practices",
+        "evidence": [
+          {
+            "type": "financial_report",
+            "source": "M&E system",
+            "verification_status": "verified",
+            "reference": "XX-FIN-2023-Q4"
+          },
+          {
+            "type": "survey_data",
+            "source": "Baseline and endline surveys",
+            "verification_status": "verified",
+            "reference": "XX-SURV-2023-001"
+          }
+        ]
+      },
+      {
+        "sdg_target": "SDG 16.6",
+        "description": "Develop effective, accountable and transparent institutions",
+        "contribution": "8 LGAs developed and approved participatory development plans",
+        "evidence": [
+          {
+            "type": "official_documents",
+            "source": "LGA records",
+            "verification_status": "verified",
+            "reference": "XX-LGA-2023-PLANS"
+          }
+        ]
+      }
+    ]
+  },
+  "geographic_coverage": {
+    "states": ["Lagos", "Kano", "Rivers"],
+    "lgas": ["Ikeja", "Kano Municipal", "Port Harcourt"],
+    "communities": 45
+  },
+  "partners": [
+    {
+      "partner_name": "Ministry of Agriculture",
+      "partner_type": "government",
+      "role": "implementing_partner",
+      "contribution": "Technical staff and extension services"
+    },
+    {
+      "partner_name": "Farmers Cooperative Society",
+      "partner_type": "civil_society",
+      "role": "beneficiary_representative",
+      "contribution": "Member mobilization and feedback"
+    }
+  ],
+  "risk_management": {
+    "identified_risks": [
+      {
+        "risk_id": "RISK-001",
+        "category": "operational",
+        "description": "Security concerns in northern regions",
+        "mitigation": "Remote monitoring and local partner engagement",
+        "status": "active"
+      }
+    ]
+  },
+  "metadata": {
+    "source_system": "Compass",
+    "ingestion_timestamp": "2023-10-01T10:00:00Z",
+    "validation_status": "pending",
+    "record_owner": "UNDP [Country Office]",
+    "last_modified": "2023-10-01T10:00:00Z",
+    "version": "1.0",
+    "report_submitted_by": "Programme Analyst",
+    "report_approved_by": "Deputy Resident Representative"
+  }
+}
