@@ -1,83 +1,31 @@
+```
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.egg-info/
-*.egg
-dist/
-build/
+*.pyc
+*.pyo
+*.pyd
 
-# Virtual environment
-.venv/
-venv/
-env/
-
-# Data — large binary / sensitive
-data/
-!data/cpd_profiles/
-# Side 5 jurisdiction evidence maps. Small, reviewed, version-controlled
-# configuration — country offices correct these, so their history matters.
-# Git will not descend into an excluded directory, so these negations are a
-# statement of intent; the files are added explicitly, as cpd_profiles was.
-!data/evidence_maps/
-*.db
-
-# Sensitive ground-truth (contains case details)
-prosecuted_cases.json
-
-# Backup archives
-*.tar.gz
-*.zip
-
-# Terraform state (contains secrets)
-*.tfstate
-*.tfstate.backup
-.terraform/
-.terraform.lock.hcl
-
-# Temp/editor files
+# Logs and temp files
+*.log
+*.tmp
 *.swp
-*.swo
-*~
-.DS_Store
-*.pyTAB
 
-# IDE
-.idea/
-.vscode/
-*.code-workspace
-
-# Environment variables (may contain API keys)
+# Environment
 .env
 .env.local
+*.env.*
 
-# OS
-Thumbs.db
+# Editors
+.vscode/
+.idea/
 
-# Empirical calibration store — operational state accumulated at runtime,
-# not source-controlled. Each deployment maintains its own running state.
-calibration/
+# Dependencies
+.venv/
+venv/
+node_modules/
 
-# Stale duplicate of docs/ — evaluation outputs written here by older runs
-code/docs/
-
-# Development artifacts — analysis outputs, milestone markers, scratch files.
-# These were useful during early development but are not source material.
-DATABASE_AUDIT_REPORT.md
-READY_CHECK.md
-WEEK1_COMPLETE.md
-WEEK1_DAY3_COMPLETE.md
-TODO.md
-baseline_metrics.json
-bulletproof_analysis_results.json
-determinism_diff.txt
-fast_analysis_results.json
-fraud_analysis.json
-institutional_analysis.json
-institutional_analysis_full.json
-sensitivity_b500.txt
-smoke_test_output.txt
-smoke_test_replay.txt
-stage2_output.txt
-stage3_full_run.txt
-top5_evidence_data.json
+# Build artifacts
+dist/
+build/
+target/
+```
