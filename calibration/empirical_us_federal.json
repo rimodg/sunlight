@@ -1,0 +1,21 @@
+{
+  "profile_name": "us_federal",
+  "total_contracts_analyzed": 82,
+  "verdict_counts": {
+    "concern": 44,
+    "sound": 36,
+    "compromised": 2
+  },
+  "rule_fire_counts": {
+    "FIN-001": 44,
+    "PROC-001": 2,
+    "TIME-001": 2
+  },
+  "risk_score_sum": 198.29999999999967,
+  "risk_score_sum_squared": 494.84500000000037,
+  "risk_score_min": 1.95,
+  "risk_score_max": 3.55,
+  "first_observation_utc": "2026-09-02T21:17:52.896508+00:00",
+  "last_observation_utc": "2026-09-02T21:18:01.455445+00:00",
+  "schema_version": "1.0"
+}

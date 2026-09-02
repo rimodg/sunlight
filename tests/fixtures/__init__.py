@@ -33,6 +33,7 @@ def load_compass_sample() -> Dict[str, Any]:
 
 def get_evidence_map_fixture(country_code: str) -> Dict[str, Any]:
     """Load an evidence map for testing."""
-    fixture_path = Path(__file__).parent.parent / "data" / "evidence_maps" / f"{country_code}.json"
+    # Evidence maps are in /workspace/data/evidence_maps/
+    fixture_path = Path(__file__).parent.parent.parent / "data" / "evidence_maps" / f"{country_code}.json"
     with open(fixture_path, "r", encoding="utf-8") as f:
         return json.load(f)

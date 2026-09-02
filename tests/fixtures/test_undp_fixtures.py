@@ -32,8 +32,9 @@ class TestFixtureAvailability:
     def test_fixture_directory_structure(self):
         """Verify fixture directory structure is correct."""
         base_dir = get_fixture_path("")
-        assert base_dir.parent.name == "undp"
-        assert base_dir.parent.parent.name == "fixtures"
+        # base_dir points to /workspace/data/fixtures/undp/
+        assert base_dir.name == "undp"
+        assert base_dir.parent.name == "fixtures"
 
 
 class TestQuantumFixtureStructure:
@@ -194,7 +195,9 @@ class TestEvidenceMapFixtures:
 
     def test_queryable_classes_are_valid(self):
         """Verify queryable classes reference valid evidence types."""
-        from code.evidence_schema import EvidenceClass
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "code"))
+        from evidence_schema import EvidenceClass
         
         valid_classes = {c.value for c in EvidenceClass}
         
@@ -209,7 +212,9 @@ class TestAdapterStubBehavior:
 
     def test_quantum_adapter_stub_raises_not_implemented(self):
         """Verify QuantumAdapter stub raises NotImplementedError when called."""
-        from code.input_adapters import QuantumAdapter
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "code"))
+        from input_adapters import QuantumAdapter
         
         adapter = QuantumAdapter()
         with pytest.raises(NotImplementedError):
@@ -217,7 +222,9 @@ class TestAdapterStubBehavior:
 
     def test_compass_adapter_stub_raises_not_implemented(self):
         """Verify CompassAdapter stub raises NotImplementedError when called."""
-        from code.input_adapters import CompassAdapter
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent / "code"))
+        from input_adapters import CompassAdapter
         
         adapter = CompassAdapter()
         with pytest.raises(NotImplementedError):
