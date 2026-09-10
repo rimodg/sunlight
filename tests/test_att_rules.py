@@ -103,3 +103,29 @@ def test_every_finding_carries_citation():
 def test_get_att_param_default_is_none_not_zero():
     class Bare: pass
     assert _get_att_param(Bare(), "min_history_items") is None
+
+def test_history_unassessable_when_contributing_exporters_did_not_file_in_baseline():
+    """Zero filings are not zero transfers: Serbia never filed in 2011, so a
+    2015 surge to Saudi Arabia from Serbia alone must be UNASSESSABLE."""
+    led = [R(2011, "Slovakia", "Germany", 50), R(2015, "Serbia", "Saudi Arabia", 60000)]
+    fs = by(assess_transfers(led, {2011: ["Slovakia"], 2015: ["Serbia","Slovakia"]}, _prof()), "ATT-HIST-001")
+    sa = [f for f in fs if f.importer == "Saudi Arabia"]
+    assert sa and sa[0].status == "UNASSESSABLE" and "zero filings are not zero transfers" in sa[0].description
+
+def test_history_fires_when_at_least_one_contributor_filed_in_baseline():
+    led = [R(2011, "Slovakia", "Germany", 50), R(2015, "Serbia", "Saudi Arabia", 60000), R(2015, "Slovakia", "Saudi Arabia", 200)]
+    fs = by(assess_transfers(led, {2011: ["Slovakia"], 2015: ["Serbia","Slovakia"]}, _prof()), "ATT-HIST-001")
+    sa = [f for f in fs if f.importer == "Saudi Arabia" and f.status == "INDICATOR"]
+    assert sa and "filed in baseline=['Slovakia']" in sa[0].evidence and "not filed in baseline=['Serbia']" in sa[0].evidence
+
+def test_ambiguous_importer_rows_are_excluded_and_reported():
+    led = _ledger() + [R(2015, "Serbia", "Saudi Arabia 38", 500)]
+    fs = assess_transfers(led, FILERS, _prof())
+    gate = by(fs, "ATT-CAT-000"); assert gate and "1 rows excluded" in gate[0].description
+    assert not any("Saudi Arabia 38" in (f.importer or "") for f in fs if f.rule_id != "ATT-CAT-000")
+
+def test_state_aliases_unify_filings_across_years():
+    led = [R(2011, "Czech Republic", "Germany", 50), R(2015, "Czechia", "United Arab Emirates", 700)]
+    fs = by(assess_transfers(led, {2011: ["Czech Republic"], 2015: ["Czechia"]}, _prof()), "ATT-HIST-001")
+    uae = [f for f in fs if f.importer == "United Arab Emirates"]
+    assert uae and uae[0].status == "INDICATOR" and "filed in baseline=['Czech Republic']" in uae[0].evidence

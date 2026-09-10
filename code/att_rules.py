@@ -61,6 +61,18 @@ def assess_transfers(records: List[TransferRecord], filers_by_year: Dict[int, Li
     submission in each year's compilation (for REP rules). Returns findings
     in deterministic order."""
     out: List[ATTFinding] = []
+    aliases = _get_att_param(profile, "state_aliases", {}) or {}
+    def canon(name):
+        for k, v in aliases.items():
+            if k in name: name = name.replace(k, v)
+        return name
+    records = [TransferRecord(r.year, canon(r.exporter), canon(r.importer), r.items, r.category, r.description, canon(r.origin), canon(r.intermediate), r.table, r.symbol, r.page, r.sha256_16) for r in records]
+    filers_by_year = {y: [canon(f) for f in fs] for y, fs in filers_by_year.items()}
+    ambiguous = [r for r in records if any(ch.isdigit() for ch in r.importer)]
+    if ambiguous:
+        out.append(ATTFinding("ATT-CAT-000", "Ambiguous importer rows excluded", "ingestion", "info", "UNASSESSABLE", 0, None, None,
+                              f"{len(ambiguous)} rows excluded because the importer field carries digits (adapter artifact)", "", "ingestion gate, not a treaty reading"))
+    records = [r for r in records if r not in ambiguous]
     exp = sorted((r for r in records if r.table == "Exports" and _in_scope(profile, r.exporter)),
                  key=lambda r: (r.year, r.exporter, r.importer, r.page))
     years = sorted({r.year for r in exp})
@@ -85,10 +97,17 @@ def assess_transfers(records: List[TransferRecord], filers_by_year: Dict[int, Li
                 continue
             prior = sum(by_imp_year.get((imp, y), 0) for y in baseline)
             cur = by_imp_year[(imp, yr)]
+            contributing = sorted(by_imp_year_exps[(imp, yr)])
+            covered = [e for e in contributing if all(any(e in f for f in filers_by_year.get(y, [])) for y in baseline)]
+            if cur >= min_new and prior < min_hist and not covered:
+                out.append(ATTFinding("ATT-HIST-001", "Recipient history", "temporal", "info", "UNASSESSABLE", yr, None, imp,
+                                      f"{imp} received {cur} declared items in {yr}, but none of the contributing exporters {contributing} filed in baseline {baseline}; zero filings are not zero transfers",
+                                      "", _cite(profile, "ATT-HIST-001")))
+                continue
             if cur >= min_new and prior < min_hist:
                 out.append(ATTFinding("ATT-HIST-001", "New recipient without prior history", "temporal", "high", "INDICATOR", yr, None, imp,
                                       f"{imp} received {cur} declared items in {yr} from in-scope exporters against {prior} in baseline {baseline}",
-                                      f"items {yr}={cur}; baseline={prior}; exporters={sorted(by_imp_year_exps[(imp, yr)])}", _cite(profile, "ATT-HIST-001")))
+                                      f"items {yr}={cur}; baseline={prior}; exporters={contributing}; filed in baseline={covered}; not filed in baseline={[e for e in contributing if e not in covered]}", _cite(profile, "ATT-HIST-001")))
 
     # ATT-CONC-001 recipient concentration across exporters
     k = _get_att_param(profile, "concentration_min_exporters", 3)

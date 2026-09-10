@@ -42,6 +42,11 @@ class ATTProfile:
         {"destination": "Iraq", "resolution": "1546 (2004)", "from": 2004, "to": None,
          "scope": "non-state", "exemptions": "Government of Iraq not covered"},
     ])
+    # State-name aliases (Register and ATT filings vary by year); profile data, not code
+    state_aliases: Dict[str, str] = field(default_factory=lambda: {
+        "Czechia": "Czech Republic", "Türkiye": "Turkey", "Turkiye": "Turkey",
+        "Republic of Serbia": "Serbia", "Bosnia-Herzegovina": "Bosnia and Herzegovina",
+    })
     citations: Dict[str, str] = field(default_factory=lambda: {
         "ATT-HIST-001": "ATT Article 11(2): the exporting State Party shall assess the risk of diversion of the export",
         "ATT-CONC-001": "ATT Article 11(3) and 11(5): cooperation and exchange of information to mitigate the risk of diversion",
