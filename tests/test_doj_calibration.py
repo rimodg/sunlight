@@ -1,13 +1,57 @@
 """
-Tests for DOJ threshold calibration and tier assignment.
-Validates that detection aligns with prosecution precedent.
+Tests for DOJ threshold constants and the DOJ fixture's integrity.
+
+HONESTY NOTE (2026-09-21): nothing in this file runs the detection engine.
+TestDOJThresholdConstantsOnly compares each case's hand-entered markup_pct to
+the DOJProsecutionThresholds constants. That proves the constants are set where
+the cases sit; it does not prove the engine would flag the cases. The engine
+gate is tests/test_doj_blind_e2e.py, which drives InstitutionalPipeline ->
+score_contract -> assign_tier (the path the worker behind the API runs) over
+synthetic contracts built from each case.
 """
-import pytest
-import sys
+import hashlib
 import os
+import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'code'))
 from institutional_statistical_rigor import DOJProsecutionThresholds, FraudTier
+
+from tests.doj_fixture import (
+    DOJ_CASES_PATH, DOJ_CASES_SHA256, DOJ_CASES_EXPECTED_COUNT, verify_doj_cases_file,
+)
+
+
+class TestDOJFixtureIntegrity:
+    """The 10-case DOJ fixture must be present and byte-identical to the pin.
+
+    This is the fail-closed gate: a missing or altered fixture is a FAILED
+    test here, and an ERROR in every test that depends on the doj_cases
+    fixture. Neither can be skipped.
+    """
+
+    def test_fixture_present_and_unaltered(self):
+        raw = verify_doj_cases_file()  # pytest.fail()s with a reason if not
+        assert hashlib.sha256(raw).hexdigest() == DOJ_CASES_SHA256
+        assert os.path.basename(DOJ_CASES_PATH) == 'prosecuted_cases.json'
+
+    def test_fixture_shape(self, doj_cases):
+        assert len(doj_cases) == DOJ_CASES_EXPECTED_COUNT
+        required = {'case_id', 'vendor', 'agency', 'markup_pct', 'settlement',
+                    'contract_amount', 'fraud_type', 'legal_basis', 'description'}
+        for case in doj_cases:
+            missing = required - set(case)
+            assert not missing, f"{case.get('case_id')} missing {missing}"
+
+    def test_fixture_composition_is_the_claimed_nine_plus_one(self, doj_cases):
+        """9 price-fraud cases (markup > 0) and 1 non-price case (markup == 0).
+
+        These are the '9 positives, 1 excluded' of docs/evaluation_report.json.
+        """
+        price = [c for c in doj_cases if c['markup_pct'] > 0]
+        non_price = [c for c in doj_cases if c['markup_pct'] == 0]
+        assert len(price) == 9
+        assert len(non_price) == 1
+        assert non_price[0]['case_id'] == 'US_v_General_Dynamics_2011'
 
 
 class TestDOJThresholds:
@@ -58,8 +102,15 @@ class TestFraudTierEnum:
         assert len(FraudTier) == 4
 
 
-class TestDOJCaseValidation:
-    """Validate that DOJ prosecuted cases would be caught by our thresholds."""
+class TestDOJThresholdConstantsOnly:
+    """Threshold-constant tests. THESE DO NOT RUN THE ENGINE.
+
+    Renamed 2026-09-21 from TestDOJCaseValidation. Each test compares a
+    case's hand-entered markup_pct against a constant in
+    DOJProsecutionThresholds. That is a statement about where the constants
+    were set, not evidence that the scoring engine flags the case. The
+    engine-driven equivalents live in tests/test_doj_blind_e2e.py.
+    """
 
     def test_all_price_fraud_cases_detected(self, doj_cases):
         """Every DOJ case with a markup should exceed INVESTIGATION_WORTHY."""

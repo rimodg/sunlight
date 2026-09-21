@@ -12,6 +12,15 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Every `run:` block executes under `bash -eo pipefail` (that is what an
+# explicit `shell: bash` means on GitHub). Without this, GitHub's default for
+# an un-shelled step is `bash -e` WITHOUT pipefail, so `pytest | tee` returns
+# tee's exit code and a failing test suite exits 0. Measured 2026-09-21: with
+# the DOJ fixture missing, pytest exited 1, tee exited 0, the step saw 0.
+defaults:
+  run:
+    shell: bash
+
 jobs:
   suite:
     name: Suite (py${{ matrix.python }})
@@ -84,17 +93,43 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
-      - name: DOJ calibration twice, digests must match
-        # The in-suite calibration is the CI proxy for the floor. The
+      - name: DOJ gate twice, tests must pass and digests must match
+        # The in-suite DOJ gate is the CI proxy for the recall floor. The
         # live 42,835-contract corpus read remains the release ritual.
-        # Running the calibration test file twice and comparing output
-        # digests proves run-to-run determinism on a machine that is
-        # not the development machine.
+        #
+        # Two files run: the threshold-constant tests and the blind
+        # end-to-end test that drives the real scoring engine
+        # (InstitutionalPipeline -> score_contract -> assign_tier) over
+        # each DOJ case. Running both twice and comparing digests proves
+        # run-to-run determinism of the engine on a machine that is not
+        # the development machine.
+        #
+        # Fail-closed rules, in order:
+        #   1. pytest's own exit code is checked explicitly and the step
+        #      exits with it. `shell: bash` also sets pipefail, so the
+        #      tee pipe can no longer mask a red run.
+        #   2. The elapsed-time suffix (" in 0.12s") is stripped before
+        #      hashing. Wall-clock text is not determinism evidence; it
+        #      made the old comparison flap on both success and failure.
+        #   3. Any digest mismatch after that is a real determinism break
+        #      and exits 1.
         run: |
-          python -m pytest tests/test_doj_calibration.py -q | tee run1.txt
-          python -m pytest tests/test_doj_calibration.py -q | tee run2.txt
-          d1=$(shasum -a 256 run1.txt | cut -d' ' -f1)
-          d2=$(shasum -a 256 run2.txt | cut -d' ' -f1)
+          set -o pipefail
+          DOJ_TESTS="tests/test_doj_calibration.py tests/test_doj_blind_e2e.py"
+          python -m pytest $DOJ_TESTS -q -p no:cacheprovider | tee run1.txt
+          python -m pytest $DOJ_TESTS -q -p no:cacheprovider | tee run2.txt
+          strip_time() { sed -E 's/ in [0-9]+\.[0-9]+s//' "$1"; }
+          d1=$(strip_time run1.txt | shasum -a 256 | cut -d' ' -f1)
+          d2=$(strip_time run2.txt | shasum -a 256 | cut -d' ' -f1)
           echo "run1: $d1"
           echo "run2: $d2"
-          test "$d1" = "$d2" && echo "DETERMINISM: byte-identical" || exit 1
+          # pytest's summary is its last line: "N passed in 0.12s" on green,
+          # "N passed, M failed" / "M errors" on red. Judge only that line.
+          for r in run1.txt run2.txt; do
+            summary=$(tail -1 "$r")
+            echo "$r summary: $summary"
+            echo "$summary" | grep -qE '^[0-9]+ passed' || { echo "GATE: $r did not report a passing suite"; exit 1; }
+            # whole tokens only: "3 xfailed" is an expected failure, not a failure
+            echo "$summary" | grep -qE '(^|, )[0-9]+ (failed|errors?)( |,|$)' && { echo "GATE: $r reported failures or errors"; exit 1; }
+          done
+          test "$d1" = "$d2" && echo "DETERMINISM: byte-identical (timing stripped)" || { echo "DETERMINISM: MISMATCH"; exit 1; }

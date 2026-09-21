@@ -24,6 +24,10 @@ data/
 
 # Sensitive ground-truth (contains case details)
 prosecuted_cases.json
+# Exception: the 10-case DOJ test fixture is public DOJ press-release data and
+# is the gate behind the README's recall claim. Its sha256 is pinned in
+# tests/doj_fixture.py; a missing or altered copy is a hard test failure.
+!tests/fixtures/prosecuted_cases.json
 
 # Backup archives
 *.tar.gz

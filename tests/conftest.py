@@ -36,12 +36,20 @@ def small_comparables():
     return [1_000_000, 1_200_000, 1_100_000]
 
 
+# ── DOJ reference-case fixture (fail-closed) ─────────────────────────────────
+# Location, pinned sha256 and the loader live in tests/doj_fixture.py so the
+# integrity test and the engine gate share one check. See that module.
+from tests.doj_fixture import DOJ_CASES_EXPECTED_COUNT, verify_doj_cases_file  # noqa: E402
+
+
 @pytest.fixture
 def doj_cases():
-    """Load DOJ prosecuted cases."""
-    cases_path = os.path.join(os.path.dirname(__file__), '..', 'prosecuted_cases.json')
-    with open(cases_path) as f:
-        return json.load(f)['cases']
+    """Load the 10 DOJ prosecuted reference cases (sha256-pinned, fail-closed)."""
+    raw = verify_doj_cases_file()
+    cases = json.loads(raw)['cases']
+    if len(cases) != DOJ_CASES_EXPECTED_COUNT:
+        pytest.fail(f"DOJ fixture has {len(cases)} cases, expected {DOJ_CASES_EXPECTED_COUNT}")
+    return cases
 
 
 @pytest.fixture

@@ -17,6 +17,8 @@ ENV/
 
 # Development and testing
 tests/
+# Exception: the DOJ reference fixture the Dockerfile copies (see Dockerfile).
+!tests/fixtures/prosecuted_cases.json
 .pytest_cache/
 .coverage
 htmlcov/

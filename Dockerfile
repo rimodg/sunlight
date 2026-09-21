@@ -33,7 +33,12 @@ COPY --from=builder /root/.local /home/sunlight/.local
 COPY --chown=sunlight:sunlight code/ ./code/
 
 # Copy required data files
-COPY --chown=sunlight:sunlight prosecuted_cases.json ./
+# The 10-case DOJ reference file lived at the repo root until commit 3866a49
+# (2026-06-12) untracked it; this COPY then failed on every clean clone and the
+# container CI job never passed. It now ships from the sha256-pinned test
+# fixture (see tests/doj_fixture.py) at the path the release-ritual scripts
+# (code/doj_validation.py, code/evaluation.py) expect.
+COPY --chown=sunlight:sunlight tests/fixtures/prosecuted_cases.json ./prosecuted_cases.json
 COPY --chown=sunlight:sunlight data/ ./data/
 
 # Create calibration directory with correct ownership for runtime state
