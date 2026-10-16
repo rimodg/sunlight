@@ -1,6 +1,14 @@
 # SUNLIGHT API - Production Container Image
 # Multi-stage build for minimal attack surface and reproducible deployment
 
+# Build the same-origin evidence workspace.
+FROM node:24-slim AS workspace
+WORKDIR /workspace
+COPY sunlight-dashboard/package.json sunlight-dashboard/package-lock.json ./
+RUN npm ci
+COPY sunlight-dashboard/ ./
+RUN npm run build -- --base=/watch/
+
 # ============================================================================
 # Stage 1: Builder - Install dependencies
 # ============================================================================
@@ -32,9 +40,10 @@ COPY --from=builder /root/.local /home/sunlight/.local
 # Copy application code
 COPY --chown=sunlight:sunlight code/ ./code/
 
-# Copy required data files
-COPY --chown=sunlight:sunlight prosecuted_cases.json ./
+# Ship calibration inputs, not the ignored evaluation-only prosecution fixture.
+COPY --chown=sunlight:sunlight research/corpus/ ./research/corpus/
 COPY --chown=sunlight:sunlight data/ ./data/
+COPY --from=workspace --chown=sunlight:sunlight /workspace/dist/ ./sunlight-dashboard/dist/
 
 # Create calibration directory with correct ownership for runtime state
 RUN mkdir -p /app/calibration && chown -R sunlight:sunlight /app/calibration
@@ -54,7 +63,7 @@ EXPOSE 8000
 
 # Health check configuration - uses the /health endpoint
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD python -c "import httpx; httpx.get('http://localhost:8000/health', timeout=2.0)" || exit 1
+    CMD python -c "import httpx; r=httpx.get('http://localhost:8000/health', timeout=2.0); r.raise_for_status(); assert r.json()['status']=='ok'" || exit 1
 
 # Run the API server
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]

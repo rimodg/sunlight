@@ -30,7 +30,10 @@ documentation/
 !requirements.txt
 
 # Data files - exclude large datasets but keep required files
-# (prosecuted_cases.json and data/ are explicitly COPY'd in Dockerfile)
+# The evaluation-only root fixture is not a runtime dependency.
+prosecuted_cases.json
+sunlight-dashboard/node_modules/
+sunlight-dashboard/dist/
 data/raw/
 *.tar.gz
 *.zip

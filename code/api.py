@@ -41,11 +41,13 @@ from __future__ import annotations
 import os
 import subprocess
 import time
+from pathlib import Path
 from datetime import date, datetime, timezone
 from typing import Optional, List, Dict, Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 # SUNLIGHT core imports
@@ -1182,6 +1184,11 @@ async def assurance():
     """Current capability boundaries, never a claim of institutional approval."""
     return {
         "schema_version": "sunlight.assurance.v1",
+        "calibration": {
+            "registry_key": MJPIS_DRAFT_V0.version,
+            "state": "derived_from_corpus" if MJPIS_DRAFT_V0.derivation_metadata.get("corpus_version") else "fallback",
+            "corpus_version": MJPIS_DRAFT_V0.derivation_metadata.get("corpus_version"),
+        },
         "purpose": "Trace public value from documented commitment to independently corroborated outcome.",
         "capabilities": [
             {"name": "Procurement analysis", "state": "API available", "endpoint": "/analyze",
@@ -2690,6 +2697,13 @@ async def get_evidence_capacity(country_code: str):
             "what submitted sources actually return. " + summary["note"]
         )
     return summary
+
+
+# The production image builds this directory with Vite base=/watch/.
+# Keep the API's root descriptor and all existing API routes unchanged.
+_workspace_dir = Path(__file__).resolve().parent.parent / "sunlight-dashboard" / "dist"
+if _workspace_dir.is_dir():
+    app.mount("/watch", StaticFiles(directory=_workspace_dir, html=True), name="evidence-workspace")
 
 
 @app.get("/evidence/dossier/{dossier_id}")

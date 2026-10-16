@@ -50,6 +50,6 @@ function ProtectedLayout() {
 
 function PrototypeNotice({ children }) {
   return <><div role="note" style={{ position: 'sticky', top: 0, zIndex: 10000, padding: '12px 20px', background: '#fff2c5', color: '#493c1c', font: '13px/1.6 system-ui' }}>
-    Synthetic interface prototype. Figures and findings on this page are illustrative. <a href="/" style={{ color: 'inherit', textDecoration: 'underline' }}>Open the live evidence workspace</a>.
+    Synthetic interface prototype. Figures and findings on this page are illustrative. <a href={import.meta.env.BASE_URL} style={{ color: 'inherit', textDecoration: 'underline' }}>Open the live evidence workspace</a>.
   </div>{children}</>;
 }

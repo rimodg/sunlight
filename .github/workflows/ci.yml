@@ -26,6 +26,8 @@ jobs:
         python: ["3.11", "3.14"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -40,6 +42,7 @@ jobs:
 
       - name: Run suite (Docker tests excluded here, run in their own job)
         run: |
+          python scripts/restore_reference_cases.py
           python -m pytest tests/ -q \
             --ignore=tests/test_docker_live.py
 
@@ -67,11 +70,13 @@ jobs:
         run: python -m pytest tests/test_docker_live.py -q
 
   determinism:
-    name: Determinism proof (double run, byte-identical)
+    name: Determinism (analysis artifacts)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -84,17 +89,26 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
-      - name: DOJ calibration twice, digests must match
-        # The in-suite calibration is the CI proxy for the floor. The
-        # live 42,835-contract corpus read remains the release ritual.
-        # Running the calibration test file twice and comparing output
-        # digests proves run-to-run determinism on a machine that is
-        # not the development machine.
+      - name: Reference fixture checks and deterministic analysis artifacts
         run: |
-          python -m pytest tests/test_doj_calibration.py -q | tee run1.txt
-          python -m pytest tests/test_doj_calibration.py -q | tee run2.txt
-          d1=$(shasum -a 256 run1.txt | cut -d' ' -f1)
-          d2=$(shasum -a 256 run2.txt | cut -d' ' -f1)
-          echo "run1: $d1"
-          echo "run2: $d2"
-          test "$d1" = "$d2" && echo "DETERMINISM: byte-identical" || exit 1
+          python scripts/restore_reference_cases.py
+          python -m pytest tests/test_doj_calibration.py -q
+          python scripts/determinism_snapshot.py --output /tmp/sunlight-run1.json
+          python scripts/determinism_snapshot.py --output /tmp/sunlight-run2.json
+          cmp /tmp/sunlight-run1.json /tmp/sunlight-run2.json
+          sha256sum /tmp/sunlight-run1.json /tmp/sunlight-run2.json
+
+  dashboard:
+    name: Evidence workspace build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: sunlight-dashboard/package-lock.json
+      - run: npm ci
+        working-directory: sunlight-dashboard
+      - run: npm run build -- --base=/watch/
+        working-directory: sunlight-dashboard
