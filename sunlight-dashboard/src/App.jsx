@@ -9,13 +9,15 @@ import Onboarding from './views/Onboarding';
 import Login from './views/Login';
 import Workstation from './pages/Workstation';
 import Demo from './pages/Demo';
+import EvidenceWorkspace from './pages/EvidenceWorkspace';
 
 export default function App() {
   return (
     <AppProvider>
       <Routes>
-        <Route path="/" element={<Workstation />} />
-        <Route path="/demo" element={<Demo />} />
+        <Route path="/" element={<EvidenceWorkspace />} />
+        <Route path="/prototype" element={<PrototypeNotice><Workstation /></PrototypeNotice>} />
+        <Route path="/demo" element={<PrototypeNotice><Demo /></PrototypeNotice>} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/app/*" element={<ProtectedLayout />} />
       </Routes>
@@ -44,4 +46,10 @@ function ProtectedLayout() {
       </Route>
     </Routes>
   );
+}
+
+function PrototypeNotice({ children }) {
+  return <><div role="note" style={{ position: 'sticky', top: 0, zIndex: 10000, padding: '12px 20px', background: '#fff2c5', color: '#493c1c', font: '13px/1.6 system-ui' }}>
+    Synthetic interface prototype. Figures and findings on this page are illustrative. <a href="/" style={{ color: 'inherit', textDecoration: 'underline' }}>Open the live evidence workspace</a>.
+  </div>{children}</>;
 }

@@ -514,9 +514,13 @@ class SunlightPipeline:
 
         buyers = [p for p in parties if "buyer" in str(p.get("roles", []))]
         suppliers = [p for p in parties if "supplier" in str(p.get("roles", []))]
+        # OCDS permits award suppliers as organization references without
+        # repeated supplier parties. Preserve those supplied identities.
+        if not suppliers:
+            suppliers = award.get("suppliers") or []
 
         d.buyer_name = buyers[0].get("name", "") if buyers else raw.get("buyer", {}).get("name", "")
-        d.buyer_id = buyers[0].get("id", "") if buyers else ""
+        d.buyer_id = buyers[0].get("id", "") if buyers else raw.get("buyer", {}).get("id", "")
         d.supplier_name = suppliers[0].get("name", "") if suppliers else ""
         d.supplier_id = suppliers[0].get("id", "") if suppliers else ""
         d.suppliers = suppliers
@@ -533,6 +537,10 @@ class SunlightPipeline:
         d.number_of_tenderers = tender.get("numberOfTenderers")
         if d.number_of_tenderers is not None:
             d.number_of_tenderers = int(d.number_of_tenderers)
+
+        period = tender.get("tenderPeriod") or {}
+        d.tender_start = period.get("startDate")
+        d.tender_end = period.get("endDate")
 
         d.award_date = award.get("date", "")
         d.sector = tender.get("mainProcurementCategory", "")
