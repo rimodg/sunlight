@@ -80,7 +80,7 @@ jobs:
               root = ET.parse(path).getroot()
               problems = root.findall('.//testcase/error') + root.findall('.//testcase/failure')
               for problem in problems[:1]:
-                  text = (problem.text or problem.get('message', 'Container test failed'))[:55000]
+                  text = (problem.text or problem.get('message', 'Container test failed'))[-3500:]
                   text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
                   print('::error title=Container test diagnostics::' + text)
           PY
