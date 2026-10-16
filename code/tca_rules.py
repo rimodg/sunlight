@@ -106,6 +106,8 @@ def _extract(dossier) -> Dict:
     suppliers = [p for p in parties
                  if "supplier" in str(p.get("roles", [])).lower()
                  or "tenderer" in str(p.get("roles", [])).lower()]
+    if not suppliers:
+        suppliers = getattr(dossier, "suppliers", None) or award.get("suppliers") or []
     buyers = [p for p in parties
               if "buyer" in str(p.get("roles", [])).lower()]
 

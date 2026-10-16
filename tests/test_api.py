@@ -259,27 +259,6 @@ class TestBatch:
         assert flagged == []
         assert body["threshold_metadata"]["recommended_count"] == 0
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="KNOWN DEFECT — capacity_budget does not bind under ties. "
-               "compute_risk_score is verdict_rank + confidence, and its own docstring "
-               "calls confidence 'a tiebreaker within verdicts'; when confidence is also "
-               "identical the tie is not broken. The C-th highest score is taken as the "
-               "threshold and compared with >=, so every contract tied at that score is "
-               "admitted. Measured: capacity_budget=2 over 10 contracts scoring "
-               "[1.95, 2.75 x 9] yields binding_threshold=2.75 and 9 recommendations. "
-               "An investigator with capacity for 2 is handed 9. "
-               "The second, independent defect in this block — the promote-only second "
-               "pass — IS now fixed; it assigns from the binding threshold in both "
-               "directions and is pinned by "
-               "test_the_second_pass_demotes_as_well_as_promotes. "
-               "This tie defect remains DELIBERATELY DEFERRED, not forgotten: breaking "
-               "the tie means deciding which 2 of 9 identically-scored contracts an "
-               "investigator receives, and every available answer is arbitrary. Picking "
-               "by original batch order would make the output depend on submission "
-               "sequence; picking none would discard real signal. The honest fix is "
-               "probably to report the tied group and let the institution choose, which "
-               "is a product decision rather than a code change. Owner's call.")
     def test_a_capacity_budget_is_honoured_as_a_ceiling_on_flags(self, client):
         """The behaviour the feature exists to provide: never recommend more cases than
         the investigator can actually take. When this starts passing, the defect above is

@@ -102,3 +102,27 @@ def assess_ingestion_quality(dossier: Any) -> IngestionQualityReport:
         fields_present=present,
         fields_total=total,
     )
+
+
+def input_mapping_gaps(dossier: Any) -> List[dict]:
+    """Expose supplied OCDS fields absent from normalized inputs.
+
+    Reporting only. No inference, normalization, or scoring correction is made.
+    These paths cover known identity/date handoffs, not every OCDS extension.
+    """
+    raw = getattr(dossier, "raw_ocds", {}) or {}
+    tender = raw.get("tender") or {}
+    period = tender.get("tenderPeriod") or {}
+    buyer = raw.get("buyer") or {}
+    awards = raw.get("awards") or []
+    award = awards[0] if awards else {}
+    candidates = [
+        ("buyer.id", "buyer_id", buyer.get("id")),
+        ("tender.tenderPeriod.startDate", "tender_start", period.get("startDate")),
+        ("tender.tenderPeriod.endDate", "tender_end", period.get("endDate")),
+        ("awards[0].suppliers", "suppliers", award.get("suppliers")),
+    ]
+    return [{"source_path": path, "normalized_field": name,
+             "status": "SUPPLIED_BUT_NOT_NORMALIZED"}
+            for path, name, supplied in candidates
+            if _is_present(supplied) and not _is_present(getattr(dossier, name, None))]

@@ -65,6 +65,8 @@ from tca_analyzer import TCAStructureEngineAdapter
 from calibration_store import EmpiricalCalibrationStore, BatchObservation
 from input_adapters import build_default_registry
 from sunlight_logging import get_logger
+from ingestion_quality import assess_ingestion_quality, input_mapping_gaps
+from analysis_receipt import build_receipt, content_digest, source_manifest
 
 # SUNLIGHT Side 2 imports
 from delivery_schema import (
@@ -444,6 +446,12 @@ class AnalyzeResponse(BaseModel):
             "band cutoff is crossed."
         ),
     )
+    ingestion_quality: Optional[Dict[str, Any]] = Field(
+        None, description="Presence of normalized engine-consumed fields; defaults can count as present. Not source authenticity or a risk score."
+    )
+    analysis_receipt: Optional[Dict[str, Any]] = Field(
+        None, description="Content hashes binding the submitted request, calibration, source files, and substantive output."
+    )
     errors: List[str] = Field(default_factory=list)
     processing_time_ms: float
     recommended_for_investigation: bool = Field(
@@ -467,15 +475,11 @@ class BatchAnalyzeResponse(BaseModel):
     threshold_metadata: dict = Field(
         default_factory=dict,
         description=(
-            "Metadata describing the thresholds applied to this batch. "
-            "Contains: statistical_threshold (float, the minimum risk score "
-            "for investigation recommendation), capacity_budget (Optional[int], "
-            "the requested capacity or None), capacity_threshold (Optional[float], "
-            "the computed risk score quantile corresponding to capacity or None "
-            "if no capacity specified), binding_threshold (float, the actual "
-            "threshold applied, equal to max(statistical, capacity)), "
-            "recommended_count (int, the number of contracts recommended for "
-            "investigation in this batch)."
+            "Review-queue policy: statistical threshold, optional hard capacity budget, "
+            "eligible/recommended/deferred counts, selection policy, and boundary ties. "
+            "capacity_threshold is the selected boundary score when capacity binds. "
+            "binding_threshold alone is not a selection predicate under ties or zero "
+            "capacity; use each result's recommendation and this selection metadata."
         ),
     )
 
@@ -764,8 +768,10 @@ async def analyze_contract(request: AnalyzeRequest):
         # Ingest contract as dossier
         dossier = pipeline.ingest(canonical_ocds, mode=ExecutionMode.BATCH)
 
-        # Process through pipeline
+        # Normalization happens inside process(), not in ingest().
         dossier = pipeline.process(dossier)
+        quality = assess_ingestion_quality(dossier).to_provenance()
+        quality["mapping_gaps"] = input_mapping_gaps(dossier)
 
         processing_time_ms = (time.perf_counter() - t0) * 1000
 
@@ -806,7 +812,8 @@ async def analyze_contract(request: AnalyzeRequest):
             risk_score = compute_risk_score(structure.verdict, structure.confidence)
             recommended = risk_score >= DEFAULT_STATISTICAL_THRESHOLD
 
-        return AnalyzeResponse(
+        response = AnalyzeResponse(
+            ingestion_quality=quality,
             ocid=dossier.ocid,
             stage=dossier.stage.value,
             profile_used=request.profile,
@@ -823,6 +830,10 @@ async def analyze_contract(request: AnalyzeRequest):
             processing_time_ms=processing_time_ms,
             recommended_for_investigation=recommended,
         )
+        response.analysis_receipt = build_receipt(
+            request.model_dump(mode="json"), response.model_dump(mode="json"), profile, global_params,
+            submitted_request=request.model_dump(mode="json", exclude_unset=True))
+        return response
 
     except Exception as e:
         raise HTTPException(
@@ -891,6 +902,8 @@ async def batch_analyze(request: BatchAnalyzeRequest):
 
             dossier = pipeline.ingest(canonical_ocds, mode=ExecutionMode.BATCH)
             dossier = pipeline.process(dossier)
+            quality = assess_ingestion_quality(dossier).to_provenance()
+            quality["mapping_gaps"] = input_mapping_gaps(dossier)
 
             processing_time_ms = (time.perf_counter() - t0) * 1000
 
@@ -932,6 +945,7 @@ async def batch_analyze(request: BatchAnalyzeRequest):
             # Add result with placeholder recommended_for_investigation=False
             # (will update in second pass after capacity threshold computation)
             results.append(AnalyzeResponse(
+                ingestion_quality=quality,
                 ocid=dossier.ocid,
                 stage=dossier.stage.value,
                 profile_used=request.profile,
@@ -964,59 +978,46 @@ async def batch_analyze(request: BatchAnalyzeRequest):
                 recommended_for_investigation=False,
             ))
 
-    # CAPACITY THRESHOLD COMPUTATION
-    # Compute risk scores for all contracts
-    risk_scores = []
-    for r in results:
-        if r.structure:
-            risk_scores.append(compute_risk_score(r.structure.verdict, r.structure.confidence))
-        else:
-            risk_scores.append(0.0)  # Failed contracts get minimum score
-
-    # Determine capacity threshold
-    capacity_threshold = None
-    if request.capacity_budget is None or request.capacity_budget >= len(results):
-        # No capacity ceiling: capacity threshold is effectively -inf
-        capacity_threshold_value = float('-inf')
-    elif request.capacity_budget == 0:
-        # Zero capacity: capacity threshold is +inf (nothing recommended)
-        capacity_threshold_value = float('inf')
-    else:
-        # Compute the C-th highest risk score (where C = capacity_budget)
-        sorted_scores = sorted(risk_scores, reverse=True)
-        capacity_threshold_value = sorted_scores[request.capacity_budget - 1]
-        capacity_threshold = capacity_threshold_value  # For metadata reporting
-
-    # Binding threshold is max of statistical and capacity thresholds
-    binding_threshold = max(DEFAULT_STATISTICAL_THRESHOLD, capacity_threshold_value)
-
-    # SECOND PASS: Set recommended_for_investigation from the binding threshold.
-    #
-    # Assigns rather than promotes. The first pass flags against the statistical
-    # threshold alone; when a capacity budget raises the binding threshold above
-    # it, contracts between the two thresholds must be UNflagged. The previous
-    # form only ever set True, so those stayed flagged from the first pass and
-    # the capacity ceiling silently did nothing to them — an investigator with
-    # capacity for 2 could still be handed everything above the statistical bar.
-    #
-    # Isolated from the DOJ scoring path: recommended_for_investigation exists
-    # only in this module, and neither doj_validation.py nor evaluation.py
-    # references it, the /batch endpoint, or capacity_budget. Verdicts,
-    # confidence and gate outcomes are untouched by this block.
-    recommended_count = 0
+    # Capacity is a hard ceiling, separate from analytical verdicts.
+    # Equal scores use OCID as an administrative order, not stronger evidence.
+    # Identical identifiers fall back to submission index and are disclosed.
+    risk_scores = [compute_risk_score(r.structure.verdict, r.structure.confidence)
+                   if r.structure else 0.0 for r in results]
+    eligible = sorted(
+        (i for i, score in enumerate(risk_scores)
+         if results[i].structure and not results[i].errors
+         and score >= DEFAULT_STATISTICAL_THRESHOLD),
+        key=lambda i: (-risk_scores[i], results[i].ocid, i))
+    budget = request.capacity_budget
+    selected = eligible if budget is None else eligible[:budget]
+    selected_set = set(selected)
+    capacity_threshold = risk_scores[selected[-1]] if selected and budget is not None and len(eligible) > budget else None
+    boundary_score = capacity_threshold
+    tied = [i for i in eligible if risk_scores[i] == boundary_score] if boundary_score is not None else []
+    batch_sha256 = content_digest(request.model_dump(mode="json"))
+    submitted_digest = content_digest(request.model_dump(mode="json", exclude_unset=True))
+    manifest = source_manifest()
     for i, result in enumerate(results):
-        recommended = risk_scores[i] >= binding_threshold
-        result.recommended_for_investigation = recommended
-        if recommended:
-            recommended_count += 1
-
-    # Populate threshold metadata
+        result.recommended_for_investigation = i in selected_set
+        result.analysis_receipt = build_receipt(
+            {"contract": request.contracts[i].model_dump(mode="json"),
+             "profile": request.profile, "input_format": request.input_format,
+             "capacity_budget": budget,
+             "batch_sha256": batch_sha256, "submission_index": i},
+            result.model_dump(mode="json"), profile, global_params, manifest=manifest,
+            submitted_digest=submitted_digest)
     threshold_metadata = {
         "statistical_threshold": DEFAULT_STATISTICAL_THRESHOLD,
-        "capacity_budget": request.capacity_budget,
-        "capacity_threshold": capacity_threshold,  # None if no budget, else the quantile
-        "binding_threshold": binding_threshold,
-        "recommended_count": recommended_count,
+        "capacity_budget": budget,
+        "capacity_threshold": capacity_threshold,
+        "binding_threshold": max(DEFAULT_STATISTICAL_THRESHOLD, capacity_threshold or DEFAULT_STATISTICAL_THRESHOLD),
+        "recommended_count": len(selected),
+        "eligible_count": len(eligible),
+        "deferred_count": len(eligible) - len(selected),
+        "selection_policy": "risk descending, OCID ascending, submission index for duplicate OCIDs; administrative ordering only",
+        "boundary_tie": [{"ocid": results[i].ocid, "submission_index": i,
+                          "selected": i in selected_set} for i in tied] if len(tied) > 1 else [],
+        "capacity_exhausted": budget is not None and len(eligible) > len(selected),
     }
 
     # Update empirical calibration store with observations from this batch
@@ -1173,6 +1174,47 @@ async def list_input_formats():
             "Use the 'input_format' field in analyze/batch requests to select "
             "an adapter explicitly, or omit it for automatic format detection."
         )
+    }
+
+
+@app.get("/assurance")
+async def assurance():
+    """Current capability boundaries, never a claim of institutional approval."""
+    return {
+        "schema_version": "sunlight.assurance.v1",
+        "purpose": "Trace public value from documented commitment to independently corroborated outcome.",
+        "capabilities": [
+            {"name": "Procurement analysis", "state": "API available", "endpoint": "/analyze",
+             "scope": "Structural findings, evidence gate, input completeness, and content-addressed receipts."},
+            {"name": "Portfolio review", "state": "API available", "endpoint": "/batch",
+             "scope": "Per-record results and a hard analyst-capacity ceiling with disclosed ties."},
+            {"name": "Delivery and corroboration", "state": "API available", "endpoint": "/openapi.json",
+             "scope": "Separate supplied-evidence workflows; a procurement result does not establish delivery."},
+            {"name": "Arms reporting consistency", "state": "Library available", "endpoint": None,
+             "scope": "ATT profile, rules, and UN Register adapter. No general transfer-analysis API."},
+            {"name": "Cross-category Registry and Need Ledger", "state": "Design", "endpoint": None,
+             "scope": "Charter v2 direction, not a deployed global observation service."},
+            {"name": "Payment control and enforcement", "state": "Outside current authority", "endpoint": None,
+             "scope": "No power to freeze, recover, redirect, or disburse funds."},
+        ],
+        "interpretation": [
+            "Risk indicators are not allegations or probabilities of corruption.",
+            "Input completeness measures field presence, not truth or source independence. The v1 heuristic treats numeric zero as missing.",
+            "A hash detects content changes; it is not a signature or authentication of a source.",
+            "No currency conversion is performed. Confirm the contract currency matches the jurisdiction calibration before interpreting monetary rules.",
+            "No live evaluation claim is made by this endpoint. Published reference metrics require their exact corpus and evaluation protocol.",
+        ],
+        "deployment_requirements": [
+            "Institutional authentication, authorization, and rate limits at the gateway.",
+            "Validated data mappings, jurisdiction calibration, and evidence access.",
+            "Independent security review and an agreed data-sharing and retention policy.",
+            "Named reviewers, correction procedures, and approved disclosure channels.",
+        ],
+        "reference_evaluation": {
+            "state": "Not executed by this endpoint",
+            "requires": ["42,835-contract reference database", "root prosecuted_cases.json", "seed 42", "clean sample 200"],
+            "protocol": "docs/INSTITUTIONAL_REVIEW.md",
+        },
     }
 
 

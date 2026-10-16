@@ -1,5 +1,17 @@
 # SUNLIGHT
 
+The long-term direction is **The Global Humanitarian Watch**. Procurement is
+the operational entry point; broader categories must earn their own validated
+coverage. Read the [charter](docs/CHARTER_v2_global_humanitarian_watch.md) and the
+[institutional review brief](docs/INSTITUTIONAL_REVIEW.md) for current capability
+boundaries, the evaluation protocol, and a reproducible demonstration.
+
+The dashboard's default page is a live evidence workspace: supplied JSON goes
+through the API, and results expose findings, normalized-input gaps, calculation
+traces, and downloadable content-addressed receipts. It does not present random
+fixture scores as operational results. Historical evaluation metrics below must
+be interpreted with the sampling and corpus limits in the review brief.
+
 **Procurement Integrity Verification Infrastructure**
 
 Structural and statistical analysis for institutional procurement oversight.
@@ -53,17 +65,29 @@ For the approximately 150 countries without mature local prosecution data, MJPIS
 
 ## Evaluation
 
-Validated on 42,835 real US federal procurement contracts from USAspending.gov, with 100% recall on 32 prosecuted reference cases spanning four legal systems (US DOJ, UK SFO, French PNF, World Bank INT).
+The historical readiness assessment reports a comparison database of 42,835
+US federal procurement contracts and the following sampled evaluation result:
 
-| Metric | Value |
-|--------|-------|
+| Metric | Reported result |
+|--------|-----------------|
 | Precision | 33.3% |
 | Recall | 100% |
 | False Positive Rate | 9.0% |
 | PR-AUC | 0.746 |
-| Flag Rate | 129.2 per 1,000 contracts |
+| Flag Rate | 129.2 per 1,000 evaluated contracts |
 
-100% recall means every prosecuted case in the corpus is detected. No exceptions. This floor is encoded in the test suite and gated by CI — every commit, every threshold update, every engine change preserves it. The 33.3% precision reflects the system's design: it flags contracts exhibiting structural patterns consistent with prosecuted fraud, even when those contracts are ultimately clean. For an institutional oversight tool, missing a corrupt contract is catastrophic; flagging a clean one is a manageable investigative cost. The system is calibrated accordingly.
+The recorded confusion matrix is TP 9, FN 0, FP 18, TN 182. These are sampled
+evaluation counts, not 42,835 independently labeled outcomes. No misses among
+nine evaluated positive cases does not establish universal recall. A separate
+multi-jurisdiction research corpus contains 32 case records; that count must not
+be substituted for the evaluated positives in this confusion matrix.
+
+The intended operational use is analyst screening: flagged records need review,
+and a flag is not an allegation. The complete reference database and exact
+sampling protocol are required to reproduce these historical results. Current
+unit-test results and browser demonstrations are separate evidence. See the
+[institutional review protocol](docs/INSTITUTIONAL_REVIEW.md) before citing a
+performance claim.
 
 Evaluation is deterministic and reproducible: `--seed 42 --clean 200 --profile doj_federal`.
 
