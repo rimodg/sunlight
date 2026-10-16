@@ -69,6 +69,16 @@ jobs:
         # compose plugin; the fixture builds the image itself.
         run: python -m pytest tests/test_docker_live.py -q --junitxml=/tmp/container-results.xml
 
+      - name: Confirm live tests executed
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          cases = ET.parse('/tmp/container-results.xml').getroot().findall('.//testcase')
+          if not cases or any(case.find('skipped') is not None for case in cases):
+              raise SystemExit('Live container tests must execute; an all-skipped run is not validation')
+          print(f'::notice title=Live container verification::{len(cases)} live tests executed without skips')
+          PY
+
       - name: Surface container diagnostics in check annotations
         if: failure()
         run: |
