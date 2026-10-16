@@ -2,7 +2,7 @@
 from api import create_analysis_pipeline
 from jurisdiction_profile import US_FEDERAL
 from ingestion_quality import assess_ingestion_quality, input_mapping_gaps
-from tca_rules import _extract
+from tca_rules import _extract, build_rules
 
 
 def source():
@@ -51,3 +51,9 @@ def test_absent_identity_and_period_fields_remain_unknown():
     assert dossier.tender_start is None
     assert dossier.tender_end is None
     assert input_mapping_gaps(dossier) == []
+
+
+def test_direct_award_rule_cites_its_procurement_basis_only():
+    rule = next(rule for rule in build_rules(US_FEDERAL) if rule.rule_id == 'PROC-001')
+    assert rule.evidence == US_FEDERAL.legal_citations['procurement_law']
+    assert 'UNCAC Art. 16' not in rule.evidence

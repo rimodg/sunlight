@@ -57,7 +57,7 @@ h3{{font-size:15px;font-weight:500;line-height:1.5}}p{{color:#53694e}}.flow{{dis
 .flow b{{display:block;font-size:9px;color:#7e906b;margin-bottom:10px}}.flow span{{font-size:12px}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:25px}}.grid p{{font-size:12px}}
 .note{{background:#edf0da;border-left:3px solid #98ac52;padding:15px 18px;font-size:12px;margin:24px 0}}.foot{{font-size:9px;color:#6f8063;border-top:1px solid #c9d5bf;margin-top:30px;padding-top:12px}}
 .metrics{{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid #c9d5bf;padding:18px 0;gap:15px;margin:24px 0}}.metrics small{{display:block;font-size:9px;color:#6d7e60;margin-bottom:8px}}.metrics strong{{font-weight:400;font-size:22px;text-transform:capitalize}}
-.finding{{padding:16px 0;border-bottom:1px solid #d7dfca}}code{{font-size:10px;background:#e8edcc;padding:4px 6px}}.finding p{{font-size:11px}}.finding h3{{margin:10px 0}}.hash{{word-break:break-all;font:9px/1.6 monospace;color:#586e4d}}li{{margin:14px 0;color:#53694e}}a{{color:#365a32}}.small{{font-size:11px}}
+.reading .finding{{padding:11px 0}}.reading .metrics{{margin:16px 0;padding:14px 0}}.reading .note{{margin:16px 0}}.reading .foot{{margin-top:14px}}.finding{{padding:16px 0;border-bottom:1px solid #d7dfca}}code{{font-size:10px;background:#e8edcc;padding:4px 6px}}.finding p{{font-size:11px}}.finding h3{{margin:10px 0}}.hash{{word-break:break-all;font:9px/1.6 monospace;color:#586e4d}}li{{margin:14px 0;color:#53694e}}a{{color:#365a32}}.small{{font-size:11px}}
 @media print{{body{{background:white}}.page{{margin:0;min-height:297mm}}@page{{size:A4;margin:0}}}}
 </style>
 <section class="page"><div class="brand">SUNLIGHT<span>THE GLOBAL HUMANITARIAN WATCH</span></div>
@@ -69,7 +69,7 @@ h3{{font-size:15px;font-weight:500;line-height:1.5}}p{{color:#53694e}}.flow{{dis
 <div class="note">Operational entry point: procurement review. Wider charter: arms, commodities, aid, and documented human need. Each additional category requires its own validated evidence and implementation.</div>
 <p class="small">For international relations: reporting obligations and institutional action chains. For economics: transparent measurement and review allocation. For trade: records, counterpart consistency, and traceability across flows.</p>
 <div class="foot">Decision support / Human authority / Documented limits</div></section>
-<section class="page"><div class="brand">SUNLIGHT<span>A LIVE ANALYTICAL READING</span></div>
+<section class="page reading"><div class="brand">SUNLIGHT<span>A LIVE ANALYTICAL READING</span></div>
 <div class="eyebrow">Fictional record / Actual engine output</div><h2>A direct award.<br>A visible basis for review.</h2>
 <p>A synthetic USD 1,000,000 direct award is submitted under the US federal calibration. This page is generated from the API response, not an animated or invented result.</p>
 <div class="metrics"><div><small>STRUCTURAL READING</small><strong>{escape(result['structure']['verdict'])}</strong></div><div><small>EVIDENCE GATE</small><strong>{escape(result['gate_verdict'])}</strong></div><div><small>NORMALIZED FIELDS PRESENT</small><strong>{quality['fields_present']} / {quality['fields_total']}</strong></div></div>

@@ -67,7 +67,23 @@ jobs:
       - name: Run Docker live tests
         # ubuntu-latest runners ship a working Docker daemon and the
         # compose plugin; the fixture builds the image itself.
-        run: python -m pytest tests/test_docker_live.py -q
+        run: python -m pytest tests/test_docker_live.py -q --junitxml=/tmp/container-results.xml
+
+      - name: Surface container diagnostics in check annotations
+        if: failure()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          path = Path('/tmp/container-results.xml')
+          if path.exists():
+              root = ET.parse(path).getroot()
+              problems = root.findall('.//testcase/error') + root.findall('.//testcase/failure')
+              for problem in problems[:1]:
+                  text = (problem.text or problem.get('message', 'Container test failed'))[:55000]
+                  text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                  print('::error title=Container test diagnostics::' + text)
+          PY
 
   determinism:
     name: Determinism (analysis artifacts)
