@@ -3,10 +3,11 @@
 
 # Build the same-origin evidence workspace.
 FROM node:24-slim AS workspace
-WORKDIR /workspace
+WORKDIR /workspace/sunlight-dashboard
 COPY sunlight-dashboard/package.json sunlight-dashboard/package-lock.json ./
 RUN npm ci
 COPY sunlight-dashboard/ ./
+COPY static/ /workspace/static/
 RUN npm run build -- --base=/watch/
 
 # ============================================================================
@@ -43,7 +44,7 @@ COPY --chown=sunlight:sunlight code/ ./code/
 # Ship calibration inputs, not the ignored evaluation-only prosecution fixture.
 COPY --chown=sunlight:sunlight research/corpus/ ./research/corpus/
 COPY --chown=sunlight:sunlight data/ ./data/
-COPY --from=workspace --chown=sunlight:sunlight /workspace/dist/ ./sunlight-dashboard/dist/
+COPY --from=workspace --chown=sunlight:sunlight /workspace/sunlight-dashboard/dist/ ./sunlight-dashboard/dist/
 
 # Create calibration directory with correct ownership for runtime state
 RUN mkdir -p /app/calibration && chown -R sunlight:sunlight /app/calibration
