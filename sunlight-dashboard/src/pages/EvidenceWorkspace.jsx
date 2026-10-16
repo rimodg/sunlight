@@ -112,7 +112,7 @@ export default function EvidenceWorkspace() {
 
   return <div className="evidence-app">
     <header className="ev-header">
-      <a className="ev-brand" href="/" aria-label="SUNLIGHT home"><span className="ev-sun" />SUNLIGHT<span className="ev-edition">THE GLOBAL HUMANITARIAN WATCH</span></a>
+      <a className="ev-brand" href={import.meta.env.BASE_URL} aria-label="SUNLIGHT home"><span className="ev-sun" />SUNLIGHT<span className="ev-edition">THE GLOBAL HUMANITARIAN WATCH</span></a>
       <span className={`ev-connection ${connection === 'API connected' ? 'connected' : ''}`}><i />{connection}</span>
     </header>
     <main className="ev-main">

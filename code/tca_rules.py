@@ -215,11 +215,10 @@ def build_rules(profile: JurisdictionProfile) -> List[Rule]:
     # fields (currently FIN-001 via markup_floor_ratio + derivation_metadata).
     global_params = get_global_parameters(profile.global_params_version)
 
-    # Build evidence string for PROC-001 from profile
-    proc_001_evidence = "; ".join(
-        profile.universal_citations +
-        [profile.legal_citations.get("procurement_law", "")]
-    )
+    # Cite the procurement basis for this rule, not the profile's unrelated
+    # universal bribery, embezzlement, and trading-in-influence provisions.
+    proc_001_evidence = (profile.legal_citations.get("procurement_law")
+                         or "Procurement-law basis not stated in profile")
 
     # ─────────────────────────────────────────
     # LAYER 0: PROCUREMENT FLOW

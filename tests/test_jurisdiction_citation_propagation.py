@@ -3,8 +3,8 @@ Tests for CRI legal citation propagation and universal_citations coverage.
 
 - Tests 1-3 (commit 39b5d65): _determine_tier() emits jurisdiction-appropriate
   legal citations from the active profile's legal_citations dict.
-- Tests 4-6 (this commit): PROC-001 evidence string contains the full UNCAC +
-  OECD universal_citations list and NOT the removed institution-specific items.
+- PROC-001 cites the active procurement basis only; unrelated universal
+  bribery provisions and removed institution-specific items are not emitted.
 
 Run: pytest tests/test_jurisdiction_citation_propagation.py -v
 """
@@ -194,25 +194,23 @@ def _get_proc_001_evidence(profile):
 
 
 # ---------------------------------------------------------------------------
-# Test 4: PROC-001 under us_federal emits full UNCAC + OECD set
+# Test 4: PROC-001 under us_federal cites its procurement basis
 # ---------------------------------------------------------------------------
 
-class TestPROC001USFederalUniversalCitations:
-    """PROC-001 evidence string under us_federal must contain the full
-    universal_citations list including key UNCAC articles and OECD instruments."""
+class TestPROC001USFederalCitations:
+    """A direct-award indicator must not imply unrelated bribery findings."""
 
-    def test_contains_uncac_art_9_1(self):
+    def test_cites_active_procurement_basis(self):
         ev = _get_proc_001_evidence(US_FEDERAL)
-        assert "UNCAC Art. 9(1)" in ev, f"Missing UNCAC Art. 9(1) in: {ev[:200]}"
+        assert ev == US_FEDERAL.legal_citations['procurement_law']
 
-    def test_contains_uncac_art_16(self):
+    def test_does_not_imply_foreign_bribery(self):
         ev = _get_proc_001_evidence(US_FEDERAL)
-        assert "UNCAC Art. 16" in ev, f"Missing UNCAC Art. 16 in: {ev[:200]}"
+        assert "UNCAC Art. 16" not in ev
 
-    def test_contains_oecd_anti_bribery(self):
+    def test_does_not_imply_bribery_convention(self):
         ev = _get_proc_001_evidence(US_FEDERAL)
-        assert "OECD Anti-Bribery Convention 1997" in ev, \
-            f"Missing OECD Anti-Bribery Convention in: {ev[:200]}"
+        assert "OECD Anti-Bribery Convention 1997" not in ev
 
     def test_contains_procurement_law(self):
         ev = _get_proc_001_evidence(US_FEDERAL)
@@ -220,25 +218,23 @@ class TestPROC001USFederalUniversalCitations:
 
 
 # ---------------------------------------------------------------------------
-# Test 5: PROC-001 under uk_central_government emits same universal set
+# Test 5: PROC-001 under uk_central_government cites its procurement basis
 # ---------------------------------------------------------------------------
 
-class TestPROC001UKCentralGovUniversalCitations:
-    """PROC-001 evidence string under uk_central_government must contain
-    the same universal UNCAC + OECD references (they are jurisdiction-agnostic)."""
+class TestPROC001UKCentralGovCitations:
+    """The active UK procurement basis must remain jurisdiction-specific."""
 
-    def test_contains_uncac_art_9_1(self):
+    def test_cites_active_procurement_basis(self):
         ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
-        assert "UNCAC Art. 9(1)" in ev, f"Missing UNCAC Art. 9(1) in: {ev[:200]}"
+        assert ev == UK_CENTRAL_GOVERNMENT.legal_citations['procurement_law']
 
-    def test_contains_uncac_art_16(self):
+    def test_does_not_imply_foreign_bribery(self):
         ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
-        assert "UNCAC Art. 16" in ev, f"Missing UNCAC Art. 16 in: {ev[:200]}"
+        assert "UNCAC Art. 16" not in ev
 
-    def test_contains_oecd_anti_bribery(self):
+    def test_does_not_imply_bribery_convention(self):
         ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)
-        assert "OECD Anti-Bribery Convention 1997" in ev, \
-            f"Missing OECD Anti-Bribery Convention in: {ev[:200]}"
+        assert "OECD Anti-Bribery Convention 1997" not in ev
 
     def test_contains_uk_procurement_law(self):
         ev = _get_proc_001_evidence(UK_CENTRAL_GOVERNMENT)

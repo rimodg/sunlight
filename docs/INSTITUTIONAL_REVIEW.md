@@ -110,6 +110,28 @@ The verifier checks content equality, not substantive correctness.
 
 ## Development run
 
+For a complete packaged demonstration, build and start the service:
+
+```bash
+docker compose up -d --build
+```
+
+The evidence workspace is served at `/watch/` on the API's port (8000 by
+default). The image builds the frontend, includes the calibration corpus, and
+does not require the ignored evaluation fixture. The API and workspace share
+one origin. Institutional authentication and access controls are still required
+before exposing a deployment to sensitive data or public traffic.
+
+To generate a portable briefing from an actual synthetic API reading:
+
+```bash
+python scripts/build_presentation.py --output-dir /tmp/sunlight-briefing
+python scripts/verify_evidence_packet.py /tmp/sunlight-briefing/evidence-packet.json --code-root code
+```
+
+The HTML is self-contained and can be printed to PDF. It includes the live
+reading, its limits, the accompanying JSON packet, and a bounded pilot path.
+
 ```bash
 cd /workspace/sunlight
 /workspace/.venvs/sunlight/bin/python -m uvicorn api:app --app-dir code --host 127.0.0.1 --port 8000
@@ -124,8 +146,9 @@ npm run dev -- --host 127.0.0.1
 ```
 
 `SUNLIGHT_API_TARGET` can override the development proxy target. Production
-hosting must configure equivalent same-origin routes; a Vite production build
-does not itself provide the API proxy. The API requires an authenticated,
+hosting can use the container's `/watch/` mount or configure equivalent
+same-origin routes. A standalone Vite build does not itself provide an API
+proxy. The API requires an authenticated,
 authorized institutional gateway before exposure. Use public or synthetic
 inputs for demonstrations until appropriate data-handling controls exist.
 Downloaded packets include submitted records and must inherit their disclosure
@@ -133,6 +156,13 @@ restrictions. This workspace does not implement the charter's complete
 protection-sensitive disclosure workflow.
 
 ## Evaluation and release evidence
+
+CI restores the original ignored prosecution fixture from its pinned Git blob
+after a full-history checkout. The determinism job compares substantive API
+artifacts from two separate processes, excluding only declared volatile fields.
+It also executes the DOJ fixture tests. This synthetic artifact check is not
+the separate full-database evaluation. Dashboard and live-container jobs cover
+the packaged presentation path and confirm derived calibration is available.
 
 Run the ordinary suite with:
 

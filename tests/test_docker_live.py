@@ -66,7 +66,7 @@ def sunlight_container():
 
     # Change to repo root for docker-compose commands
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    base_url = "http://localhost:8000"
+    base_url = f"http://localhost:{os.environ.get('SUNLIGHT_PORT', '8000')}"
 
     # Spin up the container
     try:
@@ -457,3 +457,17 @@ def test_analyze_response_schema(sunlight_container):
     assert isinstance(structure["contradictions"], list)
     assert isinstance(data["processing_time_ms"], (int, float))
     assert isinstance(data["recommended_for_investigation"], bool)
+
+
+def test_evidence_workspace_is_served_by_the_api(sunlight_container):
+    response = httpx.get(f"{sunlight_container}/watch/", timeout=5)
+    assert response.status_code == 200
+    assert 'SUNLIGHT | The Global Humanitarian Watch' in response.text
+    assert '/watch/assets/' in response.text
+
+
+def test_container_uses_derived_calibration(sunlight_container):
+    response = httpx.get(f"{sunlight_container}/assurance", timeout=5)
+    response.raise_for_status()
+    assert response.json()["calibration"]["state"] == "derived_from_corpus"
+    assert response.json()["calibration"]["corpus_version"] == "0.1"
