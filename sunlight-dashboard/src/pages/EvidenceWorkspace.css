@@ -44,3 +44,17 @@
 @media(max-width:750px){.ev-map-controls{bottom:235px}.ev-flow-legend{bottom:315px}.ev-map-caption{min-height:200px}}
 
 .ev-map-controls{bottom:calc(var(--ev-caption-height,108px) + 12px)}.ev-flow-legend{bottom:calc(var(--ev-caption-height,108px) + var(--ev-controls-height,40px) + 28px)}
+
+/* Arms context keeps reported flows separate from physical custody evidence. */
+.ev-flow-legend i.blue{background:#356cba;box-shadow:0 0 7px #538bde}
+.ev-arms-legend{color:#aac5ec!important}
+.ev-arms-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:24px 0}
+.ev-arms-metrics strong{display:block;font-size:28px;color:#aac5ec}
+.ev-arms-metrics span{display:block;font-size:12px;margin-top:6px;color:#a7bbc2}
+.ev-arms-gap{padding:16px;border:1px solid #3c5872;margin:20px 0;background:#152631}
+.ev-country-arms{margin:20px 0;padding-top:16px;border-top:1px solid #304650}
+.ev-country-arms>span{font-size:11px;letter-spacing:.1em;color:#aac5ec}
+.ev-arms-dialog td small{display:block;margin:8px 0;max-width:300px}
+.ev-arms-dialog td{vertical-align:top;min-width:155px}
+.ev-arms-dialog details{font-size:12px;margin:8px 0;max-width:330px}
+@media(max-width:640px){.ev-arms-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ev-flow-legend{max-width:calc(100% - 32px);flex-wrap:wrap}}

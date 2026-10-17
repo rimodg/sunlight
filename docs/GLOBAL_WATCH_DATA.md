@@ -109,6 +109,78 @@ Country research can request any recognized country reporter via `/watch-data/tr
 
 Successful responses cache for 12 hours. Partial/errors cache for one hour. A lock prevents simultaneous client requests from fanning out new source requests. A previous successful snapshot may be returned as **stale**, preserving its original fetched timestamp and reporting the failed refresh. There is no generated fallback dataset. The cache is in memory, resets on service restart and is not a durable source archive.
 
-Yellow trails represent dated bilateral relationships between country reference points. They are not live shipments, physical route geometry or government procurement flows. The top 80 available links are drawn, with source values and all available links in the table; country research filters the trade layer by the chosen country. Light speed and repetition are visual pacing only.
+Yellow moving points represent dated bilateral relationships between country reference points. They are not live shipments, physical route geometry or government procurement flows. The top 80 available links are drawn, with source values and all available links in the table; country research filters the trade layer by the chosen country. Light speed and repetition are visual pacing only.
 
 The outbound policy in this development cloud denied `comtradeapi.un.org`. Parsing, filtering, caching, failure/stale behavior and the interface were tested with fixtures; actual provider retrieval on Render remains unverified. The deployed UI states loading/partial/stale/unavailable explicitly. A source that fails is never described as a functioning live global feed.
+
+## Arms declarations and accountability
+
+`GET /watch-data/arms` serves a pinned historical UNROCA mirror, normalized from
+[Klohto/UNROCA-scraper](https://github.com/Klohto/UNROCA-scraper/tree/7291ca6a06c4095d0c92e0c544337edff1d621ef),
+captured June 16, 2023. The bundled years are **2020–2022**, not current-year
+tracking. The three source files and SHA-256 checksums are exposed by the API and
+in the blue legend's explorer. Regenerate using:
+
+```sh
+python scripts/build_arms_snapshot.py --source-dir /path/to/pinned-unroca-mirror
+```
+
+Only export/import declarations are retained; holdings and production are
+excluded. The 6,953 source transfer rows yield 6,832 normalized records. Identical
+source duplicates are retained once with a repetition count; affected category
+sides are unassessable rather than silently summed. There are 121 repeated groups
+and 57 normalized records without usable quantities.
+
+A comparison key is `(year, exporter, importer, family, category)`. Each side sums
+its usable declared items separately. Missing counterpart reports are **unknown**,
+not zero or proof of non-reporting outside this partial mirror. Any unknown
+quantity, duplicate ambiguity or unsafe sum prevents a numerical comparison.
+Where both sides are assessable, the signed difference is export declaration
+minus import declaration. Equal counts are not verified weapon-identity matches.
+Differences require review of timing, models, temporary transfers, corrections
+and category definitions. They do not quantify stolen or diverted weapons.
+
+For **2022**, this method produces 1,392 pair/category groups: **46 comparable**
+(15 equal, 31 different), **1,234 one-sided** and **112 ambiguous**. These are
+comparison-group counts, not a total number of weapons. Counts in different
+categories/families are never added into one physical weapons total, and neither
+USD nor SIPRI TIV is manufactured from UNROCA item declarations.
+
+The map has 678 distinct available declared exporter/importer relationships in
+2022; up to 160 are drawn globally, chosen to include available exporting
+countries before allocating additional links. Positive assessable declarations
+on either side can support a relationship. Both declarations never create two
+transfers. Small blue points use country reference centers and great-circle
+interpolation, not actual routes, shipment positions, verified recoveries or
+untraced-weapon locations. Year/category controls filter the explorer and map.
+
+### Inspected audit summaries and remaining ground-evidence gap
+
+Two separately attributed GAO audit records are included: **GAO-24-106289**
+(Ukraine, March 13, 2024) and **GAO-09-267** (Afghanistan, January 30, 2009).
+Their titles, dates and limited summaries were inspected in the public
+[CetiAlphaFive/gao metadata mirror](https://github.com/CetiAlphaFive/gao/blob/3e7d52cfb2bac0940de9ffa61f9c25bba3965ef4/inst/extdata/gao_links.rds),
+pinned at `3e7d52cfb2bac0940de9ffa61f9c25bba3965ef4`, source SHA-256
+`1dd719514cd67de582b3b8ff93d0b77f195d8c1a8997256986e24a3e05f0df05`.
+`code/arms_audit_context.json` contains the limited factual summaries and original
+publisher links. No mirror package code or complete database is redistributed.
+The full GAO reports were not independently inspected. These records document
+historical accountability concerns within their audit scopes, not present-day
+custody or proven theft. They carry **no recovery-site coordinates or matched
+declaration IDs**, and are not plotted as precise field observations.
+
+A global official-to-ground diversion gap is **not measurable from these
+sources**. Annual declarations are flows; field recoveries are selective stock
+observations. A defensible reconciliation requires independently verified
+weapon/batch identity, comparable periods, documented transfers, custody and
+inventory evidence. SUNLIGHT does not subtract unmatched field sightings,
+audit-summary dollar figures or absent reports from declared counts. No arms or
+conflict variable is added to procurement detection scores.
+
+### Point animation
+
+All flow layers now use luminous **points without tails or route strokes**.
+Visual traversal remains 1.8 seconds per relationship, independent of economic
+value, quantity or source date. Blue particle radius is 1.9 map units, matching
+the small red conflict points. This is accelerated presentation of dated data,
+not real-time monitoring. System reduced motion remains supported.

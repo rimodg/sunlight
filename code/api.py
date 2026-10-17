@@ -555,6 +555,8 @@ from watch_materials import router as watch_materials_router
 app.include_router(watch_materials_router)
 from watch_conflicts import router as watch_conflicts_router
 app.include_router(watch_conflicts_router)
+from watch_arms import router as watch_arms_router
+app.include_router(watch_arms_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1222,7 +1224,9 @@ async def assurance():
             {"name": "Delivery and corroboration", "state": "API available", "endpoint": "/openapi.json",
              "scope": "Separate supplied-evidence workflows; a procurement result does not establish delivery."},
             {"name": "Arms reporting consistency", "state": "Library available", "endpoint": None,
-             "scope": "ATT profile, rules, and UN Register adapter. No general transfer-analysis API."},
+             "scope": "ATT profile, rules, UN Register adapter, and historical UNROCA reporting context at /watch-data/arms. Reporting comparisons are not a diversion determination. No general transfer-analysis API."},
+            {"name": "Historical arms reporting context", "state": "API available", "endpoint": "/watch-data/arms",
+             "scope": "Partial 2020–2022 UNROCA mirror and attributed audit summaries. No verified recovery-site map or global diversion total."},
             {"name": "Cross-category Registry and Need Ledger", "state": "Design", "endpoint": None,
              "scope": "Charter v2 direction, not a deployed global observation service."},
             {"name": "Payment control and enforcement", "state": "Outside current authority", "endpoint": None,
