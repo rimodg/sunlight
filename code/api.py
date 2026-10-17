@@ -46,7 +46,7 @@ from datetime import date, datetime, timezone
 from typing import Optional, List, Dict, Any
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -69,6 +69,7 @@ from input_adapters import build_default_registry
 from sunlight_logging import get_logger
 from ingestion_quality import assess_ingestion_quality, input_mapping_gaps
 from analysis_receipt import build_receipt, content_digest, source_manifest
+from access_gate import configure_access_gate
 
 # SUNLIGHT Side 2 imports
 from delivery_schema import (
@@ -542,6 +543,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+configure_access_gate(app)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -716,6 +718,8 @@ def get_git_commit() -> str:
 @app.get("/")
 async def root():
     """Root endpoint — points to API documentation."""
+    if os.environ.get('SUNLIGHT_DEFAULT_WORKSPACE', '') == '1':
+        return RedirectResponse('/watch/')
     return {
         "service": "SUNLIGHT Procurement Integrity Analysis API",
         "version": "0.1.0",
