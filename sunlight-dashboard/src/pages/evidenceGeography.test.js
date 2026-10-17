@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { recordLocation, investigationRecords } from './evidenceGeography.js';
+import { recordLocation, investigationRecords, procurementLinks } from './evidenceGeography.js';
 
 const point = coordinates => ({ geometry: { type: 'Point', coordinates } });
 test('geography requires explicit valid coordinates, including zero', () => {
@@ -25,4 +25,27 @@ test('single sparse records remain inspectable without coordinates', () => {
   const [record] = investigationRecords({ request: { contract: { ocid: 'sparse' } }, response: { ocid: 'sparse', errors: [] } });
   assert.equal(record.label, 'sparse');
   assert.equal(record.location, null);
+});
+
+test('flows require an awarded supplier and valid endpoints, not country names or unrelated parties', () => {
+  const record = { tender: { deliveryLocations: [point([-77, 39])] }, parties: [{ id: 'supplier', location: point([4, 52]) }] };
+  assert.deepEqual(procurementLinks(record), []);
+  record.awards = [{ suppliers: [{ id: 'other' }] }];
+  assert.deepEqual(procurementLinks(record), []);
+  record.awards = [{ suppliers: [{ id: 'supplier' }] }];
+  assert.deepEqual(procurementLinks(record).map(l => [l.from, l.to]), [[[4, 52], [-77, 39]]]);
+  record.parties[0].location = { countryName: 'Netherlands' };
+  assert.deepEqual(procurementLinks(record), []);
+});
+
+test('cancelled/unsuccessful awards, malformed geometry, identical endpoints and duplicates do not invent links', () => {
+  const record = { tender: { deliveryLocations: [point([0, 0])] }, awards: [{ suppliers: [{ id: 's', location: point([10, 20]) }] }] };
+  record.awards.push(record.awards[0]);
+  assert.equal(procurementLinks(record).length, 1);
+  for (const status of ['cancelled', 'unsuccessful']) {
+    assert.equal(procurementLinks({ ...record, awards: [{ ...record.awards[0], status }] }).length, 0);
+  }
+  record.awards = [{ suppliers: [{ location: point([0, 0]) }, { location: point([190, 20]) }, null] }];
+  assert.equal(procurementLinks(record).length, 0);
+  assert.deepEqual(procurementLinks({ awards: {}, parties: {}, tender: {} }), []);
 });

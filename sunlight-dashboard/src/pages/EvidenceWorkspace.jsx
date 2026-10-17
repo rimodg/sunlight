@@ -21,7 +21,7 @@ function specimen(key, currency) {
       value: { amount, currency },
       tenderPeriod: { startDate: '2025-01-01T00:00:00Z', endDate: '2025-02-01T00:00:00Z' } },
     awards: [{ id: 'EXAMPLE-AWARD', date: '2025-02-15T00:00:00Z',
-      value: { amount, currency }, suppliers: [{ name: 'Illustrative supplier', id: 'EXAMPLE-SUPPLIER' }] }],
+      value: { amount, currency }, suppliers: [{ name: 'Illustrative supplier', id: 'EXAMPLE-SUPPLIER', location: { description: 'Fictional supplier site / Rotterdam', geometry: { type: 'Point', coordinates: [4.48, 51.92] } } }] }],
   };
 }
 
