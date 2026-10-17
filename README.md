@@ -12,6 +12,12 @@ traces, and downloadable content-addressed receipts. It does not present random
 fixture scores as operational results. Historical evaluation metrics below must
 be interpreted with the sampling and corpus limits in the review brief.
 
+The [global watch interface](docs/INVESTIGATION_INTERFACE.md) provides country
+research, category/value drilldowns, document registers and completion-evidence
+gaps. The separately sourced trade layer uses a dated UN Comtrade preview;
+[data coverage and annual-counter configuration](docs/GLOBAL_WATCH_DATA.md)
+remain explicit. This is not a connected worldwide procurement observation feed.
+
 **Procurement Integrity Verification Infrastructure**
 
 Structural and statistical analysis for institutional procurement oversight.

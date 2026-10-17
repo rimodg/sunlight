@@ -122,6 +122,7 @@ class ContractInput(BaseModel):
     flexible to accommodate different OCDS publisher formats while maintaining
     the core required fields for structural analysis.
     """
+    model_config = {"extra": "allow"}
     ocid: str = Field(..., description="OCDS contract identifier (required)")
     buyer: Optional[Dict[str, Any]] = Field(None, description="Buyer information")
     tender: Optional[Dict[str, Any]] = Field(None, description="Tender details including value, currency, method")
@@ -545,6 +546,9 @@ app = FastAPI(
 )
 configure_access_gate(app)
 
+from watch_trade import router as watch_trade_router
+app.include_router(watch_trade_router)
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # EMPIRICAL CALIBRATION STORE
@@ -634,6 +638,7 @@ def compute_risk_score(verdict: str, confidence: float) -> float:
 def ocds_to_dict(contract: ContractInput) -> Dict:
     """Convert ContractInput Pydantic model to dict for pipeline ingestion."""
     return {
+        **contract.model_dump(mode="json"),
         "ocid": contract.ocid,
         "buyer": contract.buyer or {},
         "tender": contract.tender or {},
@@ -1199,6 +1204,8 @@ async def assurance():
              "scope": "Structural findings, evidence gate, input completeness, and content-addressed receipts."},
             {"name": "Portfolio review", "state": "API available", "endpoint": "/batch",
              "scope": "Per-record results and a hard analyst-capacity ceiling with disclosed ties."},
+            {"name": "Trade context", "state": "API connector", "endpoint": "/watch-data/trade",
+             "scope": "Dated UN Comtrade public preview for selected reporters. Availability, coverage, and source errors are explicit. Not procurement spending or shipment tracking."},
             {"name": "Delivery and corroboration", "state": "API available", "endpoint": "/openapi.json",
              "scope": "Separate supplied-evidence workflows; a procurement result does not establish delivery."},
             {"name": "Arms reporting consistency", "state": "Library available", "endpoint": None,

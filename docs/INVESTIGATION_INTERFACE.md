@@ -1,42 +1,47 @@
-# Geographic investigation desk
+# Global watch and country research
 
-The default `/watch/` workspace opens on a full-width investigation desk. The record register, globe and evidence inspector share the same selected result. Import opens a drawer rather than displacing the investigation. Single and batch analysis, jurisdiction calibration, capacity allocation, evidence-gate traces, citations, completeness gaps and exact-response packet downloads continue to use the live API.
+`/watch/` opens on a full-width globe. The record register and evidence inspector open as overlays so they do not permanently narrow the map. Import continues to use the live single/batch analysis API, jurisdiction calibration, capacity allocation, rule citations, input gaps and exact-response verification packets.
 
-## Geographic meaning
+## Motion and research
 
-The globe is context for the currently analyzed input. There is no connected global procurement feed. Counts come only from the current analysis; submitting another analysis replaces the register. Reloading clears the session. Retain downloaded packets for subsequent review.
+The global globe rotates west to east, one accelerated turn every three minutes. Dragging, keyboard rotation, record inspection and source panels do not stop global rotation. Country search accepts common/official names, translated aliases and ISO codes; ambiguous names require choosing a result. Selecting a country centers, highlights and zooms its boundary and holds rotation until **Return to global watch** or **Global view**. Small countries absent from the 1:110m basemap have a labeled reference point and an explicit resolution notice.
 
-Markers represent the **first valid supplied delivery point** in `tender.deliveryLocations[].geometry` or `tender.items[].deliveryLocation.geometry`. Geometry must be GeoJSON `Point`, with finite numeric longitude and latitude in their valid ranges. Zero is valid. Other geometries, country names and calibration profiles do not produce markers. Geography does not enter scoring, certify a location or attribute misconduct to a country. Records without supported coordinates remain in the queue and inspector.
+System reduced-motion preferences remain respected. There are no pause or illustrative-flow controls. Annual trade lights continue during country research unless reduced motion is active. Neither lighting speed nor particle counts represent shipment frequency or monetary volume.
 
-The fictional examples carry explicitly labeled fictional delivery coordinates. Edited and uploaded records retain their separate input-origin labels. Map colors describe the basemap and selection, not national integrity or evidence coverage.
+## Documented procurement and completion evidence
 
-The bundled basemap is Natural Earth 4.1.0 at 1:110m, distributed through `world-atlas` 2.0.2 (ISC; underlying Natural Earth data is public domain). Projection uses `d3-geo`; topology conversion uses `topojson-client`. Rendering needs no external tile service, map key or runtime map request. Boundaries do not imply endorsement.
+Click the documented value near **Procurement watch** to open categories, values, document references and completion-evidence gaps. Amounts remain separate by currency and stage: contract value, award value or tender estimate. No currency conversion occurs. Multiple releases with a repeated OCID are excluded from totals rather than double-counted or silently reconciled. Records missing identifiers or with analysis errors are excluded; counts disclose these exclusions. The register still permits inspection of every result.
 
-## Interaction and validation
+The category view uses `tender.mainProcurementCategory` (goods, works, services or unclassified). It lists HTTP(S) source-document links, documents without usable URLs, the record source and its country. Root documents and metadata survive API normalization and remain bound by the submitted-request receipt. Releases containing their own `contracts[]` are correctly treated as single releases, distinct from an explicit portfolio wrapper.
 
-Earth rotates west to east at an accelerated visualization speed of one turn every three minutes. This preserves rotational direction; it is not real-time sidereal rotation. Motion stops when the user focuses, drags or locates a record on the globe. Pause/resume controls stop both rotation and the traveling lights. Reduced-motion preferences start the view paused; a user can explicitly resume. Background tabs do not accumulate a large rotation jump.
+Completion indicators distinguish:
 
-Drag or use arrow keys on the focused globe to rotate. Zoom, reset and locate controls have keyboard-accessible buttons. Locate selection is disabled for records without coordinates. Markers select records; the register supports title/identifier search, findings and unlocated filters. The import dialog supports Escape, focus containment and return to its opener. Narrow screens stack the map, register and inspector.
+- Records containing completion-document links from records without them.
+- Recorded amounts attached to records without completion links, by currency/stage.
+- Records declaring at least one contract complete.
+- Implementation milestones marked met, not met or partially met, with repeated milestone identifiers excluded within a contract.
 
-## Procurement relationships and traveling lights
+These are documentary and declared-status measures. A link does not authenticate the referenced document or prove delivery. Missing links do not establish theft, non-delivery or a monetary loss. Milestone counts are not a project completion percentage. Independent corroboration remains the separate evidence/delivery workflow.
 
-An award supplier with explicit `location.geometry` can be linked to the supplied delivery point. A supplier referenced by ID may instead take its location from the matching `parties[].location.geometry`. These location fields are visualization extensions requiring valid GeoJSON points. Country names alone and unrelated parties never produce links. Cancelled and unsuccessful awards are excluded; duplicate links and identical endpoints are suppressed. No location enters the detection core.
+Country attribution uses the buyer's explicit country, directly or through buyer parties. It never uses the selected analysis profile, supplier location or delivery point to infer buyer nationality. Country figures cover the current analyzed inputs, not the nation's complete expenditure. Unknown coverage is stated explicitly. Reloading clears analyzed session records; download evidence packets to retain them.
 
-Lines follow great-circle geometry and are clipped to the visible hemisphere. Traveling lights indicate schematic supplier-to-delivery direction, not observed shipments, cash transfers, trade volume or event timing. The first 80 links are displayed for large batches, with selected-record links prioritized and the display limit stated. Fictional examples include a labeled Rotterdam-to-Washington supplier relationship.
+## Trade layer
 
-The **Illustrate flows** toggle explicitly switches to three fictional cross-continent routes. A persistent notice and mode badge identify the illustration; it does not change records, findings, scores or packet contents. **Show record links** returns to the supplied relationships.
+Yellow paths use the separately sourced, dated UN Comtrade context described in [GLOBAL_WATCH_DATA.md](GLOBAL_WATCH_DATA.md). Paths connect country reference points along great circles. The globe displays up to 80 trade links, ranked by annual export value; country research filters links to those involving the selected country. Source tables retain the available links, source query, period, values and source reported flag. Missing trade data produces an unavailable state, with no fictional substitute routes.
 
-**Background image** selects an exact local JPG, PNG or WebP up to 3 MB. The browser validates that the image decodes and retains it in local storage on that browser; no API upload occurs. **Reset background** restores the default. If storage is unavailable or full, the image applies for the current visit and the interface states that limitation. A dark overlay preserves text contrast and the image is scoped to the globe panel.
+Supplied procurement relationships appear as distinct dashed paths. An award supplier with a valid `location.geometry` Point can be linked to the first valid delivery point in `tender.deliveryLocations[]` or `tender.items[].deliveryLocation`. A supplier ID can instead resolve its origin through the matching `parties[].location`. These location fields are visualization extensions. Cancelled/unsuccessful awards, invalid coordinates, duplicate links and identical endpoints do not produce links. Up to 20 selected-record links and 20 other supplied links are drawn; the map states drawn/available counts. Relationships are not shipment or payment tracking. Geography never enters the detection score.
 
-The optional shared asset slot accepts `src/assets/galaxy-background.jpg`, `.jpeg`, `.png` or `.webp`, bundled by Vite. The exact pasted image has no accessible original file or URL in the agent workspace; the new local image selector lets the user apply that original immediately. Until a shared asset is supplied, other browsers retain the default background.
+## Background and sources
 
-Validated against the production build served by the real API:
+**Background image** selects a local JPG, PNG or WebP up to 3 MB. It is decoded and saved in that browser's local storage; no image-upload API request occurs. **Reset background** restores the default. Storage restrictions are disclosed and permit temporary application for the visit. The shared asset slot remains `src/assets/galaxy-background.{jpg,jpeg,png,webp}` if an original file becomes available for bundling.
 
-- `npm test`: five geography/association checks, including invalid coordinates, zero coordinates, sparse inputs, duplicate identifiers, error results, supplier identity matching and excluded awards/links.
-- `npm run build -- --base=/watch/`: production build passed.
-- Chromium: real single and batch requests, marker selection, duplicate-identifier association, filters, keyboard rotation, packet download, method/readiness navigation, modal Escape and a 390px viewport without horizontal overflow. No browser page errors.
-- The packet downloaded through the browser passed `scripts/verify_evidence_packet.py` with local source verification.
-- Motion checks in Chromium verified gradual eastward movement of a centered marker, visible light movement, pause/resume freezing both map and lights, reduced-motion initialization, explicit preview labeling, supplied-link counts and mobile width without overflow.
-- Background checks verified decoded image application, retention across reload, reset, invalid/oversize rejection, disabled-storage fallback and zero API requests uploading the image. A local test image exercised the workflow; the pasted galaxy preview was not available as a file for the test.
+Basemap: Natural Earth 4.1.0 / world-atlas 2.0.2. Country metadata: world-countries 5.1.0, with the derived catalog and ODbL license downloadable through the source panel. See [country data provenance](../sunlight-dashboard/src/data/README.md). Country centers are schematic references; reporting areas and map boundaries may differ. Boundaries do not imply endorsement.
 
-These checks validate this interface against the existing engine; they do not reproduce the unavailable historical reference-database evaluation or establish institutional deployment approval.
+## Validation
+
+- Python suite: **2,003 passed, 3 skipped**, Docker tests excluded. The historical 42,835-contract evaluation database remains unavailable.
+- Frontend: **13 tests passed** covering coordinate/identity association, release-versus-batch parsing, currencies/stages, duplicate exclusions, document URL safety, country scope, source queries and milestone declarations.
+- Production Vite build passed at `/watch/`.
+- Chromium exercised real single/batch API submission and packet downloads, category/document inspection, country lookup/zoom/rotation hold, continued motion after dragging, continuing light animation, source tables and a 390px viewport without horizontal overflow.
+- Downloaded three-record packet passed offline content and local source-manifest verification.
+- Bilateral trade and configured annual-counter UI states were exercised with explicitly fictional test fixtures. These are **not live provider verification**. The actual source request in this cloud was denied by outbound network policy and produced the expected unavailable state. Render-side provider retrieval is unverified until deployment.
