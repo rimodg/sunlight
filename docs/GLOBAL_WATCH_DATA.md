@@ -1,16 +1,40 @@
 # Data behind the global watch
 
-The interface keeps three quantities separate: analyzed procurement records, annual spending context and annual merchandise trade. They cannot be combined into a worldwide completion or theft estimate.
+The interface keeps four quantities separate: published procurement aggregates, analyzed procurement records, configured annual spending context and annual merchandise trade. They cannot be combined into a worldwide completion or theft estimate.
 
-## Procurement observations
+## Published procurement observations on first load
 
-The current procurement source is the user's analyzed OCDS-shaped JSON. It is a session register, not an automatically collected worldwide procurement database. Values change when new records are analyzed. There is no fabricated per-second observation counter. Country/category/document coverage reflects the available records only.
+`GET /watch-data/procurement` serves the bundled, pinned snapshot in `code/public_procurement_snapshot.json`. It does not require external network access at runtime. The source is [Anti-Corruption Compass public datasets / undp-anticorruption](https://github.com/undp-anticorruption/public-procurement-datasets), whose repository describes the CSV files as public data supporting its indicators and visualizations. Source attribution does not imply institutional endorsement of SUNLIGHT or independent verification of the underlying contracts.
 
-A future national/global ingestion service must supply release identity/version history, currencies and procurement stages, source timestamps, source documents and delivery/corroboration evidence. Without that coverage, SUNLIGHT cannot truthfully present full country expenditure or a worldwide completed-value gap.
+- Source revision: `9fd6f26cb22a48b883ee3791fbb3e9da4950f999`, committed August 25, 2026.
+- Source files: `tab_1.csv` for country-year totals and `tab_3.csv` for published market breakdowns.
+- Source observations: **2017–2024**, 447 unique country-year rows covering **59 countries** across the period.
+- Default **2024** view: **10,617,058 source contracts**, **US$4,301,531,960,000**, **52 countries**. This is covered procurement, not a complete global-spending estimate.
+- Values are published in million USD, at up to two decimal places. Conversion to USD is exact in decimal arithmetic; it does not create precision beyond the source's 0.01 million USD granularity.
+
+Each total appears repeatedly for different risk indicators. The builder selects the `ALL` contract-value group and retains one consistent total per country-year. Conflicting repeated totals cause a build failure. It excludes the overlapping `EU` regional aggregate, maps `UK` to ISO `GB`, and keeps years separate. The global value is the sum of the unique country-year rows for the selected year; it never adds every observation year together. Repeated indicator-availability/category rows are similarly collapsed without multiplying their values. Published market slices may be incomplete; SUNLIGHT does not invent a residual category or claim they reconcile to national totals.
+
+Source CSV SHA-256 checksums are enforced by `scripts/build_public_procurement_snapshot.py` and exposed in the source panel. Regenerate from the two exact source files at the pinned revision:
+
+```sh
+python scripts/build_public_procurement_snapshot.py \
+  --source-dir /path/to/pinned-source-files \
+  --output code/public_procurement_snapshot.json
+```
+
+The source has no completion documents or verified delivered amounts. A procurement-to-completion gap cannot be calculated from these aggregate counts. Public aggregate context remains separate from uploaded contract-level evidence and SUNLIGHT's own findings.
+
+The map and country directory include **all 250 countries and territories** in the country catalog. A country missing from this source remains searchable, visible and selectable, with no invented spending amount. At a selected year, markers can show a country's latest observation at or before that year; each marker and country view states the observation year. The global total always uses exactly the selected year. It therefore need not equal a sum of markers with mixed latest years.
+
+## Analyzed procurement evidence
+
+Your OCDS-shaped JSON supplies a separate session register. Its values, source documents, completion declarations, milestone counts and reproducible receipts reflect only actual analyzed records. They are not added to the public snapshot totals, where overlaps cannot be reconciled from aggregates. Reloading clears this analyzed session state while the bundled published figures remain available.
+
+A complete national/global ingestion service still needs release identity/version histories, currencies/stages, source timestamps, document access and corroborated delivery evidence. Country inclusion on the map does not imply complete country data coverage.
 
 ## Optional annual context counter
 
-`GET /watch-data/context` exposes a deployment-configured annual baseline. It is unavailable by default. To configure a cited baseline in Render Environment, supply all of:
+`GET /watch-data/context` exposes a deployment-configured annual baseline. It is unavailable by default, and its card appears only when a baseline is configured. The published procurement card does not depend on this estimate. To configure a cited baseline in Render Environment, supply all of:
 
 - `SUNLIGHT_PROCUREMENT_ANNUAL_ESTIMATE`: positive finite annual amount in currency units.
 - `SUNLIGHT_PROCUREMENT_ESTIMATE_YEAR`: the baseline year, no later than the current year.
@@ -32,7 +56,7 @@ The displayed current-year pace is `annual baseline × elapsed UTC calendar year
 - At most 500 preview records per reporter.
 - Selected source reporter codes: 842, 156, 276, 392, 826, 251, 699, 528, 76, 710.
 
-This is **partial, selected-reporter coverage**, even if every request succeeds. World/region aggregates, self-links, mismatched periods/flows/commodities, invalid values and conflicting duplicate bilateral totals are excluded. Values are in current USD as returned by the source. Source reporting flags and names are retained. Some Comtrade reporting areas use non-ISO codes: the geographic mapping handles US 842→840, India 699→356, France 251→250, Italy 381→380, Norway 579→578 and Switzerland 757→756; raw source codes remain attached to the query links. This mapping does not assert that reporting areas exactly match political borders. Unsupported aggregate areas are not assigned to a country.
+Country research can request any recognized country reporter via `/watch-data/trade?reporter=<ISO numeric code>`, with source-code mappings applied and a bounded per-country cache. The global initial request remains a selected-reporter view; it does not launch hundreds of provider requests at once. This is **partial source coverage**, even if every request succeeds. World/region aggregates, self-links, mismatched periods/flows/commodities, invalid values and conflicting duplicate bilateral totals are excluded. Values are in current USD as returned by the source. Source reporting flags and names are retained. Some Comtrade reporting areas use non-ISO codes: the geographic mapping handles US 842→840, India 699→356, France 251→250, Italy 381→380, Norway 579→578 and Switzerland 757→756; raw source codes remain attached to the query links. This mapping does not assert that reporting areas exactly match political borders. Unsupported aggregate areas are not assigned to a country.
 
 Successful responses cache for 12 hours. Partial/errors cache for one hour. A lock prevents simultaneous client requests from fanning out new source requests. A previous successful snapshot may be returned as **stale**, preserving its original fetched timestamp and reporting the failed refresh. There is no generated fallback dataset. The cache is in memory, resets on service restart and is not a durable source archive.
 

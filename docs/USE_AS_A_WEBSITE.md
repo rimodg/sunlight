@@ -51,8 +51,10 @@ environment publication does not itself deploy the Render service.
 
 Search a country by name or ISO code to zoom and hold its map, then open the
 documented total for categories, source-document references and completion gaps.
-Return to the global view to resume rotation. Procurement totals reflect your
-current analyzed inputs, not complete national procurement coverage.
+Return to the global view to resume rotation. The published procurement card provides source-pinned country-year values on
+opening. Its source register and year selector are separate from your analyzed
+inputs; neither represents complete national procurement coverage. All 250
+countries and territories remain selectable, including uncovered places.
 
 **Trade data & sources** shows the dated UN Comtrade preview's availability,
 coverage and query links. It may remain unavailable if the provider rejects or

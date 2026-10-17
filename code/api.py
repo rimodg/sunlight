@@ -549,6 +549,9 @@ configure_access_gate(app)
 from watch_trade import router as watch_trade_router
 app.include_router(watch_trade_router)
 
+from watch_procurement import router as watch_procurement_router
+app.include_router(watch_procurement_router)
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # EMPIRICAL CALIBRATION STORE
@@ -1206,6 +1209,8 @@ async def assurance():
              "scope": "Per-record results and a hard analyst-capacity ceiling with disclosed ties."},
             {"name": "Trade context", "state": "API connector", "endpoint": "/watch-data/trade",
              "scope": "Dated UN Comtrade public preview for selected reporters. Availability, coverage, and source errors are explicit. Not procurement spending or shipment tracking."},
+            {"name": "Published procurement context", "state": "API available", "endpoint": "/watch-data/procurement",
+             "scope": "Pinned Anti-Corruption Compass country-year aggregates, 2017–2024, covering 59 countries across the period. Not complete national spending, analyzed contract records or verified delivery outcomes."},
             {"name": "Delivery and corroboration", "state": "API available", "endpoint": "/openapi.json",
              "scope": "Separate supplied-evidence workflows; a procurement result does not establish delivery."},
             {"name": "Arms reporting consistency", "state": "Library available", "endpoint": None,

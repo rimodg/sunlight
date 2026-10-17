@@ -4,11 +4,17 @@
 
 ## Motion and research
 
-The global globe rotates west to east, one accelerated turn every three minutes. Dragging, keyboard rotation, record inspection and source panels do not stop global rotation. Country search accepts common/official names, translated aliases and ISO codes; ambiguous names require choosing a result. Selecting a country centers, highlights and zooms its boundary and holds rotation until **Return to global watch** or **Global view**. Small countries absent from the 1:110m basemap have a labeled reference point and an explicit resolution notice.
+The global globe rotates west to east, one accelerated turn every three minutes. Dragging, keyboard rotation, record inspection and source panels do not stop global rotation. All 250 catalog countries and territories have selectable reference markers and a searchable directory, including places without source data. Country boundaries also support direct map selection. Country search accepts common/official names, translated aliases and ISO codes; ambiguous names require choosing a result. Selecting a country centers, highlights and zooms its boundary and holds rotation until **Return to global watch** or **Global view**. Small countries absent from the 1:110m basemap have a labeled reference point and an explicit resolution notice.
 
 System reduced-motion preferences remain respected. There are no pause or illustrative-flow controls. Annual trade lights continue during country research unless reduced motion is active. Neither lighting speed nor particle counts represent shipment frequency or monetary volume.
 
-## Documented procurement and completion evidence
+## Published procurement numbers
+
+The published procurement card opens on **US$4.30 trillion** and **10,617,058 contracts**, covering **52 countries in 2024**. The bundled source includes 59 countries across 2017–2024. These are sourced country-year aggregates, not live worldwide spending or SUNLIGHT-detected cases. Clicking opens source-year selection, published market slices, a country register, checksums and pinned source links. The independent analyzed-record card still opens contract-level findings, references and evidence gaps. Their values are never combined.
+
+The publisher repeats totals across risk indicators. The snapshot builder deduplicates them, validates consistent repeats, excludes the overlapping EU aggregate, maps UK to GB and keeps source years separate. Source money is converted from million USD using decimal arithmetic. See [data provenance and limitations](GLOBAL_WATCH_DATA.md).
+
+## Analyzed procurement and completion evidence
 
 Click the documented value near **Procurement watch** to open categories, values, document references and completion-evidence gaps. Amounts remain separate by currency and stage: contract value, award value or tender estimate. No currency conversion occurs. Multiple releases with a repeated OCID are excluded from totals rather than double-counted or silently reconciled. Records missing identifiers or with analysis errors are excluded; counts disclose these exclusions. The register still permits inspection of every result.
 
@@ -33,15 +39,14 @@ Supplied procurement relationships appear as distinct dashed paths. An award sup
 
 ## Background and sources
 
-**Background image** selects a local JPG, PNG or WebP up to 3 MB. It is decoded and saved in that browser's local storage; no image-upload API request occurs. **Reset background** restores the default. Storage restrictions are disclosed and permit temporary application for the visit. The shared asset slot remains `src/assets/galaxy-background.{jpg,jpeg,png,webp}` if an original file becomes available for bundling.
+Photo backgrounds and background-upload controls are removed. The application clears the previously saved galaxy-image preference on load and uses the plain dark map surface.
 
 Basemap: Natural Earth 4.1.0 / world-atlas 2.0.2. Country metadata: world-countries 5.1.0, with the derived catalog and ODbL license downloadable through the source panel. See [country data provenance](../sunlight-dashboard/src/data/README.md). Country centers are schematic references; reporting areas and map boundaries may differ. Boundaries do not imply endorsement.
 
 ## Validation
 
-- Python suite: **2,003 passed, 3 skipped**, Docker tests excluded. The historical 42,835-contract evaluation database remains unavailable.
-- Frontend: **13 tests passed** covering coordinate/identity association, release-versus-batch parsing, currencies/stages, duplicate exclusions, document URL safety, country scope, source queries and milestone declarations.
-- Production Vite build passed at `/watch/`.
-- Chromium exercised real single/batch API submission and packet downloads, category/document inspection, country lookup/zoom/rotation hold, continued motion after dragging, continuing light animation, source tables and a 390px viewport without horizontal overflow.
-- Downloaded three-record packet passed offline content and local source-manifest verification.
-- Bilateral trade and configured annual-counter UI states were exercised with explicitly fictional test fixtures. These are **not live provider verification**. The actual source request in this cloud was denied by outbound network policy and produced the expected unavailable state. Render-side provider retrieval is unverified until deployment.
+- Python suite: **2,008 passed, 3 skipped**, Docker tests excluded. The historical 42,835-contract evaluation database remains unavailable.
+- Frontend: **16 tests passed**, including source-year separation, 250-country inclusion, published values, missing observations, fallback years and incomplete market slices.
+- Production build passed at `/watch/`.
+- Chromium verified real bundled published figures with no mocked procurement data, year switching, pinned source links, all 250 directory rows, country selection with/without source values, direct map selection, continued rotation after dragging, removal of the old image preference, and a 390px viewport without horizontal overflow.
+- Provider trade retrieval remains unavailable in this cloud because outbound policy blocks the source. Published procurement values are independently available from the bundled, source-pinned snapshot.

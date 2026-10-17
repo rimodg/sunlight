@@ -16,7 +16,11 @@ The [global watch interface](docs/INVESTIGATION_INTERFACE.md) provides country
 research, category/value drilldowns, document registers and completion-evidence
 gaps. The separately sourced trade layer uses a dated UN Comtrade preview;
 [data coverage and annual-counter configuration](docs/GLOBAL_WATCH_DATA.md)
-remain explicit. This is not a connected worldwide procurement observation feed.
+remain explicit. Published numbers are available immediately from a source-pinned
+Anti-Corruption Compass snapshot: 59 countries across 2017–2024, including
+US$4.30 trillion and 10,617,058 contracts across 52 countries in 2024. All 250
+country/territory catalog entries remain selectable. These aggregates are not
+a live worldwide procurement observation feed or SUNLIGHT analysis findings.
 
 **Procurement Integrity Verification Infrastructure**
 

@@ -1,0 +1,10 @@
+import {memo,useMemo,useRef,useState} from 'react';
+import {countryCatalog,normalized,money} from './watchOverview';
+import {publicCountries} from './publicProcurement';
+function CountryDirectory({snapshot,year,onCountry}){
+ const dialog=useRef(null),[query,setQuery]=useState('');
+ const available=useMemo(()=>publicCountries(snapshot,year),[snapshot,year]);
+ const rows=useMemo(()=>countryCatalog.filter(c=>[c.name,c.official,c.code,c.alpha3,...c.aliases].some(v=>normalized(v).includes(normalized(query)))),[query]);
+ return <><button className="ev-country-directory-button" onClick={()=>{setQuery('');dialog.current.showModal()}}>All countries & territories ({countryCatalog.length}) ↗</button><dialog className="ev-country-directory" ref={dialog} aria-labelledby="country-directory-title"><div className="ev-directory-heading"><div><p className="ev-eyebrow">EVERY COUNTRY INCLUDED</p><h2 id="country-directory-title">Country & territory register</h2></div><button onClick={()=>dialog.current.close()} aria-label="Close country directory">Close ×</button></div><p>{countryCatalog.length} countries and territories. Published procurement figures cover {available.size}; other places remain selectable with their data availability stated.</p><label htmlFor="directory-country-filter">Filter all countries</label><input id="directory-country-filter" type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Name, translation or ISO code"/><div className="ev-table-scroll"><table><thead><tr><th>Country / territory</th><th>Published value (USD)</th><th>Contracts</th><th>Year</th></tr></thead><tbody>{rows.map(c=>{const data=available.get(c.code);return <tr key={c.code}><td><button onClick={()=>{onCountry(c);dialog.current.close()}}>{c.name} <small>{c.code}</small> ↗</button></td><td>{data?money(data.usd,'USD'):'Not in source coverage'}</td><td>{data?data.contracts.toLocaleString('en'):'—'}</td><td>{data?.year||'—'}</td></tr>})}</tbody></table></div></dialog></>;
+}
+export default memo(CountryDirectory);

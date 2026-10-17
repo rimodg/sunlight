@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 ENDPOINT = "https://comtradeapi.un.org/public/v1/preview/C/A/HS"
 PERIOD = "2023"
@@ -60,8 +60,9 @@ def parse_reporter(payload, reporter):
 
 
 class TradeFeed:
-    def __init__(self, transport=None):
+    def __init__(self, transport=None, reporters=None):
         self.transport = transport
+        self.reporters = reporters
         self.lock = asyncio.Lock()
         self.cached = None
         self.expires = 0
@@ -83,7 +84,8 @@ class TradeFeed:
                     except (httpx.HTTPError, ValueError) as exc:
                         reason = f"HTTP {exc.response.status_code}" if isinstance(exc, httpx.HTTPStatusError) else "Source unavailable or invalid response"
                         return reporter, [], reason
-                outcomes = await asyncio.gather(*(fetch(code) for code in REPORTERS))
+                reporters = self.reporters or REPORTERS
+                outcomes = await asyncio.gather(*(fetch(code) for code in reporters))
             routes, errors, available = [], [], []
             for reporter, rows, error in outcomes:
                 if error:
@@ -101,7 +103,7 @@ class TradeFeed:
                 "period": PERIOD, "currency": "USD", "flow": "Reported annual total-goods exports",
                 "status": "stale" if stale else "partial" if routes else "unavailable",
                 "fetched_at": fetched_at if routes else None, "attempted_at": now,
-                "reporters_requested": list(REPORTERS), "reporters_available": available,
+                "reporters_requested": list(reporters), "reporters_available": available,
                 "coverage": "Selected reporters only; public preview capped at 500 rows per reporter. Not global coverage or real-time shipments. Not procurement spending.",
                 "routes": sorted(routes, key=lambda r: (-r["usd"], r["reporter"], r["partner"])), "errors": errors,
             }
@@ -110,6 +112,7 @@ class TradeFeed:
 
 
 feed = TradeFeed()
+country_feeds = {}
 router = APIRouter()
 
 
@@ -133,5 +136,13 @@ async def procurement_context():
 
 
 @router.get("/watch-data/trade")
-async def trade_preview():
-    return await feed.get()
+async def trade_preview(reporter: int | None = None):
+    if reporter is None:
+        return await feed.get()
+    country = country_code(reporter)
+    if country is None:
+        raise HTTPException(status_code=422, detail='A recognized country numeric code is required')
+    source_code = {840: 842, 356: 699, 250: 251, 380: 381, 578: 579, 756: 757}.get(country, country)
+    if source_code not in country_feeds:
+        country_feeds[source_code] = TradeFeed(reporters=(source_code,))
+    return await country_feeds[source_code].get()
