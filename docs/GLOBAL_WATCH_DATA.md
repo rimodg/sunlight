@@ -2,6 +2,33 @@
 
 The interface keeps published procurement aggregates, analyzed procurement records, configured annual spending context, annual merchandise trade and selected material exports separate. They cannot be combined into a worldwide completion or theft estimate. Material exports are a subset of merchandise trade: never add the white and yellow layers as independent economic contributions.
 
+## Conflict and organized-violence context
+
+`GET /watch-data/conflicts` serves a bundled **UCDP Candidate 26.0.8** extract. It contains **1,500 preliminary records starting August 5–31, 2026**, some with reported intervals ending as late as September 10. The source mirror was generated October 6; SUNLIGHT retrieved it October 17. Those are publication/retrieval dates, not newer observations. This is a fixed snapshot, not live front lines, an all-2026 record or complete worldwide conflict coverage.
+
+Source: Uppsala Conflict Data Program, Department of Peace and Conflict Research, Uppsala University, via the public [WorldWatch data mirror, revision a01e6fe3dd2fac5f6335cc24eca3ea2296b24779](https://github.com/drdjcannon/worldwatch-data/tree/a01e6fe3dd2fac5f6335cc24eca3ea2296b24779). The source JSON SHA-256 is `daad6da8a79dfdf9ce4b4dee7391797bc7532c83dba0fedf1d742f8e870cac99`, enforced by `scripts/build_conflict_snapshot.py`. The mirror publishes 2,000 records, reserving 500 annual records and retaining 1,500 recent candidate records. SUNLIGHT takes only records starting in 2026; it does not turn the capped slice into national/global totals or use the mirror's separate full-window country totals. Original provider downloads are blocked by this cloud's network policy; the existing public mirror is accessible. SUNLIGHT has not independently recoded the original reports.
+
+UCDP data is attributed under **CC BY 4.0**. The panel links the source, candidate release directory/codebooks, license, pinned JSON, checksum and complete derived snapshot. Citations retained:
+
+- Davies, Shawn, Therése Pettersson and Magnus Öberg (2026), *Organized violence 1989–2025, and violent political protests*, Journal of Peace Research, [doi:10.1093/jopres/xjag046](https://doi.org/10.1093/jopres/xjag046).
+- Sundberg, Ralph and Erik Melander (2013), *Introducing the UCDP Georeferenced Event Dataset*, Journal of Peace Research 50(4), 523–532, [doi:10.1177/0022343313484347](https://doi.org/10.1177/0022343313484347).
+
+The source codes state-based conflict, non-state conflict and one-sided violence against civilians. A local fatal-organized-violence observation does not classify its whole country as a war zone. The panel can filter these types separately. Candidate reports can be revised, date intervals may be imprecise, and one record can summarize multiple incidents. News headlines and casualty figures are omitted from SUNLIGHT's derived snapshot; dot size/color does not rank severity.
+
+Only location precision **1 (named location)** or **2 (near a named location)** is plotted: **1,018 records at 658 distinct source coordinates**. Exact coordinate matches share one small, steady red point without random displacement. Multiple source place names can share that reference point; the detail panel preserves and explains them. The other **482** broader-location records remain searchable in the global register but do not become misleading pins at province/country centroids. All source IDs, coordinates, reporting-area labels, intervals and precision codes remain attached.
+
+UCDP reporting areas are not procurement jurisdictions: its `Israel` area includes Gaza/West Bank records. Source labels are preserved; country research filters plotted points by the selected approximate Natural Earth boundary, rather than assigning that reporting area's aggregate to Israel or Palestine. Basemap precision still limits border/small-territory attribution. Clicking a red point opens its source records; the red legend opens the searchable, paginated register and provenance. Keyboard access is provided by that register rather than hundreds of separate animated map targets.
+
+Conflict data does not enter detection scores. No aid/loan amount, stolen-fund estimate, dependency score or causal claim is derived from overlap with material exports or procurement. Those layers have different years and coverage. Missing observations do not establish peace, and sampled point density does not establish conflict intensity. Compare the evidence without silently turning co-location into a verdict.
+
+Reproduce from the exact pinned source file:
+
+```sh
+python scripts/build_conflict_snapshot.py \
+  --source /path/to/worldwatch-data/ucdp/ucdp-events.json \
+  --output code/conflict_snapshot.json
+```
+
 ## Materials and primary inputs
 
 `GET /watch-data/materials` serves a bundled snapshot with **US$3,951,738,847,968** in **2023** gross material exports, **223 exporting economies**, and **85 distinct HS4 headings**. It needs no runtime provider account or external data call. All 250 catalog countries remain in its register; missing observations stay explicit. Coverage of national totals is broader than coverage of the available leading-partner routes.

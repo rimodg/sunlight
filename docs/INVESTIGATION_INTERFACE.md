@@ -43,6 +43,14 @@ White paths show selected material exports from the bundled 2023 CEPII BACI-deri
 
 Supplied procurement relationships appear as distinct dashed paths. An award supplier with a valid `location.geometry` Point can be linked to the first valid delivery point in `tender.deliveryLocations[]` or `tender.items[].deliveryLocation`. A supplier ID can instead resolve its origin through the matching `parties[].location`. These location fields are visualization extensions. Cancelled/unsuccessful awards, invalid coordinates, duplicate links and identical endpoints do not produce links. Up to 20 selected-record links and 20 other supplied links are drawn; the map states drawn/available counts. Relationships are not shipment or payment tracking. Geography never enters the detection score.
 
+## Conflict observations
+
+Small steady red points show **UCDP Candidate 26.0.8** observations whose source start dates fall in **August 2026**. They use a separate cached canvas above the trade lights and country badges, with uniform 1.9-unit radius, muted red fill and no glow/pulse. Click selection uses the same orthographic camera, including back-face rejection; marker selection takes precedence over an overlapping country badge. The red legend provides keyboard access to the searchable, paginated source register and violence-type filter. Active filters remain visible on the legend and can be cleared there.
+
+The extract is **partial and preliminary**: 1,500 source records, 1,018 with named/nearby-location precision, grouped into 658 unchanged reference coordinates. Another 482 broader-location records remain searchable but are not drawn at misleading province/country centroids. Exact coordinate matches can carry several source place labels; their shared-point panel explains that these are source references, not claims that all incidents occurred at one exact site. Source IDs, actors, intervals and precision remain attached.
+
+Country research filters plotted reference points against the selected approximate basemap boundary. It does not substitute a UCDP reporting area for a procurement jurisdiction, including for Gaza records coded by UCDP under `Israel`. Dates, source coverage, source revision/checksum, codebook links, licensing and a downloadable snapshot are exposed. The layer neither classifies whole countries as war zones nor changes procurement detection scores. Exporting, aid dependence, loan need, theft and causation cannot be inferred from co-location alone. See [the full source and limitations](GLOBAL_WATCH_DATA.md#conflict-and-organized-violence-context).
+
 ## Background and sources
 
 Photo backgrounds and background-upload controls are removed. The application clears the previously saved galaxy-image preference on load and uses the plain dark map surface.
@@ -53,10 +61,13 @@ Basemap: Natural Earth 4.1.0 / world-atlas 2.0.2. Country metadata: world-countr
 
 Verified interface captures: [global material flows](interface/Material-Flows.png) and [Ghana material contributions](interface/Material-Contributions.png).
 
-- Python suite: **2,013 passed, 3 skipped**, Docker tests excluded. The historical 42,835-contract evaluation database remains unavailable.
-- Frontend: **22 tests passed**, including source-year separation, 250-country inclusion, published values, missing observations, fallback years, incomplete market slices, material contribution calculations, correct partner-share denominators, source-balanced route drawing, camera alignment and sampled great-circle accuracy across dateline/polar routes.
+Conflict layer captures: [red geographic observations](interface/Conflict-Context.png) and [dated source register](interface/Conflict-Source-Register.png).
+
+- Python suite: **2,016 passed, 3 skipped**, Docker tests excluded. The historical 42,835-contract evaluation database remains unavailable.
+- Frontend: **26 tests passed**, including source-year separation, 250-country inclusion, published values, missing observations, fallback years, incomplete market slices, material contribution calculations, correct partner-share denominators, source-balanced route drawing, camera alignment, sampled great-circle accuracy, conflict precision filtering, geographic hit tests, reporting-area separation and observation-date freshness.
 - Production build passed at `/watch/`.
 - Chromium verified real bundled published figures with no mocked procurement data, year switching, pinned source links, all 250 directory rows, country selection with/without source values, direct map selection, continued rotation after dragging, removal of the old image preference, and a 390px viewport without horizontal overflow.
 - Chromium additionally verified the real material snapshot, Ghana and DR Congo export values, material filtering, white particle glow/movement during country hold, full snapshot download, native dialog controls, mobile width and system reduced motion. A separate explicit trade fixture checked coexistence of yellow and white layers; actual material and procurement checks used bundled source data.
 - Canvas browser checks verified visible white/yellow pixels, front-face clipping, continued country-view motion, responsive and high-DPI buffers, reduced-motion stillness, explicit zoom redraw and runtime motion-preference changes, with no browser errors.
+- Conflict browser checks verified steady red pixels, source dates and partial coverage, record search/pagination/type filters, snapshot download, Gaza reference-point selection above country badges, Sudan map context and mobile dialogs/resizing. A five-second benchmark with all 658 reference points and the existing 320 flow routes remained approximately 60 FPS with no observed long tasks.
 - Provider trade retrieval remains unavailable in this cloud because outbound policy blocks the source. Published procurement and material values are independently available from their bundled, source-pinned snapshots. The user's Render screenshot confirms that the trade connector can return data there; local provider failure is not evidence of a Render failure.

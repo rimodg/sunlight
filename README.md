@@ -29,6 +29,12 @@ material composition and rounded leading-partner shares. Gross exports measure
 documented cross-border material trade, not GDP, domestic extraction or real-time
 shipments. Source coverage, the selected basket and calculations are exposed.
 
+Small, steady red points add dated conflict context from **UCDP Candidate
+26.0.8**: 1,018 named/nearby-location records at 658 reference coordinates.
+The capped extract has event starts in **August 2026**; it is preliminary and
+partial. Click a point or the red legend for dates, precision, source IDs and
+provenance. Co-location with exports/procurement does not establish corruption.
+
 **Procurement Integrity Verification Infrastructure**
 
 Structural and statistical analysis for institutional procurement oversight.
