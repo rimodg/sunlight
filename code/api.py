@@ -551,6 +551,8 @@ app.include_router(watch_trade_router)
 
 from watch_procurement import router as watch_procurement_router
 app.include_router(watch_procurement_router)
+from watch_materials import router as watch_materials_router
+app.include_router(watch_materials_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1209,6 +1211,8 @@ async def assurance():
              "scope": "Per-record results and a hard analyst-capacity ceiling with disclosed ties."},
             {"name": "Trade context", "state": "API connector", "endpoint": "/watch-data/trade",
              "scope": "Dated UN Comtrade public preview for selected reporters. Availability, coverage, and source errors are explicit. Not procurement spending or shipment tracking."},
+            {"name": "Material contributions", "state": "Published snapshot", "endpoint": "/watch-data/materials",
+             "scope": "2023 CEPII BACI-derived selected HS4 material exports, country composition and rounded leading-partner shares. Source coverage and provenance are explicit. Not GDP, domestic extraction or live shipments."},
             {"name": "Published procurement context", "state": "API available", "endpoint": "/watch-data/procurement",
              "scope": "Pinned Anti-Corruption Compass country-year aggregates, 2017–2024, covering 59 countries across the period. Not complete national spending, analyzed contract records or verified delivery outcomes."},
             {"name": "Delivery and corroboration", "state": "API available", "endpoint": "/openapi.json",

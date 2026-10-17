@@ -24,6 +24,7 @@ export default defineConfig({
       '/batch': { target: apiTarget, changeOrigin: true },
       '/profiles': { target: apiTarget, changeOrigin: true },
       '/assurance': { target: apiTarget, changeOrigin: true },
+      '/watch-data': { target: apiTarget, changeOrigin: true },
       '/docs': { target: apiTarget, changeOrigin: true },
       '/openapi.json': { target: apiTarget, changeOrigin: true },
       '/health': {

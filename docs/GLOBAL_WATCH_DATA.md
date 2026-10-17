@@ -1,6 +1,28 @@
 # Data behind the global watch
 
-The interface keeps four quantities separate: published procurement aggregates, analyzed procurement records, configured annual spending context and annual merchandise trade. They cannot be combined into a worldwide completion or theft estimate.
+The interface keeps published procurement aggregates, analyzed procurement records, configured annual spending context, annual merchandise trade and selected material exports separate. They cannot be combined into a worldwide completion or theft estimate. Material exports are a subset of merchandise trade: never add the white and yellow layers as independent economic contributions.
+
+## Materials and primary inputs
+
+`GET /watch-data/materials` serves a bundled snapshot with **US$3,951,738,847,968** in **2023** gross material exports, **223 exporting economies**, and **85 distinct HS4 headings**. It needs no runtime provider account or external data call. All 250 catalog countries remain in its register; missing observations stay explicit. Coverage of national totals is broader than coverage of the available leading-partner routes.
+
+The economic source is **CEPII BACI, HS 2017, release BACI_HS17_V202601**, licensed under France's **Etalab Open Licence 2.0**. SUNLIGHT uses the published, BACI-derived numerical partitions from [Trade Atlas at revision d63f2c7ba9e3639d9904da7f490bc69e96468188](https://github.com/Lucas-Speciale/trade-atlas/tree/d63f2c7ba9e3639d9904da7f490bc69e96468188). Retrieved October 17, 2026 UTC (October 16 in New York). The original BACI archive has **not** been independently reprocessed here. No application code, visual design, boundary files or product-label metadata from that project is included. Country geometry and catalog remain SUNLIGHT's existing sources. Each used data file has a pinned link and SHA-256 checksum in the explorer; the builder enforces `scripts/materials_source_checksums.json`.
+
+The SUNLIGHT basket is an explicit operational selection, not a universal or exhaustive definition of raw materials: energy feedstocks, ores/concentrates, mineral inputs, agricultural/forest inputs, primary metals and precious materials. Some HS4 headings include processed forms (for example milled rice, roasted coffee, semi-manufactured gold and unwrought refined copper). The complete code list and individual labels are visible in the material selector and snapshot. Finished manufactures, services and many other agricultural commodities are outside this basket. **2023** is used consistently; the mirror's provisional 2024 observations are not mixed into it. BACI reconciles trade reports rather than measuring audited domestic production. The mirror uses `Other Asia, nes` as its practical proxy for Taiwan; reporting areas can differ from map boundaries.
+
+The global figure sums each country/HS4 export value once. Source values have already been converted to current USD and rounded to whole dollars; SUNLIGHT applies no further thousand-dollar multiplier. Imports remain separate. Country contribution is its selected export value divided by the covered world value for the same material selection and year. The country view also shows selected exports as a share of that country's total merchandise exports. This is gross trade, including possible re-exports and repeated border crossings, not a measure of extraction, ultimate producer origin, GDP, value added, domestic retention or welfare. Country attribution identifies the exporting trade economy.
+
+The source publishes up to ten leading partners per country/product on that country's net-exporter or net-importer side, with a national/product threshold of US$1 million and source geography restrictions. The snapshot contains 56,832 directional source rows; deduplication yields **47,942 exporter/importer/material relationships involving 204 exporting economies**. Outbound shares use exporter product exports as denominator; inbound shares use importer product imports. When both source views identify a link, its outbound view is used. **Shares are rounded to 0.01 percentage point, with a 0.01% lower bound. Exact bilateral monetary values and quantities are not present in these partitions and are not asserted.**
+
+White lights always travel from exporter to importer along schematic great-circle connections between country reference points. Global drawing includes one available leading route per exporting economy before filling its 240-route budget. Country research draws up to 80 routes involving that country. A material filter changes the white layer and its totals without changing procurement data. Country totals are never calculated by summing the truncated route subset. Brightness, particle count and speed encode neither money nor physical tonnage. The source table shows up to 200 leading relationships for the selection; the downloadable snapshot retains every source row, national total and checksum.
+
+Reproduce from the pinned mirror checkout (source hashes and revision are enforced):
+
+```sh
+python scripts/build_materials_snapshot.py \
+  --source-dir /path/to/trade-atlas/public/data/trade \
+  --output code/materials_snapshot.json
+```
 
 ## Published procurement observations on first load
 

@@ -22,6 +22,13 @@ US$4.30 trillion and 10,617,058 contracts across 52 countries in 2024. All 250
 country/territory catalog entries remain selectable. These aggregates are not
 a live worldwide procurement observation feed or SUNLIGHT analysis findings.
 
+White globe trails add material-export context from a pinned CEPII BACI-derived
+snapshot: **US$3.95 trillion**, **223 exporting economies**, **85 selected HS4
+headings**, **2023**. Click the white total to explore country contributions,
+material composition and rounded leading-partner shares. Gross exports measure
+documented cross-border material trade, not GDP, domestic extraction or real-time
+shipments. Source coverage, the selected basket and calculations are exposed.
+
 **Procurement Integrity Verification Infrastructure**
 
 Structural and statistical analysis for institutional procurement oversight.
