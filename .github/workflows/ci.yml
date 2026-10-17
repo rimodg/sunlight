@@ -136,5 +136,7 @@ jobs:
           cache-dependency-path: sunlight-dashboard/package-lock.json
       - run: npm ci
         working-directory: sunlight-dashboard
+      - run: npm test
+        working-directory: sunlight-dashboard
       - run: npm run build -- --base=/watch/
         working-directory: sunlight-dashboard
