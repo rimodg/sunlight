@@ -3,9 +3,18 @@ services:
   - type: web
     name: sunlight-api
     runtime: docker
+    branch: codex/sunlight-hosted-access
     dockerfilePath: ./Dockerfile
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: SUNLIGHT_DEFAULT_WORKSPACE
+        value: "1"
+      - key: SUNLIGHT_AUTH_REQUIRED
+        value: "1"
+      - key: SUNLIGHT_ACCESS_USER
+        value: sunlight
+      - key: SUNLIGHT_ACCESS_PASSWORD
+        generateValue: true
     healthCheckPath: /health
-    plan: starter  # $7/mo, always on
+    plan: free

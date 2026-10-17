@@ -12,6 +12,31 @@ traces, and downloadable content-addressed receipts. It does not present random
 fixture scores as operational results. Historical evaluation metrics below must
 be interpreted with the sampling and corpus limits in the review brief.
 
+The [global watch interface](docs/INVESTIGATION_INTERFACE.md) provides country
+research, category/value drilldowns, document registers and completion-evidence
+gaps. The separately sourced trade layer uses a dated UN Comtrade preview;
+[data coverage and annual-counter configuration](docs/GLOBAL_WATCH_DATA.md)
+remain explicit. Published numbers are available immediately from a source-pinned
+Anti-Corruption Compass snapshot: 59 countries across 2017–2024, including
+US$4.30 trillion and 10,617,058 contracts across 52 countries in 2024. All 250
+country/territory catalog entries remain selectable. These aggregates are not
+a live worldwide procurement observation feed or SUNLIGHT analysis findings.
+
+White moving globe points add material-export context from a pinned CEPII BACI-derived
+snapshot: **US$3.95 trillion**, **223 exporting economies**, **85 selected HS4
+headings**, **2023**. Click the white total to explore country contributions,
+material composition and rounded leading-partner shares. Gross exports measure
+documented cross-border material trade, not GDP, domestic extraction or real-time
+shipments. Source coverage, the selected basket and calculations are exposed.
+
+Small, steady red points add dated conflict context from **UCDP Candidate
+26.0.8**: 1,018 named/nearby-location records at 658 reference coordinates.
+The capped extract has event starts in **August 2026**; it is preliminary and
+partial. Click a point or the red legend for dates, precision, source IDs and
+provenance. Co-location with exports/procurement does not establish corruption.
+
+Small blue moving points add [historical arms-reporting context](docs/GLOBAL_WATCH_DATA.md#arms-declarations-and-accountability): UNROCA declarations for 2020–2022, exporter/importer category comparisons, source reports and separately attributed audit summaries. Reporting discrepancies do not establish diversion. Verified recovery locations and a global missing-weapons total are unavailable; no such locations or total are invented. All flow layers use points without tails along thin fixed connections. Click a line or **Explore connections** to trace origin/destination, inspect the source measure and follow reporting discrepancies to the records needed for review.
+
 **Procurement Integrity Verification Infrastructure**
 
 Structural and statistical analysis for institutional procurement oversight.

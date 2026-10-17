@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import './EvidenceWorkspace.css';
+import EvidenceGlobe from './EvidenceGlobe';
+import { investigationRecords } from './evidenceGeography';
+import { recordCountry } from './watchOverview';
+import { analysisRequest } from './evidenceRequest';
 
 const specimens = {
   open: { label: 'Documented open procedure', method: 'open', amount: 1000000 },
@@ -12,13 +16,14 @@ function specimen(key, currency) {
   const { method, amount } = specimens[key];
   return {
     ocid: `synthetic-${key}-001`,
-    buyer: { name: 'Illustrative public authority', id: 'EXAMPLE-BUYER' },
+    buyer: { name: 'Illustrative public authority', id: 'EXAMPLE-BUYER', address: { countryName: 'United States' } },
     tender: { id: 'EXAMPLE-TENDER', title: 'Illustrative medical supply contract',
-      procurementMethod: method, numberOfTenderers: method === 'open' ? 5 : 1,
+      deliveryLocations: [{ description: 'Fictional example delivery site / Washington, DC', geometry: { type: 'Point', coordinates: [-77.04, 38.9] } }],
+      mainProcurementCategory: 'goods', procurementMethod: method, numberOfTenderers: method === 'open' ? 5 : 1,
       value: { amount, currency },
       tenderPeriod: { startDate: '2025-01-01T00:00:00Z', endDate: '2025-02-01T00:00:00Z' } },
     awards: [{ id: 'EXAMPLE-AWARD', date: '2025-02-15T00:00:00Z',
-      value: { amount, currency }, suppliers: [{ name: 'Illustrative supplier', id: 'EXAMPLE-SUPPLIER' }] }],
+      value: { amount, currency }, suppliers: [{ name: 'Illustrative supplier', id: 'EXAMPLE-SUPPLIER', location: { description: 'Fictional supplier site / Rotterdam', geometry: { type: 'Point', coordinates: [4.48, 51.92] } } }] }],
   };
 }
 
@@ -47,6 +52,12 @@ const title = value => String(value || 'Not assessed').replaceAll('_', ' ');
 
 export default function EvidenceWorkspace() {
   const [tab, setTab] = useState('review');
+  const [country, setCountry] = useState(null);
+  const [deskPanel, setDeskPanel] = useState(null);
+  const inspect = index => { setSelected(index); setDeskPanel('inspector'); };
+  const [importOpen, setImportOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('all');
   const [profiles, setProfiles] = useState([]);
   const [profile, setProfile] = useState('us_federal');
   const [assurance, setAssurance] = useState(null);
@@ -59,6 +70,23 @@ export default function EvidenceWorkspace() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [uploadName, setUploadName] = useState('');
+
+  useEffect(() => {
+    if (!importOpen) return;
+    const previous = document.activeElement;
+    const oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.querySelector('.ev-close-import')?.focus();
+    function trap(event) {
+      if (event.key !== 'Tab') return;
+      const controls = [...document.querySelectorAll('.ev-input button:not(:disabled), .ev-input select:not(:disabled), .ev-input textarea:not(:disabled), .ev-input input:not(:disabled)')].filter(el => el.getClientRects().length);
+      const first = controls[0], last = controls.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    }
+    document.addEventListener('keydown', trap);
+    return () => { document.body.style.overflow = oldOverflow; document.removeEventListener('keydown', trap); previous?.focus(); };
+  }, [importOpen]);
 
   useEffect(() => {
     let active = true;
@@ -90,19 +118,17 @@ export default function EvidenceWorkspace() {
     setError(''); setBusy(true); setRun(null);
     try {
       const payload = JSON.parse(input);
-      const contracts = Array.isArray(payload) ? payload : payload.contracts;
-      const isBatch = Array.isArray(contracts);
-      const request = isBatch ? { contracts, profile, capacity_budget: budget === '' ? null : Number(budget) }
-        : { contract: payload.contract || payload, profile };
-      if (isBatch && contracts.length > 1000) throw new Error('A batch can contain at most 1,000 records.');
-      const { body: response, text: responseText } = await getJSON(isBatch ? '/batch' : '/analyze', {
+      const { path, request } = analysisRequest(payload, profile, budget);
+      const { body: response, text: responseText } = await getJSON(path, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request),
       }, true);
-      setRun({ request, response, responseText, input_origin: origin, filename: uploadName || null }); setSelected(0);
+      setRun({ request, response, responseText, input_origin: origin, filename: uploadName || null }); setSelected(0); setImportOpen(false); setDeskPanel('inspector');
     } catch (e) { setError(e.message || 'Analysis could not complete.'); }
     finally { setBusy(false); }
   }
 
+  const records = investigationRecords(run);
+  const visibleRecords = records.filter(r => (!country || recordCountry(r.record)?.code === country.code) && `${r.label} ${r.result.ocid}`.toLowerCase().includes(search.toLowerCase()) && (filter === 'all' || (filter === 'findings' ? r.findings > 0 : !r.location)));
   const results = run ? (run.response.results || [run.response]) : [];
   const result = results[selected];
   const findings = result?.structure?.contradictions || [];
@@ -116,23 +142,30 @@ export default function EvidenceWorkspace() {
       <span className={`ev-connection ${connection === 'API connected' ? 'connected' : ''}`}><i />{connection}</span>
     </header>
     <main className="ev-main">
-      <section className="ev-intro">
-        <p className="ev-eyebrow">PUBLIC VALUE / DOCUMENTED EVIDENCE / ACCOUNTABLE REVIEW</p>
-        <h1>Follow the commitment.<br /><span>Examine what holds.</span></h1>
-        <p className="ev-deck">Read a procurement record against its jurisdiction. Inspect the findings, the evidence gate, and what the input cannot establish. Carry the result into an accountable review.</p>
-        <div className="ev-flow" aria-label="Verification lifecycle">
-          {['Commitment', 'Procurement', 'Delivery', 'Independent evidence', 'Documented outcome'].map((s, i) => <span key={s}><b>{String(i + 1).padStart(2, '0')}</b>{s}</span>)}
-        </div>
-        <p className="ev-caption">This workspace runs procurement analysis. Delivery and corroboration require their own evidence and API workflows.</p>
-      </section>
       <nav className="ev-tabs" aria-label="Workspace sections">
-        {[['review', 'Evidence workspace'], ['method', 'Method & interpretation'], ['assurance', 'Institutional readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}
+        {[['review', 'Investigation'], ['method', 'Method & interpretation'], ['assurance', 'Capabilities & readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}
+        <button aria-pressed={deskPanel === 'register'} onClick={() => setDeskPanel(deskPanel === 'register' ? null : 'register')}>Record register</button>
+        <button aria-pressed={deskPanel === 'inspector'} onClick={() => setDeskPanel(deskPanel === 'inspector' ? null : 'inspector')}>Evidence inspector</button>
+        <button className="ev-import-button" onClick={() => { setTab('review'); setImportOpen(true); }}>+ Import evidence</button>
       </nav>
 
       {tab === 'review' && <>
         <div className="ev-workspace">
-          <section className="ev-panel ev-input">
-            <div className="ev-section-title"><span className="ev-step">01</span><h2>Supply a record</h2></div>
+          <aside className="ev-queue" hidden={deskPanel !== 'register'} aria-label="Record queue"><button className="ev-panel-close" onClick={() => setDeskPanel(null)}>Close register ×</button>
+            <div className="ev-queue-title"><span>RECORD REGISTER</span><strong>{records.length.toString().padStart(2, '0')}</strong></div>
+            <div className="ev-session-stats"><div><strong>{records.reduce((n, r) => n + r.findings, 0)}</strong><span>Findings</span></div><div><strong>{records.filter(r => !r.location).length}</strong><span>Unlocated</span></div></div>
+            <label htmlFor="record-search">Find a record</label><input id="record-search" type="search" placeholder="Title or identifier" value={search} onChange={e => setSearch(e.target.value)}/>
+            <label htmlFor="queue-filter">Show</label><select id="queue-filter" value={filter} onChange={e => setFilter(e.target.value)}><option value="all">All records</option><option value="findings">With findings</option><option value="unlocated">Without coordinates</option></select>
+            <div className="ev-queue-list">{visibleRecords.map(r => <button key={r.index} className={`ev-queue-record ${selected === r.index ? 'active' : ''}`} aria-pressed={selected === r.index} onClick={() => inspect(r.index)}><span>{r.result.ocid}</span><strong>{r.label}</strong><small>{r.findings} findings · {r.location ? 'Located' : 'Unlocated'}{r.result.errors?.length ? ' · Analysis error' : ''}</small></button>)}</div>
+            {!records.length && <div className="ev-queue-empty"><h2>Start with evidence.</h2><p>Import a record or examine a fictional example through the live engine.</p><button onClick={() => setImportOpen(true)}>Supply a record ↗</button></div>}
+            {records.length > 0 && visibleRecords.length === 0 && <p className="ev-caption">No records match this filter.</p>}
+            <div className="ev-register-note"><span>SESSION SCOPE</span><p>{run ? run.input_origin : 'No records analyzed'}. This register contains only this session’s analysis. Download packets to retain the evidence.</p></div>
+          </aside>
+          <EvidenceGlobe records={records} selected={selected} onSelect={inspect} country={country} onCountry={value => { setCountry(value); setDeskPanel(null); }} origin={run?.input_origin}/>
+          {importOpen && <div className="ev-import-overlay" onClick={e => { if (e.target === e.currentTarget) setImportOpen(false); }} onKeyDown={e => { if (e.key === 'Escape') setImportOpen(false); }}>
+          <section className="ev-panel ev-input" role="dialog" aria-modal="true" aria-labelledby="ev-import-title">
+            <button className="ev-close-import" onClick={() => setImportOpen(false)} aria-label="Close import">Close ×</button>
+            <div className="ev-section-title"><span className="ev-step">01</span><h2 id="ev-import-title">Supply a record</h2></div>
             <p>OCDS-shaped JSON, one record or an array of up to 1,000. Examples are fictional inputs; every result comes from the live API.</p>
             <label htmlFor="jurisdiction">Jurisdiction calibration</label>
             <select id="jurisdiction" value={profile} disabled={busy} onChange={e => { setProfile(e.target.value); setRun(null); }}>
@@ -148,17 +181,20 @@ export default function EvidenceWorkspace() {
             {error && <div className="ev-error" role="alert">{error}</div>}
           </section>
 
-          <section className="ev-panel ev-results" aria-live="polite" aria-busy={busy}>
-            <div className="ev-section-title"><span className="ev-step">02</span><h2>Inspect the reading</h2></div>
-            {!run ? <div className="ev-empty"><span className="ev-empty-mark">◎</span><h3>{busy ? 'Reading the supplied record' : 'Evidence before conclusions'}</h3><p>Run an example or supply your own record. Findings, input gaps, and calculation traces will appear here.</p><div className="ev-principles"><span>Deterministic analysis</span><span>Rule attribution</span><span>Explicit uncertainty</span></div></div> : <>
+          </div>}
+          <section className="ev-panel ev-results" hidden={deskPanel !== 'inspector'} aria-live="polite" aria-busy={busy}>
+            <button className="ev-panel-close" onClick={() => setDeskPanel(null)}>Close inspector ×</button><div className="ev-section-title"><span className="ev-step">EVIDENCE</span><h2>{run ? 'Record inspection' : 'Investigation desk'}</h2></div>
+            {!run ? <div className="ev-empty"><span className="ev-empty-mark">◎</span><h3>{busy ? 'Analyzing evidence' : 'From record to review'}</h3><p>Select a record to follow its procedural facts, findings, and assessment limits.</p><ol className="ev-start-steps"><li><strong>Supply</strong> a procurement record.</li><li><strong>Examine</strong> the rules and their basis.</li><li><strong>Retain</strong> a reproducible evidence packet.</li></ol><button className="ev-primary" onClick={() => setImportOpen(true)}>Begin investigation ↗</button><span className="ev-caption">Geography provides context. Findings come from the record.</span></div> : <>
               <div className="ev-result-toolbar"><span className="ev-origin">{run.input_origin}</span><button onClick={() => download(packetText(run), 'sunlight-evidence-packet.json')}>Download evidence packet ↓</button></div>
               {metadata && <div className="ev-batch-summary"><strong>{run.response.total_processed} processed</strong><span>{metadata.recommended_count} recommended / {metadata.deferred_count} deferred / {run.response.total_errors} errors</span>{metadata.boundary_tie?.length > 0 && <p>Equal scores at the capacity boundary. OCID ordering selects work administratively; it adds no evidence of risk.</p>}</div>}
               {results.length > 1 && <><label htmlFor="result-record">Inspect record</label><select id="result-record" value={selected} onChange={e => setSelected(Number(e.target.value))}>{results.map((r, i) => <option key={i} value={i}>{r.ocid}{r.errors.length ? ' / errors' : ''}</option>)}</select></>}
               {result ? <>
                 <p className="ev-record-id">{result.ocid}</p>
+                <div className="ev-contract-context"><h3>{records[selected]?.label}</h3><p>{records[selected]?.record?.buyer?.name || 'Buyer not supplied'}</p><span>{records[selected]?.location?.label || 'No supported delivery coordinates supplied'}</span></div>
                 <div className="ev-verdicts"><div><label>Structural reading</label><strong>{title(result.structure?.verdict)}</strong></div><div><label>Evidence gate</label><strong>{title(result.gate_verdict)}</strong></div><div><label>Normalized fields</label><strong>{quality ? `${quality.fields_present} / ${quality.fields_total}` : 'Not assessed'}</strong></div></div>
                 <p className="ev-reading-note">Risk indicators for review. A green gate does not certify integrity; missing inputs may leave rules unassessable.</p>
                 {result.errors.length > 0 && <div className="ev-error">{result.errors.join('; ')}</div>}
+                <details className="ev-detail"><summary>Supplied source record</summary><pre className="ev-source-json">{JSON.stringify(records[selected]?.record, null, 2)}</pre></details>
                 <h3 className="ev-subheading">Observed structural findings <span>{findings.length}</span></h3>
                 {findings.length === 0 && <p>No structural contradictions reported for these inputs. This does not verify facts outside the supplied record.</p>}
                 {findings.map((f, i) => <article className="ev-finding" key={`${f.rule_id}-${i}`}><div><code>{f.rule_id}</code><span>{title(f.layer)}</span></div><h4>{f.description}</h4><p>{f.evidence}</p><details><summary>Rule basis</summary><p>{f.legal_citation || 'Citation not supplied'}</p></details></article>)}
@@ -169,7 +205,6 @@ export default function EvidenceWorkspace() {
             </>}
           </section>
         </div>
-        <section className="ev-bottom"><div><p className="ev-eyebrow">FROM FINDING TO ACCOUNTABILITY</p><h2>A finding should arrive<br />with a basis for review.</h2></div><p>The packet carries the submitted request, analytical response, input gaps, calibration fingerprint, source manifest, and runtime versions. An institution can inspect what was computed before deciding what follows.</p></section>
       </>}
 
       {tab === 'method' && <section className="ev-method">

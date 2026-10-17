@@ -1,0 +1,41 @@
+{
+  "schema_version": "sunlight.arms-audit-context.v1",
+  "source_revision": "3e7d52cfb2bac0940de9ffa61f9c25bba3965ef4",
+  "source_file": {
+    "url": "https://raw.githubusercontent.com/CetiAlphaFive/gao/3e7d52cfb2bac0940de9ffa61f9c25bba3965ef4/inst/extdata/gao_links.rds",
+    "sha256": "1dd719514cd67de582b3b8ff93d0b77f195d8c1a8997256986e24a3e05f0df05"
+  },
+  "rights": "GAO report facts and titles attributed to GAO. The metadata mirror is CetiAlphaFive/gao (GPL-3.0); no package code or complete database is redistributed.",
+  "field_evidence": [
+    {
+      "id": "GAO-24-106289",
+      "country": "UA",
+      "country_name": "Ukraine",
+      "title": "Ukraine: DOD Should Improve Data for Both Defense Article Delivery and End-Use Monitoring",
+      "publisher": "U.S. Government Accountability Office",
+      "published": "2024-03-13",
+      "finding": "GAO reported that the Department of Defense lacked clear guidance for tracking equipment deliveries and that its delivery data might not be accurate.",
+      "source_url": "https://www.gao.gov/products/gao-24-106289",
+      "mirror_url": "https://github.com/CetiAlphaFive/gao/blob/3e7d52cfb2bac0940de9ffa61f9c25bba3965ef4/inst/extdata/gao_links.rds",
+      "verification": "Title, date and limited summary inspected in a pinned public GAO metadata mirror. Full report and recovery-site coordinates were not independently inspected in this release.",
+      "limit": "Historical audit scope only. This finding does not establish theft, missing weapon quantities, current custody, a verified recovery site or a match to any UNROCA declaration. No amount is subtracted from declarations.",
+      "coordinates": null,
+      "matched_declaration_ids": []
+    },
+    {
+      "id": "GAO-09-267",
+      "country": "AF",
+      "country_name": "Afghanistan",
+      "title": "Afghanistan Security: Lack of Systematic Tracking Raises Significant Accountability Concerns about Weapons Provided to Afghan National Security Forces",
+      "publisher": "U.S. Government Accountability Office",
+      "published": "2009-01-30",
+      "finding": "GAO’s report identifies a lack of systematic tracking and significant accountability concerns about weapons provided to Afghan National Security Forces.",
+      "source_url": "https://www.gao.gov/products/gao-09-267",
+      "mirror_url": "https://github.com/CetiAlphaFive/gao/blob/3e7d52cfb2bac0940de9ffa61f9c25bba3965ef4/inst/extdata/gao_links.rds",
+      "verification": "Title, date and limited summary inspected in a pinned public GAO metadata mirror. Full report and recovery-site coordinates were not independently inspected in this release.",
+      "limit": "Historical audit scope only. This finding does not establish theft, missing weapon quantities, current custody, a verified recovery site or a match to any UNROCA declaration. No amount is subtracted from declarations.",
+      "coordinates": null,
+      "matched_declaration_ids": []
+    }
+  ]
+}

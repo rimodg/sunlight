@@ -46,7 +46,7 @@ from datetime import date, datetime, timezone
 from typing import Optional, List, Dict, Any
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -69,6 +69,7 @@ from input_adapters import build_default_registry
 from sunlight_logging import get_logger
 from ingestion_quality import assess_ingestion_quality, input_mapping_gaps
 from analysis_receipt import build_receipt, content_digest, source_manifest
+from access_gate import configure_access_gate
 
 # SUNLIGHT Side 2 imports
 from delivery_schema import (
@@ -121,6 +122,7 @@ class ContractInput(BaseModel):
     flexible to accommodate different OCDS publisher formats while maintaining
     the core required fields for structural analysis.
     """
+    model_config = {"extra": "allow"}
     ocid: str = Field(..., description="OCDS contract identifier (required)")
     buyer: Optional[Dict[str, Any]] = Field(None, description="Buyer information")
     tender: Optional[Dict[str, Any]] = Field(None, description="Tender details including value, currency, method")
@@ -542,6 +544,19 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+configure_access_gate(app)
+
+from watch_trade import router as watch_trade_router
+app.include_router(watch_trade_router)
+
+from watch_procurement import router as watch_procurement_router
+app.include_router(watch_procurement_router)
+from watch_materials import router as watch_materials_router
+app.include_router(watch_materials_router)
+from watch_conflicts import router as watch_conflicts_router
+app.include_router(watch_conflicts_router)
+from watch_arms import router as watch_arms_router
+app.include_router(watch_arms_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -632,6 +647,7 @@ def compute_risk_score(verdict: str, confidence: float) -> float:
 def ocds_to_dict(contract: ContractInput) -> Dict:
     """Convert ContractInput Pydantic model to dict for pipeline ingestion."""
     return {
+        **contract.model_dump(mode="json"),
         "ocid": contract.ocid,
         "buyer": contract.buyer or {},
         "tender": contract.tender or {},
@@ -716,6 +732,8 @@ def get_git_commit() -> str:
 @app.get("/")
 async def root():
     """Root endpoint — points to API documentation."""
+    if os.environ.get('SUNLIGHT_DEFAULT_WORKSPACE', '') == '1':
+        return RedirectResponse('/watch/')
     return {
         "service": "SUNLIGHT Procurement Integrity Analysis API",
         "version": "0.1.0",
@@ -1195,10 +1213,20 @@ async def assurance():
              "scope": "Structural findings, evidence gate, input completeness, and content-addressed receipts."},
             {"name": "Portfolio review", "state": "API available", "endpoint": "/batch",
              "scope": "Per-record results and a hard analyst-capacity ceiling with disclosed ties."},
+            {"name": "Trade context", "state": "API connector", "endpoint": "/watch-data/trade",
+             "scope": "Dated UN Comtrade public preview for selected reporters. Availability, coverage, and source errors are explicit. Not procurement spending or shipment tracking."},
+            {"name": "Material contributions", "state": "Published snapshot", "endpoint": "/watch-data/materials",
+             "scope": "2023 CEPII BACI-derived selected HS4 material exports, country composition and rounded leading-partner shares. Source coverage and provenance are explicit. Not GDP, domestic extraction or live shipments."},
+            {"name": "Conflict observations", "state": "Published snapshot", "endpoint": "/watch-data/conflicts",
+             "scope": "Partial 2026 UCDP candidate extract, dated through August 31 by event start. Only named or nearby-location references are plotted. Preliminary geographic context, not live fronts, national war classification or evidence of corruption."},
+            {"name": "Published procurement context", "state": "API available", "endpoint": "/watch-data/procurement",
+             "scope": "Pinned Anti-Corruption Compass country-year aggregates, 2017–2024, covering 59 countries across the period. Not complete national spending, analyzed contract records or verified delivery outcomes."},
             {"name": "Delivery and corroboration", "state": "API available", "endpoint": "/openapi.json",
              "scope": "Separate supplied-evidence workflows; a procurement result does not establish delivery."},
             {"name": "Arms reporting consistency", "state": "Library available", "endpoint": None,
-             "scope": "ATT profile, rules, and UN Register adapter. No general transfer-analysis API."},
+             "scope": "ATT profile, rules, UN Register adapter, and historical UNROCA reporting context at /watch-data/arms. Reporting comparisons are not a diversion determination. No general transfer-analysis API."},
+            {"name": "Historical arms reporting context", "state": "API available", "endpoint": "/watch-data/arms",
+             "scope": "Partial 2020–2022 UNROCA mirror and attributed audit summaries. No verified recovery-site map or global diversion total."},
             {"name": "Cross-category Registry and Need Ledger", "state": "Design", "endpoint": None,
              "scope": "Charter v2 direction, not a deployed global observation service."},
             {"name": "Payment control and enforcement", "state": "Outside current authority", "endpoint": None,
