@@ -1,0 +1,41 @@
+import {memo,useEffect,useMemo,useRef,useState} from 'react';
+import {flowDiscrepancies,flowEnds,flowId,flowKind,flowMeasure,flowNames} from './flows';
+import {routeShare} from './materials';
+import {safeURL} from './watchOverview';
+const number=n=>n===null?'Unknown':n.toLocaleString('en');
+export const reviewInstruction=l=>flowKind(l)==='arms'?'Compare the original export and import reports by model, transfer date and category. Request end-user certificates, serial/batch records, delivery acceptance and custody history before inferring diversion.':flowKind(l)==='material'?'Check the underlying customs declaration, product code, reporting basis and re-export status. Match invoices, shipping documents, payment and receiving records; partner shares alone cannot establish a loss.':flowKind(l)==='trade'?'Match export customs entries to the destination’s import entries for the same period, classification and reporting basis, then reconcile invoices, payment and delivery evidence. This source provides only the export side.':'Open the supplied record to examine the actual findings, source documents and missing delivery evidence.';
+export function FlowInspector({link,materials,onClose,onCountry,onArms,onRecord}){
+ if(!link)return null;
+ const kind=flowKind(link),[from,to]=flowEnds(link),differences=flowDiscrepancies(link);
+ const materialSource=materials?.source_files?.find(f=>f.name===`routes/${link.period}/${link.product?.code.slice(0,2)}.json`)?.url||materials?.mirror_url;
+ function downloadEvidence(){
+  const {geometry,rankValue,...relationship}=link;
+  const record={schema:'sunlight.connection-review.v1',exported_at:new Date().toISOString(),source_period:link.period||link.year||null,kind,measure:flowMeasure(link),relationship,material_source:kind==='material'?{url:materialSource,precision:materials?.route_precision}:undefined,next_evidence:reviewInstruction(link),interpretation:'Country coordinates are reference centers. No physical shipment path, live tracking, verified delivery or theft determination. Material partner shares are rounded and do not supply exact bilateral USD.'};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(record,null,2)],{type:'application/json'})),anchor=document.createElement('a');anchor.href=url;anchor.download=`sunlight-connection-${link.reporter?.code||'origin'}-${link.partner?.code||'destination'}.json`;anchor.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }
+
+ return <aside className="ev-flow-inspector" aria-label="Selected connection">
+ <div className="ev-directory-heading"><span className="ev-eyebrow">{flowNames[kind]} / {link.period||link.year||'SUPPLIED EVIDENCE'}</span><button onClick={onClose} aria-label="Close connection">×</button></div>
+ <h2>{from} <span aria-label="to">→</span> {to}</h2><p className="ev-flow-direction">● Origin → ◯ Destination · moving points follow this direction</p><strong>{flowMeasure(link)}</strong>
+ {kind==='material'&&<><p>{link.product.name} · {routeShare(link)}</p><p>The source supplies rounded partner shares, not exact bilateral USD or shipment quantities. Exporting economy does not establish the extraction origin.</p><a href={safeURL(materialSource)} target="_blank" rel="noreferrer">Pinned material source ↗</a></>}
+ {kind==='trade'&&<><p>Annual total goods exports. This is trade context, not a government procurement payment.</p><a href={safeURL(link.sourceURL)} target="_blank" rel="noreferrer">Export source query ↗</a></>}
+ {kind==='arms'&&<><p>{differences.length} comparable category discrepancies on this relationship. Other categories may be equal, one-sided or unassessable; no combined weapons total is inferred.</p><div className="ev-flow-category-list">{(link.comparisons||[]).map(r=><details key={r.key}><summary>{r.category} · {r.status==='different'?'Reporting difference':r.status==='equal'?'Equal counts':r.status==='one_sided'?'One side absent':'Quantity ambiguity'}</summary><p>Export: {number(r.exports.quantity)} · Import: {number(r.imports.quantity)}<br/>Signed difference: {r.difference===null?'Not comparable':number(r.difference)}</p>{[...r.exports.rows,...r.imports.rows].map(row=><p key={row.id}><a href={safeURL(row.source_url)} target="_blank" rel="noreferrer">{row.reporter} {row.direction} report ↗</a></p>)}</details>)}</div><button onClick={()=>onArms(link)}>Compare arms reports ↗</button></>}
+ <h3>What to investigate next</h3><p>{reviewInstruction(link)}</p><p className="ev-flow-limit">A source-linked relationship is not proof of delivery, payment, theft or a physical transport route. Animation speed does not measure volume or current activity.</p>
+ <div className="ev-flow-actions"><button onClick={downloadEvidence}>Download connection evidence</button>{link.reporter&&<button onClick={()=>onCountry(link.reporter)}>Research origin</button>}{link.partner&&<button onClick={()=>onCountry(link.partner)}>Research destination</button>}{kind==='procurement'&&<button onClick={()=>onRecord(link.recordIndex)}>Open supplied record ↗</button>}</div>
+ </aside>;
+}
+function FlowDirectory({links,drawn,open,onClose,onSelect,layer,onLayer}){
+ const dialog=useRef(null),[query,setQuery]=useState(''),[review,setReview]=useState(false),[page,setPage]=useState(0);
+ useEffect(()=>{if(open)dialog.current?.showModal();else dialog.current?.close()},[open]);
+ useEffect(()=>setPage(0),[query,review,layer,links]);
+ const filtered=useMemo(()=>!open?[]:links.filter(l=>(!layer||flowKind(l)===layer)&&(!review||flowDiscrepancies(l).length>0)&&(!query||`${flowEnds(l).join(' ')} ${l.reporter?.code||''} ${l.partner?.code||''} ${l.product?.name||''} ${l.product?.code||''} ${l.label||''}`.toLowerCase().includes(query.toLowerCase()))),[links,layer,review,query,open]);
+ if(!open)return null;
+ return <dialog ref={dialog} className="ev-country-directory ev-flow-directory" aria-label="Connection register" onClose={onClose} onCancel={onClose}>
+ <div className="ev-directory-heading"><div><p className="ev-eyebrow">ECONOMIC CONNECTIONS / SOURCE REGISTER</p><h2>Follow the relationship to its evidence</h2></div><button onClick={onClose}>Close ×</button></div>
+ <p>{filtered.length.toLocaleString('en')} matching available relationships · {drawn} currently drawn. The globe draws a bounded subset for legibility; this register searches all loaded relationships within the current country and source-category scope.</p><p>Different source years and units stay separate. Goods exports include material exports, so the two dollar totals must not be added. Commodity trade, arms declarations and procurement records are different evidence types.</p>
+ <div className="ev-conflict-filters"><label>Connection layer<select aria-label="Connection layer" value={layer} onChange={e=>onLayer(e.target.value)}><option value="">All economic connections</option>{Object.entries(flowNames).map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label><label>Find origin, destination or material<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Country or material"/></label><label className="ev-review-check"><input type="checkbox" checked={review} onChange={e=>setReview(e.target.checked)}/>Comparable arms reporting discrepancies only</label></div>
+ <div className="ev-table-scroll"><table><thead><tr><th>Origin → destination</th><th>Evidence / year</th><th>Published measure</th><th>Review lead</th><th>Inspect</th></tr></thead><tbody>{filtered.slice(page*50,(page+1)*50).map(l=><tr key={flowId(l)}><td>{flowEnds(l).join(' → ')}</td><td>{flowNames[flowKind(l)]}<small>{l.period||l.year||'Supplied record'}</small></td><td>{flowMeasure(l)}</td><td>{flowDiscrepancies(l).length?`${flowDiscrepancies(l).length} category discrepancies; review original reports`:'No comparable loss calculation from this relationship'}</td><td><button onClick={()=>{onSelect(l);onClose()}}>Trace on globe ↗</button></td></tr>)}</tbody></table></div>
+ <div className="ev-conflict-pagination"><button disabled={!page} onClick={()=>setPage(p=>p-1)}>Previous</button><span>{filtered.length?`${page*50+1}–${Math.min((page+1)*50,filtered.length)} of ${filtered.length}`:'No matching source relationships'}</span><button disabled={(page+1)*50>=filtered.length} onClick={()=>setPage(p=>p+1)}>Next</button></div>
+ </dialog>;
+}
+export default memo(FlowDirectory);

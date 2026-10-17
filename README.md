@@ -35,7 +35,7 @@ The capped extract has event starts in **August 2026**; it is preliminary and
 partial. Click a point or the red legend for dates, precision, source IDs and
 provenance. Co-location with exports/procurement does not establish corruption.
 
-Small blue moving points add [historical arms-reporting context](docs/GLOBAL_WATCH_DATA.md#arms-declarations-and-accountability): UNROCA declarations for 2020–2022, exporter/importer category comparisons, source reports and separately attributed audit summaries. Reporting discrepancies do not establish diversion. Verified recovery locations and a global missing-weapons total are unavailable; no such locations or total are invented. All flow layers use points without tails.
+Small blue moving points add [historical arms-reporting context](docs/GLOBAL_WATCH_DATA.md#arms-declarations-and-accountability): UNROCA declarations for 2020–2022, exporter/importer category comparisons, source reports and separately attributed audit summaries. Reporting discrepancies do not establish diversion. Verified recovery locations and a global missing-weapons total are unavailable; no such locations or total are invented. All flow layers use points without tails along thin fixed connections. Click a line or **Explore connections** to trace origin/destination, inspect the source measure and follow reporting discrepancies to the records needed for review.
 
 **Procurement Integrity Verification Infrastructure**
 

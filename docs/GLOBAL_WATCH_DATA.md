@@ -179,8 +179,10 @@ conflict variable is added to procurement detection scores.
 
 ### Point animation
 
-All flow layers now use luminous **points without tails or route strokes**.
+All flow layers now use luminous **points without tails, along thin fixed country-to-country lines**.
 Visual traversal remains 1.8 seconds per relationship, independent of economic
 value, quantity or source date. Blue particle radius is 1.9 map units, matching
 the small red conflict points. This is accelerated presentation of dated data,
 not real-time monitoring. System reduced motion remains supported.
+
+The connection register and inspector expose the actual source measure for each relationship. Selecting a route highlights its direction and opens its evidence; the full register includes available relationships omitted from the bounded map sample. Exact bilateral material USD and procurement theft are not inferred from rounded trade shares. Comparable arms discrepancies can be filtered as review leads, with source reports and next-evidence requirements attached. See [connection research](INVESTIGATION_INTERFACE.md#inspecting-a-connection).

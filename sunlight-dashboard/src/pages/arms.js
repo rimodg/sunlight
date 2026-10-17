@@ -27,7 +27,8 @@ export function armsLinks(comparisons){
   const a=countries.get(row.exporter),b=countries.get(row.importer);
   if(!a||!b||a.code===b.code||!([row.exports,row.imports].some(s=>s.status==='reported'&&s.quantity>0)))continue;
   const key=`${a.code}-${b.code}`;
-  if(!links.has(key))links.set(key,{kind:'arms',from:a.center,to:b.center,reporter:a,partner:b,year:row.year,label:`${a.name} → ${b.name} · declared arms relationship`});
+  if(!links.has(key))links.set(key,{kind:'arms',from:a.center,to:b.center,reporter:a,partner:b,year:row.year,comparisons:[],label:`${a.name} → ${b.name} · declared arms relationship`});
+  links.get(key).comparisons.push(row);
  }
  return [...links.values()];
 }

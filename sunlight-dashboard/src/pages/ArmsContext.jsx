@@ -3,15 +3,16 @@ import {armsComparisons,armsFamilies,comparisonCounts} from './arms';
 const number=value=>value===null?'Unknown':value.toLocaleString('en');
 const statusLabel={equal:'Same declared count',different:'Declaration difference',one_sided:'One side absent in mirror',unassessable:'Quantity / duplicate ambiguity'};
 function Declaration({side}){return <><strong>{number(side.quantity)}</strong><small>{side.status==='not_reported'?'No matching declaration in this mirror':side.status==='unassessable'?'Incomplete quantity or repeated source row':'Declared items in this category'}</small>{side.rows.map(r=><details key={r.id}><summary>{r.reporter} report · {r.id.slice(0,8)}</summary><p>Quantity: {r.raw_quantity} · source repetitions: {r.duplicate_count}</p><p>Origin as declared: {r.origin||'Not specified'}. Intermediate location as declared: {r.intermediate||'Not specified'}.</p><p>{r.description} {r.comments}</p><a href={r.source_url} target="_blank" rel="noreferrer">Original state report ↗</a></details>)}</>}
-function ArmsContext({snapshot,country,open,onClose,year,onYear,family,onFamily,category,onCategory}){
+function ArmsContext({snapshot,country,relationship,open,onClose,year,onYear,family,onFamily,category,onCategory}){
  const dialog=useRef(null),[query,setQuery]=useState(''),[status,setStatus]=useState(''),[page,setPage]=useState(0);
  useEffect(()=>{if(open)dialog.current?.showModal();else dialog.current?.close()},[open]);
- useEffect(()=>setPage(0),[query,status,year,country,family,category]);
- const comparisons=useMemo(()=>armsComparisons(snapshot,year,country,family,category),[snapshot,year,country,family,category]);
+ useEffect(()=>setPage(0),[query,status,year,country,family,category,relationship]);
+ useEffect(()=>{if(relationship){setQuery('');setStatus('')}},[relationship]);
+ const comparisons=useMemo(()=>armsComparisons(snapshot,year,country,family,category).filter(r=>!relationship||(r.exporter===relationship.reporter.code&&r.importer===relationship.partner.code)),[snapshot,year,country,family,category,relationship]);
  const counts=comparisonCounts(comparisons),categories=[...new Set((snapshot?.rows||[]).filter(r=>!family||r.family===family).map(r=>r.category))].sort();
  const filtered=comparisons.filter(r=>(!status||r.status===status)&&(!query||`${r.exporter_name} ${r.importer_name} ${r.exporter} ${r.importer} ${r.category}`.toLowerCase().includes(query.toLowerCase())));
  return <dialog ref={dialog} className="ev-country-directory ev-arms-dialog" aria-label="Arms reporting and accountability" onCancel={onClose} onClose={onClose}>
- <div className="ev-directory-heading"><div><p className="ev-eyebrow">ARMS / DECLARATIONS & ACCOUNTABILITY</p><h2>{country?`${country.name} / arms reporting`:'What was declared. What can be checked.'}</h2></div><button onClick={onClose}>Close ×</button></div>
+ <div className="ev-directory-heading"><div><p className="ev-eyebrow">ARMS / DECLARATIONS & ACCOUNTABILITY</p><h2>{relationship?`${relationship.reporter.name} → ${relationship.partner.name}`:country?`${country.name} / arms reporting`:'What was declared. What can be checked.'}</h2></div><button onClick={onClose}>Close ×</button></div>
  {!snapshot?.rows?<p>Arms source unavailable. No transfers or quantities are invented.</p>:<>
  <p>UNROCA · {year} · historical, partial state reporting. Blue moving points show declared country relationships, not recovery sites or current shipments.</p>
  <div className="ev-arms-metrics"><div><strong>{counts.equal+counts.different}</strong><span>Comparable pair/categories</span></div><div><strong>{counts.different}</strong><span>Different declared counts</span></div><div><strong>{counts.one_sided}</strong><span>One-sided mirror coverage</span></div><div><strong>{counts.unassessable}</strong><span>Quantity ambiguities</span></div></div>
