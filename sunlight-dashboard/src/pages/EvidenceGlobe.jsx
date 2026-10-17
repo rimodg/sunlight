@@ -6,7 +6,8 @@ import ProcurementTotals from './ProcurementTotals';
 import PublicProcurement from './PublicProcurement';
 import CountryDirectory from './CountryDirectory';
 import MaterialContributions from './MaterialContributions';
-import {materialLinks, materialScope, originBalanced, routeShare} from './materials';
+import FlowCanvas from './FlowCanvas';
+import {materialLinks, materialScope, originBalanced} from './materials';
 import { publicCountries, publicScope, compactCount } from './publicProcurement';
 import { countryCatalog, matchCountries, resolveCountry, recordCountry, overview, tradeLinks, money } from './watchOverview';
 
@@ -21,7 +22,6 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
   const [rotation, setRotation] = useState(defaultRotation);
   const [zoom, setZoom] = useState(1);
   const [motionAllowed, setMotionAllowed] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const [clock, setClock] = useState(0);
   const [query, setQuery] = useState('');
   const [searchMessage, setSearchMessage] = useState('');
   const [trade, setTrade] = useState(null);
@@ -35,7 +35,6 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
   const publishedCountries = useMemo(() => publicCountries(published, sourceYear), [published, sourceYear]);
   const drag = useRef(null);
   const projection = useMemo(() => geoOrthographic().translate([360, 340]).scale(300 * zoom).rotate(rotation).clipAngle(90), [rotation, zoom]);
-  const path = geoPath(projection);
   const mapped = records.filter(r => r.location);
   const suppliedLinks = useMemo(() => records.flatMap(r => (r.links || []).map(link => ({ ...link, recordIndex: r.index }))), [records]);
   const observedTrade = useMemo(() => tradeLinks(trade), [trade]);
@@ -60,9 +59,8 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
     const selectedLinks = suppliedLinks.filter(l => l.recordIndex === selected);
     const otherLinks = suppliedLinks.filter(l => l.recordIndex !== selected);
     const routes = [...drawnTrade, ...drawnMaterials, ...otherLinks.slice(0, 20), ...selectedLinks.slice(0, 20)];
-    return routes.map(link => { const interpolate = geoInterpolate(link.from, link.to); return { ...link, interpolate, geometry: { type: 'LineString', coordinates: Array.from({ length: 65 }, (_, i) => interpolate(i / 64)) } }; });
+    return routes.map(link => { const interpolate = geoInterpolate(link.from, link.to); return { ...link, geometry: { type: 'LineString', coordinates: Array.from({ length: 129 }, (_, i) => interpolate(i / 128)) } }; });
   }, [suppliedLinks, drawnTrade, drawnMaterials, selected]);
-  const routePaths = useMemo(() => links.map(link => geoPath(projection)(link.geometry)), [links, projection]);
 
   useEffect(() => {
     try { localStorage.removeItem('sunlight.globe.background.v1'); } catch { /* Storage may be disabled. */ }
@@ -99,19 +97,18 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
     return () => preference.removeEventListener('change', change);
   }, []);
   useEffect(() => {
-    if (!motionAllowed) return;
+    if (!motionAllowed || country) return;
     let frame, previous = null;
     function tick(now) {
       frame = requestAnimationFrame(tick);
       if (document.hidden) { previous = null; return; }
       if (previous === null) { previous = now; return; }
       const elapsed = now - previous;
-      if (elapsed < 1000 / 30) return;
+      if (elapsed < 1000 / 20) return;
       const seconds = Math.min(elapsed / 1000, .1);
       previous = now;
       // Positive longitude rotation moves the surface eastward; one turn / 180 s.
       if (!country) setRotation(([longitude, latitude]) => [(longitude + seconds * 2) % 360, latitude]);
-      setClock(time => time + seconds);
     }
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
@@ -125,7 +122,7 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
   const front = coordinates => geoDistance(coordinates, [-rotation[0], -rotation[1]]) <= Math.PI / 2;
   const chooseCountry = useCallback(value => { onCountry(value); setQuery(value.name); setSearchMessage(''); }, [onCountry]);
   function selectMapCountry(event) {
-    if (event.target.closest('[data-marker], [data-flow], [data-country]') || drag.current?.moved) return;
+    if (event.target.closest('[data-marker], [data-country]') || drag.current?.moved) return;
     const matrix = event.currentTarget.getScreenCTM(); if (!matrix) return;
     const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
     if (Math.hypot(point.x - 360, point.y - 340) > projection.scale()) return;
@@ -142,7 +139,7 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
     </div>
     <svg viewBox="0 0 720 680" className="ev-globe" role="group" aria-label="Interactive globe. Drag or use arrow keys to rotate." tabIndex="0" onClick={selectMapCountry}
       onKeyDown={e => { const moves = { ArrowLeft: [-10, 0], ArrowRight: [10, 0], ArrowUp: [0, -10], ArrowDown: [0, 10] }; if (moves[e.key]) { e.preventDefault(); rotate(...moves[e.key]); } }}
-      onPointerDown={e => { if (e.target.closest('[data-marker], [data-flow], [data-country]')) return; drag.current = { x: e.clientX, y: e.clientY, moved: false }; e.currentTarget.setPointerCapture(e.pointerId); }}
+      onPointerDown={e => { if (e.target.closest('[data-marker], [data-country]')) return; drag.current = { x: e.clientX, y: e.clientY, moved: false }; e.currentTarget.setPointerCapture(e.pointerId); }}
       onPointerMove={e => { if (!drag.current || drag.current.x == null) return; rotate((e.clientX - drag.current.x) * .3, -(e.clientY - drag.current.y) * .3); drag.current = { x: e.clientX, y: e.clientY, moved: drag.current.moved || Math.abs(e.movementX) + Math.abs(e.movementY) > 2 }; }}
       onPointerUp={() => { const moved = drag.current?.moved; drag.current = null; if (moved) { drag.current = { moved: true }; setTimeout(() => { drag.current = null; }, 0); } }} onPointerCancel={() => { drag.current = null; }}>
       <defs><radialGradient id="ev-ocean" cx="38%" cy="30%"><stop stopColor="#162b34"/><stop offset="1" stopColor="#0c1922"/></radialGradient><clipPath id="ev-sphere-clip"><path d={basemap.sphere}/></clipPath></defs>
@@ -153,18 +150,9 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
         <path d={basemap.borders} fill="none" stroke="#5c737a" strokeWidth=".5"/>
         {countryShape && <path d={basemap.country} className="ev-country-highlight"/>}
         {country && !countryShape && <g transform={`translate(${projection(country.center).join(',')})`}><circle r="8" fill="#e2c36d"/><text y="-18" textAnchor="middle" fill="#f4d998" fontSize="14">{country.name}</text></g>}
-        {links.map((link, i) => {
-          const progress = (clock / 6 + i * .27) % 1;
-          const point = link.interpolate(progress);
-          const trail = { type: 'LineString', coordinates: Array.from({ length: 10 }, (_, n) => link.interpolate(Math.max(0, progress - .1 + n / 90))) };
-          return <g key={`${link.recordIndex ?? 'trade'}-${i}`} className={`ev-procurement-flow ${link.kind === 'material' ? 'material' : link.usd ? 'trade' : 'procurement'}`} data-flow="true">
-            <title>{link.kind === 'material' ? `${link.label}, ${link.period}. ${routeShare(link)}. CEPII BACI; schematic exporter-to-importer connection, not shipment tracking.` : link.usd ? `${link.label}: ${money(link.usd, 'USD')} exports, ${link.period}. UN Comtrade; country-center connection, not a shipping route.` : `${link.label}. Supplied procurement relationship; not shipment tracking.`}</title>
-            <path d={routePaths[i]} className="ev-flow-route"/>
-            <path d={path(trail)} className="ev-flow-trail"/>
-            {front(point) && <circle className="ev-flow-particle" cx={projection(point)[0]} cy={projection(point)[1]} r={link.kind === 'material' ? 3.6 : link.usd ? 3.6 : 3}/>}
-            {[link.from, link.to].filter(front).map((coordinate, j) => <circle key={j} cx={projection(coordinate)[0]} cy={projection(coordinate)[1]} r="2" className="ev-flow-endpoint"/>)}
-          </g>;
-        })}
+        <foreignObject x="0" y="0" width="720" height="680" pointerEvents="none" aria-hidden="true">
+          <FlowCanvas links={links} rotation={rotation} zoom={zoom} motionAllowed={motionAllowed}/>
+        </foreignObject>
         {countryCounts.map(({country:c,count}) => {
           if (!front(c.center)) return null;
           const [x,y] = projection(c.center), source = publishedCountries.get(c.code), material = materialCountries.get(c.alpha3);
