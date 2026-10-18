@@ -1,3 +1,5 @@
+The default application entry is now the [Operations desk](OPERATIONS_PILOT.md), with persisted publisher snapshots and review history. The geographic interface described below remains under **Global watch**, or `/watch/#watch`.
+
 # Global watch and country research
 
 `/watch/` opens on a full-width globe. The record register and evidence inspector open as overlays so they do not permanently narrow the map. Import continues to use the live single/batch analysis API, jurisdiction calibration, capacity allocation, rule citations, input gaps and exact-response verification packets.

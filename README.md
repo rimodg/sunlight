@@ -6,11 +6,9 @@ coverage. Read the [charter](docs/CHARTER_v2_global_humanitarian_watch.md) and t
 [institutional review brief](docs/INSTITUTIONAL_REVIEW.md) for current capability
 boundaries, the evaluation protocol, and a reproducible demonstration.
 
-The dashboard's default page is a live evidence workspace: supplied JSON goes
-through the API, and results expose findings, normalized-input gaps, calculation
-traces, and downloadable content-addressed receipts. It does not present random
-fixture scores as operational results. Historical evaluation metrics below must
-be interpreted with the sampling and corpus limits in the review brief.
+The dashboard opens on the [Operations desk](docs/OPERATIONS_PILOT.md): register a publisher, submit versioned source snapshots, compare expected and observed measures, run the existing engines, and retain review notes and evidence history. Unknown observations and mismatched units do not become loss estimates. The ledger is a shared-access SQLite pilot; it needs a persistent hosting volume and validated institutional mappings before institutional use. No UN data connection is active.
+
+The **Global watch** tab retains geographic context and the session JSON analysis workspace. Supplied OCDS-shaped JSON goes through the API, exposing findings, input gaps, calculation traces and downloadable content-addressed receipts. No random fixture scores are presented as operational results. Historical evaluation metrics below retain the sampling and corpus limits in the review brief.
 
 The [global watch interface](docs/INVESTIGATION_INTERFACE.md) provides country
 research, category/value drilldowns, document registers and completion-evidence

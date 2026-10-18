@@ -61,3 +61,9 @@ coverage and query links. It may remain unavailable if the provider rejects or
 limits requests. No illustrative routes are substituted. The annual procurement
 context counter stays unavailable until a cited baseline is configured; see
 [data sources and configuration](GLOBAL_WATCH_DATA.md).
+
+## Persistent operations pilot
+
+The website now opens on **Operations desk**. Register a source with an explicitly selected calibration profile, submit cumulative versioned source snapshots, open a case, follow it and save a review note. The desk compares due, same-unit/same-period measurements and saves available engine results. **Global watch** retains the globe and prior session analysis tools. Source records are not preloaded or invented.
+
+Use [the operational schema and workflow](OPERATIONS_PILOT.md) for the API, connector client and deployment requirements. Before retaining institutional records on Render, attach a persistent disk and set `SUNLIGHT_OPERATIONS_DB` to a writable path on that disk. Without it, this pilot's SQLite ledger can disappear on redeploy. The feature is an attributed push API; no live UN connection, proprietary source mapping or institutional SSO has been activated.

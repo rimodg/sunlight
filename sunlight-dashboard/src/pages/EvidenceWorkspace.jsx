@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './EvidenceWorkspace.css';
 import EvidenceGlobe from './EvidenceGlobe';
+import OperationsDesk from './OperationsDesk';
 import { investigationRecords } from './evidenceGeography';
 import { recordCountry } from './watchOverview';
 import { analysisRequest } from './evidenceRequest';
@@ -51,7 +52,7 @@ function packetText(run) {
 const title = value => String(value || 'Not assessed').replaceAll('_', ' ');
 
 export default function EvidenceWorkspace() {
-  const [tab, setTab] = useState('review');
+  const [tab, setTab] = useState(()=>window.location.hash==='#watch'?'review':'operations');
   const [country, setCountry] = useState(null);
   const [deskPanel, setDeskPanel] = useState(null);
   const inspect = index => { setSelected(index); setDeskPanel('inspector'); };
@@ -143,12 +144,13 @@ export default function EvidenceWorkspace() {
     </header>
     <main className="ev-main">
       <nav className="ev-tabs" aria-label="Workspace sections">
-        {[['review', 'Investigation'], ['method', 'Method & interpretation'], ['assurance', 'Capabilities & readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}
-        <button aria-pressed={deskPanel === 'register'} onClick={() => setDeskPanel(deskPanel === 'register' ? null : 'register')}>Record register</button>
-        <button aria-pressed={deskPanel === 'inspector'} onClick={() => setDeskPanel(deskPanel === 'inspector' ? null : 'inspector')}>Evidence inspector</button>
+        {[['operations', 'Operations desk'], ['review', 'Global watch'], ['method', 'Method & interpretation'], ['assurance', 'Capabilities & readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}
+        <button aria-pressed={deskPanel === 'register'} onClick={() => {setTab('review');setDeskPanel(tab === 'review' && deskPanel === 'register' ? null : 'register')}}>Session record register</button>
+        <button aria-pressed={deskPanel === 'inspector'} onClick={() => {setTab('review');setDeskPanel(tab === 'review' && deskPanel === 'inspector' ? null : 'inspector')}}>Session evidence inspector</button>
         <button className="ev-import-button" onClick={() => { setTab('review'); setImportOpen(true); }}>+ Import evidence</button>
       </nav>
 
+      {tab === 'operations' && <OperationsDesk profiles={profiles}/>}
       {tab === 'review' && <>
         <div className="ev-workspace">
           <aside className="ev-queue" hidden={deskPanel !== 'register'} aria-label="Record queue"><button className="ev-panel-close" onClick={() => setDeskPanel(null)}>Close register ×</button>

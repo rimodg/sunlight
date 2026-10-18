@@ -557,6 +557,8 @@ from watch_conflicts import router as watch_conflicts_router
 app.include_router(watch_conflicts_router)
 from watch_arms import router as watch_arms_router
 app.include_router(watch_arms_router)
+from operations import router as operations_router
+app.include_router(operations_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1227,6 +1229,8 @@ async def assurance():
              "scope": "ATT profile, rules, UN Register adapter, and historical UNROCA reporting context at /watch-data/arms. Reporting comparisons are not a diversion determination. No general transfer-analysis API."},
             {"name": "Historical arms reporting context", "state": "API available", "endpoint": "/watch-data/arms",
              "scope": "Partial 2020–2022 UNROCA mirror and attributed audit summaries. No verified recovery-site map or global diversion total."},
+            {"name": "Pilot operations ledger", "state": "API available", "endpoint": "/operations/status",
+             "scope": "Attributed push ingestion, versioned records, exact comparisons, persisted engine results and review history. UN connector not connected; persistent volume and institutional access controls remain required."},
             {"name": "Cross-category Registry and Need Ledger", "state": "Design", "endpoint": None,
              "scope": "Charter v2 direction, not a deployed global observation service."},
             {"name": "Payment control and enforcement", "state": "Outside current authority", "endpoint": None,
