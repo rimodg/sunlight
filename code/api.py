@@ -559,6 +559,8 @@ from watch_arms import router as watch_arms_router
 app.include_router(watch_arms_router)
 from operations import router as operations_router
 app.include_router(operations_router)
+from research import router as research_router
+app.include_router(research_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1231,6 +1233,8 @@ async def assurance():
              "scope": "Partial 2020–2022 UNROCA mirror and attributed audit summaries. No verified recovery-site map or global diversion total."},
             {"name": "Pilot operations ledger", "state": "API available", "endpoint": "/operations/status",
              "scope": "Attributed push ingestion, versioned records, exact comparisons, persisted engine results and review history. UN connector not connected; persistent volume and institutional access controls remain required."},
+            {"name": "Saved evidence research", "state": "API available", "endpoint": "/research/status",
+             "scope": "Bounded cross-layer retrieval, page-cited PDF text and saved investigation history. Optional model synthesis requires configured credentials and explicit excerpt-sharing authorization. No complete global census or causal inference."},
             {"name": "Cross-category Registry and Need Ledger", "state": "Design", "endpoint": None,
              "scope": "Charter v2 direction, not a deployed global observation service."},
             {"name": "Payment control and enforcement", "state": "Outside current authority", "endpoint": None,

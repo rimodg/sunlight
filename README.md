@@ -8,6 +8,8 @@ boundaries, the evaluation protocol, and a reproducible demonstration.
 
 The dashboard opens on the [Operations desk](docs/OPERATIONS_PILOT.md): register a publisher, submit versioned source snapshots, compare expected and observed measures, run the existing engines, and retain review notes and evidence history. Unknown observations and mismatched units do not become loss estimates. The ledger is a shared-access SQLite pilot; it needs a persistent hosting volume and validated institutional mappings before institutional use. No UN data connection is active.
 
+The [Research desk](docs/RESEARCH_WORKSPACE.md) adds saved, source-cited inquiries across the economic context and operations ledger, text-readable PDF uploads with page references, review notes and following. Evidence retrieval works without AI. Optional model synthesis needs securely configured credentials, a model ID and explicit authorization to share selected excerpts for each run. Questions, source facts, existing calculations and model hypotheses remain separate; national context does not establish community conditions or causes.
+
 The **Global watch** tab retains geographic context and the session JSON analysis workspace. Supplied OCDS-shaped JSON goes through the API, exposing findings, input gaps, calculation traces and downloadable content-addressed receipts. No random fixture scores are presented as operational results. Historical evaluation metrics below retain the sampling and corpus limits in the review brief.
 
 The [global watch interface](docs/INVESTIGATION_INTERFACE.md) provides country
@@ -45,7 +47,7 @@ SUNLIGHT verifies the structural integrity of public contracts before money is s
 
 Existing institutional tools measure statistical deviation — they flag contracts where the price looks unusual. SUNLIGHT looks at the structure behind the contract: whether the awarded entity has the required capability, whether a competitive process actually occurred, whether the stakeholder dependencies and procedural commitments are internally consistent. It detects structural contradictions that live in the topology of a contract's dependency graph, a class of finding that indicator-based methods are architecturally unable to produce. Contracts where the price was calibrated to look clean but the structure underneath is broken.
 
-The system is deterministic. Given the same input, it produces the same output. No machine learning, no stochastic components. Every flag traces to a rule, every rule traces to a jurisdiction-specific legal citation, every finding is framed as a risk indicator, not an allegation.
+The core verification engines are deterministic: the same input and calibration produce the same output. Optional research-model synthesis is separate, may vary between runs, and does not modify those engine results. Every flag traces to a rule, every rule traces to a jurisdiction-specific legal citation, every finding is framed as a risk indicator, not an allegation.
 
 SUNLIGHT integrates once at the institutional level and covers an entire operational footprint. Each contract is analyzed against its execution country's legal framework through jurisdiction profiles. Adding a new country is a data task — authoring a profile — not a code change.
 
