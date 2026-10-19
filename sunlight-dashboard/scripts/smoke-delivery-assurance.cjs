@@ -321,9 +321,12 @@ const assert = require("node:assert/strict");
     .getByRole("button", { name: "Locate on watch ↗", exact: true })
     .click();
   await p
-    .locator(".ev-country-research h2")
-    .filter({ hasText: "Ghana" })
+    .getByRole("status")
+    .filter({ hasText: "Country research: Ghana" })
     .waitFor();
+  assert(await p.locator(".ev-world-canvas").isVisible());
+  assert(await p.locator(".da-mission h2").isVisible());
+  await p.getByRole("button", { name: "Close tools ×", exact: true }).click();
   await p
     .getByRole("button", { name: "Delivery assurance", exact: true })
     .click();

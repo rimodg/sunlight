@@ -22,4 +22,4 @@ export function routeVector(samples, progress) {
  const length=Math.hypot(x,y,z);
  return [x/length,y/length,z/length];
 }
-export function flowProgress(seconds,index) { return (seconds/FLOW_LAP_SECONDS+index*.27)%1; }
+export function flowProgress(seconds,index,duration=FLOW_LAP_SECONDS) { return (seconds/duration+index*.381966)%1; }

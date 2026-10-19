@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { geoContains, geoDistance, geoGraticule10, geoInterpolate, geoOrthographic, geoPath } from 'd3-geo';
+import {createPortal} from 'react-dom';
 import { feature, mesh } from 'topojson-client';
 import atlas from 'world-atlas/countries-110m.json';
 import ProcurementTotals from './ProcurementTotals';
@@ -9,14 +10,15 @@ import MaterialContributions from './MaterialContributions';
 import FlowCanvas from './FlowCanvas';
 import SourceCoverage from './SourceCoverage';
 import FlowDirectory, {FlowInspector} from './FlowInspector';
-import {flowId,flowKind,flowEnds,pickFlow,flowColors,flowNames} from './flows';
+import {flowId,flowKind,flowEnds,pickFlow,flowNames} from './flows';
 import ArmsContext from './ArmsContext';
 import {armsComparisons, armsLinks} from './arms';
 import ConflictContext from './ConflictContext';
-import ConflictCanvas from './ConflictCanvas';
+import {globeProjector,unitVector} from './flowMotion';
+import {flowCorridors,corridorContains} from './flowScene';
 import {conflictPoints, countryConflictPoints, pickConflictPoint, violenceTypes} from './conflicts';
 import {materialLinks, materialScope, originBalanced} from './materials';
-import { publicCountries, publicScope, compactCount } from './publicProcurement';
+import { publicCountries, publicScope } from './publicProcurement';
 import { countryCatalog, matchCountries, resolveCountry, recordCountry, overview, tradeLinks, money } from './watchOverview';
 
 const land = feature(atlas, atlas.objects.land);
@@ -26,9 +28,14 @@ const countryShapes = feature(atlas, atlas.objects.countries).features;
 const countryDatasetURL = new URL('../data/countries.json', import.meta.url).href;
 const countryLicenseURL = new URL('../data/COUNTRIES-LICENSE.txt', import.meta.url).href;
 const defaultRotation = [-12, -15];
-export default function EvidenceGlobe({ records, selected, onSelect, country, onCountry, origin, active=true, onInvestigate }) {
+export default function EvidenceGlobe({ records, selected, onSelect, country, onCountry, origin, active=true, onInvestigate,connectionsOpen=false,onConnections,onCloseConnections }) {
+  const [portalReady,setPortalReady]=useState(false);
+  useEffect(()=>setPortalReady(true),[]);
   const [rotation, setRotation] = useState(defaultRotation);
   const [zoom, setZoom] = useState(1);
+  const cameraRef=useRef({rotation:[...defaultRotation],zoom:1});
+  const [hoveredFlow,setHoveredFlow]=useState(null);
+  const lastHover=useRef(0);
   const [motionAllowed, setMotionAllowed] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [query, setQuery] = useState('');
   const [searchMessage, setSearchMessage] = useState('');
@@ -58,7 +65,6 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
   const drag = useRef(null);
   const cameraBeforeTrace = useRef(null);
   const panel = useRef(null), controls = useRef(null), caption = useRef(null);
-  const projection = useMemo(() => geoOrthographic().translate([360, 340]).scale(300 * zoom).rotate(rotation).clipAngle(90), [rotation, zoom]);
   const mapped = records.filter(r => r.location);
   const suppliedLinks = useMemo(() => records.flatMap(r => (r.links || []).map(link => ({ ...link, recordIndex: r.index }))), [records]);
   const observedTrade = useMemo(() => tradeLinks(trade), [trade]);
@@ -79,25 +85,17 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
   const drawnArms = useMemo(() => originBalanced(declaredArmsLinks, country ? 80 : 160), [declaredArmsLinks, country]);
   const closeArms = useCallback(() => {setArmsOpen(false);setArmsRelationship(null)}, []);
   useEffect(()=>{closeFlow()},[armsYear,armsFamily,armsCategory,materialCode]);
-  const basemap = useMemo(() => {
-    const draw = geoPath(projection);
-    return { sphere: draw({ type: 'Sphere' }), grid: draw(graticule), land: draw(land), borders: draw(borders), country: countryShape ? draw(countryShape) : null };
-  }, [projection, countryShape]);
-  const countryCounts = useMemo(() => {
-    const counts = new Map();
-    for (const record of records) { const c = recordCountry(record.record); if (c) { const previous = counts.get(c.code) || { country: c, count: 0 }; previous.count++; counts.set(c.code, previous); } }
-    return countryCatalog.map(country => ({ country, count: counts.get(country.code)?.count || 0 }));
-  }, [records]);
   const availableFlows = useMemo(() => [...scopedTrade,...materialFlows,...declaredArmsLinks,...suppliedLinks], [scopedTrade,materialFlows,declaredArmsLinks,suppliedLinks]);
   const links = useMemo(() => {
     const selectedLinks = suppliedLinks.filter(l => l.recordIndex === selected);
     const otherLinks = suppliedLinks.filter(l => l.recordIndex !== selected);
     const routes = [...drawnTrade, ...drawnMaterials, ...drawnArms, ...otherLinks.slice(0, 20), ...selectedLinks.slice(0, 20)];
-    const visible=routes.filter(l=>!flowLayer||flowKind(l)===flowLayer);
-    if(flowSelection && !visible.some(l=>flowId(l)===flowId(flowSelection)))visible.push(flowSelection);
+    const visible=flowCorridors(routes.filter(l=>!flowLayer||flowKind(l)===flowLayer));
+    if(flowSelection){const index=visible.findIndex(c=>corridorContains(c,flowSelection));if(index>=0)visible[index]={...flowSelection,members:visible[index].members};else visible.push(flowSelection)}
     return visible.map(link => { const interpolate = geoInterpolate(link.from, link.to); return { ...link, geometry: { type: 'LineString', coordinates: Array.from({ length: 129 }, (_, i) => interpolate(i / 128)) } }; });
   }, [suppliedLinks, drawnTrade, drawnMaterials, drawnArms, selected, flowLayer, flowSelection]);
 
+  const scene=useMemo(()=>({land,borders,graticule,countryShape,country,countries:countryCatalog.map(c=>({...c,vector:unitVector(c.center)})),conflicts:scopedConflictPoints,records:mapped}),[countryShape,country,scopedConflictPoints,records]);
   const drawnCounts = useMemo(()=>links.reduce((counts,l)=>{const kind=flowKind(l);counts[kind]=(counts[kind]||0)+1;return counts},{}),[links]);
 
   useEffect(() => {
@@ -146,60 +144,49 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
     preference.addEventListener('change', change);
     return () => preference.removeEventListener('change', change);
   }, []);
-  useEffect(() => {
-    if (!active || !motionAllowed || country || flowSelection) return;
-    let frame, previous = null;
-    function tick(now) {
-      frame = requestAnimationFrame(tick);
-      if (document.hidden) { previous = null; return; }
-      if (previous === null) { previous = now; return; }
-      const elapsed = now - previous;
-      if (elapsed < 1000 / 20) return;
-      const seconds = Math.min(elapsed / 1000, .1);
-      previous = now;
-      // Positive longitude rotation moves the surface eastward; one turn / 180 s.
-      if (!country) setRotation(([longitude, latitude]) => [(longitude + seconds * 2) % 360, latitude]);
-    }
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [active, motionAllowed, country, flowSelection]);
 
   function focus() {
     const location = records[selected]?.location;
     if (location) { setRotation([-location.coordinates[0], -location.coordinates[1]]); }
   }
-  function rotate(dx, dy) { setRotation(([x, y]) => [x + dx, Math.max(-85, Math.min(85, y + dy))]); }
-  const front = coordinates => geoDistance(coordinates, [-rotation[0], -rotation[1]]) <= Math.PI / 2;
+  function rotate(dx,dy){const [x,y]=cameraRef.current.rotation;const next=[x+dx,Math.max(-85,Math.min(85,y+dy))];if(drag.current?.x!=null)cameraRef.current={...cameraRef.current,rotation:next};setRotation(next)}
   const chooseCountry = useCallback(value => { onCountry(value); setQuery(value.name); setSearchMessage(''); }, [onCountry]);
   function selectConflictObservation(event) {
     if (drag.current?.moved) return;
     const matrix = event.currentTarget.getScreenCTM(); if (!matrix) return;
     const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
-    const observation = pickConflictPoint(scopedConflictPoints, rotation, zoom, [point.x, point.y]);
+    const observation = pickConflictPoint(scopedConflictPoints, cameraRef.current.rotation, cameraRef.current.zoom, [point.x, point.y],5/Math.hypot(matrix.a,matrix.b));
     if (observation) { event.stopPropagation(); setConflictSelection(observation); setConflictsOpen(true); }
   }
   function traceFlow(link) {
-    if(!flowSelection)cameraBeforeTrace.current={rotation,zoom};
+    if(!flowSelection)cameraBeforeTrace.current={rotation:[...cameraRef.current.rotation],zoom:cameraRef.current.zoom};
     setFlowSelection(link);
+    onConnections?.();
+    requestAnimationFrame(()=>document.getElementById('watch-connection-dock')?.scrollTo({top:0,behavior:motionAllowed?'smooth':'auto'}));
     const midpoint=geoInterpolate(link.from,link.to)(.5);
-    setRotation([-midpoint[0],-midpoint[1]]);setZoom(Math.min(6,Math.max(1,.65/Math.max(.01,Math.sin(geoDistance(link.from,link.to)/2)))));
+    setRotation([-midpoint[0],-midpoint[1]]);setZoom(Math.min(1.08,Math.max(.95,.70/Math.max(.01,Math.sin(geoDistance(link.from,link.to)/2)))));
   }
   function closeFlow(){setFlowSelection(null);if(cameraBeforeTrace.current){setRotation(cameraBeforeTrace.current.rotation);setZoom(cameraBeforeTrace.current.zoom);cameraBeforeTrace.current=null}}
-  function changeFlowLayer(value){setFlowLayer(value);closeFlow()}
+  function changeFlowLayer(value){setFlowLayer(value);setHoveredFlow(null);closeFlow()}
   function selectMapCountry(event) {
     if (event.target.closest('[data-marker], [data-country]') || drag.current?.moved) return;
     const matrix = event.currentTarget.getScreenCTM(); if (!matrix) return;
     const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
-    if (Math.hypot(point.x - 360, point.y - 340) > projection.scale()) return;
-    const flow=pickFlow(links,rotation,zoom,[point.x,point.y],4*720/event.currentTarget.getBoundingClientRect().width);
+    const camera=cameraRef.current,currentProjection=geoOrthographic().translate([360,340]).rotate(camera.rotation).scale(300*camera.zoom);
+    if (Math.hypot(point.x - 360, point.y - 340) > currentProjection.scale()) return;
+    const project=globeProjector(camera.rotation,300*camera.zoom);
+    const record=mapped.find(r=>{const p=project(unitVector(r.location.coordinates));return p[2]>=0&&Math.hypot(p[0]-point.x,p[1]-point.y)<7/Math.hypot(matrix.a,matrix.b)});
+    if(record){onSelect(record.index);return}
+    const flow=pickFlow(links,camera.rotation,camera.zoom,[point.x,point.y],5/Math.hypot(matrix.a,matrix.b));
     if(flow){traceFlow(flow);return}
-    const coordinates = projection.invert([point.x, point.y]);
+    const coordinates = currentProjection.invert([point.x, point.y]);
     const shape = countryShapes.find(s => geoContains(s, coordinates));
     const match = shape && countryCatalog.find(c => c.numeric && c.numeric === String(shape.id).padStart(3, '0'));
     if (match) chooseCountry(match);
   }
   const matches = query && query !== country?.name ? matchCountries(query) : [];
   return <section ref={panel} className="ev-globe-panel" aria-label="Geographic evidence view">
+    {(country||flowSelection)&&<div className="ev-camera-scope" role="status">{country?'Country research: '+country.name:'Tracing: '+flowEnds(flowSelection).join(' → ')}</div>}
     <div className="ev-map-heading"><div><span className="ev-eyebrow">GLOBAL WATCH / GEOGRAPHIC CONTEXT</span><h1>Global economic watch</h1><p className="ev-watch-time-basis">Source-dated relationships · direction animation · amounts and source periods in each connection</p></div><div className="ev-watch-counters"><PublicProcurement snapshot={published} country={country} year={sourceYear} onYear={setSourceYear} onCountry={chooseCountry}/><MaterialContributions snapshot={materials} country={country} onCountry={onCountry} productCode={materialCode} onProduct={setMaterialCode} links={materialFlows} drawn={drawnCounts.material||0}/><ProcurementTotals records={records} country={country} context={context} origin={origin} onSelect={onSelect}/></div></div>
     <div className="ev-country-search"><form onSubmit={e => { e.preventDefault(); const exact = resolveCountry(query); if (exact) chooseCountry(exact); else setSearchMessage('Choose a matching country below.'); }}><label htmlFor="country-research">Research a country or territory</label><div><input id="country-research" type="search" autoComplete="off" placeholder="Country name or ISO code" value={query} onChange={e => { setQuery(e.target.value); setSearchMessage(''); }}/><button type="submit">Find ↗</button></div></form>{matches.length > 0 && <ul>{matches.map(c => <li key={c.code}><button onClick={() => chooseCountry(c)}>{c.name}<span>{c.code}</span></button></li>)}</ul>}{searchMessage && <p role="status">{searchMessage}</p>}<CountryDirectory snapshot={published} year={sourceYear} onCountry={chooseCountry}/>
       {country && <div className="ev-country-research"><span className="ev-eyebrow">COUNTRY RESEARCH</span><h2>{country.name}</h2><p>{country.official}</p>{!countryShape && <p>Boundary unavailable at this basemap resolution. The map marks a country reference point.</p>}<div className="ev-published-country"><span>PUBLISHED PROCUREMENT / {publicData?.year || 'SOURCE COVERAGE'}</span><strong>{publicData ? money(publicData.usd, 'USD') : 'No published figure'}</strong><p>{publicData ? `${publicData.contracts.toLocaleString('en')} contracts in publisher coverage. Open the published total above for markets and provenance.` : 'This country is included. No spending value is invented where the source has no observation.'}</p></div><div className="ev-country-materials"><span>RAW MATERIALS & PRIMARY INPUTS / {materials?.year || 'SOURCE'}</span><strong>{countryMaterials?.hasObservation ? money(countryMaterials.exports, 'USD') : 'No source observation'}</strong><p>Selected material exports · {countryMaterials?.products.filter(p=>p.exports>0).length || 0} HS4 headings. Open the white total for materials, partners and source coverage.</p></div><div className="ev-country-conflicts"><span>RECORDED VIOLENCE / UCDP 2026 EXTRACT</span><p>{conflicts?.events ? `${scopedConflictPoints.reduce((n,p)=>n+p.events.length,0)} plotted source records at ${scopedConflictPoints.length} reference locations within the map boundary. Coverage is partial; a missing point does not establish peace.` : 'Conflict data unavailable. No location is invented.'}</p><button onClick={()=>{setConflictSelection(null);setConflictsOpen(true)}}>Conflict context & sources ↗</button></div><div className="ev-country-arms"><span>ARMS DECLARATIONS / {armsYear}</span><p>{armsRows.length} declared pair/categories in partial UNROCA mirror coverage. Missing data is unknown.</p><button onClick={()=>setArmsOpen(true)}>Arms reporting & accountability ↗</button></div><div className="ev-country-numbers"><div><strong>{countryData.records}</strong><span>Supplied records</span></div><div><strong>{countryData.documents}</strong><span>Listed documents</span></div><div><strong>{countryData.missingCompletion}</strong><span>Completion-link gaps</span></div><div><strong>{scopedTrade.length}</strong><span>Available trade links</span></div></div>{countryData.amounts.map(a => <p className="ev-country-amount" key={`${a.currency}-${a.basis}`}>{money(a.amount,a.currency)} <small>{a.basis}</small></p>)}<p>{countryData.milestonesMet} / {countryData.milestones} implementation milestones marked met in supplied records.</p><p>Analysis figures cover your supplied records. Published figures come from the cited source dataset; open either total above for its own evidence and coverage.</p>{!countryData.records && <p>No contract-level records have been analyzed for this buyer country in this session. Published aggregates are shown separately above.</p>}<button onClick={() => onCountry(null)}>Return to global watch ↗</button></div>}
@@ -207,45 +194,21 @@ export default function EvidenceGlobe({ records, selected, onSelect, country, on
     <svg viewBox="0 0 720 680" className="ev-globe" role="group" aria-label="Interactive globe. Drag or use arrow keys to rotate." tabIndex="0" onClick={selectMapCountry} onClickCapture={selectConflictObservation}
       onKeyDown={e => { const moves = { ArrowLeft: [-10, 0], ArrowRight: [10, 0], ArrowUp: [0, -10], ArrowDown: [0, 10] }; if (moves[e.key]) { e.preventDefault(); rotate(...moves[e.key]); } }}
       onPointerDown={e => { if (e.target.closest('[data-marker], [data-country]')) return; drag.current = { x: e.clientX, y: e.clientY, moved: false }; e.currentTarget.setPointerCapture(e.pointerId); }}
-      onPointerMove={e => { if (!drag.current || drag.current.x == null) return; rotate((e.clientX - drag.current.x) * .3, -(e.clientY - drag.current.y) * .3); drag.current = { x: e.clientX, y: e.clientY, moved: drag.current.moved || Math.abs(e.movementX) + Math.abs(e.movementY) > 2 }; }}
+      onPointerLeave={()=>setHoveredFlow(null)} onPointerMove={e => { if (!drag.current || drag.current.x == null){if(performance.now()-lastHover.current<80)return;lastHover.current=performance.now();const matrix=e.currentTarget.getScreenCTM();if(!matrix)return;const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(matrix.inverse());const camera=cameraRef.current;const link=pickFlow(links,camera.rotation,camera.zoom,[p.x,p.y],5/Math.hypot(matrix.a,matrix.b));setHoveredFlow(old=>old&&link&&flowId(old)===flowId(link)?old:link);return;} rotate((e.clientX - drag.current.x) * .3, -(e.clientY - drag.current.y) * .3); drag.current = { x: e.clientX, y: e.clientY, moved: drag.current.moved || Math.abs(e.movementX) + Math.abs(e.movementY) > 2 }; }}
       onPointerUp={() => { const moved = drag.current?.moved; drag.current = null; if (moved) { drag.current = { moved: true }; setTimeout(() => { drag.current = null; }, 0); } }} onPointerCancel={() => { drag.current = null; }}>
-      <defs><radialGradient id="ev-ocean" cx="38%" cy="30%"><stop stopColor="#162b34"/><stop offset="1" stopColor="#0c1922"/></radialGradient><clipPath id="ev-sphere-clip"><path d={basemap.sphere}/></clipPath></defs>
-      <path d={basemap.sphere} fill="url(#ev-ocean)" stroke="#46606a" strokeWidth="1"/>
-      <g clipPath="url(#ev-sphere-clip)">
-        <path d={basemap.grid} fill="none" stroke="#28404a" strokeWidth=".55"/>
-        <path d={basemap.land} fill="#29434a" stroke="#567079" strokeWidth=".6"/>
-        <path d={basemap.borders} fill="none" stroke="#5c737a" strokeWidth=".5"/>
-        {countryShape && <path d={basemap.country} className="ev-country-highlight"/>}
-        {country && !countryShape && <g transform={`translate(${projection(country.center).join(',')})`}><circle r="8" fill="#e2c36d"/><text y="-18" textAnchor="middle" fill="#f4d998" fontSize="14">{country.name}</text></g>}
-        <foreignObject x="0" y="0" width="720" height="680" pointerEvents="none" aria-hidden="true">
-          <FlowCanvas links={links} rotation={rotation} zoom={zoom} motionAllowed={motionAllowed&&active} selectedId={flowSelection?flowId(flowSelection):null}/>
-        </foreignObject>
-        {countryCounts.map(({country:c,count}) => {
-          if (!front(c.center)) return null;
-          const [x,y] = projection(c.center), source = publishedCountries.get(c.code), material = materialCountries.get(c.alpha3);
-          const description = `${c.name}: ${source ? `${source.contracts.toLocaleString('en')} source contracts, ${money(source.usd,'USD')}, ${source.year}` : 'published procurement data not available'}; ${material ? `${money(material.exports,'USD')} selected material exports in ${materials.year}` : 'material export observation unavailable'}; ${count} supplied records`;
-          return <g className={`ev-country-count ${source ? 'has-public-data' : 'coverage-pending'}`} data-country="true" data-country-code={c.code} key={c.code} transform={`translate(${x},${y})`} role="button" tabIndex="0" aria-label={`Research ${description}`} onClick={() => chooseCountry(c)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); chooseCountry(c); } }}><circle r={source ? 9 : 3}/>{!source && material?.exports > 0 && <circle r="4.5" className="ev-material-origin"/>}{source && <text textAnchor="middle" dy="3">{compactCount(source.contracts)}</text>}<title>{description}</title></g>;
-        })}
-        {mapped.map(r => {
-          if (!front(r.location.coordinates)) return null;
-          const [x, y] = projection(r.location.coordinates);
-          return <g key={r.index} data-marker="true" role="button" tabIndex="0" aria-label={`Inspect ${r.label}`} className={`ev-map-marker ${selected === r.index ? 'selected' : ''}`} transform={`translate(${x},${y})`}
-            onClick={() => { onSelect(r.index); }} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); onSelect(r.index); } }}>
-            <title>{r.label} — {r.location.label}</title><circle r="14" fill="transparent"/><circle r="9" className="ev-marker-ring"/><circle r="3.5" fill="#e3c582"/>
-          </g>;
-        })}
-        <foreignObject x="0" y="0" width="720" height="680" pointerEvents="none" aria-hidden="true">
-          <ConflictCanvas points={scopedConflictPoints} rotation={rotation} zoom={zoom}/>
-        </foreignObject>
-      </g>
-        {flowSelection && [flowSelection.from,flowSelection.to].map((coordinates,index)=>front(coordinates)&&<g key={index} pointerEvents="none" transform={`translate(${projection(coordinates).join(',')})`}><text className="ev-flow-endpoint-label" x={projection(coordinates)[0]<projection(index?flowSelection.from:flowSelection.to)[0]?-9:9} y="-10" textAnchor={projection(coordinates)[0]<projection(index?flowSelection.from:flowSelection.to)[0]?'end':'start'} fill={flowColors[flowKind(flowSelection)]}>{index?'TO':'FROM'} · {flowEnds(flowSelection)[index]}</text></g>)}
+      <title>Global economic relationships. Use country search or the connection register to inspect source evidence.</title>
+      <foreignObject x="0" y="0" width="720" height="680" pointerEvents="none" aria-hidden="true">
+        <FlowCanvas links={links} rotation={rotation} zoom={zoom} motionAllowed={motionAllowed&&active} selectedId={flowSelection?flowId(flowSelection):null} hoveredId={hoveredFlow?flowId(hoveredFlow):null} cameraRef={cameraRef} dragRef={drag} rotateWorld={!country&&!flowSelection} scene={scene}/>
+      </foreignObject>
     </svg>
-    <FlowInspector link={flowSelection} materials={materials} onClose={closeFlow} onCountry={chooseCountry} onArms={link=>{setArmsRelationship(link);setArmsOpen(true)}} onRecord={onSelect} onInvestigate={onInvestigate}/>
+    {flowSelection&&!connectionsOpen&&<button className="ev-trace-return" onClick={onConnections}>Tracing {flowEnds(flowSelection).join(' → ')} · open evidence ↗</button>}
+    {hoveredFlow&&!flowSelection&&<div className="ev-flow-readout" role="status"><strong>{flowEnds(hoveredFlow).join(' → ')}</strong><span>{flowNames[flowKind(hoveredFlow)]} · {hoveredFlow.period||hoveredFlow.year} · {hoveredFlow.members?.length||1} source records · Click to trace</span></div>}
+    {portalReady&&document.getElementById('watch-connection-focus')?createPortal(<FlowInspector onMember={traceFlow} link={flowSelection} materials={materials} onClose={closeFlow} onCountry={chooseCountry} onArms={link=>{setArmsRelationship(link);setArmsOpen(true)}} onRecord={onSelect} onInvestigate={onInvestigate}/>,document.getElementById('watch-connection-focus')):<FlowInspector onMember={traceFlow} link={flowSelection} materials={materials} onClose={closeFlow} onCountry={chooseCountry} onArms={link=>{setArmsRelationship(link);setArmsOpen(true)}} onRecord={onSelect} onInvestigate={onInvestigate}/>}
     <SourceCoverage open={coverageOpen} onClose={()=>setCoverageOpen(false)} published={published} materials={materials} arms={arms} conflicts={conflicts} trade={trade}/>
-    <FlowDirectory links={availableFlows} drawn={links.length} open={flowsOpen} onClose={()=>setFlowsOpen(false)} onSelect={traceFlow} layer={flowLayer} onLayer={changeFlowLayer}/>
+    {portalReady&&document.getElementById('watch-connection-dock')?createPortal(<FlowDirectory embedded links={availableFlows} drawn={links.length} open={connectionsOpen} onClose={onCloseConnections} onSelect={traceFlow} layer={flowLayer} onLayer={changeFlowLayer}/>,document.getElementById('watch-connection-dock')):<FlowDirectory links={availableFlows} drawn={links.length} open={flowsOpen} onClose={()=>setFlowsOpen(false)} onSelect={traceFlow} layer={flowLayer} onLayer={changeFlowLayer}/>}
 
-    <div className="ev-flow-legend" aria-label="Flow legend"><span><i className="gold"/>Teal → goods exports (2023)</span><span><i className="white"/>Pale → material subset ({materials?.year || 'source'})</span><button className="ev-conflict-legend" onClick={()=>{setConflictSelection(null);setConflictsOpen(true)}} aria-label="Open conflict observations"><i className="red"/>Red · {conflicts?.latest_start ? 'recorded violence (Aug 2026)' : conflicts ? 'conflict source unavailable' : 'loading conflict context'} ↗</button><button className="ev-arms-legend" onClick={()=>setArmsOpen(true)} aria-label="Open arms reporting and accountability"><i className="blue"/>Indigo → arms declarations ({armsYear}) ↗</button>{(armsFamily || armsCategory) && <button onClick={()=>{setArmsFamily('');setArmsCategory('')}}>Arms category filter · clear ×</button>}{conflictType && <button onClick={()=>changeConflictType('')}>{violenceTypes[conflictType]} · clear filter ×</button>}{materialCode && <button onClick={()=>setMaterialCode('')}>HS {materialCode} · clear filter ×</button>}</div><div ref={controls} className="ev-map-controls"><button onClick={()=>setCoverageOpen(true)}>Coverage & source periods ↗</button><button onClick={()=>setFlowsOpen(true)}>Explore connections ↗</button><select aria-label="Visible flow layer" value={flowLayer} onChange={e=>changeFlowLayer(e.target.value)}><option value="">All flow layers</option>{Object.entries(flowNames).map(([v,n])=><option key={v} value={v}>{n}</option>)}</select><button onClick={() => setZoom(z => Math.min(45, z * 1.2))} aria-label="Zoom in">+</button><button onClick={() => setZoom(z => Math.max(.7, z / 1.2))} aria-label="Zoom out">−</button><button onClick={() => { onCountry(null); setFlowSelection(null); setRotation(defaultRotation); setZoom(1); }}>Global view</button><button disabled={!records[selected]?.location} onClick={focus}>Locate record</button><button onClick={() => setTradeOpen(value => !value)}>Trade data & sources ↗</button></div>
+    <div className="ev-flow-legend" aria-label="Flow legend"><span><i className="gold"/>Teal → goods exports (2023)</span><span><i className="white"/>Pale → material subset ({materials?.year || 'source'})</span><button className="ev-conflict-legend" onClick={()=>{setConflictSelection(null);setConflictsOpen(true)}} aria-label="Open conflict observations"><i className="red"/>Red · {conflicts?.latest_start ? 'recorded violence (Aug 2026)' : conflicts ? 'conflict source unavailable' : 'loading conflict context'} ↗</button><button className="ev-arms-legend" onClick={()=>setArmsOpen(true)} aria-label="Open arms reporting and accountability"><i className="blue"/>Indigo → arms declarations ({armsYear}) ↗</button>{(armsFamily || armsCategory) && <button onClick={()=>{setArmsFamily('');setArmsCategory('')}}>Arms category filter · clear ×</button>}{conflictType && <button onClick={()=>changeConflictType('')}>{violenceTypes[conflictType]} · clear filter ×</button>}{materialCode && <button onClick={()=>setMaterialCode('')}>HS {materialCode} · clear filter ×</button>}</div><div ref={controls} className="ev-map-controls"><button onClick={()=>setCoverageOpen(true)}>Coverage & source periods ↗</button><button onClick={()=>onConnections?onConnections():setFlowsOpen(true)}>Explore connections ↗</button><select aria-label="Visible flow layer" value={flowLayer} onChange={e=>changeFlowLayer(e.target.value)}><option value="">All flow layers</option>{Object.entries(flowNames).map(([v,n])=><option key={v} value={v}>{n}</option>)}</select><button onClick={() => setZoom(z => Math.min(45, z * 1.2))} aria-label="Zoom in">+</button><button onClick={() => setZoom(z => Math.max(.7, z / 1.2))} aria-label="Zoom out">−</button>{flowSelection&&<button onClick={closeFlow}>Clear trace ×</button>}<button onClick={() => { onCountry(null); setFlowSelection(null); setRotation(defaultRotation); setZoom(1); }}>Global view</button><button disabled={!records[selected]?.location} onClick={focus}>Locate record</button><button onClick={() => setTradeOpen(value => !value)}>Trade data & sources ↗</button></div>
     {tradeOpen && <section className="ev-trade-panel" aria-label="Trade data and sources"><button className="ev-ledger-close" onClick={() => setTradeOpen(false)}>Close sources ×</button><p className="ev-eyebrow">UN COMTRADE / {trade?.period || 'ANNUAL DATA'}</p><h2>Trade, with its source attached.</h2><p>{trade?.coverage || 'Connecting to the public trade source. No illustrative routes are displayed.'}</p><p>Status: {trade?.status || 'Loading'} · Retrieved: {trade?.fetched_at || 'No successful retrieval'} · {scopedTrade.length} bilateral links available{scopedTrade.length > 80 ? ' / 80 drawn, balanced by available exporter' : ''}.</p><p>Directional connections link reporting and partner country reference points. They are schematic relationships, not tracked ships or actual transport paths. The animation indicates direction; it does not encode money or shipment volume. Trade values are separate from procurement values.</p>{trade?.errors?.length > 0 && <p>{trade.errors.length} reporting-source requests failed. Missing routes do not imply absent trade.</p>}<div className="ev-table-scroll"><table><thead><tr><th>Reporter → partner</th><th>Period</th><th>Export value (USD)</th><th>Source</th><th>Reported flag</th></tr></thead><tbody>{scopedTrade.map((l,i) => <tr key={i}><td>{l.label}</td><td>{l.period}</td><td>{money(l.usd,'USD')}</td><td><a href={l.sourceURL} target="_blank" rel="noreferrer">Source query ↗</a></td><td>{l.reported === true ? 'true' : l.reported === false ? 'false / source aggregate' : 'Not supplied'}</td></tr>)}</tbody></table></div><p className="ev-caption">Country reference points: world-countries 5.1.0, ODbL. <a href="https://github.com/mledoze/countries" target="_blank" rel="noreferrer">Dataset source ↗</a> · <a href={countryDatasetURL} download="sunlight-country-catalog.json">Download country catalog</a> · <a href={countryLicenseURL} target="_blank" rel="noreferrer">ODbL license</a></p></section>}
-    <ArmsContext relationship={armsRelationship} snapshot={arms} country={country} open={armsOpen} onClose={closeArms} year={armsYear} onYear={setArmsYear} family={armsFamily} onFamily={setArmsFamily} category={armsCategory} onCategory={setArmsCategory}/><ConflictContext snapshot={conflicts} points={scopedConflictPoints} country={country} boundaryAvailable={Boolean(countryShape)} selection={conflictSelection} open={conflictsOpen} onClose={closeConflicts} type={conflictType} onType={changeConflictType}/><div ref={caption} className="ev-map-caption"><div><i/>{countryCatalog.length} countries & territories · {publishedCountries.size} with published observations at or before {sourceYear || published?.default_year || 'source year'} · {scopedTrade.length} goods trade links · {materialFlows.length.toLocaleString('en')} material links ({drawnCounts.material||0} drawn) · {scopedConflictPoints.length} conflict reference points · {declaredArmsLinks.length} declared arms relationships ({drawnCounts.arms||0} drawn)</div><p>Gold labels show publisher contract counts; each marker carries its source year. White rings identify countries with material export observations. Gray dots remain selectable where neither source has figures. Pale directional connections show selected material exports from CEPII BACI, {materials?.year || 'source year'}. {trade?.status === 'unavailable' ? 'The trade connection is unavailable; published procurement totals remain available.' : 'Teal directional connections use dated UN Comtrade data, with values and coverage in sources.'}</p><p className="ev-conflict-caption">Red points: dated, partial UCDP candidate observations; latest record start {conflicts?.latest_start || 'unavailable'}. Open red context for precision, coverage and sources. Co-location alone does not establish stolen funds. Thin connections show source → destination; click a line or explore the register to inspect its evidence. Indigo connections: historical UNROCA declarations, not untraced recoveries. No live tracking or global diversion total is implied.</p><small>{!motionAllowed ? 'System reduced-motion preference active' : country ? 'Country research · rotation held' : flowSelection ? 'Connection research · rotation held' : 'West → east · 3 min / turn (accelerated)'} · Natural Earth boundaries do not imply endorsement.</small></div>
+    <ArmsContext relationship={armsRelationship} snapshot={arms} country={country} open={armsOpen} onClose={closeArms} year={armsYear} onYear={setArmsYear} family={armsFamily} onFamily={setArmsFamily} category={armsCategory} onCategory={setArmsCategory}/><ConflictContext snapshot={conflicts} points={scopedConflictPoints} country={country} boundaryAvailable={Boolean(countryShape)} selection={conflictSelection} open={conflictsOpen} onClose={closeConflicts} type={conflictType} onType={changeConflictType}/><div ref={caption} className="ev-map-caption"><div><i/>{countryCatalog.length} countries & territories · {publishedCountries.size} with published observations at or before {sourceYear || published?.default_year || 'source year'} · {scopedTrade.length} goods trade links · {materialFlows.length.toLocaleString('en')} material links ({drawnCounts.material||0} corridors) · {scopedConflictPoints.length} conflict reference points · {declaredArmsLinks.length} declared arms relationships ({drawnCounts.arms||0} corridors)</div><p>Country reference points remain included where source coverage is missing. Corridors combine drawn relationships with matching endpoints, layer and source period; source records remain separate in the register. Pale directional connections show selected material exports from CEPII BACI, {materials?.year || 'source year'}. {trade?.status === 'unavailable' ? 'The trade connection is unavailable; published procurement totals remain available.' : 'Teal directional connections use dated UN Comtrade data, with values and coverage in sources.'}</p><p className="ev-conflict-caption">Red points: dated, partial UCDP candidate observations; latest record start {conflicts?.latest_start || 'unavailable'}. Open red context for precision, coverage and sources. Co-location alone does not establish stolen funds. Thin connections show source → destination; click a line or explore the register to inspect its evidence. Indigo connections: historical UNROCA declarations, not untraced recoveries. No live tracking or global diversion total is implied.</p><small>{!motionAllowed ? 'System reduced-motion preference active' : country ? 'Country research · rotation held' : flowSelection ? 'Connection research · rotation held' : 'West → east · 3 min / turn (accelerated)'} · Natural Earth boundaries do not imply endorsement.</small></div>
   </section>;
 }

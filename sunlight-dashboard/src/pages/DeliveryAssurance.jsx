@@ -176,6 +176,7 @@ const newObligation = (country) => ({
 
 export default function DeliveryAssurance({
   profiles,
+  embedded = false,
   scopeCountry,
   active,
   onInvestigate,
@@ -449,6 +450,85 @@ export default function DeliveryAssurance({
     formType !== "new" &&
     detail &&
     form.expected_version !== detail.version;
+  const registerPanel = (
+    <aside className="da-register">
+      <h2>Obligations</h2>
+      <label>
+        Find an obligation
+        <input
+          type="search"
+          maxLength="200"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Programme, reference or community"
+        />
+      </label>
+      <label className="da-check">
+        <input
+          type="checkbox"
+          checked={attention}
+          onChange={(e) => setAttention(e.target.checked)}
+        />
+        Evidence or action needed
+      </label>
+      <label className="da-check">
+        <input
+          type="checkbox"
+          checked={examples}
+          onChange={(e) => {
+            setExamples(e.target.checked);
+            setSelected(null);
+            setDetail(null);
+          }}
+        />
+        Show synthetic examples
+      </label>
+      <p className="da-count">
+        {portfolio?.total ?? "…"} matching obligations ·{" "}
+        {portfolio?.scope_count ?? "…"} in scope
+      </p>
+      <div className="da-register-list">
+        {portfolio?.obligations.map((r) => (
+          <button
+            key={r.id}
+            aria-pressed={selected === r.id}
+            onClick={() => show(r)}
+          >
+            <span>{r.obligation.reference}</span>
+            <strong>{r.obligation.title}</strong>
+            <small>
+              {countryName(r.obligation.country)} · {r.obligation.sector}
+            </small>
+            <em>
+              {r.assessment.signals.length} evidence issues ·{" "}
+              {r.assessment.open_actions} open follow-ups
+            </em>
+          </button>
+        ))}
+      </div>
+      {portfolio && !portfolio.total && (
+        <p>
+          No obligations match. Register a public promise with its baseline, or
+          explore the worked example.
+        </p>
+      )}
+      <div className="da-buttons">
+        <button disabled={!page} onClick={() => setPage((p) => p - 1)}>
+          Previous
+        </button>
+        <button
+          disabled={!portfolio || (page + 1) * 30 >= portfolio.total}
+          onClick={() => setPage((p) => p + 1)}
+        >
+          Next
+        </button>
+      </div>
+      <small>
+        Coverage includes only registered obligations. This is not a census of
+        public spending.
+      </small>
+    </aside>
+  );
   return (
     <section className="da" aria-label="Delivery assurance workspace">
       <header className="da-header">
@@ -508,83 +588,16 @@ export default function DeliveryAssurance({
         </p>
       )}
       <div className="da-layout">
-        <aside className="da-register">
-          <h2>Obligations</h2>
-          <label>
-            Find an obligation
-            <input
-              type="search"
-              maxLength="200"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Programme, reference or community"
-            />
-          </label>
-          <label className="da-check">
-            <input
-              type="checkbox"
-              checked={attention}
-              onChange={(e) => setAttention(e.target.checked)}
-            />
-            Evidence or action needed
-          </label>
-          <label className="da-check">
-            <input
-              type="checkbox"
-              checked={examples}
-              onChange={(e) => {
-                setExamples(e.target.checked);
-                setSelected(null);
-                setDetail(null);
-              }}
-            />
-            Show synthetic examples
-          </label>
-          <p className="da-count">
-            {portfolio?.total ?? "…"} matching obligations ·{" "}
-            {portfolio?.scope_count ?? "…"} in scope
-          </p>
-          <div className="da-register-list">
-            {portfolio?.obligations.map((r) => (
-              <button
-                key={r.id}
-                aria-pressed={selected === r.id}
-                onClick={() => show(r)}
-              >
-                <span>{r.obligation.reference}</span>
-                <strong>{r.obligation.title}</strong>
-                <small>
-                  {countryName(r.obligation.country)} · {r.obligation.sector}
-                </small>
-                <em>
-                  {r.assessment.signals.length} evidence issues ·{" "}
-                  {r.assessment.open_actions} open follow-ups
-                </em>
-              </button>
-            ))}
-          </div>
-          {portfolio && !portfolio.total && (
-            <p>
-              No obligations match. Register a public promise with its baseline,
-              or explore the worked example.
-            </p>
-          )}
-          <div className="da-buttons">
-            <button disabled={!page} onClick={() => setPage((p) => p - 1)}>
-              Previous
-            </button>
-            <button
-              disabled={!portfolio || (page + 1) * 30 >= portfolio.total}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              Next
-            </button>
-          </div>
-          <small>
-            Coverage includes only registered obligations. This is not a census
-            of public spending.
-          </small>
-        </aside>
+        {embedded ? (
+          <details className="da-embedded-register" open={!detail}>
+            <summary>
+              Find obligations · {portfolio?.total ?? "…"} records
+            </summary>
+            {registerPanel}
+          </details>
+        ) : (
+          registerPanel
+        )}
         <main className="da-main">
           {!detail ? (
             <div className="da-empty">

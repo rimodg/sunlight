@@ -137,3 +137,47 @@ multi-hop/FX/refund and allocation reconciliation, formal baseline amendments,
 institution-approved external interventions and evaluated live model assistance.
 The new ledger is a scoped working slice of the institutional architecture,
 not a complete worldwide origin-to-arrival service.
+
+## Persistent world and flow-tracking revision
+
+The world is now the permanent surface, superseding the earlier separate-page
+presentation and the hidden-watch rotation behaviour described above. Delivery,
+research and records use independent surrounding docks, preserving the map's
+camera and selection. Narrow screens retain the globe above the scrolling tool.
+The connection register is a source-searching flow-tracking dock with readable
+cards, source periods, explicit FROM/TO endpoints and a selected path. A selected
+connection can carry into investigation without replacing the globe.
+
+Canvas 2D now renders the land, borders, grid, reference points, conflict points,
+routes and directional marks with one camera/clock. Automatic rotation does not
+rebuild React/SVG geometry. Focus eases across the shorter longitude direction;
+manual drag, country search and picking use the current camera. Repeated drawn
+relationships share corridors while their individual source records remain
+inspectable. Different bases, products or categories are not added as one value.
+Dense contract-count balloons no longer cover the geography; figures remain in
+their country/source controls.
+
+- **46 frontend tests passed**, including corridor source preservation,
+  import/export identity, dateline camera continuity, visual-time helpers,
+  projection and route picking. Production `/watch/` build passed with the
+  existing bundle-size advisory. No application dependencies were added.
+- Real Chromium checked the same canvas node remains visible across flow
+  tracking, saved research, delivery and records; source selection and readable
+  connection output; country research; mobile split view; reduced motion; and
+  no browser errors. During a three-second global multi-layer sample, a DOM
+  observer recorded **zero SVG subtree mutations** while the globe rotated.
+- Local 1680×1050 headless samples measured approximately **60 frames/s** and
+  **16.8 ms p95** frame intervals. These are environment-specific observations,
+  not a guarantee for every device, browser, network or future source volume.
+- The retained delivery-assurance browser workflow also passed inside the dock:
+  guided registration, exact transfer/acceptance comparisons, calibrated engine,
+  PDF output, concurrent-review draft protection, source corrections, completion
+  evidence, reload and country focus without dismissing the obligation.
+
+The new browser regression is
+`sunlight-dashboard/scripts/smoke-world-workbench.cjs`; it uses the same isolated
+local API and environment-supplied browser variables as the delivery smoke test.
+Backend calculations and external feed coverage were unchanged. Map movement
+still communicates direction for dated source relationships; it is not a live
+shipment/payment feed or quantitative volume encoding. See
+[the world-workbench workflow](WORLD_WORKBENCH.md) for controls and scope.

@@ -1,83 +1,287 @@
-import {memo,useEffect,useRef} from 'react';
-import {flowId,flowKind,flowColors} from './flows';
-import {flowProgress,globeProjector,routeVector,unitVector} from './flowMotion';
+import { memo, useEffect, useRef } from "react";
+import { geoDistance, geoOrthographic, geoPath } from "d3-geo";
+import { flowId, flowKind, flowColors, flowEnds } from "./flows";
+import {
+  flowProgress,
+  globeProjector,
+  routeVector,
+  unitVector,
+} from "./flowMotion";
+import { cameraBetween } from "./flowScene";
 
-const styles=Object.fromEntries(Object.entries(flowColors).map(([kind,color])=>[kind,{head:color}]));
-
-function FlowCanvas({links,rotation,zoom,motionAllowed,selectedId}) {
- const canvas=useRef(null), view=useRef({rotation,zoom,selectedId}), data=useRef([]), revision=useRef(0);
- // Animation reads refs; it never schedules a React render or restarts on rotation.
- useEffect(()=>{view.current={rotation,zoom,selectedId};revision.current++},[rotation,zoom,selectedId]);
- useEffect(()=>{data.current=links.map((link,index)=>({index,id:flowId(link),kind:flowKind(link),samples:link.geometry.coordinates.map(unitVector)}));revision.current++},[links]);
- useEffect(()=>{
-  const surface=canvas.current,ctx=surface.getContext('2d');
-  if(!ctx)return;
-  const routes=document.createElement('canvas'),routeContext=routes.getContext('2d');
-  let frame,previous=null,seconds=0,painted=-1,scaleX=1,scaleY=1;
-  function resize(){
-   const box=surface.getBoundingClientRect(),ratio=Math.min(window.devicePixelRatio||1,2);
-   surface.width=routes.width=Math.max(1,Math.round(box.width*ratio));surface.height=routes.height=Math.max(1,Math.round(box.height*ratio));
-   scaleX=surface.width/720;scaleY=surface.height/680;painted=-1;
-  }
-  function paint(){
-   const {rotation,zoom,selectedId}=view.current,scale=300*zoom,project=globeProjector(rotation,scale);
-   if(painted!==revision.current){
-    routeContext.setTransform(1,0,0,1,0,0);routeContext.clearRect(0,0,routes.width,routes.height);routeContext.setTransform(scaleX,0,0,scaleY,0,0);
-    routeContext.save();routeContext.beginPath();routeContext.arc(360,340,scale,0,Math.PI*2);routeContext.clip();
-    const trace=flow=>{let drawing=false;const stride=zoom<=1.5?4:zoom<=3?2:1;for(let i=0;i<flow.samples.length;i+=stride){const [x,y,depth]=project(flow.samples[i]);if(depth<0){drawing=false;continue}if(drawing)routeContext.lineTo(x,y);else{routeContext.moveTo(x,y);drawing=true}}};
-    for(const kind of Object.keys(styles)){
-     routeContext.beginPath();for(const flow of data.current)if(flow.kind===kind&&flow.id!==selectedId)trace(flow);
-     routeContext.globalAlpha=selectedId ? .08 : .34;routeContext.strokeStyle=flowColors[kind];routeContext.lineWidth=.55;routeContext.stroke();
+// One camera and RAF clock. No React updates or SVG path strings per frame.
+function FlowCanvas({
+  links,
+  rotation,
+  zoom,
+  motionAllowed,
+  selectedId,
+  hoveredId,
+  cameraRef,
+  dragRef,
+  rotateWorld,
+  scene,
+}) {
+  const canvas = useRef(null),
+    view = useRef({ selectedId, hoveredId, rotateWorld, scene }),
+    data = useRef([]),
+    transition = useRef(null);
+  useEffect(() => {
+    view.current = { selectedId, hoveredId, rotateWorld, scene };
+  }, [selectedId, hoveredId, rotateWorld, scene]);
+  useEffect(() => {
+    data.current = links.map((link, index) => ({
+      link,
+      index,
+      id: flowId(link),
+      kind: flowKind(link),
+      samples: link.geometry.coordinates.map(unitVector),
+      duration: 1.6 + geoDistance(link.from, link.to) * 0.7,
+    }));
+  }, [links]);
+  useEffect(() => {
+    const to = { rotation: [...rotation], zoom };
+    if (dragRef.current?.x != null || !motionAllowed) {
+      cameraRef.current = to;
+      transition.current = null;
+    } else
+      transition.current = {
+        from: {
+          rotation: [...cameraRef.current.rotation],
+          zoom: cameraRef.current.zoom,
+        },
+        to,
+        start: performance.now(),
+      };
+  }, [rotation, zoom, motionAllowed, cameraRef, dragRef]);
+  useEffect(() => {
+    const surface = canvas.current,
+      ctx = surface.getContext("2d", { alpha: false });
+    if (!ctx) return;
+    const world = document.createElement("canvas"),
+      base = world.getContext("2d", { alpha: false });
+    const projection = geoOrthographic().translate([360, 340]).clipAngle(90),
+      path = geoPath(projection, base);
+    let frame,
+      previous = null,
+      seconds = 0,
+      sx = 1,
+      sy = 1,
+      baseKey = "";
+    function resize() {
+      const box = surface.getBoundingClientRect(),
+        ratio = Math.min(devicePixelRatio || 1, 1.75);
+      const width = Math.max(1, Math.round(box.width * ratio)),
+        height = Math.max(1, Math.round(box.height * ratio));
+      if (surface.width === width && surface.height === height) return;
+      surface.width = world.width = width;
+      surface.height = world.height = height;
+      sx = width / 720;
+      sy = height / 680;
+      baseKey = "";
     }
-    const flow=data.current.find(f=>f.id===selectedId);
-    if(flow){
-     routeContext.globalAlpha=1;routeContext.strokeStyle=flowColors[flow.kind];routeContext.lineWidth=1.5;routeContext.beginPath();trace(flow);routeContext.stroke();
-      routeContext.globalAlpha=1;
-      const start=project(flow.samples[0]),end=project(flow.samples.at(-1));
-      if(start[2]>=0){routeContext.beginPath();routeContext.arc(start[0],start[1],4,0,Math.PI*2);routeContext.fillStyle=flowColors[flow.kind];routeContext.fill()}
-      if(end[2]>=0){routeContext.beginPath();routeContext.arc(end[0],end[1],5.5,0,Math.PI*2);routeContext.stroke()}
-      const a=project(routeVector(flow.samples,.69)),b=project(routeVector(flow.samples,.71));
-      if(a[2]>=0&&b[2]>=0){const angle=Math.atan2(b[1]-a[1],b[0]-a[0]);routeContext.beginPath();routeContext.moveTo(b[0]-6*Math.cos(angle-.5),b[1]-6*Math.sin(angle-.5));routeContext.lineTo(b[0],b[1]);routeContext.lineTo(b[0]-6*Math.cos(angle+.5),b[1]-6*Math.sin(angle+.5));routeContext.stroke()}
+    function paint(now) {
+      const state = view.current;
+      if (transition.current) {
+        const t = transition.current,
+          p = (now - t.start) / 550;
+        cameraRef.current = cameraBetween(t.from, t.to, motionAllowed ? p : 1);
+        if (p >= 1 || !motionAllowed) transition.current = null;
+      } else if (
+        motionAllowed &&
+        state.rotateWorld &&
+        dragRef.current?.x == null &&
+        previous !== null
+      )
+        cameraRef.current.rotation[0] =
+          (cameraRef.current.rotation[0] +
+            Math.min((now - previous) / 1000, 0.05) * 2) %
+          360;
+      const camera = cameraRef.current,
+        scale = 300 * camera.zoom,
+        project = globeProjector(camera.rotation, scale),
+        currentScene = state.scene;
+      const key = JSON.stringify([
+        camera.rotation,
+        camera.zoom,
+        currentScene?.country?.code,
+        world.width,
+        world.height,
+      ]);
+      if (baseKey !== key) {
+        base.setTransform(1, 0, 0, 1, 0, 0);
+        base.fillStyle = "#0b1922";
+        base.fillRect(0, 0, world.width, world.height);
+        base.setTransform(sx, 0, 0, sy, 0, 0);
+        projection.rotate(camera.rotation).scale(scale);
+        const draw = (feature, fill, stroke, width) => {
+          if (!feature) return;
+          base.beginPath();
+          path(feature);
+          if (fill) {
+            base.fillStyle = fill;
+            base.fill();
+          }
+          if (stroke) {
+            base.strokeStyle = stroke;
+            base.lineWidth = width;
+            base.stroke();
+          }
+        };
+        draw({ type: "Sphere" }, "#10242e", "#46636f", 0.7);
+        draw(currentScene?.graticule, null, "#243f4a", 0.35);
+        draw(currentScene?.land, "#223d47", "#53707c", 0.5);
+        draw(currentScene?.borders, null, "#48616c", 0.35);
+        draw(currentScene?.countryShape, "#3d5a60", "#e5c880", 0.9);
+        baseKey = key;
+      }
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.drawImage(world, 0, 0);
+      ctx.setTransform(sx, 0, 0, sy, 0, 0);
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(360, 340, scale, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      const focus = state.selectedId || state.hoveredId,
+        step = camera.zoom > 3 ? 1 : 2;
+      for (const flow of data.current) {
+        const chosen = flow.id === focus;
+        ctx.beginPath();
+        let drawing = false;
+        for (let i = 0; i < flow.samples.length; i += step) {
+          const p = project(flow.samples[i]);
+          if (p[2] < 0.005) {
+            drawing = false;
+            continue;
+          }
+          if (drawing) ctx.lineTo(p[0], p[1]);
+          else {
+            ctx.moveTo(p[0], p[1]);
+            drawing = true;
+          }
+        }
+        ctx.strokeStyle = flowColors[flow.kind];
+        ctx.lineWidth = chosen ? 1.2 : 0.5;
+        ctx.globalAlpha = focus ? (chosen ? 0.95 : 0.055) : 0.16;
+        ctx.stroke();
+        // Fine moving direction marks follow a continuous path, without a comet tail.
+        const progress = flowProgress(seconds, flow.index, flow.duration);
+        for (const t of chosen ? [progress, 0.35, 0.72] : [progress]) {
+          const p = project(routeVector(flow.samples, t)),
+            a = project(routeVector(flow.samples, Math.max(0, t - 0.008))),
+            b = project(routeVector(flow.samples, Math.min(1, t + 0.008)));
+          if (p[2] < 0.015 || a[2] < 0 || b[2] < 0) continue;
+          const angle = Math.atan2(b[1] - a[1], b[0] - a[0]),
+            size = chosen ? 4.2 : 2.6;
+          ctx.globalAlpha = focus ? (chosen ? 1 : 0.1) : 0.7;
+          ctx.strokeStyle = flowColors[flow.kind];
+          ctx.lineWidth = chosen ? 1.45 : 0.85;
+          ctx.beginPath();
+          ctx.moveTo(
+            p[0] - size * Math.cos(angle - 0.5),
+            p[1] - size * Math.sin(angle - 0.5),
+          );
+          ctx.lineTo(p[0], p[1]);
+          ctx.lineTo(
+            p[0] - size * Math.cos(angle + 0.5),
+            p[1] - size * Math.sin(angle + 0.5),
+          );
+          ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = "#91acb7";
+      for (const c of currentScene?.countries || []) {
+        const p = project(c.vector);
+        if (p[2] < 0.04) continue;
+        ctx.beginPath();
+        ctx.arc(
+          p[0],
+          p[1],
+          c.code === currentScene.country?.code ? 3.3 : 1.25,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
+      ctx.globalAlpha = 0.85;
+      ctx.fillStyle = "#d87976";
+      ctx.beginPath();
+      for (const point of currentScene?.conflicts || []) {
+        const p = project(point.vector);
+        if (p[2] < 0.015) continue;
+        ctx.moveTo(p[0] + 1.35, p[1]);
+        ctx.arc(p[0], p[1], 1.35, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#edcc82";
+      for (const r of currentScene?.records || []) {
+        const p = project(unitVector(r.location.coordinates));
+        if (p[2] < 0) continue;
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+      const chosen = data.current.find((f) => f.id === focus);
+      if (chosen) {
+        ctx.fillStyle = flowColors[chosen.kind];
+        ctx.strokeStyle = flowColors[chosen.kind];
+        ctx.lineWidth = 1.3;
+        const ends = flowEnds(chosen.link);
+        for (const [i, v] of [
+          chosen.samples[0],
+          chosen.samples.at(-1),
+        ].entries()) {
+          const p = project(v);
+          if (p[2] < 0.02) continue;
+          ctx.strokeStyle = flowColors[chosen.kind];
+          ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          ctx.arc(p[0], p[1], i ? 4.5 : 3, 0, Math.PI * 2);
+          if (i) ctx.stroke();
+          else ctx.fill();
+          const text = (i ? "TO · " : "FROM · ") + ends[i];
+          ctx.font = "600 10px system-ui";
+          ctx.textAlign = p[0] > 520 ? "right" : "left";
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "#0b1922";
+          const x = p[0] + (p[0] > 520 ? -8 : 8),
+            y = p[1] - 11;
+          ctx.strokeText(text, x, y);
+          ctx.fillText(text, x, y);
+        }
+      }
     }
-    routeContext.restore();painted=revision.current;
-   }
-   ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,surface.width,surface.height);ctx.drawImage(routes,0,0);ctx.setTransform(scaleX,0,0,scaleY,0,0);
-   ctx.save();ctx.beginPath();ctx.arc(360,340,scale,0,Math.PI*2);ctx.clip();ctx.lineCap='round';
-   for(const [kind,style] of Object.entries(styles)){
-    const flows=data.current.filter(f=>f.kind===kind);
-    for(const flow of flows){
-     const chosen=flow.id===selectedId;
-     const progress=flowProgress(seconds,flow.index);
-     const point=project(routeVector(flow.samples,progress));
-     const before=project(routeVector(flow.samples,Math.max(0,progress-.006)));
-     const after=project(routeVector(flow.samples,Math.min(1,progress+.006)));
-     if(point[2]<0||before[2]<0||after[2]<0)continue;
-     const angle=Math.atan2(after[1]-before[1],after[0]-before[0]);
-     const size=chosen?5.8:3.6;
-     ctx.globalAlpha=selectedId?(chosen?1:.18):.9;
-     ctx.strokeStyle=style.head;ctx.lineWidth=chosen?1.8:1.15;
-     ctx.beginPath();
-     ctx.moveTo(point[0]-size*Math.cos(angle-.55),point[1]-size*Math.sin(angle-.55));
-     ctx.lineTo(point[0],point[1]);
-     ctx.lineTo(point[0]-size*Math.cos(angle+.55),point[1]-size*Math.sin(angle+.55));
-     ctx.stroke();
+    function tick(now) {
+      frame = requestAnimationFrame(tick);
+      if (document.hidden) {
+        previous = null;
+        return;
+      }
+      if (previous !== null && motionAllowed)
+        seconds += Math.min((now - previous) / 1000, 0.05);
+      paint(now);
+      previous = now;
     }
-   }
-   ctx.restore();
-  }
-  function tick(now){
-   frame=requestAnimationFrame(tick);
-   if(document.hidden){previous=null;return}
-   if(previous!==null)seconds+=Math.min((now-previous)/1000,.1);
-   previous=now;paint();
-  }
-  resize();const observer=new ResizeObserver(()=>{resize();if(!motionAllowed)paint()});observer.observe(surface);observer.observe(surface.closest('svg'));
-  if(motionAllowed)frame=requestAnimationFrame(tick);else paint();
-  // Reduced motion still redraws after an explicit drag, filter, zoom or selection.
-  let observerId;
-  if(!motionAllowed){const redraw=()=>{if(painted!==revision.current)paint();observerId=requestAnimationFrame(redraw)};observerId=requestAnimationFrame(redraw)}
-  return ()=>{cancelAnimationFrame(frame);cancelAnimationFrame(observerId);observer.disconnect()};
- },[motionAllowed]);
- return <canvas ref={canvas} className="ev-flow-canvas" aria-hidden="true"/>;
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(surface.closest("svg"));
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [motionAllowed, cameraRef, dragRef]);
+  return (
+    <canvas
+      ref={canvas}
+      className="ev-flow-canvas ev-world-canvas"
+      aria-hidden="true"
+    />
+  );
 }
 export default memo(FlowCanvas);
