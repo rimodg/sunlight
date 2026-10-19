@@ -1,6 +1,6 @@
 # Research desk: inquiry, evidence and review
 
-Open **Research desk** in `/watch/`, or `/watch/#research`. This workspace searches
+Open **Investigate** in `/watch/`, or `/watch/#research`. A question from the watch carries the country or selected connection into the inquiry. Desk drafts and the watch camera are retained when switching sections. This workspace searches
 SUNLIGHT's retained public context, operational cases and selected PDFs, saves a
 source-cited dossier, and retains investigation review history. It is a bounded
 research pilot, not a complete census of world economic activity, a causal model
@@ -32,7 +32,7 @@ theft from a reporting discrepancy.
 6. **Refine / rerun inquiry** copies its scope into the editor. A new run creates
    a linked dossier and preserves the previous report. No report is silently
    rewritten when a source or model changes.
-7. Download the evidence/review packet. It includes the immutable report hash,
+7. Open the readable investigation brief and print/save it as PDF. Its evidence, page references, hypotheses, limitations and notes are human-readable. The optional advanced JSON evidence/review packet includes the immutable report hash,
    retained citations and values, source revisions, original-PDF references and
    hashes, extraction hashes, review history and local integrity checks.
 
@@ -74,26 +74,28 @@ The current configuration is exposed by `GET /research/status`. The interface
 says **AI synthesis is not configured** when either required setting is absent.
 
 To enable the optional OpenAI Responses API adapter, a deployment operator sets
-`OPENAI_API_KEY` securely and `SUNLIGHT_RESEARCH_MODEL` to an available model ID
+`SUNLIGHT_RESEARCH_API_KEY` securely (or the existing `OPENAI_API_KEY` setting) and `SUNLIGHT_RESEARCH_MODEL` to an available model ID
 supporting Responses structured outputs. Do not commit or paste the key into a
 question, source record or document. Outbound HTTPS to `api.openai.com` must be
 permitted by that deployment's network policy. Configuration presence is not a
 successful provider/entitlement test. No live provider call was validated for
 this change because credentials are absent in the development environment.
 
+In the managed cloud environment, the `OPENAI_` prefix is reserved; use `SUNLIGHT_RESEARCH_API_KEY`. A saved cloud configuration draft declares the key requirement, model variable and `api.openai.com` destination. Saving a draft does not apply credentials or configure the separate Render deployment.
+
 AI is off by default. Each run requires both **Add AI interpretation** and a
 separate authorization to send the inquiry and selected excerpts. The server
 rejects AI requests without that explicit sharing field. It sends bounded
-excerpts (up to 36,000 serialized excerpt characters), the inquiry, scope and
+excerpts (up to 36,000 serialized excerpt characters across initial evidence and tool results; initial tool-enabled input reserves budget at 20,000), the inquiry, scope and
 coverage limits. Raw PDF files, full archives and deployment credentials are not
 part of the model input. The adapter uses `store: false`; this does not establish
 zero retention under the provider's separate policies.
 
-AI output is displayed separately as interpretations, hypotheses, alternative
+Model-assisted output is displayed separately as interpretations, hypotheses, alternative
 explanations, evidence needed and open questions. Document text and model output
-are rendered as text, not executable HTML. The model receives no browsing,
-execution or external-action tools; instructions embedded in documents do not
-authorize actions. Structured output is validated locally, including checking
+are rendered as text, not executable HTML. The model can call read-only tools to search the selected layers/documents again, compute source-specific totals/counts across the retained public scope, inspect a matching operational case and read an explicitly selected PDF page. It receives no arbitrary SQL, browsing, execution or external-action tools. Original selected source/country/year restrictions apply; document access is limited to selected uploads. Instructions embedded in documents do not authorize actions.
+
+The provider loop permits at most five model requests and six tool calls (no more than two in a returned step), checks an 80-second request budget, and caps returned excerpt characters. New evidence actually sent to the provider is appended to the saved dossier; citation validation includes those IDs only. The visible work log lists tool names, returned IDs and errors, not private model reasoning. Tool-assisted behavior has been protocol-tested with a mocked provider; a live provider/model quality assessment still requires configured credentials and domain evaluation. Calls, source content, calculations and the model response remain subject to analyst review. Operations statistics scan the latest 500 cases; the other source statistics retain each source’s coverage and avoid domain double counting. Structured output is validated locally, including checking
 that cited IDs were actually sent. Unknown citations reject the synthesis.
 These checks **do not validate semantic support, publisher truth, causal
 reasoning or every factual model claim**. Analyst review remains necessary.
@@ -149,6 +151,7 @@ rewriting the entire archive and chain.
 | `GET /research/inquiries` | Search/paginate/filter followed investigations. |
 | `GET /research/inquiries/{id}` | Retained report, hash, current review state and version. |
 | `POST /research/inquiries/{id}/review` | Append review with optimistic version control. |
+| `GET /research/inquiries/{id}/report` | Readable HTML brief, printable to PDF. |
 | `GET /research/inquiries/{id}/export` | Evidence/review packet and local integrity checks. |
 
 Request schemas are in `/openapi.json`. The backend country index derives from

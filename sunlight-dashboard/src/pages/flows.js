@@ -2,7 +2,7 @@ import {globeProjector,unitVector} from './flowMotion.js';
 import {money} from './watchOverview.js';
 export const flowKind=l=>l.kind==='arms'?'arms':l.kind==='material'?'material':l.usd?'trade':'procurement';
 export const flowNames={trade:'Goods exports',material:'Material exports',arms:'Arms declarations',procurement:'Supplied record link'};
-export const flowColors={trade:'#efd17b',material:'#d8e7ed',arms:'#538bde',procurement:'#b4e0da'};
+export const flowColors={trade:'#5fcac4',material:'#d8e7ed',arms:'#a5b4ef',procurement:'#edcc82'};
 export const flowId=l=>JSON.stringify([flowKind(l),l.from,l.to,l.product?.code,l.period||l.year,l.recordIndex,l.label]);
 export const flowEnds=l=>[l.reporter?.name||l.fromLabel||l.from.join(', '),l.partner?.name||l.toLabel||l.to.join(', ')];
 export function flowMeasure(l){

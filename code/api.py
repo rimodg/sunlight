@@ -561,6 +561,8 @@ from operations import router as operations_router
 app.include_router(operations_router)
 from research import router as research_router
 app.include_router(research_router)
+from readable_reports import router as readable_reports_router
+app.include_router(readable_reports_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1234,7 +1236,7 @@ async def assurance():
             {"name": "Pilot operations ledger", "state": "API available", "endpoint": "/operations/status",
              "scope": "Attributed push ingestion, versioned records, exact comparisons, persisted engine results and review history. UN connector not connected; persistent volume and institutional access controls remain required."},
             {"name": "Saved evidence research", "state": "API available", "endpoint": "/research/status",
-             "scope": "Bounded cross-layer retrieval, page-cited PDF text and saved investigation history. Optional model synthesis requires configured credentials and explicit excerpt-sharing authorization. No complete global census or causal inference."},
+             "scope": "Cross-layer retrieval, scoped read-only investigative tools, page-cited PDF text, readable briefs and saved review history. Model assistance requires credentials and explicit excerpt-sharing authorization. No complete global census, verified causal model or payment-control connection."},
             {"name": "Cross-category Registry and Need Ledger", "state": "Design", "endpoint": None,
              "scope": "Charter v2 direction, not a deployed global observation service."},
             {"name": "Payment control and enforcement", "state": "Outside current authority", "endpoint": None,

@@ -1,0 +1,58 @@
+[
+  {
+    "key": "deck-arc",
+    "url": "https://raw.githubusercontent.com/visgl/deck.gl/master/docs/api-reference/layers/arc-layer.md",
+    "status": 200,
+    "bytes": 9776,
+    "sha256": "d6b8f2a9a88f135845f2de6a63676a12acc094aafbb5e79d004584d6abb1ab3a"
+  },
+  {
+    "key": "deck-globe",
+    "url": "https://raw.githubusercontent.com/visgl/deck.gl/master/docs/api-reference/core/globe-view.md",
+    "status": 200,
+    "bytes": 5705,
+    "sha256": "faa585d1824a011a9952639e24f321e0ec8ae351bbd2acce79803a237b60dcaf"
+  },
+  {
+    "key": "deck-trips",
+    "url": "https://raw.githubusercontent.com/visgl/deck.gl/master/docs/api-reference/geo-layers/trips-layer.md",
+    "status": 200,
+    "bytes": 6090,
+    "sha256": "a8e3ee7d45014b94454dc00f74dff0297c80a2e1f6160d4329d5f196d895efb1"
+  },
+  {
+    "key": "wcag-color",
+    "url": "https://raw.githubusercontent.com/w3c/wcag/main/guidelines/sc/20/use-of-color.html",
+    "status": 200,
+    "bytes": 545,
+    "sha256": "81b0f49c1c18ed014de5eb93836c1f6d5b218b55663fcb2a43b78b78efada9b9"
+  },
+  {
+    "key": "wcag-motion",
+    "url": "https://raw.githubusercontent.com/w3c/wcag/main/guidelines/sc/20/pause-stop-hide.html",
+    "status": 200,
+    "bytes": 2424,
+    "sha256": "fc401c6ba40694a85d8feaf757b1377ec70a30fdaf1c1d52aec75a0f3c286ed5"
+  },
+  {
+    "key": "wcag-interactions",
+    "url": "https://raw.githubusercontent.com/w3c/wcag/main/guidelines/sc/21/animation-from-interactions.html",
+    "status": 200,
+    "bytes": 352,
+    "sha256": "ebf2dad0e24deb24b7963b7309ab7872d93a4b22859524edfd74021a41c66b10"
+  },
+  {
+    "key": "wcag-contrast",
+    "url": "https://raw.githubusercontent.com/w3c/wcag/main/guidelines/sc/21/non-text-contrast.html",
+    "status": 200,
+    "bytes": 872,
+    "sha256": "f2926663703c6a18795858c9c54cdab4914333bb474e965c51258e5bc38520f8"
+  },
+  {
+    "key": "openai-tools",
+    "url": "https://raw.githubusercontent.com/openai/openai-python/main/README.md",
+    "status": 200,
+    "bytes": 42167,
+    "sha256": "48e4ff40310a1fb39c2a868b115a3cddf745c8e9d504db439e3b61c294a06836"
+  }
+]

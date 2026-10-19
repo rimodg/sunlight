@@ -1,0 +1,100 @@
+[
+  {
+    "repository": "open-contracting/standard",
+    "commit": "7876f2d57223caedc0c7359af9e93a8c8202e8ba",
+    "file": "schema/release-schema.json",
+    "url": "https://github.com/open-contracting/standard/blob/7876f2d57223caedc0c7359af9e93a8c8202e8ba/schema/release-schema.json",
+    "sha256": "bf18280598c08c9889051a61e1cd39af8e1aebbfb9c260c31be155604026a149"
+  },
+  {
+    "repository": "open-contracting/standard",
+    "commit": "7876f2d57223caedc0c7359af9e93a8c8202e8ba",
+    "file": "docs/schema/merging.md",
+    "url": "https://github.com/open-contracting/standard/blob/7876f2d57223caedc0c7359af9e93a8c8202e8ba/docs/schema/merging.md",
+    "sha256": "b2e14022b342b45fc43300efd9a923aa1e071f28d88bad71f38f3b01ee83c83d"
+  },
+  {
+    "repository": "IATI/IATI-Schemas",
+    "commit": "b4ead00528d3785b336d9847928274c207704deb",
+    "file": "iati-activities-schema.xsd",
+    "url": "https://github.com/IATI/IATI-Schemas/blob/b4ead00528d3785b336d9847928274c207704deb/iati-activities-schema.xsd",
+    "sha256": "66aa6ce8a1cbdba9f18674913772199e1c640935ff805d780d699f6d6378e7e4"
+  },
+  {
+    "repository": "IATI/IATI-Codelists",
+    "commit": "e83832716be342b63e7b9fb9cb694220bd3551b2",
+    "file": "xml/TransactionType.xml",
+    "url": "https://github.com/IATI/IATI-Codelists/blob/e83832716be342b63e7b9fb9cb694220bd3551b2/xml/TransactionType.xml",
+    "sha256": "ebd6273f81174f61a578cb71dd3a840f022961a2a0a407be0fa5e4669710e5e5"
+  },
+  {
+    "repository": "openownership/data-standard",
+    "commit": "acdc7fd13db478fb9ed17dbef3e6bf48768cd7ce",
+    "file": "docs/standard/concepts.rst",
+    "url": "https://github.com/openownership/data-standard/blob/acdc7fd13db478fb9ed17dbef3e6bf48768cd7ce/docs/standard/concepts.rst",
+    "sha256": "d7d52e137122145b86ce57c6aab51d04855ece81bc5b07cfd559bc4d37f040e4"
+  },
+  {
+    "repository": "sdmx-twg/sdmx-rest",
+    "commit": "46bba52cb8a8a21704019f949987ee21adefdd5e",
+    "file": "doc/data.md",
+    "url": "https://github.com/sdmx-twg/sdmx-rest/blob/46bba52cb8a8a21704019f949987ee21adefdd5e/doc/data.md",
+    "sha256": "985d327c4b10496e4c543a1e11fabb3b79e204f7144850dd81680b1d7276d6d1"
+  },
+  {
+    "repository": "sdmx-twg/sdmx-rest",
+    "commit": "46bba52cb8a8a21704019f949987ee21adefdd5e",
+    "file": "doc/metadata.md",
+    "url": "https://github.com/sdmx-twg/sdmx-rest/blob/46bba52cb8a8a21704019f949987ee21adefdd5e/doc/metadata.md",
+    "sha256": "e89c3923918f4fe038ad82e80dde171dbccb8e3c2415b89f2541dd4753510590"
+  },
+  {
+    "repository": "w3c/prov",
+    "commit": "aa82bd71b6bb1f7b735bf3f7f5b948fae87764f0",
+    "file": "primer/NOTE-prov-primer-20130430/Overview.html",
+    "url": "https://github.com/w3c/prov/blob/aa82bd71b6bb1f7b735bf3f7f5b948fae87764f0/primer/NOTE-prov-primer-20130430/Overview.html",
+    "sha256": "6e184dd9f7a1aaf3137b56f9cdc69a578ea4962c023f459c6c2b5b749a2730e8"
+  },
+  {
+    "repository": "OCHA-DAP/hdx-hapi",
+    "commit": "1187a59ff27d4907f779abca5aa3e3433f7eef5c",
+    "file": "docs/data_usage_guides/metadata.md",
+    "url": "https://github.com/OCHA-DAP/hdx-hapi/blob/1187a59ff27d4907f779abca5aa3e3433f7eef5c/docs/data_usage_guides/metadata.md",
+    "sha256": "dcbd80cfc477a047af92ec3d930f42c92fb7e039e6373387883b70c747bc6e41"
+  },
+  {
+    "repository": "OCHA-DAP/hdx-hapi",
+    "commit": "1187a59ff27d4907f779abca5aa3e3433f7eef5c",
+    "file": "docs/data_usage_guides/affected_people.md",
+    "url": "https://github.com/OCHA-DAP/hdx-hapi/blob/1187a59ff27d4907f779abca5aa3e3433f7eef5c/docs/data_usage_guides/affected_people.md",
+    "sha256": "7f471146e7ad1acd9f6072e9932dbf2c24dd99b190e2421256b26cee04ad0f48"
+  },
+  {
+    "repository": "OCHA-DAP/hdx-hapi",
+    "commit": "1187a59ff27d4907f779abca5aa3e3433f7eef5c",
+    "file": "docs/data_usage_guides/food_security_nutrition_and_poverty.md",
+    "url": "https://github.com/OCHA-DAP/hdx-hapi/blob/1187a59ff27d4907f779abca5aa3e3433f7eef5c/docs/data_usage_guides/food_security_nutrition_and_poverty.md",
+    "sha256": "a3f0f3d8c024d2577c4a5b12c6af0f9461a41e2b9c0f1eb3dcaf73af9c76ee0c"
+  },
+  {
+    "repository": "OCHA-DAP/hdx-hapi",
+    "commit": "1187a59ff27d4907f779abca5aa3e3433f7eef5c",
+    "file": "docs/data_usage_guides/subcategory_details/funding_details.yaml",
+    "url": "https://github.com/OCHA-DAP/hdx-hapi/blob/1187a59ff27d4907f779abca5aa3e3433f7eef5c/docs/data_usage_guides/subcategory_details/funding_details.yaml",
+    "sha256": "fc953e9a24710f69d05eecf3e46250de4dd0c515aad93b95cb5bff5cca8366a9"
+  },
+  {
+    "repository": "OCHA-DAP/hdx-hapi",
+    "commit": "1187a59ff27d4907f779abca5aa3e3433f7eef5c",
+    "file": "docs/data_usage_guides/subcategory_details/conflict_event_details.yaml",
+    "url": "https://github.com/OCHA-DAP/hdx-hapi/blob/1187a59ff27d4907f779abca5aa3e3433f7eef5c/docs/data_usage_guides/subcategory_details/conflict_event_details.yaml",
+    "sha256": "6879d0a24268de98738b94ce13e0ae2e9feb12ee7869d0279f2b4c51a41cbc04"
+  },
+  {
+    "repository": "worldbank/open-api-specs",
+    "commit": "bbf93b34a3c78948d18f2ae40f5a31e4aa7a45a6",
+    "file": "Data360 Open_API.json",
+    "url": "https://github.com/worldbank/open-api-specs/blob/bbf93b34a3c78948d18f2ae40f5a31e4aa7a45a6/Data360%20Open_API.json",
+    "sha256": "3b011f6a840f29e19a90b1dfd88be61f447486658a01ef609d5093548c5c52b8"
+  }
+]

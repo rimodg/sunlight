@@ -53,7 +53,12 @@ function packetText(run) {
 const title = value => String(value || 'Not assessed').replaceAll('_', ' ');
 
 export default function EvidenceWorkspace() {
-  const [tab, setTab] = useState(()=>window.location.hash==='#research'?'research':window.location.hash==='#watch'?'review':'operations');
+  const [tab, setTab] = useState(()=>window.location.hash==='#research'?'research':window.location.hash==='#operations'?'operations':'review');
+  const [opened,setOpened]=useState({review:true,operations:window.location.hash==='#operations',research:window.location.hash==='#research'});
+  const [investigationContext,setInvestigationContext]=useState(null);
+  const [inquiry,setInquiry]=useState('');
+  useEffect(()=>{setOpened(v=>({...v,[tab]:true}));history.replaceState(null,'',tab==='review'?'#watch':`#${tab}`)},[tab]);
+  function investigate(context){setInvestigationContext({...context,id:Date.now()});setTab('research')}
   const [country, setCountry] = useState(null);
   const [deskPanel, setDeskPanel] = useState(null);
   const inspect = index => { setSelected(index); setDeskPanel('inspector'); };
@@ -145,15 +150,16 @@ export default function EvidenceWorkspace() {
     </header>
     <main className="ev-main">
       <nav className="ev-tabs" aria-label="Workspace sections">
-        {[['operations', 'Operations desk'], ['research', 'Research desk'], ['review', 'Global watch'], ['method', 'Method & interpretation'], ['assurance', 'Capabilities & readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}
+        {[['review', 'Global watch'], ['research', 'Investigate'], ['operations', 'Records & review'], ['method', 'Method & interpretation'], ['assurance', 'Capabilities & readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}
         <button aria-pressed={deskPanel === 'register'} onClick={() => {setTab('review');setDeskPanel(tab === 'review' && deskPanel === 'register' ? null : 'register')}}>Session record register</button>
         <button aria-pressed={deskPanel === 'inspector'} onClick={() => {setTab('review');setDeskPanel(tab === 'review' && deskPanel === 'inspector' ? null : 'inspector')}}>Session evidence inspector</button>
         <button className="ev-import-button" onClick={() => { setTab('review'); setImportOpen(true); }}>+ Import evidence</button>
       </nav>
 
-      {tab === 'operations' && <OperationsDesk profiles={profiles}/>}
-      {tab === 'research' && <ResearchDesk onOperations={()=>setTab('operations')}/>}
-      {tab === 'review' && <>
+      <div className="ev-shared-scope"><span>{country?`WATCH SCOPE / ${country.name}`:'WATCH SCOPE / GLOBAL'}</span>{country&&<button onClick={()=>setCountry(null)}>Clear country ×</button>}<form onSubmit={e=>{e.preventDefault();investigate({question:inquiry,country_codes:country?[country.code]:[]})}}><label htmlFor="watch-inquiry">Ask SUNLIGHT</label><input id="watch-inquiry" minLength="8" required value={inquiry} onChange={e=>setInquiry(e.target.value)} placeholder={country?`Investigate a question about ${country.name}…`:'Ask about a country, flow, source or delivery discrepancy…'}/><button>Investigate →</button></form><button onClick={()=>setTab('review')}>Return to watch</button></div>
+      <div hidden={tab!=='operations'}>{opened.operations&&<OperationsDesk profiles={profiles} scopeCountry={country?.code}/>}</div>
+      <div hidden={tab!=='research'}>{opened.research&&<ResearchDesk context={investigationContext} onOperations={()=>setTab('operations')}/>}</div>
+      <div hidden={tab!=='review'}>
         <div className="ev-workspace">
           <aside className="ev-queue" hidden={deskPanel !== 'register'} aria-label="Record queue"><button className="ev-panel-close" onClick={() => setDeskPanel(null)}>Close register ×</button>
             <div className="ev-queue-title"><span>RECORD REGISTER</span><strong>{records.length.toString().padStart(2, '0')}</strong></div>
@@ -165,7 +171,7 @@ export default function EvidenceWorkspace() {
             {records.length > 0 && visibleRecords.length === 0 && <p className="ev-caption">No records match this filter.</p>}
             <div className="ev-register-note"><span>SESSION SCOPE</span><p>{run ? run.input_origin : 'No records analyzed'}. This register contains only this session’s analysis. Download packets to retain the evidence.</p></div>
           </aside>
-          <EvidenceGlobe records={records} selected={selected} onSelect={inspect} country={country} onCountry={value => { setCountry(value); setDeskPanel(null); }} origin={run?.input_origin}/>
+          <EvidenceGlobe records={records} selected={selected} onSelect={inspect} country={country} onCountry={value => { setCountry(value); setDeskPanel(null); }} origin={run?.input_origin} active={tab==='review'} onInvestigate={investigate}/>
           {importOpen && <div className="ev-import-overlay" onClick={e => { if (e.target === e.currentTarget) setImportOpen(false); }} onKeyDown={e => { if (e.key === 'Escape') setImportOpen(false); }}>
           <section className="ev-panel ev-input" role="dialog" aria-modal="true" aria-labelledby="ev-import-title">
             <button className="ev-close-import" onClick={() => setImportOpen(false)} aria-label="Close import">Close ×</button>
@@ -209,7 +215,7 @@ export default function EvidenceWorkspace() {
             </>}
           </section>
         </div>
-      </>}
+      </div>
 
       {tab === 'method' && <section className="ev-method">
         <div className="ev-method-lead"><p className="ev-eyebrow">HOW TO READ A RESULT</p><h2>Three readings.<br />Different questions.</h2><p>Keeping these distinctions visible prevents a score from becoming a claim the evidence cannot support.</p></div>

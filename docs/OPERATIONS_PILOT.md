@@ -1,7 +1,7 @@
 # Operations desk: a source-connected investigation pilot
 
-SUNLIGHT now opens on **Operations desk** at `/watch/`. The globe remains under
-**Global watch** (`/watch/#watch`). The operations workflow is independent of the
+SUNLIGHT opens on **Global watch** at `/watch/`. Open **Records & review**
+(`/watch/#operations`) to use the operational ledger. Country scope carries from the watch. The operations workflow is independent of the
 map animation: a source supplies versioned expected and observed measurements,
 the server validates and compares them, runs the applicable existing engines,
 and retains an investigation history.
@@ -17,7 +17,7 @@ and Compass adapters remain placeholders pending validated institutional schemas
 1. Register a source with a stable source ID, declared publisher reference,
    explicitly selected jurisdiction profile and expected publication interval.
    Registration is attribution, not publisher authentication.
-2. Open **Submit source records**. Paste or upload a JSON batch. The synthetic
+2. Open **Submit source records**. Use the guided form for a physical-delivery or payment snapshot: identifiers, source revision, countries, units/currency, period, baseline, due time, optional observation and source documents. Blank observations remain unknown and 0 is explicit. Submission records publication time. Advanced integrations can paste/upload a JSON batch. The synthetic
    example is an editable, clearly labeled demonstration; it is not seeded into
    the ledger or sent until you explicitly submit it.
 3. Submit the batch. The server validates it, runs the available engines and
@@ -29,7 +29,7 @@ and Compass adapters remain placeholders pending validated institutional schemas
 5. Assign an analyst label, follow a case, add a review note and save its workflow
    status. New current source evidence reopens the case while preserving following
    and ownership. Every review change remains in the case history.
-6. Download a case packet containing declared source configuration, all retained source revisions, stored engine
+6. Open the readable case brief and use **Print / save as PDF** for a report with measurements, calculation, evidence, findings, revisions and review notes. An advanced JSON case packet retains declared source configuration, all retained source revisions, stored engine
    responses, audit entries and local content-integrity verification.
 
 The visible desk refreshes every 15 seconds and on returning to a visible tab.
@@ -127,6 +127,7 @@ request schemas are in `/openapi.json`.
 | `GET /operations/cases` | Search/filter/paginate current cases and separated totals. |
 | `GET /operations/cases/{id}` | Current comparison, stored engine results and history. |
 | `POST /operations/cases/{id}/review` | Follow/assign/note/status with revision and audit-head locking. |
+| `GET /operations/cases/{id}/report` | Escaped, self-contained readable HTML brief, printable to PDF. |
 | `GET /operations/cases/{id}/export` | Full source/engine/review evidence packet. |
 
 An identical event replay is idempotent. Changed content under the same event ID,

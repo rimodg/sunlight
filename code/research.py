@@ -247,7 +247,8 @@ async def create_inquiry(request:InquiryInput):
         trade,trade_status=await cached_trade(request,scope) if 'goods_trade' in request.sources else ([],{'status':'not_selected'})
         facts,counts,metadata=await run_in_threadpool(retrieve_evidence,request,scope,trade)
         gaps=research_gaps(scope,request.community,request.sources,counts,metadata)
-        ai=await synthesize(request.question,facts,scope,[g['text'] for g in gaps]) if request.use_ai else {'status':'not_requested','synthesis':None,'sent_evidence_ids':[]}
+        from research_tools import make_tool_runner
+        ai=await synthesize(request.question,facts,scope,[g['text'] for g in gaps],tool_runner=make_tool_runner(request,scope,trade)) if request.use_ai else {'status':'not_requested','synthesis':None,'sent_evidence_ids':[]}
         inquiry_id=uuid.uuid4().hex;created_at=utcnow().isoformat()
         report={'schema_version':'sunlight.research.dossier.v1','id':inquiry_id,'created_at':created_at,'request':request.model_dump(mode='json'),
                 'scope':scope,'facts':facts,'candidate_counts':counts,'documents':metadata,'sources':[s for s in catalog() if s['id'] in request.sources],

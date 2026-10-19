@@ -1,8 +1,11 @@
-The default application entry is now the [Operations desk](OPERATIONS_PILOT.md), with persisted publisher snapshots and review history. The geographic interface described below remains under **Global watch**, or `/watch/#watch`.
+The default entry is **Global watch** (`/watch/#watch`). **Records & review** (`/watch/#operations`) provides the [operational ledger](OPERATIONS_PILOT.md), guided source intake and readable case briefs. A shared question bar and retained desk state carry country scope into investigation and operational filters.
 
-The [Research desk](RESEARCH_WORKSPACE.md) (`/watch/#research`) adds saved cross-layer inquiries, page-cited PDF text, review history and optional explicitly authorized model synthesis. It uses bounded retained evidence; it does not create a complete live economic census or turn documentary differences into theft findings.
+The [Investigate desk](RESEARCH_WORKSPACE.md) (`/watch/#research`) adds saved cross-layer inquiries, page-cited PDF text, review history and optional explicitly authorized model synthesis. It uses bounded retained evidence; it does not create a complete live economic census or turn documentary differences into theft findings.
 
 # Global watch and country research
+
+The directional layer now uses crisp moving chevrons along source-linked connections, with teal goods, pale material-subset, indigo arms and amber supplied-record links. Direction animation conveys orientation only, not shipment timing or monetary rate. **Coverage & source periods** lists actual source periods, loaded evidence and unavailable institutional domains. **Investigate this connection** carries endpoints, year and evidence layer to the saved inquiry. Connections open a readable HTML brief with print/save-to-PDF controls; JSON is an advanced audit export.
+
 
 `/watch/` opens on a full-width globe. The record register and evidence inspector open as overlays so they do not permanently narrow the map. Import continues to use the live single/batch analysis API, jurisdiction calibration, capacity allocation, rule citations, input gaps and exact-response verification packets.
 

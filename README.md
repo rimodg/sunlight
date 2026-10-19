@@ -1,16 +1,18 @@
 # SUNLIGHT
 
+The [institutional rebuild research](docs/INSTITUTIONAL_REBUILD_RESEARCH.md) grounds the next architecture in primary standards and documents what remains unconnected or unvalidated.
+
 The long-term direction is **The Global Humanitarian Watch**. Procurement is
 the operational entry point; broader categories must earn their own validated
 coverage. Read the [charter](docs/CHARTER_v2_global_humanitarian_watch.md) and the
 [institutional review brief](docs/INSTITUTIONAL_REVIEW.md) for current capability
 boundaries, the evaluation protocol, and a reproducible demonstration.
 
-The dashboard opens on the [Operations desk](docs/OPERATIONS_PILOT.md): register a publisher, submit versioned source snapshots, compare expected and observed measures, run the existing engines, and retain review notes and evidence history. Unknown observations and mismatched units do not become loss estimates. The ledger is a shared-access SQLite pilot; it needs a persistent hosting volume and validated institutional mappings before institutional use. No UN data connection is active.
+The dashboard opens on **Global watch**, with a shared country scope and a question bar linking the map to investigation. [Records & review](docs/OPERATIONS_PILOT.md) provides guided source forms, exact expected/observed comparisons, existing engine execution, review history and readable HTML briefs with print/save-to-PDF controls. JSON remains an advanced integration/audit option. Unknown observations and mismatched units do not become loss estimates. The ledger is a shared-access SQLite pilot; it needs a persistent hosting volume and validated institutional mappings before institutional use. No UN data connection is active.
 
-The [Research desk](docs/RESEARCH_WORKSPACE.md) adds saved, source-cited inquiries across the economic context and operations ledger, text-readable PDF uploads with page references, review notes and following. Evidence retrieval works without AI. Optional model synthesis needs securely configured credentials, a model ID and explicit authorization to share selected excerpts for each run. Questions, source facts, existing calculations and model hypotheses remain separate; national context does not establish community conditions or causes.
+The [Research desk](docs/RESEARCH_WORKSPACE.md) adds saved, source-cited inquiries across the economic context and operations ledger, text-readable PDF uploads with page references, review notes and following. Evidence retrieval works without AI. Optional model-assisted investigation can query selected evidence, compute source-specific statistics, inspect an operational case and read selected PDF pages. It needs securely configured credentials, a model ID and explicit authorization to share selected excerpts for each run. Questions, source facts, existing calculations and model hypotheses remain separate; national context does not establish community conditions or causes.
 
-The **Global watch** tab retains geographic context and the session JSON analysis workspace. Supplied OCDS-shaped JSON goes through the API, exposing findings, input gaps, calculation traces and downloadable content-addressed receipts. No random fixture scores are presented as operational results. Historical evaluation metrics below retain the sampling and corpus limits in the review brief.
+The **Global watch** workspace retains source-dated geographic context, directional chevrons, a source-coverage register and the advanced session analysis workspace. Supplied OCDS-shaped JSON goes through the API, exposing findings, input gaps, calculation traces and downloadable content-addressed receipts. No random fixture scores are presented as operational results. Historical evaluation metrics below retain the sampling and corpus limits in the review brief.
 
 The [global watch interface](docs/INVESTIGATION_INTERFACE.md) provides country
 research, category/value drilldowns, document registers and completion-evidence

@@ -2,18 +2,7 @@ import {memo,useEffect,useRef} from 'react';
 import {flowId,flowKind,flowColors} from './flows';
 import {flowProgress,globeProjector,routeVector,unitVector} from './flowMotion';
 
-const styles={
- material:{head:'#ffffff',glow:'rgba(255,255,255,.5)'},
- trade:{head:'#fff5b0',glow:'rgba(255,225,123,.5)'},
- arms:{head:'#356cba',glow:'rgba(83,139,222,.6)'},
- procurement:{head:'#e6fffa',glow:'rgba(180,224,218,.5)'},
-};
-function glowSprite(style) {
- const canvas=document.createElement('canvas');canvas.width=canvas.height=48;
- const ctx=canvas.getContext('2d'),gradient=ctx.createRadialGradient(24,24,1,24,24,24);
- gradient.addColorStop(0,style.glow);gradient.addColorStop(.25,style.glow);gradient.addColorStop(1,'rgba(0,0,0,0)');
- ctx.fillStyle=gradient;ctx.fillRect(0,0,48,48);return canvas;
-}
+const styles=Object.fromEntries(Object.entries(flowColors).map(([kind,color])=>[kind,{head:color}]));
 
 function FlowCanvas({links,rotation,zoom,motionAllowed,selectedId}) {
  const canvas=useRef(null), view=useRef({rotation,zoom,selectedId}), data=useRef([]), revision=useRef(0);
@@ -24,7 +13,6 @@ function FlowCanvas({links,rotation,zoom,motionAllowed,selectedId}) {
   const surface=canvas.current,ctx=surface.getContext('2d');
   if(!ctx)return;
   const routes=document.createElement('canvas'),routeContext=routes.getContext('2d');
-  const sprites=Object.fromEntries(Object.entries(styles).map(([kind,style])=>[kind,glowSprite(style)]));
   let frame,previous=null,seconds=0,painted=-1,scaleX=1,scaleY=1;
   function resize(){
    const box=surface.getBoundingClientRect(),ratio=Math.min(window.devicePixelRatio||1,2);
@@ -39,7 +27,7 @@ function FlowCanvas({links,rotation,zoom,motionAllowed,selectedId}) {
     const trace=flow=>{let drawing=false;const stride=zoom<=1.5?4:zoom<=3?2:1;for(let i=0;i<flow.samples.length;i+=stride){const [x,y,depth]=project(flow.samples[i]);if(depth<0){drawing=false;continue}if(drawing)routeContext.lineTo(x,y);else{routeContext.moveTo(x,y);drawing=true}}};
     for(const kind of Object.keys(styles)){
      routeContext.beginPath();for(const flow of data.current)if(flow.kind===kind&&flow.id!==selectedId)trace(flow);
-     routeContext.globalAlpha=selectedId ? .07 : .23;routeContext.strokeStyle=flowColors[kind];routeContext.lineWidth=.55;routeContext.stroke();
+     routeContext.globalAlpha=selectedId ? .08 : .34;routeContext.strokeStyle=flowColors[kind];routeContext.lineWidth=.55;routeContext.stroke();
     }
     const flow=data.current.find(f=>f.id===selectedId);
     if(flow){
@@ -56,16 +44,24 @@ function FlowCanvas({links,rotation,zoom,motionAllowed,selectedId}) {
    ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,surface.width,surface.height);ctx.drawImage(routes,0,0);ctx.setTransform(scaleX,0,0,scaleY,0,0);
    ctx.save();ctx.beginPath();ctx.arc(360,340,scale,0,Math.PI*2);ctx.clip();ctx.lineCap='round';
    for(const [kind,style] of Object.entries(styles)){
-    const flows=data.current.filter(f=>f.kind===kind),heads=[];
+    const flows=data.current.filter(f=>f.kind===kind);
     for(const flow of flows){
-     const point=project(routeVector(flow.samples,flowProgress(seconds,flow.index)));
-     if(point[2]>=0)heads.push([...point,flow.id===selectedId]);
+     const chosen=flow.id===selectedId;
+     const progress=flowProgress(seconds,flow.index);
+     const point=project(routeVector(flow.samples,progress));
+     const before=project(routeVector(flow.samples,Math.max(0,progress-.006)));
+     const after=project(routeVector(flow.samples,Math.min(1,progress+.006)));
+     if(point[2]<0||before[2]<0||after[2]<0)continue;
+     const angle=Math.atan2(after[1]-before[1],after[0]-before[0]);
+     const size=chosen?5.8:3.6;
+     ctx.globalAlpha=selectedId?(chosen?1:.18):.9;
+     ctx.strokeStyle=style.head;ctx.lineWidth=chosen?1.8:1.15;
+     ctx.beginPath();
+     ctx.moveTo(point[0]-size*Math.cos(angle-.55),point[1]-size*Math.sin(angle-.55));
+     ctx.lineTo(point[0],point[1]);
+     ctx.lineTo(point[0]-size*Math.cos(angle+.55),point[1]-size*Math.sin(angle+.55));
+     ctx.stroke();
     }
-    const radius=kind==='arms'?1.9:2.6;
-    ctx.globalAlpha=selectedId ? .35 : 1;
-    for(const [x,y] of heads)ctx.drawImage(sprites[kind],x-7,y-7,14,14);
-    ctx.beginPath();for(const [x,y] of heads){ctx.moveTo(x+radius,y);ctx.arc(x,y,radius,0,Math.PI*2)}ctx.fillStyle=style.head;ctx.fill();
-    ctx.globalAlpha=1;for(const [x,y,,chosen] of heads)if(chosen){ctx.drawImage(sprites[kind],x-9,y-9,18,18);ctx.beginPath();ctx.arc(x,y,radius+.6,0,Math.PI*2);ctx.fill()}
    }
    ctx.restore();
   }
