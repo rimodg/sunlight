@@ -28,7 +28,7 @@ WORK_SLOT=threading.BoundedSemaphore(1)
 MAX_PDF_BYTES=8*1024*1024
 MAX_DOCUMENTS=200
 MAX_ARCHIVE_BYTES=128*1024*1024
-LAYERS=Literal['procurement','materials','arms','conflicts','operations','goods_trade']
+LAYERS=Literal['procurement','materials','arms','conflicts','operations','goods_trade','delivery_assurance']
 
 
 @contextmanager
@@ -45,8 +45,9 @@ class InquiryInput(StrictModel):
     community:str=Field(default='',max_length=200)
     year_start:int|None=Field(default=None,ge=1992,le=2100)
     year_end:int|None=Field(default=None,ge=1992,le=2100)
-    sources:list[LAYERS]=Field(default_factory=lambda:list(SOURCE_LABELS),max_length=6)
+    sources:list[LAYERS]=Field(default_factory=lambda:list(SOURCE_LABELS),max_length=7)
     document_ids:list[str]=Field(default_factory=list,max_length=5)
+    obligation_ids:list[str]=Field(default_factory=list,max_length=10)
     use_ai:bool=False
     share_evidence_with_ai:bool=False
     refresh_trade:bool=False
@@ -59,6 +60,9 @@ class InquiryInput(StrictModel):
         if any(c not in BY_CODE for c in self.country_codes):raise ValueError('Select recognized country/territory ISO codes')
         self.document_ids=list(dict.fromkeys(self.document_ids));self.sources=list(dict.fromkeys(self.sources))
         if any(not __import__('re').fullmatch('[a-f0-9]{32}',d) for d in self.document_ids):raise ValueError('Invalid document ID')
+        self.obligation_ids=list(dict.fromkeys(self.obligation_ids))
+        if any(not __import__('re').fullmatch('[a-f0-9]{32}',d) for d in self.obligation_ids):raise ValueError('Invalid obligation ID')
+        if self.obligation_ids and 'delivery_assurance' not in self.sources:raise ValueError('Selected obligations require the delivery assurance layer')
         if self.year_start and self.year_end and self.year_start>self.year_end:raise ValueError('Year range is reversed')
         if not self.sources and not self.document_ids:raise ValueError('Select an evidence layer or a document')
         if self.use_ai and not self.share_evidence_with_ai:raise ValueError('AI mode requires explicit authorization to send the inquiry and selected excerpts to the provider')
@@ -84,6 +88,7 @@ def catalog():
         {'id':'arms','label':SOURCE_LABELS['arms'],'years':ARMS['years'],'coverage':ARMS['coverage']+' '+ARMS['gap_limit'],'url':ARMS['mirror_url'],'revision':ARMS['source_revision']},
         {'id':'conflicts','label':SOURCE_LABELS['conflicts'],'years':[CONFLICTS['year']],'coverage':CONFLICTS['coverage']+' Country filters use publisher reporting-area labels, not sovereign boundaries or procurement jurisdictions; Gaza may be coded under Israel.','url':CONFLICTS['mirror_url'],'revision':CONFLICTS['mirror_revision']},
         {'id':'operations','label':SOURCE_LABELS['operations'],'years':[],'coverage':'Latest 500 operational case revisions scanned, then scope-filtered. Declared source claims and existing engine findings only. Source push pilot, not a live UN feed.','url':'/operations/status'},
+        {'id':'delivery_assurance','label':SOURCE_LABELS['delivery_assurance'],'years':[],'coverage':'Registered obligations, separately attributed debit/credit entries and cumulative delivery/service reports. Latest 200 scoped obligations, or explicitly selected IDs; year filter uses obligation deadline. Synthetic examples excluded unless explicitly selected. Submitted claims are not authenticated financial or field feeds.','url':'/assurance/status'},
         {'id':'goods_trade','label':SOURCE_LABELS['goods_trade'],'years':[2023],'coverage':'Only already cached UN Comtrade preview responses unless you request a bounded refresh. Selected reporters, annual values, no live shipment tracking.','url':'https://comtradeapi.un.org/'}]
 
 
@@ -220,6 +225,7 @@ def research_gaps(scope,community,sources,counts,documents):
 
 
 def retrieve_evidence(request,scope,trade):
+    from delivery_assurance import research_facts as assurance_facts
     with research_connection() as db:
         if request.parent_inquiry_id and not db.execute('SELECT id FROM research_inquiries WHERE id=?',(request.parent_inquiry_id,)).fetchone():raise HTTPException(404,'Parent investigation not found')
         documents=[]
@@ -228,7 +234,8 @@ def retrieve_evidence(request,scope,trade):
             if not row:raise HTTPException(404,'A selected document was not found')
             documents.append(row)
         factories={'procurement':lambda:public_facts(scope),'materials':lambda:material_facts(scope),'arms':lambda:arms_facts(scope),
-                   'conflicts':lambda:conflict_facts(scope),'operations':lambda:operations_facts(db,scope),'goods_trade':lambda:trade}
+                   'conflicts':lambda:conflict_facts(scope),'operations':lambda:operations_facts(db,scope),'goods_trade':lambda:trade,
+                   'delivery_assurance':lambda:assurance_facts(scope,request.obligation_ids)}
         candidates=chain.from_iterable([*(factories[s]() for s in request.sources),document_facts(documents)])
         facts,counts=select_balanced(candidates,request.question,scope['countries'])
         metadata=[document_metadata(d) for d in documents]
@@ -244,6 +251,7 @@ async def create_inquiry(request:InquiryInput):
         if scope['ambiguous_names'] and not scope['countries']:
             raise HTTPException(422,'Ambiguous country name; select the country codes explicitly: '+', '.join(scope['ambiguous_names']))
         scope['community']=request.community
+        scope['obligation_ids']=request.obligation_ids
         trade,trade_status=await cached_trade(request,scope) if 'goods_trade' in request.sources else ([],{'status':'not_selected'})
         facts,counts,metadata=await run_in_threadpool(retrieve_evidence,request,scope,trade)
         gaps=research_gaps(scope,request.community,request.sources,counts,metadata)

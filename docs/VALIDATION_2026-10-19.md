@@ -77,3 +77,63 @@ claim registry and larger ingestion architecture remain staged work in the
 research brief. Persistent Render storage and the remote rollout were not
 verified from this environment. Existing source-connection, authentication and
 storage requirements continue to apply.
+
+## Delivery-assurance evolution
+
+Implemented a persistent public-obligation ledger and visible `/watch/#delivery`
+workspace. This supersedes the earlier limitation that the visible pilot could
+only compare two measurements submitted within one source revision: separately
+attributed debit/credit entries, cumulative physical snapshots and service
+outcomes are now distinct retained records. Their issuer identities and actual
+arrival remain unverified; no live bank feed was added.
+
+The workspace includes baseline registration, a six-stage chain, transfer-level
+reconciliation, stage-specific issues, evidence sources/corrections, explicit
+calibrated delivery runs, responsible follow-up and readable printable reports.
+It carries exact selected obligations into saved research and the optional
+read-only model tool. The synthetic worked example is isolated from the default
+institutional portfolio. See [the workflow and contracts](DELIVERY_ASSURANCE.md).
+
+- Full Python regression: **2,098 passed, 3 skipped**; Docker-live suite excluded.
+  Final focused assurance/research/report tests after the last core refinement:
+  **68 passed**. The existing TestClient deprecation warning remains.
+- Frontend tests: **42 passed**. Production `/watch/` build passed; the existing
+  single-bundle size advisory remains (about 748 KB before gzip).
+- Real Chromium: watch → assurance → isolated example → actual calibrated
+  `DEL-OUT-001` finding → printable report → exact-obligation saved inquiry.
+  Guided registration and source evidence required no JSON editing. Recorded
+  1,000 sent / 960 credited = 40 unresolved; accepted 73 of 100 = 27 kits short.
+  Follow-up completion required retained evidence and did not erase the gap.
+  Correcting acceptance retained the original and raised review of the earlier
+  completion evidence. Browser reload, country-to-watch handoff, retained desk
+  context, desktop/mobile overflow and browser-error checks passed.
+  A concurrent second-reviewer action blocked a stale correction; the browser
+  retained the typed draft and saved it after explicit review of the new version.
+  The retained smoke script also passed against already populated example history.
+- The explicit example separately shows 1,000,000 sent / 965,000 credited /
+  5,000 submitted pre-credit deductions = **30,000 claim-based residual**;
+  730 of 1,000 accepted kits = **270 kits short**; 18 of 25 clinics = **7 short**.
+  These are fictional, distinct measurements, not additive losses.
+- Generated PDF text was inspected for exact example quantities, source
+  references, calibrated findings and local integrity. Report tests cover escaped
+  script-like titles and retained history.
+- Stopped and restarted the local API against the same SQLite file: obligation
+  version, evidence and follow-ups persisted and local content-chain checks
+  remained valid. This does not establish a durable Render disk.
+- Changed Python sources parse for the production Docker Python 3.11 target.
+  The cloud test interpreter is Python 3.12; no new dependencies were introduced.
+
+The optional browser regression is retained at
+`sunlight-dashboard/scripts/smoke-delivery-assurance.cjs`. It requires an isolated
+local API database, a Playwright installation and Chromium. Set
+`SUNLIGHT_PLAYWRIGHT_MODULE` and `SUNLIGHT_CHROMIUM_PATH` to the environment's
+installed locations when necessary; `SUNLIGHT_SMOKE_URL` defaults to local port
+8043. The script refuses remote hosts and writes test evidence only to that
+isolated deployment. Artifacts default to `/tmp/sunlight-delivery-assurance-smoke`.
+
+Remaining integration boundaries: authenticated financial/receiving sources,
+institutional identities and source authorization, persistent hosting storage,
+multi-hop/FX/refund and allocation reconciliation, formal baseline amendments,
+institution-approved external interventions and evaluated live model assistance.
+The new ledger is a scoped working slice of the institutional architecture,
+not a complete worldwide origin-to-arrival service.

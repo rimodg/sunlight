@@ -8,6 +8,7 @@ TOOL_SCHEMAS=[
  {'type':'function','name':'search_selected_evidence','description':'Search the run’s selected evidence layers and PDFs with a more specific query. Original country/year/source permissions remain fixed. Returns a bounded evidence selection and source candidate counts, not exhaustive global coverage.','strict':True,'parameters':{'type':'object','properties':{'query':{'type':'string','minLength':3,'maxLength':1000}},'required':['query'],'additionalProperties':False}},
  {'type':'function','name':'read_selected_document_page','description':'Read up to 6000 characters from an original extracted page of a PDF explicitly selected for this inquiry. Scanned PDFs may have no text.','strict':True,'parameters':{'type':'object','properties':{'document_id':{'type':'string'},'page':{'type':'integer','minimum':1,'maximum':64},'character_start':{'type':'integer','minimum':0,'maximum':12000}},'required':['document_id','page','character_start'],'additionalProperties':False}},
  {'type':'function','name':'inspect_operational_case','description':'Inspect one operational case identifier from case:<identifier>:v<revision>. Runs the existing exact comparison on retained measurements and returns source and deadline basis. Only available if operations was selected and case matches original country/year scope. No writes or external actions.','strict':True,'parameters':{'type':'object','properties':{'case_id':{'type':'string'}},'required':['case_id'],'additionalProperties':False}},
+ {'type':'function','name':'inspect_delivery_obligation','description':'Inspect a registered delivery obligation and its separately attributed transfer, acceptance and service evidence. Requires selected delivery assurance layer and original country, deadline-year and obligation scope. Reports claims, missing evidence and follow-ups; cannot authenticate issuers or execute actions.','strict':True,'parameters':{'type':'object','properties':{'obligation_id':{'type':'string'}},'required':['obligation_id'],'additionalProperties':False}},
 ]
 
 
@@ -57,7 +58,23 @@ def make_tool_runner(request,scope,trade):
                 with research_connection() as db:rows=operations_facts(db,scope)
                 counts=Counter(r['values']['comparison']['state'] for r in rows)
                 if counts:facts.append(fact('statistics:operations:'+digest(scope)[:12],'operations','Operational comparison state counts',f"Latest 500 operational cases scanned, then scope-filtered: {'; '.join(str(n)+' '+name.replace('_',' ') for name,n in counts.items())}. Counts are cases, not added monetary shortfalls. Inspect each case for exact units, period, deadline and evidence.",dict(counts),source_urls['operations']))
-            return {'facts':facts,'limit':'Source-specific full retained public-scope statistics. Operations are capped at latest 500 cases; partial and unconnected sources remain missing. No global theft total.'}
+            if 'delivery_assurance' in request.sources:
+                from delivery_assurance import research_facts
+                rows=research_facts(scope,request.obligation_ids)
+                counts=Counter(s['stage'] for r in rows for s in r['values']['signals'])
+                if rows:facts.append(fact('statistics:obligations:'+digest(scope)[:12],'delivery_assurance','Registered delivery assurance coverage',f'{len(rows)} registered obligations in the bounded selected scope; unresolved issue counts by stage {dict(counts)}. Counts are not monetary loss totals. Deadline-year filters and explicit example selection apply.',{'registered_obligations':len(rows),'issues_by_stage':dict(counts)},'/assurance/status'))
+            return {'facts':facts,'limit':'Source-specific retained statistics. Operations scan latest 500 cases and delivery assurance latest 200 scoped obligations; no global theft total.'}
+        if name=='inspect_delivery_obligation':
+            oid=args.get('obligation_id')
+            if set(args)!={'obligation_id'} or not isinstance(oid,str) or not re.fullmatch('[a-f0-9]{32}',oid) or 'delivery_assurance' not in request.sources:return {'error':'A valid identifier and selected delivery assurance layer are required'}
+            if request.obligation_ids and oid not in request.obligation_ids:return {'error':'Obligation is outside the explicitly selected scope'}
+            from delivery_assurance import research_facts,get_obligation
+            from fastapi import HTTPException
+            try:record=get_obligation(oid)
+            except HTTPException:return {'error':'Obligation is unavailable'}
+            if record['obligation']['synthetic'] and oid not in request.obligation_ids:return {'error':'Synthetic examples require explicit selection'}
+            facts=research_facts(scope,[oid])
+            return {'facts':facts,'limit':'Retained claims and exact comparisons only. Outside-scope records return no evidence.'}
         if name=='search_selected_evidence':
             if set(args)!={'query'} or not isinstance(args['query'],str) or not 3<=len(args['query'])<=1000:return {'error':'Provide a query of 3–1000 characters only'}
             from research import retrieve_evidence

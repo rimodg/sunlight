@@ -563,6 +563,8 @@ from research import router as research_router
 app.include_router(research_router)
 from readable_reports import router as readable_reports_router
 app.include_router(readable_reports_router)
+from delivery_assurance import router as delivery_assurance_router
+app.include_router(delivery_assurance_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1237,6 +1239,8 @@ async def assurance():
              "scope": "Attributed push ingestion, versioned records, exact comparisons, persisted engine results and review history. UN connector not connected; persistent volume and institutional access controls remain required."},
             {"name": "Saved evidence research", "state": "API available", "endpoint": "/research/status",
              "scope": "Cross-layer retrieval, scoped read-only investigative tools, page-cited PDF text, readable briefs and saved review history. Model assistance requires credentials and explicit excerpt-sharing authorization. No complete global census, verified causal model or payment-control connection."},
+            {"name": "Delivery assurance workspace", "state": "API available", "endpoint": "/assurance/status",
+             "scope": "Persistent public obligations; separately attributed sender debits, recipient credits, delivery and service evidence; exact reconciliation, versioned corrections and accountable follow-ups. Submitted issuer identities are not authenticated. Bank feeds and intervention execution are not connected."},
             {"name": "Cross-category Registry and Need Ledger", "state": "Design", "endpoint": None,
              "scope": "Charter v2 direction, not a deployed global observation service."},
             {"name": "Payment control and enforcement", "state": "Outside current authority", "endpoint": None,

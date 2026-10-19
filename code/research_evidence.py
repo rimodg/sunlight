@@ -19,7 +19,7 @@ COUNTRIES=json.loads(Path(__file__).with_name('research_countries.json').read_te
 BY_CODE={c['code']:c for c in COUNTRIES}
 BY_ALPHA3={c['alpha3']:c for c in COUNTRIES}
 BY_NUMERIC={int(c['numeric']):c for c in COUNTRIES if c['numeric']}
-SOURCE_LABELS={'procurement':'Published procurement','materials':'Material exports','arms':'Arms declarations','conflicts':'Recorded violence','operations':'Operational cases','goods_trade':'Goods trade preview'}
+SOURCE_LABELS={'procurement':'Published procurement','materials':'Material exports','arms':'Arms declarations','conflicts':'Recorded violence','operations':'Operational cases','goods_trade':'Goods trade preview','delivery_assurance':'Delivery obligations & arrival evidence'}
 STOP=set('the a an in on at to of for and or is are was were be been how why what where when which with from between about investigate investigation analyze analyse community economic economics economy movement flow procurement trade global world show explain please document documents evidence'.split())
 
 

@@ -33,6 +33,50 @@ def measurement(value):
     return f"{value['value']} {value['currency'] or value['unit']}"
 
 
+@router.get('/assurance/obligations/{oid}/report', response_class=HTMLResponse)
+def assurance_report(oid: str):
+    from delivery_assurance import export_obligation
+    packet = export_obligation(oid)
+    c = packet['current']; o = c['obligation']; a = c['assessment']
+    body = '<p class="notice">' + ('SYNTHETIC WORKED EXAMPLE · ' if o['synthetic'] else '') + e(a['limitations']) + '</p>'
+    body += fields([('Obligation', o['reference']), ('Public promise', o['promise']), ('Community / intended recipients', o['community']),
+                    ('Recipient organization', o['recipient']), ('Programme owner label', o['owner']), ('Country / origin', o['country']+' / '+str(o['origin_country'] or 'Unspecified')),
+                    ('Deadline', o['due_at']), ('Budget context (not a debit)', str(o['budget'])+' '+str(o['currency']) if o['budget'] is not None else 'Not supplied'),
+                    ('Evidence / review version', c['version']), ('Assessed at', a['as_of'])])
+    body += '<p>' + link(o['baseline_url'], 'Obligation baseline') + ' · ' + link('/watch/?obligation='+oid+'#delivery', 'Open delivery workspace') + '</p>'
+    body += '<h2>Origin-to-arrival reconciliation</h2><p>Each row is one declared transfer identity and its attributable ledger entries. Credits may be partial. Pre-credit deductions remain submitted claims. Matching claimed amounts does not authenticate either issuer.</p>'
+    body += table(['Transfer / parties', 'Currency', 'Sent', 'Recorded arrival', 'Submitted pre-credit deductions', 'Raw difference', 'Residual / state'],
+                  [[t['transfer_id']+' · '+t['sender_id']+' → '+t['recipient_id'], t['currency'], t['sent'], t['received'], t['deductions'], t['raw_difference'], (t['residual'] if t['residual'] is not None else 'Not calculable')+' / '+t['state'].replace('_',' ')] for t in a['transfers']])
+    if not a['transfers']: body += '<p>No executed debit or recipient credit is recorded. A budget does not establish release or arrival.</p>'
+    body += '<h2>Physical delivery and service outcomes</h2>' + table(['Stage', 'Target / unit', 'Observed', 'Coverage through', 'Shortfall', 'State'],
+                  [[s['kind'], str(s['target']['value'])+' '+s['target']['unit'] if s['target'] else 'No target', s['observed'], s['covers_through'], s['shortfall'], s['state']] for s in a['stages']])
+    body += '<p>Latest cumulative reports are not added together. Different issuer reports, units and coverage times can block comparison. Payment, receipt, acceptance and service outcomes are separate facts; none establishes causation.</p>'
+    body += '<h2>Where to look next</h2>'
+    for s in a['signals']:
+        body += '<article><h3>'+e(s['title'])+'</h3><p>'+e(s['reason'])+'</p><p>Next evidence: '+e(s['next_step'])+'</p></article>'
+    if not a['signals']: body += '<p>Recorded stages meet the configured comparison conditions. Independent issuer authentication and field verification are still required.</p>'
+    body += '<h2>Calibrated delivery engine</h2>'
+    for run in c['analyses']:
+        body += '<article><h3>'+e(run['profile'])+'</h3><p>Evidence basis current: '+e(run['basis_current'])+' · '+e(run['created_at'])+'</p><p>'+e(run['scope'])+'</p>'
+        for finding in run['result'].get('fired_rules', []):
+            body += '<p><strong>'+e(finding.get('rule_id'))+'</strong> '+e(finding.get('evidence') or finding.get('description'))+'</p>'
+        if not run['result'].get('fired_rules'): body += '<p>No rules fired for the supplied comparable dimensions. This does not verify delivery.</p>'
+        body += '</article>'
+    if not c['analyses']: body += '<p>No calibrated delivery run recorded. Exact comparisons above remain available.</p>'
+    body += '<h2>Accountable follow-up</h2>' + table(['Action', 'Responsible label / due', 'Status', 'Latest note / completion evidence'],
+                  [[x['title'], x['owner']+' / '+x['due_at'], x['status'], x['note']+' / '+str(x.get('completion_evidence_id'))] for x in c['actions']])
+    body += '<p>Follow-ups are local review records. Completing an action does not erase a discrepancy or execute a payment intervention.</p><h2>Evidence register</h2>'
+    for x in c['evidence']:
+        body += '<article><h3>'+label(x['kind'])+' · '+e(x['value'])+' '+e(x['currency'] or x['unit'])+'</h3>'
+        body += fields([('Evidence identifier', x['id']), ('Declared issuer', x['issuer_name']+' / '+x['issuer_id']), ('Ledger entry reference', x['ledger_reference']),
+                        ('Observed / value time', x['observed_at']), ('Cumulative coverage', x['covers_through']), ('Received by SUNLIGHT', x['created_at']),
+                        ('Superseded by', x['superseded_by'] or 'Current'), ('Note', x['note']), ('Payload SHA-256', x['payload_hash'])])
+        body += '<p>'+link(x['document_url'])+'</p></article>'
+    body += '<h2>Evidence and follow-up history</h2>' + table(['Version', 'Time', 'Event'], [[i+1, h['payload']['at'], label(h['payload']['action'])] for i,h in enumerate(packet['history'])])
+    body += '<h2>Integrity</h2><p>Local history and retained content check: '+e(packet['integrity']['local_chain_and_content_valid'])+'</p><p>'+e(packet['integrity']['meaning'])+'</p><p>'+link('/assurance/obligations/'+oid+'/export', 'Advanced audit packet')+'</p>'
+    return HTMLResponse(page(o['title'], body, 'Delivery assurance brief · '+oid), headers={'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff'})
+
+
 @router.get('/operations/cases/{case_id}/report',response_class=HTMLResponse)
 def operation_report(case_id:str):
     from operations import export_case
