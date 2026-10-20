@@ -49,13 +49,8 @@ fs.mkdirSync(artifacts, { recursive: true });
   await p.waitForTimeout(450);
   await p.screenshot({ path: path.join(artifacts, "Monetary-Atlas.png") });
   await dock
-    .getByLabel("Find a monetary domain", { exact: true })
-    .fill("remittances");
-  assert.equal(await dock.locator(".ev-money-totals button").count(), 2);
-  await dock
-    .locator(".ev-money-totals button")
-    .filter({ hasText: "Personal remittances received" })
-    .click();
+    .getByLabel("Monetary map measure", { exact: true })
+    .selectOption("remittances_received");
   await p.waitForTimeout(400);
   assert.match(await dock.locator(".ev-money-selected").innerText(), /925.55B/);
   assert.match(
@@ -74,6 +69,9 @@ fs.mkdirSync(artifacts, { recursive: true });
     name: "Country monetary profile",
     exact: true,
   });
+  await dock
+    .getByText("Nigeria · all monetary measures", { exact: true })
+    .click();
   await profile.waitFor();
   assert.match(await profile.innerText(), /Nigeria/);
   assert.equal(await profile.locator("button").count(), 28);
@@ -89,15 +87,10 @@ fs.mkdirSync(artifacts, { recursive: true });
   await dock
     .getByLabel("Find a country or connection", { exact: true })
     .fill("");
-  await dock.getByLabel("Find a monetary domain", { exact: true }).fill("");
   await dock
     .getByLabel("Monetary source period", { exact: true })
     .selectOption("2026");
-  await dock
-    .locator(".ev-money-totals button")
-    .first()
-    .filter({ hasText: "Unavailable" })
-    .waitFor();
+  await dock.locator(".mw-focus").filter({ hasText: "Unavailable" }).waitFor();
   assert.match(
     await dock.locator(".ev-money-selected").innerText(),
     /No observation for this year/,
@@ -108,9 +101,8 @@ fs.mkdirSync(artifacts, { recursive: true });
     .getByLabel("Monetary source period", { exact: true })
     .selectOption("");
   await dock
-    .locator(".ev-money-totals button")
-    .filter({ hasText: "Bilateral development assistance" })
-    .click();
+    .getByLabel("Monetary map measure", { exact: true })
+    .selectOption("aid");
   await dock.locator(".ev-money-pair").first().waitFor();
   await dock.locator(".ev-money-pair").first().click();
   const tracking = p.getByRole("region", {

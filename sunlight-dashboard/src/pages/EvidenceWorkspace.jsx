@@ -72,7 +72,8 @@ export default function EvidenceWorkspace() {
   useEffect(()=>{setOpened(v=>({...v,[tab]:true}));history.replaceState(null,'',tab==='review'?'#watch':`#${tab}`)},[tab]);
   useEffect(()=>{function change(){const value=window.location.hash.slice(1);setTab(['queue','money','connections','delivery','research','operations','method','assurance'].includes(value)?value:'review')}window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change)},[]);
   function investigate(context){setInvestigationContext({...context,id:Date.now()});setTab('research')}
-  const [country, setCountry] = useState(null);
+  const [country, setCountry] = useState(()=>countryCatalog.find(c=>c.code===new URLSearchParams(location.search).get('country'))||null);
+  useEffect(()=>{const url=new URL(location.href);country?url.searchParams.set('country',country.code):url.searchParams.delete('country');history.replaceState(null,'',url)},[country?.code]);
   useEffect(()=>{
     const controller=new AbortController();let revision=0;
     setQueueOverview(null);setQueueError(false);
@@ -198,7 +199,7 @@ export default function EvidenceWorkspace() {
             {records.length > 0 && visibleRecords.length === 0 && <p className="ev-caption">No records match this filter.</p>}
             <div className="ev-register-note"><span>SESSION SCOPE</span><p>{run ? run.input_origin : 'No records analyzed'}. This register contains only this session’s analysis. Download packets to retain the evidence.</p></div>
           </aside>
-          <EvidenceGlobe onMoney={()=>setTab('money')} connectionsOpen={tab==='connections'} onConnections={()=>setTab('connections')} onCloseConnections={()=>setTab('review')} records={records} selected={selected} onSelect={inspect} country={country} onCountry={value => { setCountry(value); setDeskPanel(null); }} origin={run?.input_origin} active={true} onInvestigate={investigate}/>
+          <EvidenceGlobe moneyOpen={tab==='money'} reviewOverview={queueOverview} onReview={()=>openQueue(false)} onDelivery={()=>setTab('delivery')} onMoney={()=>setTab('money')} connectionsOpen={tab==='connections'} onConnections={()=>setTab('connections')} onCloseConnections={()=>setTab('review')} records={records} selected={selected} onSelect={inspect} country={country} onCountry={value => { setCountry(value); setDeskPanel(null); }} origin={run?.input_origin} active={true} onInvestigate={investigate}/>
           {importOpen && <div className="ev-import-overlay" onClick={e => { if (e.target === e.currentTarget) setImportOpen(false); }} onKeyDown={e => { if (e.key === 'Escape') setImportOpen(false); }}>
           <section className="ev-panel ev-input" role="dialog" aria-modal="true" aria-labelledby="ev-import-title">
             <button className="ev-close-import" onClick={() => setImportOpen(false)} aria-label="Close import">Close ×</button>

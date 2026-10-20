@@ -1,0 +1,354 @@
+.mw-tabs {
+  display: flex;
+  gap: 5px;
+  margin: 16px 0;
+  border-bottom: 1px solid #38545f;
+  padding-bottom: 8px;
+}
+.mw-tabs button {
+  flex: 1;
+  padding: 9px 6px !important;
+  font-size: 11px !important;
+}
+.mw-tabs [aria-pressed="true"] {
+  color: #bce4ce !important;
+  border-color: #89b79b !important;
+  background: #1b3a3e !important;
+}
+.mw-focus {
+  padding: 15px;
+  border: 1px solid #567c6d;
+  background: #142e36;
+  margin: 14px 0;
+}
+.mw-focus h2 {
+  margin: 4px 0 !important;
+  font-size: 22px !important;
+}
+.mw-focus .ev-money-value {
+  font-size: 32px;
+  display: block;
+}
+.mw-focus-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 9px 0;
+  font-size: 10px;
+  color: #afc9c8;
+}
+.mw-focus-meta span {
+  border: 1px solid #49645e;
+  padding: 3px 6px;
+}
+.mw-country-value {
+  border-top: 1px solid #41615e;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.mw-country-value strong {
+  display: block;
+  font-size: 24px;
+  color: #edce8f;
+}
+.mw-focus-actions,
+.mw-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin: 12px 0;
+}
+.mw-export-actions a {
+  display: inline-block;
+  padding: 8px 10px;
+  border: 1px solid #4a6770;
+  border-radius: 3px;
+  font-size: 11px;
+  color: #c7dfdd !important;
+}
+.mw-country-focus {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0;
+  align-items: end;
+}
+.mw-country-focus label {
+  flex: 1;
+  min-width: 0;
+}
+.mw-country-focus button {
+  flex: 0 0 auto;
+}
+.mw-evidence-bridge {
+  border-left: 2px solid #e1c27e;
+  padding: 12px;
+  background: #132a34;
+  margin: 16px 0;
+}
+.mw-evidence-bridge h3 {
+  font-size: 13px !important;
+  margin: 0 0 7px !important;
+}
+.mw-evidence-bridge p {
+  font-size: 11px;
+  margin: 8px 0 !important;
+}
+.mw-evidence-bridge strong {
+  color: #e7cf97;
+}
+.mw-evidence-bridge button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 6px 0;
+}
+.mw-analysis {
+  margin: 16px 0;
+}
+.mw-analysis > p {
+  font-size: 11px;
+}
+.mw-compare-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+}
+.mw-compare-filters > button {
+  align-self: end;
+  height: 41px;
+}
+.mw-add-country {
+  min-width: 0;
+}
+.mw-country-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 12px 0;
+}
+.mw-country-chips > span {
+  padding: 4px 7px;
+  background: #203c44;
+  border: 1px solid #43626b;
+  border-radius: 4px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+}
+.mw-country-chips small {
+  color: #adc7c8;
+  font-size: 9px;
+}
+.mw-country-chips button {
+  padding: 0 4px !important;
+}
+.mw-analysis-basis {
+  border-top: 1px solid #3b5963;
+  padding-top: 15px;
+}
+.mw-analysis-basis > strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 500;
+}
+.mw-analysis-basis > span {
+  font-size: 10px;
+  color: #b5cbd2;
+}
+.mw-analysis-basis p {
+  font-size: 11px;
+  border-left: 2px solid #9ab8d5;
+  padding-left: 9px;
+  margin: 10px 0 !important;
+}
+.mw-trend {
+  margin: 16px 0;
+}
+.mw-trend svg {
+  width: 100%;
+  display: block;
+  background: #0c202b;
+  border: 1px solid #334f59;
+  border-radius: 3px;
+}
+.mw-trend text {
+  fill: #aac0ca;
+  font:
+    9px system-ui,
+    sans-serif;
+}
+.mw-trend circle {
+  cursor: pointer;
+}
+.mw-trend circle:focus-visible {
+  outline: none;
+  stroke: #fff;
+  stroke-width: 3px;
+}
+.mw-legend {
+  display: flex;
+  gap: 8px 15px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+  font-size: 10px;
+  color: #c4d5da;
+}
+.mw-legend span {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.mw-legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.mw-point {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #56766f;
+  margin: 8px 0;
+  font-size: 11px;
+}
+.mw-point small {
+  display: block;
+  font-size: 9px;
+  color: #a2bbc3;
+}
+.mw-caption {
+  font-size: 10px !important;
+  color: #a3bbc6 !important;
+  line-height: 1.65;
+  margin: 9px 0 !important;
+}
+.mw-comparisons {
+  display: grid;
+  gap: 9px;
+}
+.mw-comparisons article {
+  border: 1px solid #3c5965;
+  padding: 12px;
+  background: #122b35;
+}
+.mw-comparisons header h3 {
+  font-size: 13px !important;
+  margin: 0 0 4px !important;
+}
+.mw-comparisons header > span {
+  color: #9db6c0;
+  font-size: 9px;
+}
+.mw-compare-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 9px 0;
+}
+.mw-compare-values span {
+  color: #a9c1cb;
+  font-size: 10px;
+}
+.mw-compare-values strong {
+  display: block;
+  color: #dbe9eb;
+  font-size: 17px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.mw-comparisons p {
+  margin: 4px 0 0 !important;
+  font-size: 10px;
+}
+.mw-table-scroll {
+  width: 100%;
+  overflow: auto;
+}
+.mw-table-scroll table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10px;
+}
+.mw-table-scroll td,
+.mw-table-scroll th {
+  padding: 8px;
+  border-bottom: 1px solid #314b56;
+  text-align: left;
+}
+.mw-table-scroll td:nth-child(3) {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.mw-catalog {
+  margin: 16px 0;
+}
+.mw-catalog > summary {
+  font-size: 12px;
+  color: #c1dbd5;
+  padding: 10px 0;
+}
+.mw-share {
+  margin: 10px 0;
+}
+.mw-share input {
+  font-size: 10px !important;
+}
+.mw-share p {
+  margin: 6px 0 !important;
+  font-size: 10px;
+}
+@media (max-width: 500px) {
+  .mw-focus {
+    padding: 12px;
+  }
+  .mw-focus-meta {
+    font-size: 9px;
+  }
+  .mw-compare-values strong {
+    font-size: 15px;
+  }
+  .mw-point {
+    flex-wrap: wrap;
+  }
+}
+.ev-cockpit .ev-money-desk label {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.ev-cockpit .ev-money-desk > .ev-money-filters {
+  margin: 12px 0;
+}
+.ev-cockpit .ev-money-desk > .ev-money-filters label:last-child {
+  grid-column: auto;
+}
+.ev-cockpit .ev-money-desk .ev-money-selected {
+  border: 0;
+  padding-top: 0;
+}
+.ev-cockpit .ev-money-desk .ev-eyebrow {
+  margin-bottom: 8px !important;
+  font-size: 9px;
+}
+.mw-analysis-headline {
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid #527469;
+  background: #142f36;
+}
+.mw-analysis-headline strong {
+  display: block;
+  color: #bae2cb;
+  font-size: 25px;
+  font-weight: 500;
+}
+.mw-analysis-headline span {
+  display: block;
+  font-size: 10px;
+  color: #b4c8ca;
+}

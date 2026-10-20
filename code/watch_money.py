@@ -2,11 +2,16 @@
 from decimal import Decimal
 import json
 from pathlib import Path
+import csv
+import io
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import HTMLResponse, Response
+from monetary_analysis import analyse
 
 SNAPSHOT = json.loads(Path(__file__).with_name('monetary_snapshot.json').read_text())
-COUNTRIES = {c['code'] for c in json.loads(Path(__file__).with_name('research_countries.json').read_text())}
+COUNTRY_CATALOG = json.loads(Path(__file__).with_name('research_countries.json').read_text())
+COUNTRIES = {c['code'] for c in COUNTRY_CATALOG}
 router = APIRouter()
 
 # A researched integration inventory, not a claim that these feeds are connected.
@@ -58,3 +63,44 @@ def atlas(year=None, country=None):
 @router.get('/watch-data/money')
 def monetary_atlas(year: int | None = Query(default=None,ge=2019,le=2026),country: str | None=None):
     return atlas(year,country)
+
+
+@router.get('/watch-data/money/analysis')
+def monetary_analysis(measure: str, countries: str='', baseline: int | None=None, year: int | None=None, direction: str='inward'):
+    return analyse(SNAPSHOT,COUNTRY_CATALOG,measure,countries,baseline,year,direction)
+
+
+@router.get('/watch-data/money/analysis/report', response_class=HTMLResponse)
+def monetary_analysis_report(measure: str, countries: str='', baseline: int | None=None, year: int | None=None, direction: str='inward'):
+    from readable_reports import e, fields, link, page, table
+    result=monetary_analysis(measure,countries,baseline,year,direction)
+    m=result['measure']
+    body=fields([('Measure',m['label']),('Accounting basis',m['kind'].replace('_',' ')),('Currency','USD · current prices'),
+                 ('Publisher aggregation method',m.get('aggregation_method') or ('Covered reported bilateral pairs' if measure=='aid' else 'Not supplied')),
+                 ('Baseline / comparison',f"{result['baseline_year']} / {result['year']}"),
+                 ('Country selection',', '.join(result['countries']) or 'World / covered total only'),
+                 ('Aid role',direction if measure=='aid' else 'Not applicable')])
+    body+='<p class="notice">'+e(result['interpretation'])+'</p><h2>Comparison</h2>'
+    body+=table(['Scope','Baseline USD','Comparison USD','Change USD','Change %','Comparability'],[
+        [s['name'],s['baseline']['value'],s['current']['value'],s['change']['difference'],s['change']['percent'],s['change']['status']]
+        for s in result['series']])
+    body+='<p>'+e(result['comparison_rule'])+'</p><h2>Retained annual observations</h2>'
+    body+=table(['Scope','Year','Exact published / covered USD','Basis','Covered countries or pairs'],[
+        [s['name'],p['year'],p['value'],p['basis'],p['coverage_count']] for s in result['series'] for p in s['points']])
+    body+='<h2>Definition and provenance</h2><p>'+e(m['definition'])+'</p><p>'+e(m['source'])+' · '+e(m['license'])+'</p>'
+    body+=link(m['source_url'],'Publisher definition')+'<p>'+e(result['provenance'])+'</p>'
+    body+=fields([('Source revision',result['source_revision']),('Mirror updated',result['mirror_updated_at']),('Retrieved',result['retrieved_at'])])
+    body+=link(result['source_repository']+'/tree/'+result['source_revision'],'Pinned source repository')
+    return HTMLResponse(page('Monetary analysis · '+m['label'],body,'Source-dated statistics · recipient settlement not verified'),headers={'Cache-Control':'no-store'})
+
+
+@router.get('/watch-data/money/analysis.csv')
+def monetary_analysis_csv(measure: str, countries: str='', baseline: int | None=None, year: int | None=None, direction: str='inward'):
+    result=monetary_analysis(measure,countries,baseline,year,direction)
+    buffer=io.StringIO(newline='');writer=csv.writer(buffer)
+    writer.writerow(['measure','country','country_name','year','exact_current_usd','basis','coverage_count','aid_direction','source_revision'])
+    for series in result['series']:
+        name=series['name'];name="'"+name if name.lstrip().startswith(('=','+','-','@')) else name
+        for point in series['points']:
+            writer.writerow([measure,series['country'],name,point['year'],point['value'],point['basis'],point['coverage_count'],result['aid_direction'] or '',result['source_revision']])
+    return Response(buffer.getvalue(),media_type='text/csv',headers={'Content-Disposition':f'attachment; filename="sunlight-{measure}-{result["year"]}.csv"','Cache-Control':'no-store'})

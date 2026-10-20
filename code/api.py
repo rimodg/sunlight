@@ -1227,6 +1227,8 @@ async def assurance():
              "scope": "Per-record results and a hard analyst-capacity ceiling with disclosed ties."},
             {"name": "Trade context", "state": "API connector", "endpoint": "/watch-data/trade",
              "scope": "Dated UN Comtrade public preview for selected reporters. Availability, coverage, and source errors are explicit. Not procurement spending or shipment tracking."},
+            {"name": "Monetary workbench", "state": "Published snapshot", "endpoint": "/watch-data/money/analysis",
+             "scope": "27 pinned source-dated monetary measures and signed bilateral aid; country/year comparisons, coverage-aware exact decimal changes, annual history and readable/CSV exports. Stocks, flows and economic context remain distinct. No live settlement feed, all-money sum or global theft calculation."},
             {"name": "Material contributions", "state": "Published snapshot", "endpoint": "/watch-data/materials",
              "scope": "2023 CEPII BACI-derived selected HS4 material exports, country composition and rounded leading-partner shares. Source coverage and provenance are explicit. Not GDP, domestic extraction or live shipments."},
             {"name": "Conflict observations", "state": "Published snapshot", "endpoint": "/watch-data/conflicts",
