@@ -23,6 +23,9 @@ def make_tool_runner(request,scope,trade):
             from research import research_connection,catalog
             from research_evidence import public_facts,material_facts,arms_facts,conflict_facts,operations_facts
             facts=[];source_urls={r['id']:r['url'] for r in catalog()}
+            if 'monetary' in request.sources:
+                from research_evidence import monetary_facts
+                facts.extend(monetary_facts(scope,summaries_only=True))
             if 'procurement' in request.sources:
                 groups=defaultdict(lambda:{'usd':Decimal(0),'contracts':0,'countries':0})
                 for f in public_facts(scope):

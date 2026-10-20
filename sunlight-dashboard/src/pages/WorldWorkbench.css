@@ -1161,3 +1161,61 @@
     font-size: 8px;
   }
 }
+
+/* Monetary evidence surrounds the permanent world surface. */
+.ev-open-money { color:#b6dfc1; margin-top:6px; padding:6px 9px; font-size:10px; }
+.ev-money-map-key { position:absolute; z-index:3; right:18px; top:114px; display:flex; max-width:min(390px,48%); background:#112b33ef; border:1px solid #567864; border-radius:4px; }
+.ev-money-map-key button { text-align:left; border:0; background:transparent; font-size:10px; padding:8px 11px; }
+.ev-money-map-key strong { display:block; color:#b8e3c3; font-size:24px; font-weight:500; }
+.ev-money-map-key small { display:block; color:#acc1c8; font-size:9px; line-height:1.6; }
+.ev-money-desk { padding:22px 20px; color:#d9e5e8; font-size:12px; line-height:1.65; }
+.ev-money-desk h1 { font-size:27px; margin:6px 0; }
+.ev-money-desk h2 { font-size:20px; margin:8px 0; }
+.ev-money-desk h3 { font-size:14px; }
+.ev-money-desk p { color:#aebfc6; }
+.ev-money-desk label { display:grid; gap:6px; font-size:11px; color:#b4c8ce; }
+.ev-money-desk select,.ev-money-desk input { width:100%; min-width:0; padding:10px; border:1px solid #3a535e; border-radius:3px; background:#10242e; color:#d9e5e8; }
+.ev-money-filters { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 0; }
+.ev-money-filters label:last-child { grid-column:1/-1; }
+.ev-money-rule { border-left:2px solid #bca978; padding-left:12px; font-size:11px; }
+.ev-money-totals { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:20px 0; }
+.ev-money-totals button { display:flex; flex-direction:column; text-align:left; padding:12px; border:1px solid #334d56; background:#112731; min-width:0; border-radius:4px; }
+.ev-money-totals button[aria-pressed=true] { border-color:#93d1a4; background:#19373b; }
+.ev-money-totals span { font-size:11px; line-height:1.5; }
+.ev-money-totals strong { font-weight:500; font-size:24px; color:#b6dfc1; margin:7px 0; }
+.ev-money-totals small { font-size:9px; line-height:1.6; color:#a6bbc3; }
+.ev-money-selected { border-top:1px solid #3b555e; padding-top:20px; scroll-margin:10px; }
+.ev-money-value { font-weight:500; font-size:30px; color:#b6dfc1; }
+.ev-money-selected > button { margin:15px 0; color:#b6dfc1; }
+.ev-money-country-list { display:grid; gap:3px; }
+.ev-money-country-list button { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; text-align:left; }
+.ev-money-country-list small { display:block; font-size:9px; color:#a6bbc3; }
+.ev-money-country-list strong { font-size:11px; font-weight:500; white-space:nowrap; }
+.ev-money-desk details { border-top:1px solid #334d56; padding:14px 0; margin-top:15px; }
+.ev-money-desk summary { cursor:pointer; color:#c5d9df; }
+.ev-money-desk article { border-bottom:1px solid #283f49; padding:5px 0; }
+.ev-money-desk a { color:#b6dfc1; overflow-wrap:anywhere; }
+.ev-money-pair { display:grid; text-align:left; width:100%; padding:10px; margin:3px 0; font-size:11px; }
+.ev-money-pair strong { color:#b6dfc1; font-weight:500; font-size:11px; }
+.ev-money-pagination { display:flex; align-items:center; justify-content:space-between; margin-top:14px; }
+@media(max-width:900px) { .ev-money-map-key { top:83px; right:10px; max-width:43%; } .ev-money-map-key strong { font-size:17px; } .ev-money-map-key small { font-size:8px; } .ev-open-money { font-size:9px; padding:3px; } }
+.ev-cockpit .ev-country-search { top:158px; }
+.ev-money-map-key { top:128px; }
+@container world (max-width:1100px) {
+  .ev-cockpit .ev-watch-counters { top:100px; }
+  .ev-cockpit .ev-country-search { top:220px; }
+  .ev-money-map-key { top:212px; max-width:43%; }
+}
+@media(max-width:900px) {
+  .ev-cockpit .ev-open-money { display:none; }
+  .ev-cockpit .ev-watch-counters { top:46px; }
+  .ev-cockpit .ev-country-search { top:130px; }
+  .ev-money-map-key { top:142px; }
+  .ev-cockpit.has-dock .ev-money-map-key { top:40px; max-width:48%; }
+  .ev-cockpit.has-dock .ev-money-map-key strong { font-size:15px; }
+  .ev-cockpit.has-dock .ev-money-map-key button { padding:5px 8px; font-size:9px; }
+}
+.ev-money-country-overview { border:1px solid #46665a; border-radius:4px; padding:12px; margin:15px 0; }
+.ev-money-country-overview button { display:flex; width:100%; justify-content:space-between; gap:12px; text-align:left; padding:9px 4px; border:0; border-bottom:1px solid #2e454e; border-radius:0; background:transparent; font-size:11px; }
+.ev-money-country-overview small { display:block; font-size:9px; color:#9bb4bd; }
+.ev-money-country-overview strong { font-size:13px; white-space:nowrap; color:#b6dfc1; font-weight:500; }

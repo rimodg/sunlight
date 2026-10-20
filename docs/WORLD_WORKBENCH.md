@@ -97,3 +97,14 @@ Both browser scripts require an isolated local API and environment-supplied
 Playwright/Chromium, using the variables described in the delivery-assurance
 validation record. They refuse remote hosts. Backend calculations and data feeds
 were not changed in this pass.
+
+## Monetary atlas
+
+The **Monetary atlas** rail tool (`#money`) adds source-dated global/covered totals
+for 27 measures, a complete country profile across those measures and a searchable
+bilateral net aid layer. Selecting a measure changes country observation symbols;
+selecting an aid relationship traces the actual source donor/recipient endpoints.
+The globe stays mounted beside the atlas and investigation. Stocks and national
+observations do not become invented directional payments. Read the
+[accounting and research notes](MONETARY_ATLAS.md), including the 17-domain
+integration inventory and publisher-versus-mirror provenance.

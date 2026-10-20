@@ -21,14 +21,14 @@ from starlette.concurrency import run_in_threadpool
 from operations import StrictModel,connection,canonical,digest,append_audit,utcnow
 from research_ai import provider_status,synthesize
 from research_evidence import (BY_CODE,COUNTRIES,SOURCE_LABELS,PROCUREMENT,MATERIALS,ARMS,CONFLICTS,
-    infer_scope,public_facts,material_facts,arms_facts,conflict_facts,operations_facts,trade_facts,select_balanced,fact)
+    infer_scope,public_facts,material_facts,arms_facts,conflict_facts,operations_facts,trade_facts,monetary_facts,select_balanced,fact)
 
 router=APIRouter(prefix='/research',tags=['Evidence research'])
 WORK_SLOT=threading.BoundedSemaphore(1)
 MAX_PDF_BYTES=8*1024*1024
 MAX_DOCUMENTS=200
 MAX_ARCHIVE_BYTES=128*1024*1024
-LAYERS=Literal['procurement','materials','arms','conflicts','operations','goods_trade','delivery_assurance']
+LAYERS=Literal['procurement','materials','arms','conflicts','operations','goods_trade','delivery_assurance','monetary']
 
 
 @contextmanager
@@ -45,7 +45,7 @@ class InquiryInput(StrictModel):
     community:str=Field(default='',max_length=200)
     year_start:int|None=Field(default=None,ge=1992,le=2100)
     year_end:int|None=Field(default=None,ge=1992,le=2100)
-    sources:list[LAYERS]=Field(default_factory=lambda:list(SOURCE_LABELS),max_length=7)
+    sources:list[LAYERS]=Field(default_factory=lambda:list(SOURCE_LABELS),max_length=8)
     document_ids:list[str]=Field(default_factory=list,max_length=5)
     obligation_ids:list[str]=Field(default_factory=list,max_length=10)
     use_ai:bool=False
@@ -83,6 +83,7 @@ class InquiryUpdate(StrictModel):
 
 def catalog():
     return [
+        {'id':'monetary','label':SOURCE_LABELS['monetary'],'years':list(range(2019,2027)),'coverage':'27 annual USD indicators, stocks and economic context kept separate; dated country observations and partial bilateral net aid. Pinned third-party WDI mirror, not authenticated settlement. Overlapping measures are never added.','url':'/watch-data/money','revision':'4252d91d988efc0f116d4fa48e92357b778729e5'},
         {'id':'procurement','label':SOURCE_LABELS['procurement'],'years':PROCUREMENT['years'],'coverage':PROCUREMENT['coverage'],'url':PROCUREMENT['source_repository'],'revision':PROCUREMENT['source_revision']},
         {'id':'materials','label':SOURCE_LABELS['materials'],'years':[MATERIALS['year']],'coverage':MATERIALS['definition']+' '+MATERIALS['route_precision'],'url':MATERIALS['mirror_url'],'revision':MATERIALS['source_revision']},
         {'id':'arms','label':SOURCE_LABELS['arms'],'years':ARMS['years'],'coverage':ARMS['coverage']+' '+ARMS['gap_limit'],'url':ARMS['mirror_url'],'revision':ARMS['source_revision']},
@@ -219,7 +220,7 @@ def research_gaps(scope,community,sources,counts,documents):
     if community:gaps.append({'kind':'geography','text':f'Community/place under study: {community}. Country-level totals and publisher reporting-area labels do not measure local conditions. No automatic community-to-country, social-condition or causal inference is made.'})
     gaps.extend([
         {'kind':'causation','text':'Trade patterns, conflict events and procurement discrepancies alone do not establish why a society trades as it does. Competing hypotheses require local, temporal and independent evidence.'},
-        {'kind':'comparability','text':'Goods trade overlaps material trade. Published procurement aggregates have no independently verified delivery amount. Currencies, units, stock/flow concepts and different periods must not be subtracted to invent a global theft gap.'},
+        {'kind':'comparability','text':'Goods trade overlaps material trade; aid, institutional financing and other income subsets can overlap too. Export/import views are not additive. Net flows can be negative; stocks and GDP are not payments. Published procurement and monetary statistics have no independently verified recipient credit or delivery amount. Currencies, units, stock/flow concepts and different periods must not be subtracted to invent a global theft gap.'},
         {'kind':'coverage','text':'Retrieval is lexical and source-balanced, capped at 40 excerpts and 10 per layer/document. A result is a bounded evidence dossier, not an exhaustive worldwide investigation or a validated answer to every part of the inquiry.'}])
     return gaps
 
@@ -233,7 +234,7 @@ def retrieve_evidence(request,scope,trade):
             row=db.execute('SELECT id,sha256,filename,received_at,extraction FROM research_documents WHERE id=?',(doc_id,)).fetchone()
             if not row:raise HTTPException(404,'A selected document was not found')
             documents.append(row)
-        factories={'procurement':lambda:public_facts(scope),'materials':lambda:material_facts(scope),'arms':lambda:arms_facts(scope),
+        factories={'monetary':lambda:monetary_facts(scope),'procurement':lambda:public_facts(scope),'materials':lambda:material_facts(scope),'arms':lambda:arms_facts(scope),
                    'conflicts':lambda:conflict_facts(scope),'operations':lambda:operations_facts(db,scope),'goods_trade':lambda:trade,
                    'delivery_assurance':lambda:assurance_facts(scope,request.obligation_ids)}
         candidates=chain.from_iterable([*(factories[s]() for s in request.sources),document_facts(documents)])

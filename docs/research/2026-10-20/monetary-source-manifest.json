@@ -1,0 +1,407 @@
+{
+  "revision": "4252d91d988efc0f116d4fa48e92357b778729e5",
+  "retrieved_at": "2026-10-20",
+  "files": [
+    {
+      "path": "datapoints/ddf--datapoints--bm_gsr_fcty_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bm_gsr_fcty_cd--by--economy--year.csv",
+      "sha256": "645ac1d7bcd8511dda6d3fd571d7db1cf76d1c69f3307bb23692eb0f91956d73",
+      "bytes": 295328
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bm_gsr_nfsv_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bm_gsr_nfsv_cd--by--economy--year.csv",
+      "sha256": "2a04382d7b8464e97662a6cd391df1382f362433bf44fc3984a0c02032105b40",
+      "bytes": 308690
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bm_klt_dinv_cd_wd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bm_klt_dinv_cd_wd--by--economy--year.csv",
+      "sha256": "410a2496c20deb22d6a5ab34e3bd3b3776e1dafb2ece8afd4fe3d6e41d4f6968",
+      "bytes": 299707
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bm_trf_pwkr_cd_dt--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bm_trf_pwkr_cd_dt--by--economy--year.csv",
+      "sha256": "2d8d4ae0c003af00531bd6c5df2c1c9d172113a9c15d2a91c5a3507b113e81d7",
+      "bytes": 291693
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bn_klt_ptxl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bn_klt_ptxl_cd--by--economy--year.csv",
+      "sha256": "3563a2f93b4342cec9dca943bce15857334a73df7971905d419f7cc9eeac5b90",
+      "bytes": 181444
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bx_gsr_fcty_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bx_gsr_fcty_cd--by--economy--year.csv",
+      "sha256": "a4ce260d61fa87a6958a7a0b69ea756d1a7bca3621d01545d57d2ae986261ed4",
+      "bytes": 285252
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bx_gsr_nfsv_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bx_gsr_nfsv_cd--by--economy--year.csv",
+      "sha256": "9a67f8f500a127b1ea6d884d8c09b411afe769021789beb081526b1f9b66d1b0",
+      "bytes": 306024
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bx_gsr_royl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bx_gsr_royl_cd--by--economy--year.csv",
+      "sha256": "d060921e0b68cc32588dea73aa802c41d8a19179d1139e7f65c678eb3c71a187",
+      "bytes": 190686
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bx_klt_dinv_cd_wd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bx_klt_dinv_cd_wd--by--economy--year.csv",
+      "sha256": "598c6d1f4c68aa395e87b658069f965820f25c46b4ff2e6d1941a1305d83cdf5",
+      "bytes": 375979
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bx_pef_totl_cd_wd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bx_pef_totl_cd_wd--by--economy--year.csv",
+      "sha256": "9f2e821fb8c163c9455d1ecba4a9fbe6f7839b12d8cece1f944977d3f23eed65",
+      "bytes": 251241
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bx_trf_curr_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bx_trf_curr_cd--by--economy--year.csv",
+      "sha256": "dc64f08c160fe273033dba9500a740c5cebf9fe1ed28f97e3e80102c46bba8c9",
+      "bytes": 283651
+    },
+    {
+      "path": "datapoints/ddf--datapoints--bx_trf_pwkr_cd_dt--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--bx_trf_pwkr_cd_dt--by--economy--year.csv",
+      "sha256": "7c5da7c3433267be3a76b55e46c11fa3bde7e014ca8455df397dfdb0e70eaacc",
+      "bytes": 297119
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_ausl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_ausl_cd--by--economy--year.csv",
+      "sha256": "c183f6de3c70378708063b1403c6f842c48dfd48e2bfad1faccc823a9741ca27",
+      "bytes": 205487
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_autl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_autl_cd--by--economy--year.csv",
+      "sha256": "c0795d1f18587945b5353ee16aba864036451a4acd7b0774b1f940ca5420f5b8",
+      "bytes": 225619
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_bell_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_bell_cd--by--economy--year.csv",
+      "sha256": "af7b6a0861779e2b068d31773a6dd56272a8ce3cf4b58569c7f7b6457d2db622",
+      "bytes": 227028
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_canl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_canl_cd--by--economy--year.csv",
+      "sha256": "9827b7148951848411b06dc3f881d4b7af5e0917f24b0d70c90bbf60f59e8b0c",
+      "bytes": 269302
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_cecl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_cecl_cd--by--economy--year.csv",
+      "sha256": "4e9cd6b14c7cd41dec5e091c0cfa8dd18887bdb69e47cb4328c8ab8e59ea6bab",
+      "bytes": 276257
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_chel_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_chel_cd--by--economy--year.csv",
+      "sha256": "d57e3f8f980f5c21ccdfc5e758cc9c2587023bff5ac312f0811066daf74854d0",
+      "bytes": 238864
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_czel_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_czel_cd--by--economy--year.csv",
+      "sha256": "e0cf158ba96712a0ba6b313d119b4a2c070cd7633c416c9376bdead82352b97d",
+      "bytes": 67046
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_deul_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_deul_cd--by--economy--year.csv",
+      "sha256": "80fdabdce51288111c6876370a2c63de294a90ef4d54568ff40d79d816fe8623",
+      "bytes": 300173
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_dnkl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_dnkl_cd--by--economy--year.csv",
+      "sha256": "e5d62c3346c94097f40b8bd6612a11e19fc46c400a3e2eb6248aea5305022549",
+      "bytes": 194551
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_espl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_espl_cd--by--economy--year.csv",
+      "sha256": "9c5e1ee5c631cec7a6a501a16c8aa2680f5b40b8b05f4c934a4bdbc5ecfce22e",
+      "bytes": 153694
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_estl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_estl_cd--by--economy--year.csv",
+      "sha256": "0d44d884d09a6200916132cf305d68c532d7c571d4e9144ae0fbf1abd760e977",
+      "bytes": 29594
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_finl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_finl_cd--by--economy--year.csv",
+      "sha256": "61c7aa717cc307f44e154b50b0457b0a1cc103dd80f3d366ba7b5d6990783263",
+      "bytes": 186724
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_fral_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_fral_cd--by--economy--year.csv",
+      "sha256": "5445666e16df27402e62be8ddf27889bf7a72f06c11d91d3e913851958a127ab",
+      "bytes": 267818
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_gbrl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_gbrl_cd--by--economy--year.csv",
+      "sha256": "1de3c729903b34e0df0a81464081e6e0c8489947843bd1d130a8b6970f42230b",
+      "bytes": 286098
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_grcl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_grcl_cd--by--economy--year.csv",
+      "sha256": "9cb760d78fb26135fbcbd445ceb93486d8847828effda18aa906eb35cf715af1",
+      "bytes": 85883
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_hunl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_hunl_cd--by--economy--year.csv",
+      "sha256": "fc5e56dd4cb1230f02e134d69a56fa5ff6117a536080270b92e1fdd8a529a075",
+      "bytes": 55954
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_irll_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_irll_cd--by--economy--year.csv",
+      "sha256": "66047a01bf5cccdc3e179424ec952182f8934da88ee58ed0765ed57d34096245",
+      "bytes": 147982
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_isll_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_isll_cd--by--economy--year.csv",
+      "sha256": "3910dd1f3ba8c5855fdbe1bad777562cd98d9eb0dcba4d9e081f122845972ca3",
+      "bytes": 55312
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_ital_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_ital_cd--by--economy--year.csv",
+      "sha256": "2242833b5dde6bf5e36fd6dca9856f6d3f21ccccb3ab10a755e7bd5695b68209",
+      "bytes": 240954
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_jpnl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_jpnl_cd--by--economy--year.csv",
+      "sha256": "4dcce02eb56606029717df2f264acfe322a04a85f67567a661bab0da3824ae18",
+      "bytes": 292295
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_korl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_korl_cd--by--economy--year.csv",
+      "sha256": "f8cd20b13537aeecde1235c983f2ebbb518c5a78d242efb5d484300cf3e43da5",
+      "bytes": 173764
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_ltul_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_ltul_cd--by--economy--year.csv",
+      "sha256": "d5083212923b5a2e41fb02cb706706d2793efe898ee49aff45fbce060630b87a",
+      "bytes": 36481
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_luxl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_luxl_cd--by--economy--year.csv",
+      "sha256": "d038fd49f029a9553c2ace78aa15c2acf1f2ce30730a6c2c8bbc46e60a66d270",
+      "bytes": 115305
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_nldl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_nldl_cd--by--economy--year.csv",
+      "sha256": "33fbd303f6179c72551f83c9cc87e958c869534e29172f18beb594d064904b2a",
+      "bytes": 235316
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_norl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_norl_cd--by--economy--year.csv",
+      "sha256": "a328b3bf84bc03ac76858b01a2e9d8d2ed42ead768fc5b4a17da2a3cfba08eba",
+      "bytes": 216936
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_nzll_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_nzll_cd--by--economy--year.csv",
+      "sha256": "7a674b64cc8066382e3567c38418b694c6b739e5cdf16db794a1368d1e6e79a9",
+      "bytes": 148513
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_poll_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_poll_cd--by--economy--year.csv",
+      "sha256": "4ca49860aabccdb9be697a753f948d5f72e8968c26748adfb9c670df653b3e9e",
+      "bytes": 66775
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_prtl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_prtl_cd--by--economy--year.csv",
+      "sha256": "a585437044db10b6b1392042d50aad09ec6527f4736a38a770b5f380bd4c6cd1",
+      "bytes": 87610
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_svkl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_svkl_cd--by--economy--year.csv",
+      "sha256": "afbd17041208767d8b519b9054be65db52f1f8fb9e64ba3e773bdc601dcc13d6",
+      "bytes": 37488
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_svnl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_svnl_cd--by--economy--year.csv",
+      "sha256": "0cc4ba4b4c1229816e27628f09e96e3143b8f3e2accc6d7ca62a9de508413833",
+      "bytes": 34549
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_swel_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_swel_cd--by--economy--year.csv",
+      "sha256": "a87de6babafe1ede21655419e3f3513baae6b6522ada914f6b4126a2bdd46e68",
+      "bytes": 211649
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_dac_usal_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_dac_usal_cd--by--economy--year.csv",
+      "sha256": "75914a933f229f72089d2645d658357d540c921fd5167292b42a5f5649cba23e",
+      "bytes": 282272
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dc_oda_totl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dc_oda_totl_cd--by--economy--year.csv",
+      "sha256": "582482c2820d33a07e8dc5de78ecdfaf043fd01bac179021adac2795a6b19cab",
+      "bytes": 49005
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dt_dod_dect_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dt_dod_dect_cd--by--economy--year.csv",
+      "sha256": "761526ef185658b81c48f7375814dccf52f5f75371911b3964f61428fb0ce672",
+      "bytes": 200957
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dt_nfl_imfc_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dt_nfl_imfc_cd--by--economy--year.csv",
+      "sha256": "fcddaaaab99f6d504bb782c443aec37a14d6ec196c797c2cd81e1c42f583b02a",
+      "bytes": 33747
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dt_nfl_imfn_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dt_nfl_imfn_cd--by--economy--year.csv",
+      "sha256": "7879d0b032dd24221327e3fafc64d80d453ae57fc2768f32ea7df080d65669aa",
+      "bytes": 123273
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dt_nfl_mibr_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dt_nfl_mibr_cd--by--economy--year.csv",
+      "sha256": "f2b591d6eda266dd5346c073e3a8dc8fa80956055b932c45543867b5602d7706",
+      "bytes": 186322
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dt_nfl_mida_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dt_nfl_mida_cd--by--economy--year.csv",
+      "sha256": "c656088861fbf00fe771eb31434253e1c169ec8c31d7ffdb4e46acdc92982ccc",
+      "bytes": 204428
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dt_oda_odat_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dt_oda_odat_cd--by--economy--year.csv",
+      "sha256": "a257a403eff762b956e211794ca19afdfecd3e8844a02e28d5c39aae285e7481",
+      "bytes": 344180
+    },
+    {
+      "path": "datapoints/ddf--datapoints--dt_tds_dect_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--dt_tds_dect_cd--by--economy--year.csv",
+      "sha256": "0cbfb81474135b184a6d37eea90c37a26f59227166c27284dd431b76be3721ff",
+      "bytes": 192844
+    },
+    {
+      "path": "datapoints/ddf--datapoints--fi_res_totl_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--fi_res_totl_cd--by--economy--year.csv",
+      "sha256": "317c685d7ddbbff9bb4c2a7e8798684bf8d74d5786b0b9f7ccd2690d7fdadcdc",
+      "bytes": 291160
+    },
+    {
+      "path": "datapoints/ddf--datapoints--ms_mil_xpnd_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--ms_mil_xpnd_cd--by--economy--year.csv",
+      "sha256": "43d583de855f82c75e22b48320a73f094b0bb3d4dabfe9eec25d97e723750f50",
+      "bytes": 326425
+    },
+    {
+      "path": "datapoints/ddf--datapoints--ne_con_govt_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--ne_con_govt_cd--by--economy--year.csv",
+      "sha256": "6e18c4121420997e19dfad3446b1757a8f9c11aeb5f5b2d44a9cbd1dc15be018",
+      "bytes": 345957
+    },
+    {
+      "path": "datapoints/ddf--datapoints--ny_gdp_mktp_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--ny_gdp_mktp_cd--by--economy--year.csv",
+      "sha256": "bace52d78062e9000f32efac2fdcff4bba487d9c25e6ee6b3c6ee834aa2f1e47",
+      "bytes": 471921
+    },
+    {
+      "path": "datapoints/ddf--datapoints--st_int_rcpt_cd--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--st_int_rcpt_cd--by--economy--year.csv",
+      "sha256": "d21a3b97676e767d7ec8a2fecf1d95a4cea1aae8a30dcb498243ee4597a0b2c0",
+      "bytes": 152303
+    },
+    {
+      "path": "datapoints/ddf--datapoints--tm_val_mrch_cd_wt--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--tm_val_mrch_cd_wt--by--economy--year.csv",
+      "sha256": "947e98148f3690ad64e1d0227f935a2125ab7b5a1d7fa471fae24a0e37f614ea",
+      "bytes": 465453
+    },
+    {
+      "path": "datapoints/ddf--datapoints--tx_val_mrch_cd_wt--by--economy--year.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/datapoints/ddf--datapoints--tx_val_mrch_cd_wt--by--economy--year.csv",
+      "sha256": "98795ad772e0aeb3759e4df7409fab430a6e16704e8d49b891415eb67c764715",
+      "bytes": 464231
+    },
+    {
+      "path": "ddf--concepts--continuous.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/ddf--concepts--continuous.csv",
+      "sha256": "4d2fafe7196db67d9a47f7f86968576f18cadb709a75cbdd5c4339532b559906",
+      "bytes": 6713082
+    },
+    {
+      "path": "ddf--entities--economy--country.csv",
+      "url": "https://raw.githubusercontent.com/open-numbers/ddf--world_bank--world_development_indicators/4252d91d988efc0f116d4fa48e92357b778729e5/ddf--entities--economy--country.csv",
+      "sha256": "4a949d4ff018be208a0e504a26cf6570c88820c79b4f35bd7d65d32e9c5071b5",
+      "bytes": 137608
+    }
+  ],
+  "excluded_entities": [
+    {
+      "source_code": "chi",
+      "name": "Channel Islands",
+      "reason": "Historical entity or combined reporting area without a single catalogue country; not allocated to successor countries."
+    },
+    {
+      "source_code": "csk",
+      "name": "Czechoslovakia (former)",
+      "reason": "Historical entity or combined reporting area without a single catalogue country; not allocated to successor countries."
+    },
+    {
+      "source_code": "ant",
+      "name": "Netherlands Antilles (former)",
+      "reason": "Historical entity or combined reporting area without a single catalogue country; not allocated to successor countries."
+    },
+    {
+      "source_code": "yug",
+      "name": "Serbia and Montenegro (former)",
+      "reason": "Historical entity or combined reporting area without a single catalogue country; not allocated to successor countries."
+    },
+    {
+      "source_code": "sun",
+      "name": "USSR (former)",
+      "reason": "Historical entity or combined reporting area without a single catalogue country; not allocated to successor countries."
+    },
+    {
+      "source_code": "yugf",
+      "name": "Yugoslavia (former)",
+      "reason": "Historical entity or combined reporting area without a single catalogue country; not allocated to successor countries."
+    }
+  ],
+  "code_aliases": {
+    "xkx": "XK"
+  }
+}

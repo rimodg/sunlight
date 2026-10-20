@@ -207,6 +207,20 @@ function FlowCanvas({
         ctx.fill();
       }
       ctx.globalAlpha = 0.85;
+      for (const observation of currentScene?.moneyPoints || []) {
+        const p = project(observation.vector);
+        if (p[2] < 0.04) continue;
+        const value = Number(observation.value);
+        // A bounded logarithmic symbol, explicitly labelled in the map key.
+        const size = Math.max(2, Math.min(7, Math.log10(1 + Math.abs(value)) * .48));
+        ctx.fillStyle = "#93d1a4";
+        ctx.strokeStyle = "#93d1a4";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], size, 0, Math.PI * 2);
+        if (value < 0) ctx.stroke();
+        else ctx.fill();
+      }
       ctx.fillStyle = "#d87976";
       ctx.beginPath();
       for (const point of currentScene?.conflicts || []) {

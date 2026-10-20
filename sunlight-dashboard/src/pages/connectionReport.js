@@ -5,6 +5,7 @@ export function connectionReport(link,materialSource,nextEvidence){
  const e=reportEscape,[from,to]=flowEnds(link),kind=flowKind(link);
  let body=`<h1>${e(from)} → ${e(to)}</h1><p>${e(flowNames[kind])} · ${e(link.period||link.year||'Supplied record')}</p><h2>Published measure</h2><p class="measure">${e(flowMeasure(link))}</p>`;
  if(kind==='material')body+=`<p>${e(link.product.name)}. Rounded leading-partner share, using ${link.direction===1?'exporter exports':'importer imports'} as its denominator. Exact bilateral dollars, extraction origin and actual transport path are unavailable.</p><p>${source(materialSource,'Pinned material source')}</p>`;
+ if(kind==='aid')body+=`<p>Annual net bilateral aid disbursements; USD ${e(link.exactUSD)} as retained in the source extract. Net of repayments; no independently verified recipient credit. ${source(link.sourceURL,'Publisher indicator')} · ${source(link.mirrorURL,'Pinned data extract')}</p>`;
  if(kind==='trade')body+=`<p>Annual reported total-goods exports. The goods relationship does not identify a payment’s payer, payee or banking route.</p><p>${source(link.sourceURL,'Original export source query')}</p>`;
  if(kind==='arms'){
   body+='<h2>Category reporting comparisons</h2><p>Quantities remain separate by family/category and source year. A reporting difference is not a missing/diverted-weapon count.</p>';

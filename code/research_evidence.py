@@ -20,6 +20,7 @@ BY_CODE={c['code']:c for c in COUNTRIES}
 BY_ALPHA3={c['alpha3']:c for c in COUNTRIES}
 BY_NUMERIC={int(c['numeric']):c for c in COUNTRIES if c['numeric']}
 SOURCE_LABELS={'procurement':'Published procurement','materials':'Material exports','arms':'Arms declarations','conflicts':'Recorded violence','operations':'Operational cases','goods_trade':'Goods trade preview','delivery_assurance':'Delivery obligations & arrival evidence'}
+SOURCE_LABELS['monetary']='Monetary atlas · WDI and bilateral aid'
 STOP=set('the a an in on at to of for and or is are was were be been how why what where when which with from between about investigate investigation analyze analyse community economic economics economy movement flow procurement trade global world show explain please document documents evidence'.split())
 
 
@@ -72,6 +73,38 @@ def fact(fid,source,title,text,values,url,**extra):
 
 def selected(code,scope):
     return not scope['countries'] or code in scope['countries']
+
+
+def monetary_facts(scope, summaries_only=False):
+    from watch_money import SNAPSHOT as monetary
+    for layer in monetary['layers']:
+        matching=[r for r in layer['rows'] if period_matches(r['year'],scope)]
+        # One explicitly dated year per measure; never sum different years.
+        years={r['year'] for r in matching}
+        year=max(years,default=None) if scope['year_start'] is not None or scope['year_end'] is not None else layer['year']
+        annual=[r for r in matching if r['year']==year]
+        national=[r for r in annual if r['country']!='WLD' and selected(r['country'],scope)]
+        world=next((r for r in annual if r['country']=='WLD'),None) if not scope['countries'] else None
+        if national or world:
+            total=world['value'] if world else str(sum((Decimal(r['value']) for r in national),Decimal(0)))
+            basis='publisher world aggregate' if world else 'covered selected economy sum'
+            values={'usd':total,'currency':'USD','year':year,'measure':layer['id'],'kind':layer['kind'],'basis':basis,'economies':len(national),'indicator':layer['indicator']}
+            yield fact(f'monetary:summary:{layer["id"]}:{year}:{"-".join(scope["countries"])}','monetary',f'{layer["label"]} / {year}',f'{layer["label"]}: USD {total}, {year}, {basis}; {layer["kind"]}. Not additive across measures: import/export views and aid subsets overlap; stocks and GDP are not payments. Annual statistics do not authenticate recipient bank credits.',values,layer['mirror_url'])
+        if summaries_only:continue
+        for r in national:
+            c=BY_CODE[r['country']]
+            yield fact(f'monetary:{layer["id"]}:{r["country"]}:{year}','monetary',f'{c["name"]}: {layer["label"]} / {year}',f'{c["name"]}, {layer["label"]}: USD {r["value"]} in {year}. Basis: {layer["kind"]}, {layer["direction"]}. {layer["definition"]} A national observation identifies no bilateral payer/payee or verified arrival.',{'usd':r['value'],'year':year,'measure':layer['id'],'kind':layer['kind'],'indicator':layer['indicator']},layer['mirror_url'],country=r['country'])
+    aid=monetary['aid']
+    candidates=[r for r in aid['rows'] if period_matches(r['year'],scope)]
+    year=max((r['year'] for r in candidates),default=None) if scope['year_start'] is not None or scope['year_end'] is not None else aid['year']
+    matching=[r for r in candidates if r['year']==year and (not scope['countries'] or any(c in scope['countries'] for c in [r['from'],r['to']]))]
+    if matching:
+        total=str(sum((Decimal(r['usd']) for r in matching),Decimal(0)))
+        yield fact(f'monetary:summary:bilateral_aid:{year}:{"-".join(scope["countries"])}','monetary',f'Covered bilateral net aid / {year}',f'Covered donor-recipient net aid, {year}: USD {total} across {len(matching)} signed pair observations. This is partial donor/recipient coverage and overlaps ODA. Country scope includes either endpoint, not solely incoming funds; negative net entries are not reversed payments. Statistical disbursements are not authenticated recipient credits.',{'usd':total,'year':year,'measure':'bilateral_aid','kind':'net_flow','basis':'covered selected bilateral pairs','pairs':len(matching)},monetary['source_repository']+'/tree/'+monetary['source_revision'])
+    if summaries_only:return
+    for r in candidates:
+        if r['year']!=year or (scope['countries'] and not any(c in scope['countries'] for c in [r['from'],r['to']])):continue
+        yield fact(f'monetary:aid:{r["from"]}:{r["to"]}:{year}','monetary',f'{BY_CODE[r["from"]]["name"]} → {BY_CODE[r["to"]]["name"]} net bilateral aid / {year}',f'Net bilateral aid disbursements USD {r["usd"]}, {year}; donor {r["from"]}, recipient {r["to"]}. Net of principal repayments; a negative figure is not a reversed payment. Overlaps ODA aggregates. Recipient bank credit and public benefit require separate evidence.',{'usd':r['usd'],'year':year,'donor':r['from'],'recipient':r['to'],'indicator':r['indicator']},r['mirror_url'],country=r['to'])
 
 
 def public_facts(scope):

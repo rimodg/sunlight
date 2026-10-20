@@ -227,7 +227,7 @@ def test_export_detects_local_content_changes(client,target):
 
 
 def test_community_and_unsupported_period_remain_coverage_gaps(client):
-    r=inquiry(client,community='Tarkwa',year_start=2025,year_end=2025)['report']
+    r=inquiry(client,community='Tarkwa',year_start=2025,year_end=2025,sources=['materials','arms','procurement','conflicts'])['report']
     assert not r['facts'] and all(r['candidate_counts'].get(s,0)==0 for s in ['materials','arms','procurement','conflicts'])
     assert any('Country-level totals' in g['text'] for g in r['gaps'])
     assert any('do not establish why' in g['text'] for g in r['gaps'])

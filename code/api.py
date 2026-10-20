@@ -553,6 +553,8 @@ from watch_procurement import router as watch_procurement_router
 app.include_router(watch_procurement_router)
 from watch_materials import router as watch_materials_router
 app.include_router(watch_materials_router)
+from watch_money import router as watch_money_router
+app.include_router(watch_money_router)
 from watch_conflicts import router as watch_conflicts_router
 app.include_router(watch_conflicts_router)
 from watch_arms import router as watch_arms_router
