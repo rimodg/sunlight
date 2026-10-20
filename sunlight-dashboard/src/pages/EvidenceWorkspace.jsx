@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import './EvidenceWorkspace.css';
 import EvidenceGlobe from './EvidenceGlobe';
+import ReviewQueue from './ReviewQueue';
 import OperationsDesk from './OperationsDesk';
 import ResearchDesk from './ResearchDesk';
 import DeliveryAssurance from './DeliveryAssurance';
@@ -56,17 +57,20 @@ function packetText(run) {
 const title = value => String(value || 'Not assessed').replaceAll('_', ' ');
 
 export default function EvidenceWorkspace() {
-  const [tab, setTab] = useState(()=>window.location.hash==='#money'?'money':window.location.hash==='#connections'?'connections':window.location.hash==='#research'?'research':window.location.hash==='#operations'?'operations':window.location.hash==='#delivery'?'delivery':'review');
+  const [tab, setTab] = useState(()=>window.location.hash==='#queue'?'queue':window.location.hash==='#money'?'money':window.location.hash==='#connections'?'connections':window.location.hash==='#research'?'research':window.location.hash==='#operations'?'operations':window.location.hash==='#delivery'?'delivery':'review');
   const [opened,setOpened]=useState({review:true,operations:window.location.hash==='#operations',research:window.location.hash==='#research',delivery:window.location.hash==='#delivery'});
   const [assuranceRefresh,setAssuranceRefresh]=useState(0);
-  const [assuranceOverview,setAssuranceOverview]=useState(null);
+  const [queueOverview,setQueueOverview]=useState(null);
+  const [deliverySelection,setDeliverySelection]=useState(null),[operationSelection,setOperationSelection]=useState(null);
+  function openDelivery(item){if(item)setDeliverySelection({id:item.id,token:Date.now()});setTab('delivery')}
+  function openOperations(item){if(item)setOperationSelection({id:item.id,token:Date.now()});setTab('operations')}
   const [investigationContext,setInvestigationContext]=useState(null);
   const [inquiry,setInquiry]=useState('');
   useEffect(()=>{setOpened(v=>({...v,[tab]:true}));history.replaceState(null,'',tab==='review'?'#watch':`#${tab}`)},[tab]);
-  useEffect(()=>{function change(){const value=window.location.hash.slice(1);setTab(['money','connections','delivery','research','operations','method','assurance'].includes(value)?value:'review')}window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change)},[]);
+  useEffect(()=>{function change(){const value=window.location.hash.slice(1);setTab(['queue','money','connections','delivery','research','operations','method','assurance'].includes(value)?value:'review')}window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change)},[]);
   function investigate(context){setInvestigationContext({...context,id:Date.now()});setTab('research')}
   const [country, setCountry] = useState(null);
-  useEffect(()=>{const controller=new AbortController();fetch('/assurance/obligations?limit=1&country='+encodeURIComponent(country?.code||''),{signal:controller.signal}).then(r=>{if(!r.ok)throw new Error();return r.json()}).then(setAssuranceOverview).catch(()=>{});return()=>controller.abort()},[country?.code,assuranceRefresh]);
+  useEffect(()=>{const controller=new AbortController();setQueueOverview(null);fetch('/workbench/review-queue?limit=1&country='+encodeURIComponent(country?.code||''),{signal:controller.signal}).then(r=>{if(!r.ok)throw new Error();return r.json()}).then(setQueueOverview).catch(()=>{});return()=>controller.abort()},[country?.code,assuranceRefresh]);
   const [deskPanel, setDeskPanel] = useState(null);
   const inspect = index => { setSelected(index); setDeskPanel('inspector'); };
   const [importOpen, setImportOpen] = useState(false);
@@ -157,18 +161,18 @@ export default function EvidenceWorkspace() {
     </header>
     <main className="ev-main">
       <nav className="ev-tabs" aria-label="Workspace sections">
-        {[['review', 'Global watch'], ['money','Monetary atlas'], ['connections','Flow tracking'], ['delivery','Delivery assurance'], ['research', 'Investigate'], ['operations', 'Records & review'], ['method', 'Method & interpretation'], ['assurance', 'Capabilities & readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(tab===id?'review':id)}><span aria-hidden="true" className="ev-tool-symbol">{{review:'◎',money:'＄',connections:'⇄',delivery:'⇢',research:'⌕',operations:'▤',method:'≡',assurance:'◈'}[id]}</span>{label}</button>)}
+        {[['review', 'Global watch'], ['queue','Review queue'], ['money','Monetary atlas'], ['connections','Flow tracking'], ['delivery','Delivery assurance'], ['research', 'Investigate'], ['operations', 'Records & review'], ['method', 'Method & interpretation'], ['assurance', 'Capabilities & readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(tab===id?'review':id)}><span aria-hidden="true" className="ev-tool-symbol">{{review:'◎',queue:'☷',money:'＄',connections:'⇄',delivery:'⇢',research:'⌕',operations:'▤',method:'≡',assurance:'◈'}[id]}</span>{label}</button>)}
         <button aria-pressed={deskPanel === 'register'} onClick={() => {setTab('review');setDeskPanel(tab === 'review' && deskPanel === 'register' ? null : 'register')}}>Session record register</button>
         <button aria-pressed={deskPanel === 'inspector'} onClick={() => {setTab('review');setDeskPanel(tab === 'review' && deskPanel === 'inspector' ? null : 'inspector')}}>Session evidence inspector</button>
         <button className="ev-import-button" onClick={() => { setTab('review'); setImportOpen(true); }}>+ Import evidence</button>
       </nav>
 
       <div className="ev-shared-scope"><span>{country?`WATCH SCOPE / ${country.name}`:'WATCH SCOPE / GLOBAL'}</span>{country&&<button onClick={()=>setCountry(null)}>Clear country ×</button>}<form onSubmit={e=>{e.preventDefault();investigate({question:inquiry,country_codes:country?[country.code]:[]})}}><label htmlFor="watch-inquiry">Ask SUNLIGHT</label><input id="watch-inquiry" minLength="8" required value={inquiry} onChange={e=>setInquiry(e.target.value)} placeholder={country?`Investigate a question about ${country.name}…`:'Ask about a country, flow, source or delivery discrepancy…'}/><button>Investigate →</button></form><button onClick={()=>setTab('review')}>{tab==='review'?'Global workspace':'Close tools ×'}</button></div>
-      <div className="ev-tool-dock" id="watch-money-dock" role="region" aria-label="Monetary atlas tools" hidden={tab!=='money'}/><div className="ev-tool-dock" id="watch-connection-dock" role="region" aria-label="Flow tracking tools" hidden={tab!=='connections'}><div id="watch-connection-focus"/></div><div className="ev-tool-dock" role="region" aria-label="Records tools" hidden={tab!=='operations'}>{opened.operations&&<OperationsDesk profiles={profiles} scopeCountry={country?.code}/>}</div>
+      <div className="ev-tool-dock" role="region" aria-label="Review queue tools" hidden={tab!=='queue'}>{opened.queue&&<ReviewQueue active={tab==='queue'} country={country?.code} refreshToken={assuranceRefresh} onChanged={()=>setAssuranceRefresh(v=>v+1)} onDelivery={openDelivery} onOperations={openOperations} onCountry={code=>setCountry(countryCatalog.find(c=>c.code===code)||null)} onInvestigate={investigate}/>}</div><div className="ev-tool-dock" id="watch-money-dock" role="region" aria-label="Monetary atlas tools" hidden={tab!=='money'}/><div className="ev-tool-dock" id="watch-connection-dock" role="region" aria-label="Flow tracking tools" hidden={tab!=='connections'}><div id="watch-connection-focus"/></div><div className="ev-tool-dock" role="region" aria-label="Records tools" hidden={tab!=='operations'}>{opened.operations&&<OperationsDesk profiles={profiles} scopeCountry={country?.code} selectionRequest={operationSelection} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
       <div className="ev-tool-dock" role="region" aria-label="Investigation tools" hidden={tab!=='research'}>{opened.research&&<ResearchDesk embedded context={investigationContext} onOperations={()=>setTab('operations')}/>}</div>
-      <div className="ev-tool-dock" role="region" aria-label="Delivery tools" hidden={tab!=='delivery'}>{opened.delivery&&<DeliveryAssurance embedded profiles={profiles} active={tab==='delivery'} scopeCountry={country?.code} onInvestigate={investigate} onWatch={code=>{setCountry(countryCatalog.find(c=>c.code===code)||null)}} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
+      <div className="ev-tool-dock" role="region" aria-label="Delivery tools" hidden={tab!=='delivery'}>{opened.delivery&&<DeliveryAssurance selectionRequest={deliverySelection} embedded profiles={profiles} active={tab==='delivery'} scopeCountry={country?.code} onInvestigate={investigate} onWatch={code=>{setCountry(countryCatalog.find(c=>c.code===code)||null)}} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
       <div className="ev-watch-surface">
-        <div className="ev-delivery-entry"><div><strong>Follow a public promise through to delivery.</strong><span>{assuranceOverview?`${assuranceOverview.scope_count} registered obligations in this scope · ${assuranceOverview.state_counts.attention_required||0} need evidence or action`:'Link funding, recorded arrival, acceptance and service outcomes.'} · Registered records only.</span></div><button onClick={()=>setTab('delivery')}>Open delivery assurance →</button></div>
+        <div className="ev-delivery-entry"><div><strong>Turn the watch into evidence and accountable follow-up.</strong><span>{queueOverview?`${queueOverview.total} review records in this scope · ${queueOverview.unassigned} need assignment · ${queueOverview.overdue_actions} overdue follow-ups`:'Link funding, recorded arrival, acceptance and service outcomes.'} · Registered records only.</span></div><button onClick={()=>setTab('queue')}>Review priorities →</button><button onClick={()=>setTab('delivery')}>Open delivery assurance →</button></div>
         <div className="ev-workspace">
           <aside className="ev-queue" hidden={deskPanel !== 'register'} aria-label="Record queue"><button className="ev-panel-close" onClick={() => setDeskPanel(null)}>Close register ×</button>
             <div className="ev-queue-title"><span>RECORD REGISTER</span><strong>{records.length.toString().padStart(2, '0')}</strong></div>

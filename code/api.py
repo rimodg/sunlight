@@ -567,6 +567,8 @@ from readable_reports import router as readable_reports_router
 app.include_router(readable_reports_router)
 from delivery_assurance import router as delivery_assurance_router
 app.include_router(delivery_assurance_router)
+from review_queue import router as review_queue_router
+app.include_router(review_queue_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

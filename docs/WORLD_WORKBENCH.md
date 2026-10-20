@@ -108,3 +108,19 @@ The globe stays mounted beside the atlas and investigation. Stocks and national
 observations do not become invented directional payments. Read the
 [accounting and research notes](MONETARY_ATLAS.md), including the 17-domain
 integration inventory and publisher-versus-mirror provenance.
+
+## Institutional review work
+
+**Review queue** (`#queue`) connects the global context to current registered
+obligations and source cases. It discloses priority reasons, individual comparable
+measurements, current engine/acceptance basis, responsible follow-ups and deadlines.
+Assignments use the existing audited, version-checked action ledger. Statistical
+recommendations and yellow/red evidence gates remain review leads even when
+reported quantities match. The exact dossier shows the applicable profile,
+structural verdict and available gate dimensions/thresholds.
+
+Opening a record preserves the world and selects that exact obligation or case,
+including when its desk was already open. A different-record request cannot
+silently replace an unsaved review/form draft. A scoped meeting brief provides a
+readable point-in-time work list; source conditions remain separate from review
+completion. See the [institutional-use assessment](INSTITUTIONAL_INSTRUMENT.md).

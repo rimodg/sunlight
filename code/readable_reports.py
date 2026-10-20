@@ -92,8 +92,10 @@ def operation_report(case_id:str):
         if not result:body+='<p>Not run for the supplied record and comparable dimensions.</p>';continue
         body+='<p>Stage: '+label(result.get('stage','reported'))+'</p>'
         findings=result.get('fired_rules') or (result.get('structure') or {}).get('contradictions') or []
-        if not findings:body+='<p>No findings reported for these supplied dimensions. Missing evidence is not verified.</p>'
+        if not findings:body+='<p>No rule-level findings reported for these supplied dimensions. Statistical recommendations and evidence-gate outcomes remain separate; missing evidence is not verified.</p>'
         for f in findings:body+='<article><strong>'+e(f.get('rule_id'))+'</strong><p>'+e(f.get('evidence') or f.get('description'))+'</p><small>'+e(f.get('legal_basis') or f.get('legal_citation'))+'</small></article>'
+        if name=='procurement':
+            body+='<p>Applicable profile: '+e(result.get('profile_used'))+'. Structural verdict: '+e((result.get('structure') or {}).get('verdict'))+'. Investigation recommendation: '+('statistical check recommends examination' if result.get('recommended_for_investigation') else 'no recommendation in this output')+'. Evidence gate: '+e(result.get('gate_verdict'))+'. Single-contract output has no portfolio-capacity context; no probability of theft or independently verified delivery is implied.</p>'
         for error in result.get('errors') or []:body+='<p>Engine limitation: '+e(error)+'</p>'
     review=c['review'];body+='<h2>Review and next evidence</h2>'+fields([('Status',review['status']),('Following',review['followed']),('Analyst label',review['owner']),('Latest note',review.get('note') or 'No review note recorded')])
     body+='<p>Confirm baseline amendments and receipt cut-off dates. Reconcile dispatch, receiving, inspection, invoice, payment and custody records for the same item and period. Obtain independent acceptance evidence before alleging loss or theft.</p>'

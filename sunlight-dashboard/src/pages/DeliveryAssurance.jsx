@@ -182,6 +182,7 @@ export default function DeliveryAssurance({
   onInvestigate,
   onWatch,
   onChanged,
+  selectionRequest,
 }) {
   const [portfolio, setPortfolio] = useState(null),
     [detail, setDetail] = useState(null),
@@ -201,9 +202,27 @@ export default function DeliveryAssurance({
     [formError, setFormError] = useState(""),
     [notice, setNotice] = useState("");
   const [profile, setProfile] = useState("");
+  const [pendingRequest, setPendingRequest] = useState(null);
   const requestSeq = useRef(0),
     formId = useRef(null);
   formId.current = formType;
+  function openRequested(id) {
+    requestSeq.current++;
+    setSelected(id);
+    setDetail(null);
+    setView("chain");
+    setStageFilter("");
+    setError("");
+    setPendingRequest(null);
+  }
+  useEffect(() => {
+    if (!selectionRequest?.id || selectionRequest.id === selected) return;
+    if (formId.current) {
+      setPendingRequest(selectionRequest.id);
+      return;
+    }
+    openRequested(selectionRequest.id);
+  }, [selectionRequest?.token]);
   const load = useCallback(
     async (signal) => {
       const seq = ++requestSeq.current;
@@ -531,6 +550,25 @@ export default function DeliveryAssurance({
   );
   return (
     <section className="da" aria-label="Delivery assurance workspace">
+      {pendingRequest && (
+        <div className="da-banner" role="alert">
+          <strong>
+            A different obligation was requested. Your current form draft is
+            retained.
+          </strong>
+          <button
+            onClick={() => {
+              setFormType(null);
+              openRequested(pendingRequest);
+            }}
+          >
+            Discard draft and open requested obligation
+          </button>
+          <button onClick={() => setPendingRequest(null)}>
+            Keep current draft
+          </button>
+        </div>
+      )}
       <header className="da-header">
         <div>
           <p className="da-eyebrow">PUBLIC PROMISE → EVIDENCE → RESPONSE</p>
