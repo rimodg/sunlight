@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import './EvidenceWorkspace.css';
 import EvidenceGlobe from './EvidenceGlobe';
 import ReviewQueue from './ReviewQueue';
+import WatchActions from './WatchActions';
 import OperationsDesk from './OperationsDesk';
 import ResearchDesk from './ResearchDesk';
 import DeliveryAssurance from './DeliveryAssurance';
@@ -61,6 +62,8 @@ export default function EvidenceWorkspace() {
   const [opened,setOpened]=useState({review:true,operations:window.location.hash==='#operations',research:window.location.hash==='#research',delivery:window.location.hash==='#delivery'});
   const [assuranceRefresh,setAssuranceRefresh]=useState(0);
   const [queueOverview,setQueueOverview]=useState(null);
+  const [queueError,setQueueError]=useState(false),[queueRequest,setQueueRequest]=useState(null);
+  function openQueue(unassigned=false){setQueueRequest({unassigned,token:Date.now()});setTab('queue')}
   const [deliverySelection,setDeliverySelection]=useState(null),[operationSelection,setOperationSelection]=useState(null);
   function openDelivery(item){if(item)setDeliverySelection({id:item.id,token:Date.now()});setTab('delivery')}
   function openOperations(item){if(item)setOperationSelection({id:item.id,token:Date.now()});setTab('operations')}
@@ -70,7 +73,18 @@ export default function EvidenceWorkspace() {
   useEffect(()=>{function change(){const value=window.location.hash.slice(1);setTab(['queue','money','connections','delivery','research','operations','method','assurance'].includes(value)?value:'review')}window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change)},[]);
   function investigate(context){setInvestigationContext({...context,id:Date.now()});setTab('research')}
   const [country, setCountry] = useState(null);
-  useEffect(()=>{const controller=new AbortController();setQueueOverview(null);fetch('/workbench/review-queue?limit=1&country='+encodeURIComponent(country?.code||''),{signal:controller.signal}).then(r=>{if(!r.ok)throw new Error();return r.json()}).then(setQueueOverview).catch(()=>{});return()=>controller.abort()},[country?.code,assuranceRefresh]);
+  useEffect(()=>{
+    const controller=new AbortController();let revision=0;
+    setQueueOverview(null);setQueueError(false);
+    async function update(){
+      if(document.hidden)return;
+      const current=++revision;
+      try{const response=await fetch('/workbench/review-queue?limit=1&country='+encodeURIComponent(country?.code||''),{signal:controller.signal});if(!response.ok)throw new Error();const data=await response.json();if(!controller.signal.aborted&&current===revision){setQueueOverview(data);setQueueError(false)}}
+      catch(e){if(!controller.signal.aborted&&current===revision)setQueueError(true)}
+    }
+    update();const timer=setInterval(update,30000);document.addEventListener('visibilitychange',update);
+    return()=>{controller.abort();clearInterval(timer);document.removeEventListener('visibilitychange',update)};
+  },[country?.code,assuranceRefresh]);
   const [deskPanel, setDeskPanel] = useState(null);
   const inspect = index => { setSelected(index); setDeskPanel('inspector'); };
   const [importOpen, setImportOpen] = useState(false);
@@ -167,12 +181,12 @@ export default function EvidenceWorkspace() {
         <button className="ev-import-button" onClick={() => { setTab('review'); setImportOpen(true); }}>+ Import evidence</button>
       </nav>
 
-      <div className="ev-shared-scope"><span>{country?`WATCH SCOPE / ${country.name}`:'WATCH SCOPE / GLOBAL'}</span>{country&&<button onClick={()=>setCountry(null)}>Clear country ×</button>}<form onSubmit={e=>{e.preventDefault();investigate({question:inquiry,country_codes:country?[country.code]:[]})}}><label htmlFor="watch-inquiry">Ask SUNLIGHT</label><input id="watch-inquiry" minLength="8" required value={inquiry} onChange={e=>setInquiry(e.target.value)} placeholder={country?`Investigate a question about ${country.name}…`:'Ask about a country, flow, source or delivery discrepancy…'}/><button>Investigate →</button></form><button onClick={()=>setTab('review')}>{tab==='review'?'Global workspace':'Close tools ×'}</button></div>
-      <div className="ev-tool-dock" role="region" aria-label="Review queue tools" hidden={tab!=='queue'}>{opened.queue&&<ReviewQueue active={tab==='queue'} country={country?.code} refreshToken={assuranceRefresh} onChanged={()=>setAssuranceRefresh(v=>v+1)} onDelivery={openDelivery} onOperations={openOperations} onCountry={code=>setCountry(countryCatalog.find(c=>c.code===code)||null)} onInvestigate={investigate}/>}</div><div className="ev-tool-dock" id="watch-money-dock" role="region" aria-label="Monetary atlas tools" hidden={tab!=='money'}/><div className="ev-tool-dock" id="watch-connection-dock" role="region" aria-label="Flow tracking tools" hidden={tab!=='connections'}><div id="watch-connection-focus"/></div><div className="ev-tool-dock" role="region" aria-label="Records tools" hidden={tab!=='operations'}>{opened.operations&&<OperationsDesk profiles={profiles} scopeCountry={country?.code} selectionRequest={operationSelection} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
+      <div className="ev-shared-scope"><span>{country?`WATCH SCOPE / ${country.name}`:'WATCH SCOPE / GLOBAL'}</span>{country&&<button onClick={()=>setCountry(null)}>Clear country ×</button>}<form onSubmit={e=>{e.preventDefault();investigate({question:inquiry,country_codes:country?[country.code]:[]})}}><label htmlFor="watch-inquiry">Ask SUNLIGHT</label><input id="watch-inquiry" minLength="8" required value={inquiry} onChange={e=>setInquiry(e.target.value)} placeholder={country?`Investigate a question about ${country.name}…`:'Ask about a country, flow, source or delivery discrepancy…'}/><button>Investigate →</button></form>{tab!=='review'&&<button onClick={()=>setTab('review')}>Close tools ×</button>}</div>
+      <div className="ev-tool-dock" role="region" aria-label="Review queue tools" hidden={tab!=='queue'}>{opened.queue&&<ReviewQueue filterRequest={queueRequest} active={tab==='queue'} country={country?.code} refreshToken={assuranceRefresh} onChanged={()=>setAssuranceRefresh(v=>v+1)} onDelivery={openDelivery} onOperations={openOperations} onCountry={code=>setCountry(countryCatalog.find(c=>c.code===code)||null)} onInvestigate={investigate}/>}</div><div className="ev-tool-dock" id="watch-money-dock" role="region" aria-label="Monetary atlas tools" hidden={tab!=='money'}/><div className="ev-tool-dock" id="watch-connection-dock" role="region" aria-label="Flow tracking tools" hidden={tab!=='connections'}><div id="watch-connection-focus"/></div><div className="ev-tool-dock" role="region" aria-label="Records tools" hidden={tab!=='operations'}>{opened.operations&&<OperationsDesk profiles={profiles} scopeCountry={country?.code} selectionRequest={operationSelection} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
       <div className="ev-tool-dock" role="region" aria-label="Investigation tools" hidden={tab!=='research'}>{opened.research&&<ResearchDesk embedded context={investigationContext} onOperations={()=>setTab('operations')}/>}</div>
       <div className="ev-tool-dock" role="region" aria-label="Delivery tools" hidden={tab!=='delivery'}>{opened.delivery&&<DeliveryAssurance selectionRequest={deliverySelection} embedded profiles={profiles} active={tab==='delivery'} scopeCountry={country?.code} onInvestigate={investigate} onWatch={code=>{setCountry(countryCatalog.find(c=>c.code===code)||null)}} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
       <div className="ev-watch-surface">
-        <div className="ev-delivery-entry"><div><strong>Turn the watch into evidence and accountable follow-up.</strong><span>{queueOverview?`${queueOverview.total} review records in this scope · ${queueOverview.unassigned} need assignment · ${queueOverview.overdue_actions} overdue follow-ups`:'Link funding, recorded arrival, acceptance and service outcomes.'} · Registered records only.</span></div><button onClick={()=>setTab('queue')}>Review priorities →</button><button onClick={()=>setTab('delivery')}>Open delivery assurance →</button></div>
+        <WatchActions data={queueOverview} error={queueError} country={country?.name} compact={tab!=='review'} onQueue={openQueue} onRecord={item=>item.kind==='delivery'?openDelivery(item):openOperations(item)} onMoney={()=>setTab('money')} onDelivery={()=>setTab('delivery')} onOperations={()=>setTab('operations')} onRetry={()=>setAssuranceRefresh(v=>v+1)}/>
         <div className="ev-workspace">
           <aside className="ev-queue" hidden={deskPanel !== 'register'} aria-label="Record queue"><button className="ev-panel-close" onClick={() => setDeskPanel(null)}>Close register ×</button>
             <div className="ev-queue-title"><span>RECORD REGISTER</span><strong>{records.length.toString().padStart(2, '0')}</strong></div>

@@ -1,0 +1,244 @@
+.watch-actions {
+  order: 0;
+  flex: 0 0 auto;
+  padding: 12px 20px;
+  border-bottom: 1px solid #49616a;
+  background: #112732;
+  color: #e4edef;
+  min-width: 0;
+}
+.wa-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.wa-heading h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.wa-heading > span {
+  color: #aabec8;
+  font-size: 10px;
+}
+.wa-heading > button {
+  margin-left: auto;
+}
+.watch-actions button {
+  border: 1px solid #47626e;
+  border-radius: 4px;
+  background: #16313d;
+  color: #e0ebef;
+  cursor: pointer;
+  padding: 7px 10px;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+}
+.watch-actions button:hover {
+  background: #21434e;
+  border-color: #a6c4ca;
+}
+.watch-actions button:focus-visible {
+  outline: 2px solid #f1d68e;
+  outline-offset: 2px;
+}
+.wa-workflow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.wa-workflow button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  min-width: 0;
+}
+.wa-step {
+  font:
+    11px ui-monospace,
+    monospace;
+  color: #e9ca83;
+}
+.wa-workflow strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+}
+.wa-workflow small {
+  display: block;
+  color: #aec4cd;
+  font-size: 10px;
+  margin-top: 3px;
+}
+.wa-next {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  border-left: 2px solid #e5c37c;
+  padding: 9px 12px;
+  margin-top: 10px;
+  background: #0c202a;
+}
+.wa-next-copy {
+  min-width: 0;
+  flex: 1;
+}
+.wa-priority {
+  color: #ebcb86;
+  font-size: 10px;
+}
+.wa-next h3 {
+  margin: 3px 0;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.wa-next p,
+.wa-state p {
+  color: #c3d3d9;
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 4px 0;
+}
+.wa-basis {
+  color: #97b2be;
+  font-size: 10px;
+}
+.wa-basis b {
+  color: #d9e6e9;
+  font-weight: 500;
+}
+.wa-next-controls {
+  display: grid;
+  gap: 7px;
+  flex: 0 0 auto;
+}
+.watch-actions .wa-open {
+  color: #10242c;
+  background: #e5c780;
+  border-color: #e5c780;
+}
+.watch-actions .wa-open:hover {
+  background: #f1d89c;
+}
+.wa-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 0;
+  padding: 8px 0 0;
+  border-top: 1px solid #344e5b;
+}
+.wa-state > div {
+  flex: 1;
+}
+.wa-state strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.wa-state button {
+  flex: 0 0 auto;
+}
+.watch-actions.is-compact {
+  padding: 7px 16px;
+}
+.is-compact .wa-heading {
+  margin: 0;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+.is-compact .wa-heading h2 {
+  font-size: 12px;
+}
+.is-compact .wa-workflow,
+.is-compact .wa-next,
+.is-compact .wa-state {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .wa-heading > span {
+    display: none;
+  }
+  .wa-next p {
+    font-size: 10px;
+  }
+}
+@media (max-width: 900px) {
+  .watch-actions {
+    padding: 9px 12px;
+    max-height: 42%;
+    overflow: auto;
+  }
+  .wa-heading {
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+  .wa-heading h2 {
+    font-size: 13px;
+  }
+  .watch-actions button {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+  .wa-workflow {
+    gap: 5px;
+  }
+  .wa-workflow button {
+    padding: 7px;
+    gap: 5px;
+    align-items: flex-start;
+  }
+  .wa-workflow strong {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .wa-workflow small {
+    display: none;
+  }
+  .wa-next {
+    padding: 7px 9px;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 7px;
+  }
+  .wa-next-copy {
+    flex-basis: 100%;
+  }
+  .wa-next h3 {
+    font-size: 12px;
+  }
+  .wa-next p,
+  .wa-basis {
+    display: none;
+  }
+  .wa-next-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .wa-state {
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 7px;
+    padding-top: 6px;
+  }
+  .wa-state > div {
+    flex-basis: 100%;
+  }
+  .wa-state p {
+    font-size: 10px;
+    margin: 2px 0;
+  }
+  .watch-actions.is-compact {
+    max-height: none;
+    padding: 5px 10px;
+  }
+  .is-compact .wa-heading > span {
+    display: none;
+  }
+}

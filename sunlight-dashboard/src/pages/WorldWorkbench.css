@@ -126,26 +126,6 @@
   border: 0;
   overflow: hidden;
 }
-.ev-cockpit .ev-delivery-entry {
-  order: 2;
-  flex: 0 0 auto;
-  padding: 8px 16px;
-  gap: 8px;
-  min-height: 34px;
-  background: #10232d;
-  border-top: 1px solid #2d4550;
-  border-bottom: 0;
-}
-.ev-cockpit .ev-delivery-entry strong {
-  display: none;
-}
-.ev-cockpit .ev-delivery-entry span {
-  font-size: 9px;
-}
-.ev-cockpit .ev-delivery-entry button {
-  padding: 5px 9px;
-  font-size: 10px !important;
-}
 .ev-cockpit .ev-tool-dock,
 .ev-cockpit .ev-method,
 .ev-cockpit .ev-assurance {
@@ -700,16 +680,6 @@
     grid-row: 4;
     border-left: 0;
     border-top: 1px solid #66828d;
-  }
-  .ev-cockpit.has-dock .ev-delivery-entry {
-    display: none;
-  }
-  .ev-cockpit .ev-delivery-entry span {
-    max-width: 210px;
-    font-size: 8px;
-  }
-  .ev-cockpit .ev-delivery-entry button {
-    font-size: 9px !important;
   }
   .ev-cockpit .ev-map-heading {
     top: 10px;

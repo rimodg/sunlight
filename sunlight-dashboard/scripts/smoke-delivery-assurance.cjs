@@ -36,7 +36,7 @@ const assert = require("node:assert/strict");
     .getByRole("heading", { name: "Global economic watch", exact: true })
     .waitFor();
   await p
-    .getByRole("button", { name: "Open delivery assurance →", exact: true })
+    .getByRole("button", { name: "Verify funds & delivery", exact: true })
     .click();
   await p
     .getByRole("heading", { name: "Delivery assurance", exact: true })

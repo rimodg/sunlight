@@ -13,6 +13,7 @@ async function request(url, options) {
 }
 export default function ReviewQueue({
   active,
+  filterRequest,
   country,
   refreshToken,
   onChanged,
@@ -35,6 +36,16 @@ export default function ReviewQueue({
     [busy, setBusy] = useState(false),
     [formError, setFormError] = useState("");
   const generation = useRef(0);
+  useEffect(() => {
+    if (!filterRequest) return;
+    setQ("");
+    setLens("all");
+    setSource("all");
+    setUnassigned(Boolean(filterRequest.unassigned));
+    setReviewed(false);
+    setExamples(false);
+    setPage(0);
+  }, [filterRequest]);
   useEffect(() => {
     if (assignment)
       requestAnimationFrame(() =>
