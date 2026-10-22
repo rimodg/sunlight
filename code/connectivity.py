@@ -27,8 +27,8 @@ def _local(host):
 def install_offline_guard():
     """Block non-loopback Python socket traffic, including proxy and DNS calls.
 
-    This is a runtime policy, not a substitute for the appliance's isolated
-    Docker network. Local browser/API and Unix-domain sockets remain usable.
+    This is an application runtime policy, not an operating-system firewall.
+    Local browser/API and Unix-domain sockets remain usable.
     """
     global _installed
     if _installed:

@@ -26,7 +26,7 @@ No Docker registry or package-manager download is needed after obtaining it.
    evidence, source dates and checkpoint actions.
 
 The launcher checks SHA-256 hashes, loads the included image, uses its immutable
-image ID with `--pull=never`, creates an internal Docker network and publishes
+image ID with `--pull=never`, creates a dedicated Docker bridge network and publishes
 only the loopback browser port. The API starts with `SUNLIGHT_OFFLINE=1`.
 The local edition uses a read-only application filesystem and a durable Docker
 volume, `sunlight-offline-state`, for registered records and calibration.
@@ -66,7 +66,9 @@ edition for that situation.
   extract survives restart; its original `fetched_at` is preserved. If none is
   retained for a requested scope, the response is unavailable rather than zero.
 - The API blocks non-loopback Python socket/name-resolution attempts. The
-  prepared launcher's internal Docker network is an additional isolation layer.
+  bridge network permits access to the local browser port; it is not an
+  operating-system firewall. External refreshes remain disabled by the runtime
+  policy. The no-network test also exercises operation with all networking absent.
 - The document, case, obligation and action stores remain local. No background
   upload, automatic source refresh, or automatic cross-instance merge runs.
 - Deadline-sensitive checks use the local system clock. Verify its time when a

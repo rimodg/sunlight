@@ -1,0 +1,9 @@
+/* Keep navigation arrows available on hosts without system symbol fonts. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./data/DejaVuSans.ttf') format('truetype');
+  unicode-range: U+2190-21FF,U+25A0-25FF;
+}

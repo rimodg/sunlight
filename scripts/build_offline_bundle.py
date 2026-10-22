@@ -36,10 +36,10 @@ subdir=${SUNLIGHT_DATA_SUBDIR:-}
 case "$subdir" in *..*|/*|*\\\\*) echo "Use a simple relative data subdirectory" >&2; exit 1;; esac
 data_dir=/app/calibration
 if [ -n "$subdir" ]; then data_dir="$data_dir/$subdir"; fi
-docker network inspect sunlight-offline-local >/dev/null 2>&1 || docker network create --internal sunlight-offline-local >/dev/null
-if [ "$(docker network inspect --format '{{.Internal}}' sunlight-offline-local)" != true ]; then echo "Existing network is not internal; no container started." >&2; exit 1; fi
+docker network inspect sunlight-offline-browser >/dev/null 2>&1 || docker network create sunlight-offline-browser >/dev/null
+if [ "$(docker network inspect --format '{{.Internal}}' sunlight-offline-browser)" != false ]; then echo "Existing network blocks the local browser port; no container started." >&2; exit 1; fi
 docker volume create "$volume" >/dev/null
-docker run -d --pull=never --platform "$platform" --name sunlight-offline --network sunlight-offline-local \\
+docker run -d --pull=never --platform "$platform" --name sunlight-offline --network sunlight-offline-browser \\
   -p 127.0.0.1:8000:8000 --restart unless-stopped --read-only --tmpfs /tmp:size=64m,mode=1777 \\
   --cap-drop ALL --security-opt no-new-privileges \\
   --mount "type=volume,src=$volume,dst=/app/calibration" \\
@@ -74,12 +74,12 @@ if ($env:SUNLIGHT_DATA_SUBDIR) {
   if ($env:SUNLIGHT_DATA_SUBDIR -match "(^/|\\.\\.|\\\\)") { throw "Use a simple relative data subdirectory" }
   $dataDir += "/" + $env:SUNLIGHT_DATA_SUBDIR
 }
-docker network inspect sunlight-offline-local *> $null
-if ($LASTEXITCODE -ne 0) { docker network create --internal sunlight-offline-local | Out-Null; if ($LASTEXITCODE -ne 0) { throw "Network creation failed" } }
-if ((docker network inspect --format '{{.Internal}}' sunlight-offline-local) -ne "true") { throw "Existing network is not internal" }
+docker network inspect sunlight-offline-browser *> $null
+if ($LASTEXITCODE -ne 0) { docker network create sunlight-offline-browser | Out-Null; if ($LASTEXITCODE -ne 0) { throw "Network creation failed" } }
+if ((docker network inspect --format '{{.Internal}}' sunlight-offline-browser) -ne "false") { throw "Existing network blocks the local browser port" }
 docker volume create $volume | Out-Null
 if ($LASTEXITCODE -ne 0) { throw "Volume creation failed" }
-docker run -d --pull=never --platform $platform --name sunlight-offline --network sunlight-offline-local -p 127.0.0.1:8000:8000 --restart unless-stopped --read-only --tmpfs /tmp:size=64m,mode=1777 --cap-drop ALL --security-opt no-new-privileges --mount "type=volume,src=$volume,dst=/app/calibration" -e SUNLIGHT_OFFLINE=1 -e "SUNLIGHT_CALIBRATION_DIR=$dataDir" $imageId
+docker run -d --pull=never --platform $platform --name sunlight-offline --network sunlight-offline-browser -p 127.0.0.1:8000:8000 --restart unless-stopped --read-only --tmpfs /tmp:size=64m,mode=1777 --cap-drop ALL --security-opt no-new-privileges --mount "type=volume,src=$volume,dst=/app/calibration" -e SUNLIGHT_OFFLINE=1 -e "SUNLIGHT_CALIBRATION_DIR=$dataDir" $imageId
 if ($LASTEXITCODE -ne 0) { throw "Local start failed" }
 Write-Output "Open http://127.0.0.1:8000/watch/ after startup. Records stay in the Docker volume."
 '''
