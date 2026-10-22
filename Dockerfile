@@ -5,7 +5,9 @@
 FROM node:24-slim AS workspace
 WORKDIR /workspace/sunlight-dashboard
 COPY sunlight-dashboard/package.json sunlight-dashboard/package-lock.json ./
-RUN npm ci
+RUN --mount=type=secret,id=proxy_ca \
+    if [ -f /run/secrets/proxy_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca; fi; \
+    npm ci --strict-ssl=true
 COPY sunlight-dashboard/ ./
 COPY static/ /workspace/static/
 RUN npm run build -- --base=/watch/
@@ -22,12 +24,17 @@ WORKDIR /build
 
 # Copy and install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN --mount=type=secret,id=proxy_ca \
+    if [ -f /run/secrets/proxy_ca ]; then export PIP_CERT=/run/secrets/proxy_ca; fi; \
+    pip install --no-cache-dir --user -r requirements.txt
 
 # ============================================================================
 # Stage 2: Runtime - Minimal production image
 # ============================================================================
 FROM python:3.11-slim
+ARG SUNLIGHT_BUILD_REVISION=unversioned
+LABEL org.opencontainers.image.source="https://github.com/rimodg/sunlight" \
+      org.opencontainers.image.revision=$SUNLIGHT_BUILD_REVISION
 
 # Security: Create non-root user for running the application
 RUN groupadd -r sunlight && useradd -r -g sunlight -u 1000 sunlight

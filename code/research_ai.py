@@ -7,6 +7,7 @@ import httpx
 from pydantic import BaseModel,ConfigDict,Field
 
 from operations import canonical
+from connectivity import offline_enabled
 
 
 class CitedInterpretation(BaseModel):
@@ -29,6 +30,9 @@ class AISynthesis(BaseModel):
 
 
 def provider_status():
+    if offline_enabled():
+        return {'provider':'OpenAI Responses API','configured':False,'model':None,
+                'mode':'offline_evidence_search','disclosure':'Offline policy disables remote model requests. Local cited evidence search and calculations remain available.'}
     model=os.environ.get('SUNLIGHT_RESEARCH_MODEL','').strip()
     configured=bool(model and (os.environ.get('SUNLIGHT_RESEARCH_API_KEY') or os.environ.get('OPENAI_API_KEY')))
     return {'provider':'OpenAI Responses API','configured':configured,'model':model if configured else None,
@@ -51,6 +55,7 @@ def response_schema():
 
 
 async def synthesize(question,facts,scope,coverage,transport=None,tool_runner=None):
+    if offline_enabled():return {'status':'offline_disabled','synthesis':None,'sent_evidence_ids':[]}
     status=provider_status()
     if not status['configured']:return {'status':'not_configured','synthesis':None,'sent_evidence_ids':[]}
     if not facts:return {'status':'no_evidence','synthesis':None,'sent_evidence_ids':[]}

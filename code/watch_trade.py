@@ -6,11 +6,14 @@ import json
 import math
 import os
 import time
+import hashlib
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
 from fastapi import APIRouter, HTTPException
+from connectivity import offline_enabled, state_directory
 
 ENDPOINT = "https://comtradeapi.un.org/public/v1/preview/C/A/HS"
 PERIOD = "2023"
@@ -60,15 +63,56 @@ def parse_reporter(payload, reporter):
 
 
 class TradeFeed:
-    def __init__(self, transport=None, reporters=None):
+    def __init__(self, transport=None, reporters=None, persist=False):
         self.transport = transport
         self.reporters = reporters
         self.lock = asyncio.Lock()
         self.cached = None
         self.expires = 0
+        self.persist = persist
+
+    def cache_path(self):
+        name = 'global' if not self.reporters else '-'.join(str(int(r)) for r in self.reporters)
+        return state_directory()/'trade-cache'/(name+'.json')
+
+    def load_cached(self):
+        if self.cached is not None or not self.persist:return self.cached
+        try:
+            path=self.cache_path()
+            if path.stat().st_size>4*1024*1024:return None
+            wrapper=json.loads(path.read_text());payload=wrapper['payload']
+            raw=json.dumps(payload,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+            if hashlib.sha256(raw).hexdigest()!=wrapper['sha256']:return None
+            if payload.get('schema_version')!='sunlight.trade-preview.v1' or payload.get('source_url')!=ENDPOINT or payload.get('period')!=PERIOD:return None
+            if payload.get('reporters_requested')!=list(self.reporters or REPORTERS):return None
+            if not isinstance(payload.get('routes'),list) or len(payload['routes'])>5000:return None
+            for r in payload['routes']:
+                if not country_code(r['reporter']) or not country_code(r['partner']) or not math.isfinite(r['usd']) or r['usd']<=0 or r['period']!=PERIOD:return None
+            self.cached=payload
+        except (OSError,ValueError,TypeError,KeyError):
+            return None
+        return self.cached
+
+    def save_cached(self):
+        if not self.persist or not self.cached.get('routes'):return
+        raw=json.dumps(self.cached,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+        target=self.cache_path();target.parent.mkdir(parents=True,exist_ok=True)
+        with tempfile.NamedTemporaryFile(mode='w',dir=target.parent,delete=False) as f:
+            temp=Path(f.name);json.dump({'sha256':hashlib.sha256(raw).hexdigest(),'payload':self.cached},f)
+        try:os.replace(temp,target)
+        finally:temp.unlink(missing_ok=True)
 
     async def get(self):
         async with self.lock:
+            self.load_cached()
+            if offline_enabled():
+                if self.cached and self.cached.get('routes'):
+                    return {**self.cached,'status':'offline_cached','offline':True,'refresh_performed':False,
+                            'coverage':self.cached['coverage']+' Offline retained extract; fetched_at remains the actual last retrieval time.'}
+                return {'schema_version':'sunlight.trade-preview.v1','source':'UN Comtrade public preview',
+                        'source_url':ENDPOINT,'period':PERIOD,'currency':'USD','status':'unavailable',
+                        'offline':True,'refresh_performed':False,'fetched_at':None,'attempted_at':None,
+                        'routes':[],'errors':[],'coverage':'Offline mode. No retained trade preview exists for this scope. Missing routes are unknown; other packaged source layers remain available.'}
             if self.cached is not None and time.monotonic() < self.expires:
                 return self.cached
             now = datetime.now(timezone.utc).isoformat()
@@ -108,10 +152,12 @@ class TradeFeed:
                 "routes": sorted(routes, key=lambda r: (-r["usd"], r["reporter"], r["partner"])), "errors": errors,
             }
             self.expires = time.monotonic() + (3600 if errors else 43200)
+            try:self.save_cached()
+            except OSError:self.cached['persistence_warning']='Trade preview could not be saved for restart; this response is retained in memory only.'
             return self.cached
 
 
-feed = TradeFeed()
+feed = TradeFeed(persist=True)
 country_feeds = {}
 router = APIRouter()
 
@@ -144,5 +190,5 @@ async def trade_preview(reporter: int | None = None):
         raise HTTPException(status_code=422, detail='A recognized country numeric code is required')
     source_code = {840: 842, 356: 699, 250: 251, 380: 381, 578: 579, 756: 757}.get(country, country)
     if source_code not in country_feeds:
-        country_feeds[source_code] = TradeFeed(reporters=(source_code,))
+        country_feeds[source_code] = TradeFeed(reporters=(source_code,),persist=True)
     return await country_feeds[source_code].get()

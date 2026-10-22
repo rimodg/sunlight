@@ -1,5 +1,14 @@
 # SUNLIGHT
 
+The [offline local edition](docs/OFFLINE.md) runs the watch, monetary comparisons,
+procurement/delivery engines, PDF evidence search and follow-up without internet.
+Open **Offline workspace** in the header for source dates and full evidence
+checkpoints. A prepared Docker bundle includes its dependencies and local fonts;
+records remain in a durable local volume. New facts arrive through delivered
+records or an authorized local integration, while external refreshes and cloud
+AI are disabled by offline policy. Checkpoints preserve the ledger and verify
+files and engine/runtime compatibility before restoring into a new directory.
+
 The [institutional rebuild research](docs/INSTITUTIONAL_REBUILD_RESEARCH.md) grounds the next architecture in primary standards and documents what remains unconnected or unvalidated.
 
 The long-term direction is **The Global Humanitarian Watch**. Procurement is

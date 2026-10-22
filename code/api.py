@@ -545,6 +545,8 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 configure_access_gate(app)
+from connectivity import install_offline_guard
+install_offline_guard()
 
 from watch_trade import router as watch_trade_router
 app.include_router(watch_trade_router)
@@ -569,6 +571,8 @@ from delivery_assurance import router as delivery_assurance_router
 app.include_router(delivery_assurance_router)
 from review_queue import router as review_queue_router
 app.include_router(review_queue_router)
+from offline_workspace import router as offline_workspace_router
+app.include_router(offline_workspace_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1229,6 +1233,8 @@ async def assurance():
              "scope": "Dated UN Comtrade public preview for selected reporters. Availability, coverage, and source errors are explicit. Not procurement spending or shipment tracking."},
             {"name": "Monetary workbench", "state": "Published snapshot", "endpoint": "/watch-data/money/analysis",
              "scope": "27 pinned source-dated monetary measures and signed bilateral aid; country/year comparisons, coverage-aware exact decimal changes, annual history and readable/CSV exports. Stocks, flows and economic context remain distinct. No live settlement feed, all-money sum or global theft calculation."},
+            {"name": "Offline local edition", "state": "Local installation available", "endpoint": "/offline/status",
+             "scope": "Packaged watch data, local engines, documents, saved inquiries and reconciliation without internet; durable volume storage, retained trade caches and verified portable checkpoints. Offline policy disables external requests and cloud AI. New observations require delivered evidence; no automatic cross-instance merge."},
             {"name": "Material contributions", "state": "Published snapshot", "endpoint": "/watch-data/materials",
              "scope": "2023 CEPII BACI-derived selected HS4 material exports, country composition and rounded leading-partner shares. Source coverage and provenance are explicit. Not GDP, domestic extraction or live shipments."},
             {"name": "Conflict observations", "state": "Published snapshot", "endpoint": "/watch-data/conflicts",

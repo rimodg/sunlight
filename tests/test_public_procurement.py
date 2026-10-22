@@ -64,7 +64,8 @@ def test_each_recognized_country_can_request_its_trade_source(monkeypatch):
     import watch_trade
     calls = []
     class FakeFeed:
-        def __init__(self, reporters):
+        def __init__(self, reporters, persist=False):
+            assert persist, 'Country previews must survive restart'
             self.reporters = reporters
         async def get(self):
             calls.append(self.reporters)

@@ -197,11 +197,12 @@ def document_facts(rows):
 
 async def cached_trade(request,scope):
     from watch_trade import feed,country_feeds,trade_preview
+    from connectivity import offline_enabled
     fresh=None
-    if request.refresh_trade and 'goods_trade' in request.sources:
+    if (request.refresh_trade or offline_enabled()) and 'goods_trade' in request.sources:
         first=BY_CODE[scope['countries'][0]] if scope['countries'] else None
         fresh=await trade_preview(int(first['numeric']) if first and first['numeric'] else None)
-    snapshots=[s for s in [feed.cached,*[f.cached for f in country_feeds.values()],fresh] if s]
+    snapshots=[s for s in [feed.load_cached(),*[f.load_cached() for f in country_feeds.values()],fresh] if s]
     unique={}
     for snapshot in snapshots:
         for f in trade_facts(snapshot,scope):

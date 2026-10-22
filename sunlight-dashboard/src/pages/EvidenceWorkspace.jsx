@@ -3,6 +3,7 @@ import './EvidenceWorkspace.css';
 import EvidenceGlobe from './EvidenceGlobe';
 import ReviewQueue from './ReviewQueue';
 import WatchActions from './WatchActions';
+import OfflineWorkspace from './OfflineWorkspace';
 import OperationsDesk from './OperationsDesk';
 import ResearchDesk from './ResearchDesk';
 import DeliveryAssurance from './DeliveryAssurance';
@@ -58,7 +59,7 @@ function packetText(run) {
 const title = value => String(value || 'Not assessed').replaceAll('_', ' ');
 
 export default function EvidenceWorkspace() {
-  const [tab, setTab] = useState(()=>window.location.hash==='#queue'?'queue':window.location.hash==='#money'?'money':window.location.hash==='#connections'?'connections':window.location.hash==='#research'?'research':window.location.hash==='#operations'?'operations':window.location.hash==='#delivery'?'delivery':'review');
+  const [tab, setTab] = useState(()=>window.location.hash==='#offline'?'offline':window.location.hash==='#queue'?'queue':window.location.hash==='#money'?'money':window.location.hash==='#connections'?'connections':window.location.hash==='#research'?'research':window.location.hash==='#operations'?'operations':window.location.hash==='#delivery'?'delivery':'review');
   const [opened,setOpened]=useState({review:true,operations:window.location.hash==='#operations',research:window.location.hash==='#research',delivery:window.location.hash==='#delivery'});
   const [assuranceRefresh,setAssuranceRefresh]=useState(0);
   const [queueOverview,setQueueOverview]=useState(null);
@@ -70,7 +71,7 @@ export default function EvidenceWorkspace() {
   const [investigationContext,setInvestigationContext]=useState(null);
   const [inquiry,setInquiry]=useState('');
   useEffect(()=>{setOpened(v=>({...v,[tab]:true}));history.replaceState(null,'',tab==='review'?'#watch':`#${tab}`)},[tab]);
-  useEffect(()=>{function change(){const value=window.location.hash.slice(1);setTab(['queue','money','connections','delivery','research','operations','method','assurance'].includes(value)?value:'review')}window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change)},[]);
+  useEffect(()=>{function change(){const value=window.location.hash.slice(1);setTab(['offline','queue','money','connections','delivery','research','operations','method','assurance'].includes(value)?value:'review')}window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change)},[]);
   function investigate(context){setInvestigationContext({...context,id:Date.now()});setTab('research')}
   const [country, setCountry] = useState(()=>countryCatalog.find(c=>c.code===new URLSearchParams(location.search).get('country'))||null);
   useEffect(()=>{const url=new URL(location.href);country?url.searchParams.set('country',country.code):url.searchParams.delete('country');history.replaceState(null,'',url)},[country?.code]);
@@ -95,6 +96,8 @@ export default function EvidenceWorkspace() {
   const [profile, setProfile] = useState('us_federal');
   const [assurance, setAssurance] = useState(null);
   const [connection, setConnection] = useState('Connecting');
+  const [offlinePolicy,setOfflinePolicy]=useState(false);
+  useEffect(()=>{const c=new AbortController();fetch('/offline/status',{signal:c.signal}).then(r=>r.ok?r.json():null).then(d=>{if(d)setOfflinePolicy(d.offline_policy)}).catch(()=>{});return()=>c.abort()},[]);
   const [input, setInput] = useState(JSON.stringify(specimen('direct', 'USD'), null, 2));
   const [origin, setOrigin] = useState('Synthetic example');
   const [budget, setBudget] = useState('');
@@ -172,6 +175,7 @@ export default function EvidenceWorkspace() {
   return <div className={`evidence-app ev-cockpit ${tab!=='review'?'has-dock':''}`}>
     <header className="ev-header">
       <a className="ev-brand" href={import.meta.env.BASE_URL} aria-label="SUNLIGHT home"><span className="ev-sun" />SUNLIGHT<span className="ev-edition">THE GLOBAL HUMANITARIAN WATCH</span></a>
+      <button aria-label="Offline workspace" className="ev-offline-access" onClick={()=>setTab('offline')}>{offlinePolicy?'Offline mode':'Offline workspace ↗'}</button>
       <span className={`ev-connection ${connection === 'API connected' ? 'connected' : ''}`}><i />{connection}</span>
     </header>
     <main className="ev-main">
@@ -183,7 +187,7 @@ export default function EvidenceWorkspace() {
       </nav>
 
       <div className="ev-shared-scope"><span>{country?`WATCH SCOPE / ${country.name}`:'WATCH SCOPE / GLOBAL'}</span>{country&&<button onClick={()=>setCountry(null)}>Clear country ×</button>}<form onSubmit={e=>{e.preventDefault();investigate({question:inquiry,country_codes:country?[country.code]:[]})}}><label htmlFor="watch-inquiry">Ask SUNLIGHT</label><input id="watch-inquiry" minLength="8" required value={inquiry} onChange={e=>setInquiry(e.target.value)} placeholder={country?`Investigate a question about ${country.name}…`:'Ask about a country, flow, source or delivery discrepancy…'}/><button>Investigate →</button></form>{tab!=='review'&&<button onClick={()=>setTab('review')}>Close tools ×</button>}</div>
-      <div className="ev-tool-dock" role="region" aria-label="Review queue tools" hidden={tab!=='queue'}>{opened.queue&&<ReviewQueue filterRequest={queueRequest} active={tab==='queue'} country={country?.code} refreshToken={assuranceRefresh} onChanged={()=>setAssuranceRefresh(v=>v+1)} onDelivery={openDelivery} onOperations={openOperations} onCountry={code=>setCountry(countryCatalog.find(c=>c.code===code)||null)} onInvestigate={investigate}/>}</div><div className="ev-tool-dock" id="watch-money-dock" role="region" aria-label="Monetary atlas tools" hidden={tab!=='money'}/><div className="ev-tool-dock" id="watch-connection-dock" role="region" aria-label="Flow tracking tools" hidden={tab!=='connections'}><div id="watch-connection-focus"/></div><div className="ev-tool-dock" role="region" aria-label="Records tools" hidden={tab!=='operations'}>{opened.operations&&<OperationsDesk profiles={profiles} scopeCountry={country?.code} selectionRequest={operationSelection} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
+      <div className="ev-tool-dock" role="region" aria-label="Offline tools" hidden={tab!=='offline'}>{opened.offline&&<OfflineWorkspace active={tab==='offline'} onOpen={setTab}/>}</div><div className="ev-tool-dock" role="region" aria-label="Review queue tools" hidden={tab!=='queue'}>{opened.queue&&<ReviewQueue filterRequest={queueRequest} active={tab==='queue'} country={country?.code} refreshToken={assuranceRefresh} onChanged={()=>setAssuranceRefresh(v=>v+1)} onDelivery={openDelivery} onOperations={openOperations} onCountry={code=>setCountry(countryCatalog.find(c=>c.code===code)||null)} onInvestigate={investigate}/>}</div><div className="ev-tool-dock" id="watch-money-dock" role="region" aria-label="Monetary atlas tools" hidden={tab!=='money'}/><div className="ev-tool-dock" id="watch-connection-dock" role="region" aria-label="Flow tracking tools" hidden={tab!=='connections'}><div id="watch-connection-focus"/></div><div className="ev-tool-dock" role="region" aria-label="Records tools" hidden={tab!=='operations'}>{opened.operations&&<OperationsDesk profiles={profiles} scopeCountry={country?.code} selectionRequest={operationSelection} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
       <div className="ev-tool-dock" role="region" aria-label="Investigation tools" hidden={tab!=='research'}>{opened.research&&<ResearchDesk embedded context={investigationContext} onOperations={()=>setTab('operations')}/>}</div>
       <div className="ev-tool-dock" role="region" aria-label="Delivery tools" hidden={tab!=='delivery'}>{opened.delivery&&<DeliveryAssurance selectionRequest={deliverySelection} embedded profiles={profiles} active={tab==='delivery'} scopeCountry={country?.code} onInvestigate={investigate} onWatch={code=>{setCountry(countryCatalog.find(c=>c.code===code)||null)}} onChanged={()=>setAssuranceRefresh(v=>v+1)}/>}</div>
       <div className="ev-watch-surface">
