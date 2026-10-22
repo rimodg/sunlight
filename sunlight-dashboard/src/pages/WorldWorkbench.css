@@ -1,0 +1,1191 @@
+/* The world is the working surface; tools occupy an independent surrounding dock. */
+.ev-cockpit {
+  height: 100dvh;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr) 20px;
+  overflow: hidden;
+  background: #0b1922;
+}
+.ev-cockpit .ev-header {
+  padding: 10px 22px;
+  background: #10242d;
+}
+.ev-cockpit .ev-brand {
+  font-size: 21px;
+}
+.ev-cockpit .ev-edition {
+  font-size: 8px;
+}
+.ev-cockpit .ev-main {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 0;
+  grid-template-rows: 54px minmax(0, 1fr);
+  position: relative;
+}
+.ev-cockpit.has-dock .ev-main {
+  grid-template-columns: 88px minmax(0, 1fr) clamp(400px, 35vw, 640px);
+}
+.ev-cockpit .ev-tabs {
+  grid-column: 1;
+  grid-row: 1/-1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 3px;
+  padding: 12px 6px;
+  border: 0;
+  border-right: 1px solid #304650;
+  background: #10232d;
+  overflow: auto;
+  white-space: normal;
+}
+.ev-cockpit .ev-tabs > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  font-size: 9px;
+  line-height: 1.5;
+  padding: 11px 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  white-space: normal;
+  min-width: 0;
+}
+.ev-cockpit .ev-tabs > button[aria-pressed="true"] {
+  background: #213a43;
+  border-color: #7a7054;
+  color: #edce87;
+}
+.ev-tool-symbol {
+  font-size: 23px;
+  line-height: 1;
+  font-weight: 400;
+  color: #b2ccd5;
+}
+.ev-cockpit .ev-tabs > button:nth-child(n + 7) {
+  font-size: 8px;
+  padding: 10px 3px;
+  border-top: 1px solid #273d48;
+}
+.ev-cockpit .ev-tabs .ev-import-button {
+  margin-left: 0;
+  color: #edce87;
+}
+.ev-cockpit .ev-shared-scope {
+  grid-column: 2/-1;
+  grid-row: 1;
+  padding: 8px 18px;
+  flex-wrap: nowrap;
+  gap: 12px;
+  min-width: 0;
+  background: #10232d;
+}
+.ev-cockpit .ev-shared-scope > span {
+  font-size: 9px;
+  max-width: 145px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.ev-cockpit .ev-shared-scope form {
+  min-width: 0;
+  gap: 9px;
+}
+.ev-cockpit .ev-shared-scope input {
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.ev-cockpit .ev-shared-scope label {
+  font-size: 10px;
+}
+.ev-cockpit .ev-watch-surface {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ev-cockpit .ev-workspace {
+  order: 1;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: block;
+  position: relative;
+  border: 0;
+  overflow: hidden;
+}
+.ev-cockpit .ev-tool-dock,
+.ev-cockpit .ev-method,
+.ev-cockpit .ev-assurance {
+  grid-column: 3;
+  grid-row: 2;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: #10212b;
+  border-left: 1px solid #45606b;
+  scrollbar-width: thin;
+  scrollbar-color: #52717d #10212b;
+}
+.ev-cockpit .ev-tool-dock {
+  container-type: inline-size;
+  container-name: tools;
+}
+.ev-cockpit .ev-footer {
+  padding: 2px 16px;
+  font-size: 8px;
+  border-top: 1px solid #2b434e;
+  min-height: 0;
+  background: #10232d;
+}
+/* Globe fills the available height rather than pushing the workflow below it. */
+.ev-cockpit .ev-globe-panel {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  position: relative;
+  container-type: inline-size;
+  container-name: world;
+  background: #0b1922;
+}
+.ev-cockpit .ev-globe {
+  position: absolute;
+  inset: 112px 0 84px;
+  width: 100%;
+  height: calc(100% - 196px);
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+.ev-cockpit .ev-globe:active {
+  cursor: grabbing;
+}
+.ev-cockpit .ev-map-heading {
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  z-index: 4;
+}
+.ev-cockpit .ev-map-heading h1 {
+  font-size: 25px;
+  margin-top: 5px;
+}
+.ev-cockpit .ev-map-heading .ev-eyebrow {
+  font-size: 8px;
+}
+.ev-cockpit .ev-watch-time-basis {
+  font-size: 9px !important;
+  max-width: 270px;
+  margin: 7px 0 0 !important;
+}
+.ev-cockpit .ev-watch-counters {
+  display: flex;
+  gap: 7px;
+  margin: 0;
+  justify-content: flex-end;
+}
+.ev-cockpit .ev-watch-counters .ev-public-counter,
+.ev-cockpit .ev-procurement-pulse .ev-document-counter {
+  min-width: 0 !important;
+  width: 170px;
+  padding: 10px;
+  background: #142a34e8;
+}
+.ev-cockpit .ev-watch-counters .ev-public-counter strong {
+  font-size: 23px;
+  margin: 5px 0;
+}
+.ev-cockpit .ev-watch-counters .ev-public-counter > span {
+  font-size: 7px;
+}
+.ev-cockpit .ev-watch-counters .ev-public-counter small {
+  font-size: 8px;
+  line-height: 1.6;
+}
+.ev-cockpit .ev-procurement-pulse .ev-document-counter {
+  width: 130px;
+}
+.ev-cockpit .ev-procurement-pulse .ev-document-counter strong {
+  font-size: 15px;
+}
+.ev-cockpit .ev-country-search {
+  top: 138px;
+  left: 18px;
+  right: auto;
+  width: 208px;
+  max-height: calc(100% - 240px);
+  overflow: auto;
+  padding: 12px;
+  background: #10242de8;
+  border: 1px solid #314d5b;
+  border-radius: 4px;
+  scrollbar-width: thin;
+  z-index: 5;
+}
+.ev-cockpit .ev-country-search label {
+  font-size: 9px;
+}
+.ev-cockpit .ev-country-search input {
+  padding: 8px;
+  font-size: 11px;
+  min-width: 0;
+}
+.ev-cockpit .ev-country-search form button {
+  font-size: 10px;
+  padding: 7px;
+}
+.ev-cockpit .ev-country-directory-button {
+  font-size: 9px !important;
+}
+.ev-cockpit .ev-country-research {
+  max-height: 260px;
+  overflow: auto;
+  margin-top: 10px;
+}
+.ev-cockpit .ev-country-research h2 {
+  font-size: 20px;
+}
+.ev-cockpit .ev-country-research p {
+  font-size: 10px;
+}
+.ev-cockpit .ev-country-research strong {
+  font-size: 17px;
+}
+.ev-cockpit .ev-map-controls {
+  bottom: 35px;
+  left: 16px;
+  right: 16px;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  z-index: 8;
+}
+.ev-cockpit .ev-map-controls button,
+.ev-cockpit .ev-map-controls select {
+  font-size: 9px;
+  padding: 7px 8px;
+  background: #112731e8;
+}
+.ev-cockpit .ev-flow-legend {
+  bottom: 86px;
+  left: 18px;
+  right: auto;
+  max-width: calc(100% - 36px);
+  padding: 7px 10px;
+  gap: 10px;
+  background: #10242ddd;
+  border: 1px solid #314d5b;
+}
+.ev-cockpit .ev-flow-legend span,
+.ev-cockpit .ev-flow-legend button {
+  font-size: 8px;
+}
+.ev-cockpit .ev-map-caption {
+  height: 26px;
+  min-height: 0;
+  padding: 5px 16px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  border-top: 1px solid #2b434e;
+  background: #10232d;
+}
+.ev-cockpit .ev-map-caption > div {
+  font-size: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ev-cockpit .ev-map-caption > p,
+.ev-cockpit .ev-map-caption > small {
+  display: none;
+}
+.ev-cockpit .ev-flow-readout {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #122b36f2;
+  border: 1px solid #63828f;
+  padding: 10px 14px;
+  border-radius: 4px;
+  max-width: 85%;
+  z-index: 10;
+  pointer-events: none;
+}
+.ev-flow-readout strong,
+.ev-flow-readout span {
+  display: block;
+  font-size: 12px;
+}
+.ev-flow-readout span {
+  font-size: 9px;
+  margin-top: 5px;
+  color: #b0cbd6;
+}
+.ev-cockpit .ev-flow-inspector {
+  top: auto;
+  bottom: 120px;
+  right: 18px;
+  left: auto;
+  width: 290px;
+  max-height: 60%;
+  margin: 0;
+  padding: 16px;
+}
+.ev-cockpit .ev-flow-inspector h2 {
+  font-size: 19px;
+}
+.ev-cockpit .ev-flow-inspector p {
+  font-size: 10px;
+}
+.ev-cockpit .ev-flow-inspector strong {
+  font-size: 14px;
+}
+.ev-cockpit .ev-trade-panel {
+  position: absolute;
+  inset: 115px 18px 105px auto;
+  width: min(470px, 90%);
+  z-index: 15;
+  overflow: auto;
+  background: #10232dfc;
+}
+.ev-cockpit .ev-queue,
+.ev-cockpit .ev-results {
+  position: absolute;
+  top: 110px;
+  bottom: 100px;
+  right: 12px;
+  left: auto;
+  width: min(400px, 90%);
+  max-height: none;
+  overflow: auto;
+  z-index: 20;
+  background: #112630fa;
+  border: 1px solid #496674;
+  padding: 18px;
+}
+/* Dense, readable tool layouts use their own scroll and keep the world in view. */
+.ev-tool-dock .da,
+.ev-tool-dock .ops,
+.ev-tool-dock .research {
+  padding: 20px 18px 40px;
+  max-width: none;
+  margin: 0;
+}
+.ev-tool-dock .da h1,
+.ev-tool-dock .ops h1,
+.ev-tool-dock .research h1 {
+  font-size: 26px;
+}
+.ev-tool-dock .da-header,
+.ev-tool-dock .ops-heading,
+.ev-tool-dock .research-heading {
+  display: block;
+}
+.ev-tool-dock .da-header > .da-buttons,
+.ev-tool-dock .ops-heading > .ops-actions {
+  margin: 14px 0;
+}
+.ev-tool-dock .da-header p,
+.ev-tool-dock .research-heading p {
+  font-size: 11px;
+}
+.ev-tool-dock .da-scope-line {
+  font-size: 8px;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+.ev-tool-dock .da-layout,
+.ev-tool-dock .research-layout,
+.ev-tool-dock .ops-workspace.has-case {
+  display: block;
+}
+.ev-tool-dock .da-embedded-register,
+.ev-tool-dock .research-embedded-library {
+  padding: 12px;
+  border: 1px solid #3e5864;
+  margin-bottom: 18px;
+  background: #142a34;
+}
+.da-embedded-register > summary,
+.research-embedded-library > summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #dfca92;
+}
+.ev-tool-dock .da-register,
+.ev-tool-dock .research-library {
+  position: static;
+  max-height: 360px;
+  overflow: auto;
+  border: 0;
+  padding: 14px 0 0;
+  background: transparent;
+}
+.ev-tool-dock .da-register-list {
+  grid-template-columns: 1fr;
+}
+.ev-tool-dock .da-count {
+  font-size: 10px !important;
+}
+.ev-tool-dock .da-mission {
+  display: block;
+}
+.ev-tool-dock .da-mission h2 {
+  font-size: 23px;
+}
+.ev-tool-dock .da-mission .da-promise {
+  font-size: 13px;
+}
+.ev-tool-dock .da-version {
+  display: block;
+  text-align: left;
+  font-size: 9px;
+}
+.ev-tool-dock .da-version small {
+  display: inline;
+  margin-left: 10px;
+  max-width: none;
+}
+.ev-tool-dock .da-chain {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 15px 0 20px;
+}
+.ev-tool-dock .da-chain .da-stage {
+  min-height: 145px;
+  padding: 13px;
+  border-bottom: 1px solid #314954;
+  border-right: 1px solid #314954;
+}
+.ev-tool-dock .da-stage strong {
+  font-size: 17px;
+}
+.ev-tool-dock .da-stage:nth-child(2n) {
+  border-right: 0;
+}
+.ev-tool-dock .da-stage:nth-child(2n):after {
+  display: none;
+}
+.ev-tool-dock .da-stage:nth-child(3):after {
+  display: block;
+}
+.ev-tool-dock .da-view-tabs button {
+  font-size: 10px;
+  padding: 11px 8px;
+}
+.ev-tool-dock .da-view-tabs .da-add-evidence {
+  margin-left: 0;
+}
+.ev-tool-dock .da-signals article {
+  flex-wrap: wrap;
+  padding: 14px;
+  gap: 11px;
+}
+.ev-tool-dock .da-signals h4 {
+  font-size: 15px;
+}
+.ev-tool-dock .da-signals p {
+  font-size: 11px;
+}
+.ev-tool-dock .da-signals article > button {
+  margin-left: 29px;
+}
+.ev-tool-dock .da-outcomes > div {
+  grid-template-columns: 1fr;
+}
+.ev-tool-dock .da-outcomes article {
+  padding: 15px;
+}
+.ev-tool-dock .da-empty {
+  min-height: 360px;
+  padding: 25px 10px;
+  border: 0;
+}
+.ev-tool-dock .da-empty h2 {
+  font-size: 25px;
+}
+.ev-tool-dock .da-empty-orbit {
+  font-size: 55px;
+  margin-bottom: 18px;
+}
+.ev-tool-dock .da-section-heading h3 {
+  font-size: 19px;
+}
+.ev-tool-dock .da-section-heading > button {
+  width: 100%;
+  text-align: left;
+}
+.ev-tool-dock .da p {
+  font-size: 11px;
+}
+.ev-tool-dock .research-fields,
+.ev-tool-dock .research-layer-grid,
+.ev-tool-dock .ops-form-grid,
+.ev-tool-dock .ops-filters {
+  grid-template-columns: 1fr 1fr;
+}
+.ev-tool-dock .research-form {
+  padding: 16px;
+}
+.ev-tool-dock .research-mode {
+  margin-top: 12px;
+}
+.ev-tool-dock .ops-metrics {
+  grid-template-columns: 1fr 1fr;
+}
+.ev-tool-dock .ops-case {
+  max-height: none;
+  margin-top: 16px;
+}
+.ev-cockpit .ev-method,
+.ev-cockpit .ev-assurance {
+  padding: 24px 18px;
+}
+.ev-cockpit .ev-method h2,
+.ev-cockpit .ev-assurance h2 {
+  font-size: 28px;
+}
+.ev-cockpit .ev-method-grid,
+.ev-cockpit .ev-capabilities,
+.ev-cockpit .ev-assurance-columns {
+  display: block;
+}
+@container world (max-width:1000px) {
+  .ev-cockpit .ev-map-heading {
+    display: block;
+  }
+  .ev-cockpit .ev-watch-counters {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    right: 0;
+    justify-content: flex-start;
+  }
+  .ev-cockpit .ev-watch-counters .ev-public-counter {
+    width: 150px;
+    padding: 7px 10px;
+  }
+  .ev-cockpit .ev-procurement-pulse .ev-document-counter {
+    width: 125px;
+  }
+  .ev-cockpit .ev-watch-counters .ev-public-counter strong {
+    font-size: 19px;
+  }
+  .ev-cockpit .ev-country-search {
+    top: 163px;
+    width: 185px;
+  }
+  .ev-cockpit .ev-globe {
+    top: 140px;
+    height: calc(100% - 230px);
+  }
+}
+@media (max-width: 900px) {
+  .ev-cockpit {
+    grid-template-rows: 48px minmax(0, 1fr);
+  }
+  .ev-cockpit .ev-header {
+    padding: 8px 13px;
+  }
+  .ev-cockpit .ev-edition,
+  .ev-cockpit .ev-footer {
+    display: none;
+  }
+  .ev-cockpit .ev-brand {
+    font-size: 18px;
+  }
+  .ev-cockpit .ev-main,
+  .ev-cockpit.has-dock .ev-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 42px 48px minmax(0, 1fr);
+  }
+  .ev-cockpit .ev-tabs {
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: row;
+    gap: 3px;
+    overflow: auto;
+    padding: 4px 8px;
+    border-right: 0;
+    border-bottom: 1px solid #314954;
+    white-space: nowrap;
+  }
+  .ev-cockpit .ev-tabs > button {
+    flex-direction: row;
+    font-size: 9px;
+    padding: 6px 9px;
+    white-space: nowrap;
+  }
+  .ev-tool-symbol {
+    font-size: 15px;
+  }
+  .ev-cockpit .ev-tabs > button:nth-child(n + 5) {
+    display: none;
+  }
+  .ev-cockpit .ev-shared-scope {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 5px 10px;
+    gap: 5px;
+  }
+  .ev-cockpit .ev-shared-scope > span,
+  .ev-cockpit .ev-shared-scope label,
+  .ev-cockpit .ev-shared-scope > button {
+    display: none;
+  }
+  .ev-cockpit .ev-shared-scope input {
+    font-size: 11px;
+  }
+  .ev-cockpit .ev-shared-scope form > button {
+    font-size: 10px;
+    padding: 7px;
+  }
+  .ev-cockpit .ev-watch-surface {
+    grid-column: 1;
+    grid-row: 3;
+    min-height: 0;
+  }
+  .ev-cockpit.has-dock .ev-main {
+    grid-template-rows: 42px 48px minmax(245px, 42%) minmax(0, 1fr);
+  }
+  .ev-cockpit .ev-tool-dock,
+  .ev-cockpit .ev-method,
+  .ev-cockpit .ev-assurance {
+    grid-column: 1;
+    grid-row: 4;
+    border-left: 0;
+    border-top: 1px solid #66828d;
+  }
+  .ev-cockpit .ev-map-heading {
+    top: 10px;
+    left: 13px;
+    right: 13px;
+  }
+  .ev-cockpit .ev-map-heading h1 {
+    font-size: 21px;
+  }
+  .ev-cockpit .ev-watch-time-basis {
+    display: none;
+  }
+  .ev-cockpit .ev-watch-counters {
+    top: 46px;
+    gap: 5px;
+  }
+  .ev-cockpit .ev-watch-counters .ev-public-counter {
+    width: 125px;
+    padding: 6px;
+  }
+  .ev-cockpit .ev-watch-counters .ev-public-counter strong {
+    font-size: 17px;
+  }
+  .ev-cockpit .ev-procurement-pulse {
+    display: none;
+  }
+  .ev-cockpit .ev-country-search {
+    top: 130px;
+    left: 12px;
+    width: 175px;
+    padding: 8px;
+    max-height: calc(100% - 225px);
+  }
+  .ev-cockpit .ev-country-search label {
+    font-size: 8px;
+  }
+  .ev-cockpit .ev-globe {
+    top: 115px;
+    bottom: 100px;
+    height: calc(100% - 215px);
+  }
+  .ev-cockpit .ev-map-controls {
+    bottom: 30px;
+    left: 8px;
+    right: 8px;
+    gap: 3px;
+  }
+  .ev-cockpit .ev-map-controls button,
+  .ev-cockpit .ev-map-controls select {
+    font-size: 8px;
+    padding: 5px 6px;
+  }
+  .ev-cockpit .ev-map-controls button:nth-last-child(1),
+  .ev-cockpit .ev-map-controls button:nth-last-child(2) {
+    display: none;
+  }
+  .ev-cockpit .ev-flow-legend {
+    bottom: 87px;
+    left: 10px;
+    padding: 5px 8px;
+    gap: 7px;
+  }
+  .ev-cockpit .ev-flow-legend span,
+  .ev-cockpit .ev-flow-legend button {
+    font-size: 7px;
+  }
+  .ev-cockpit.has-dock .ev-globe {
+    inset: 38px 0 40px;
+    height: calc(100% - 78px);
+  }
+  .ev-cockpit.has-dock .ev-map-heading h1 {
+    font-size: 17px;
+  }
+  .ev-cockpit.has-dock .ev-map-heading .ev-eyebrow,
+  .ev-cockpit.has-dock .ev-watch-counters,
+  .ev-cockpit.has-dock .ev-country-search,
+  .ev-cockpit.has-dock .ev-flow-legend,
+  .ev-cockpit.has-dock .ev-map-caption {
+    display: none;
+  }
+  .ev-cockpit.has-dock .ev-map-controls {
+    bottom: 4px;
+  }
+  .ev-cockpit.has-dock .ev-map-controls button:nth-child(-n + 2) {
+    display: none;
+  }
+  .ev-cockpit .ev-flow-inspector {
+    bottom: 65px;
+    right: 8px;
+    width: 210px;
+    max-height: 55%;
+    padding: 10px;
+  }
+  .ev-cockpit .ev-flow-inspector h2 {
+    font-size: 14px;
+  }
+  .ev-cockpit .ev-flow-readout {
+    bottom: 125px;
+  }
+  .ev-cockpit.has-dock .ev-flow-readout {
+    bottom: 45px;
+  }
+  .ev-tool-dock .research-fields,
+  .ev-tool-dock .ops-filters {
+    grid-template-columns: 1fr;
+  }
+  .ev-cockpit .ev-queue,
+  .ev-cockpit .ev-results {
+    top: 90px;
+    bottom: 60px;
+  }
+  .ev-cockpit.has-dock .ev-flow-inspector {
+    bottom: 40px;
+    max-height: 60%;
+    width: 190px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ev-cockpit .ev-tool-dock {
+    animation: ev-dock-in 0.2s ease-out;
+  }
+  @keyframes ev-dock-in {
+    from {
+      opacity: 0.5;
+      transform: translateX(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+/* Clear legacy page-sized minima and centered toolbar transforms. */
+.ev-cockpit .ev-main {
+  align-items: stretch;
+}
+.ev-cockpit .ev-tabs {
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
+}
+.ev-cockpit .ev-globe {
+  min-height: 0;
+}
+.ev-cockpit .ev-map-heading {
+  width: auto;
+  transform: none;
+}
+.ev-cockpit .ev-map-controls {
+  width: auto;
+  transform: none;
+  margin: 0;
+}
+.ev-cockpit .ev-footer {
+  width: 100%;
+  max-width: none;
+}
+.ev-cockpit .ev-country-search form {
+  border: 0;
+  padding: 0;
+  background: none;
+}
+.ev-cockpit .ev-connection-detail {
+  margin: 12px 0;
+}
+.ev-cockpit .ev-connection-detail > summary {
+  font-size: 11px;
+  color: #dac998;
+  cursor: pointer;
+}
+.ev-cockpit .ev-corridor-members {
+  display: grid;
+  gap: 8px;
+  font-size: 10px;
+  margin: 12px 0;
+  color: #b2c9d4;
+}
+.ev-cockpit .ev-corridor-members select {
+  font-size: 10px;
+  max-width: 100%;
+  background: #112a35;
+  border: 1px solid #496573;
+  color: #d9e9ee;
+  padding: 7px;
+}
+@container world (max-width:1100px) {
+  .ev-cockpit .ev-map-heading {
+    display: block;
+  }
+  .ev-cockpit .ev-watch-counters {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    right: 0;
+    justify-content: flex-start;
+  }
+  .ev-cockpit .ev-watch-counters .ev-public-counter {
+    width: 150px;
+    padding: 7px 10px;
+  }
+  .ev-cockpit .ev-procurement-pulse .ev-document-counter {
+    width: 125px;
+  }
+  .ev-cockpit .ev-watch-counters .ev-public-counter strong {
+    font-size: 19px;
+  }
+  .ev-cockpit .ev-country-search {
+    top: 163px;
+    width: 185px;
+  }
+  .ev-cockpit .ev-globe {
+    top: 140px;
+    height: calc(100% - 230px);
+  }
+}
+@media (max-width: 900px) {
+  .ev-cockpit .ev-tabs {
+    height: 42px;
+    min-height: 0;
+    flex-wrap: nowrap;
+  }
+  .ev-cockpit .ev-watch-counters {
+    top: 46px;
+  }
+  .ev-cockpit .ev-country-search {
+    top: 130px;
+    width: 175px;
+  }
+  .ev-cockpit .ev-globe {
+    top: 115px;
+    height: calc(100% - 215px);
+  }
+  .ev-cockpit.has-dock .ev-globe {
+    top: 38px;
+    height: calc(100% - 78px);
+  }
+  .ev-cockpit .ev-flow-inspector .ev-flow-direction {
+    display: none;
+  }
+  .ev-cockpit .ev-flow-actions button,
+  .ev-cockpit .ev-flow-actions a {
+    font-size: 9px !important;
+  }
+}
+.ev-connection-desk {
+  padding: 24px 20px 40px;
+}
+.ev-connection-desk h1 {
+  font-size: 27px;
+  margin: 12px 0;
+}
+.ev-connection-desk p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #a9c3ce;
+}
+.ev-connection-desk .ev-eyebrow {
+  font-size: 9px;
+}
+.ev-connection-filters {
+  display: grid;
+  gap: 16px;
+  margin: 22px 0;
+}
+.ev-connection-filters label {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  color: #bdd0d8;
+}
+.ev-connection-filters input,
+.ev-connection-filters select {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  background: #0e2631;
+  border: 1px solid #45616f;
+  color: #dfebef;
+  font-size: 12px;
+}
+.ev-connection-filters .ev-review-check {
+  display: flex !important;
+  font-size: 11px;
+}
+.ev-connection-filters .ev-review-check input {
+  width: auto !important;
+}
+.ev-connection-cards {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+}
+.ev-connection-cards article {
+  padding: 18px;
+  border: 1px solid #3b5563;
+  background: #142b35;
+}
+.ev-connection-cards small {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #abc5d0;
+}
+.ev-connection-cards h2 {
+  font-size: 18px;
+  margin: 12px 0 !important;
+  line-height: 1.5 !important;
+}
+.ev-connection-cards p {
+  font-size: 11px;
+  margin: 8px 0;
+}
+.ev-connection-cards strong {
+  display: block;
+  font-size: 14px;
+  color: #d6e9ef;
+  font-weight: 450;
+}
+.ev-connection-cards button {
+  margin-top: 15px;
+  font-size: 11px;
+  color: #e7cf92;
+}
+.ev-connection-basis {
+  margin-top: 24px;
+  border-top: 1px solid #38515e;
+  padding-top: 16px;
+}
+.ev-connection-basis summary {
+  font-size: 12px;
+  cursor: pointer;
+  color: #ddcc9f;
+}
+.ev-connection-basis p {
+  margin-top: 15px;
+}
+.ev-connections-count {
+  font-size: 10px !important;
+  letter-spacing: 0.04em;
+}
+@media (max-width: 900px) {
+  .ev-cockpit .ev-tabs > button:nth-child(5) {
+    display: flex;
+  }
+  .ev-connection-desk {
+    padding: 20px 16px;
+  }
+  .ev-cockpit .ev-shared-scope > button:last-child {
+    display: block;
+    font-size: 9px;
+    padding: 7px;
+    max-width: 90px;
+  }
+}
+.ev-cockpit .ev-tool-dock .ev-flow-inspector {
+  position: static;
+  inset: auto;
+  transform: none;
+  width: auto;
+  max-width: none;
+  max-height: none;
+  margin: 20px 20px 0;
+  background: #19343f;
+  border: 1px solid #7a8e98;
+  box-shadow: none;
+}
+.ev-cockpit .ev-tool-dock .ev-flow-inspector h2 {
+  font-size: 23px;
+  line-height: 1.4;
+}
+.ev-cockpit .ev-tool-dock .ev-flow-inspector p {
+  font-size: 12px;
+}
+.ev-cockpit .ev-tool-dock .ev-flow-inspector strong {
+  font-size: 17px;
+}
+.ev-cockpit.has-dock .ev-watch-time-basis {
+  display: none;
+}
+.ev-cockpit .ev-trace-return {
+  position: absolute;
+  bottom: 122px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 14px;
+  background: #15313ef2;
+  border-color: #668591;
+  font-size: 11px;
+  max-width: 90%;
+  z-index: 10;
+}
+@container world (max-width:1100px) {
+  .ev-cockpit .ev-country-search {
+    top: 187px;
+  }
+  .ev-cockpit .ev-globe {
+    top: 120px;
+    height: calc(100% - 210px);
+  }
+}
+@media (max-width: 900px) {
+  .ev-cockpit .ev-country-search {
+    top: 130px;
+  }
+  .ev-cockpit .ev-globe {
+    top: 115px;
+    height: calc(100% - 215px);
+  }
+  .ev-cockpit.has-dock .ev-globe {
+    top: 38px;
+    height: calc(100% - 78px);
+  }
+  .ev-cockpit .ev-tool-dock .ev-flow-inspector {
+    position: static;
+    width: auto;
+    margin: 15px 16px 0;
+    max-height: none;
+    padding: 15px;
+  }
+  .ev-cockpit .ev-tool-dock .ev-flow-inspector .ev-flow-direction {
+    display: block;
+  }
+  .ev-cockpit .ev-trace-return {
+    bottom: 120px;
+    font-size: 9px;
+  }
+}
+.ev-cockpit .ev-camera-scope {
+  position: absolute;
+  top: 20px;
+  left: 310px;
+  max-width: 330px;
+  color: #e8d9ae;
+  border: 1px solid #58645d;
+  background: #142c36;
+  padding: 6px 9px;
+  font-size: 9px;
+  z-index: 6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .ev-cockpit .ev-camera-scope {
+    top: 12px;
+    left: auto;
+    right: 12px;
+    max-width: 145px;
+    padding: 4px 6px;
+    font-size: 8px;
+  }
+}
+
+/* Monetary evidence surrounds the permanent world surface. */
+.ev-open-money { color:#b6dfc1; margin-top:6px; padding:6px 9px; font-size:10px; }
+.ev-money-map-key { position:absolute; z-index:3; right:18px; top:114px; display:flex; max-width:min(390px,48%); background:#112b33ef; border:1px solid #567864; border-radius:4px; }
+.ev-money-map-key button { text-align:left; border:0; background:transparent; font-size:10px; padding:8px 11px; }
+.ev-money-map-key strong { display:block; color:#b8e3c3; font-size:24px; font-weight:500; }
+.ev-money-map-key small { display:block; color:#acc1c8; font-size:9px; line-height:1.6; }
+.ev-money-desk { padding:22px 20px; color:#d9e5e8; font-size:12px; line-height:1.65; }
+.ev-money-desk h1 { font-size:27px; margin:6px 0; }
+.ev-money-desk h2 { font-size:20px; margin:8px 0; }
+.ev-money-desk h3 { font-size:14px; }
+.ev-money-desk p { color:#aebfc6; }
+.ev-money-desk label { display:grid; gap:6px; font-size:11px; color:#b4c8ce; }
+.ev-money-desk select,.ev-money-desk input { width:100%; min-width:0; padding:10px; border:1px solid #3a535e; border-radius:3px; background:#10242e; color:#d9e5e8; }
+.ev-money-filters { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 0; }
+.ev-money-filters label:last-child { grid-column:1/-1; }
+.ev-money-rule { border-left:2px solid #bca978; padding-left:12px; font-size:11px; }
+.ev-money-totals { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:20px 0; }
+.ev-money-totals button { display:flex; flex-direction:column; text-align:left; padding:12px; border:1px solid #334d56; background:#112731; min-width:0; border-radius:4px; }
+.ev-money-totals button[aria-pressed=true] { border-color:#93d1a4; background:#19373b; }
+.ev-money-totals span { font-size:11px; line-height:1.5; }
+.ev-money-totals strong { font-weight:500; font-size:24px; color:#b6dfc1; margin:7px 0; }
+.ev-money-totals small { font-size:9px; line-height:1.6; color:#a6bbc3; }
+.ev-money-selected { border-top:1px solid #3b555e; padding-top:20px; scroll-margin:10px; }
+.ev-money-value { font-weight:500; font-size:30px; color:#b6dfc1; }
+.ev-money-selected > button { margin:15px 0; color:#b6dfc1; }
+.ev-money-country-list { display:grid; gap:3px; }
+.ev-money-country-list button { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; text-align:left; }
+.ev-money-country-list small { display:block; font-size:9px; color:#a6bbc3; }
+.ev-money-country-list strong { font-size:11px; font-weight:500; white-space:nowrap; }
+.ev-money-desk details { border-top:1px solid #334d56; padding:14px 0; margin-top:15px; }
+.ev-money-desk summary { cursor:pointer; color:#c5d9df; }
+.ev-money-desk article { border-bottom:1px solid #283f49; padding:5px 0; }
+.ev-money-desk a { color:#b6dfc1; overflow-wrap:anywhere; }
+.ev-money-pair { display:grid; text-align:left; width:100%; padding:10px; margin:3px 0; font-size:11px; }
+.ev-money-pair strong { color:#b6dfc1; font-weight:500; font-size:11px; }
+.ev-money-pagination { display:flex; align-items:center; justify-content:space-between; margin-top:14px; }
+@media(max-width:900px) { .ev-money-map-key { top:83px; right:10px; max-width:43%; } .ev-money-map-key strong { font-size:17px; } .ev-money-map-key small { font-size:8px; } .ev-open-money { font-size:9px; padding:3px; } }
+.ev-cockpit .ev-country-search { top:158px; }
+.ev-money-map-key { top:128px; }
+@container world (max-width:1100px) {
+  .ev-cockpit .ev-watch-counters { top:100px; }
+  .ev-cockpit .ev-country-search { top:220px; }
+  .ev-money-map-key { top:212px; max-width:43%; }
+}
+@media(max-width:900px) {
+  .ev-cockpit .ev-open-money { display:none; }
+  .ev-cockpit .ev-watch-counters { top:46px; }
+  .ev-cockpit .ev-country-search { top:130px; }
+  .ev-money-map-key { top:142px; }
+  .ev-cockpit.has-dock .ev-money-map-key { top:40px; max-width:48%; }
+  .ev-cockpit.has-dock .ev-money-map-key strong { font-size:15px; }
+  .ev-cockpit.has-dock .ev-money-map-key button { padding:5px 8px; font-size:9px; }
+}
+.ev-money-country-overview { border:1px solid #46665a; border-radius:4px; padding:12px; margin:15px 0; }
+.ev-money-country-overview button { display:flex; width:100%; justify-content:space-between; gap:12px; text-align:left; padding:9px 4px; border:0; border-bottom:1px solid #2e454e; border-radius:0; background:transparent; font-size:11px; }
+.ev-money-country-overview small { display:block; font-size:9px; color:#9bb4bd; }
+.ev-money-country-overview strong { font-size:13px; white-space:nowrap; color:#b6dfc1; font-weight:500; }

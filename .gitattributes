@@ -1,0 +1,2 @@
+# Generated PDF evidence briefs contain binary font and compressed page streams.
+*.pdf binary

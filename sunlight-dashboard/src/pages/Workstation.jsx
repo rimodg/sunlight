@@ -1021,7 +1021,6 @@ export default function App() {
   if (page === "onboarding") {
     return (
       <div style={{ minHeight: "100vh", background: T.bg, fontFamily: F.sans }}>
-        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
         <header style={{ height: 52, background: T.header, display: "flex", alignItems: "center", padding: "0 20px" }}>
           <div style={{ width: 28, height: 28, borderRadius: 7, background: "linear-gradient(135deg, #C9A84C, #A68930)", display: "flex", alignItems: "center", justifyContent: "center", marginRight: 10 }}><span style={{ fontSize: 14 }}>☀</span></div>
           <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.08em", color: "#FFF" }}><span style={{ color: "#C9A84C" }}>SUN</span>LIGHT</span>
@@ -1036,7 +1035,6 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100vh", background: T.bg, fontFamily: F.sans, display: "flex", flexDirection: "column" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
       {/* Header */}
       <header style={{ height: 48, background: T.header, display: "flex", alignItems: "center", padding: "0 16px", zIndex: 100, flexShrink: 0 }}>

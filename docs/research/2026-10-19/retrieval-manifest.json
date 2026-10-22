@@ -1,0 +1,135 @@
+[
+  {
+    "key": "ocds",
+    "repo": "open-contracting/standard",
+    "branch": "1.1-dev",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/open-contracting/standard/1.1-dev/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.230239+00:00",
+    "status": 200,
+    "bytes": 3794,
+    "sha256": "df3acb6f720a845cfa60cb20aadc8e61f8fbe8529f35748d46d4d316ff68eba5"
+  },
+  {
+    "key": "iati-schemas",
+    "repo": "IATI/IATI-Schemas",
+    "branch": "master",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/IATI/IATI-Schemas/master/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.230531+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "iati-codelists",
+    "repo": "IATI/IATI-Codelists",
+    "branch": "master",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/IATI/IATI-Codelists/master/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.230808+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "ownership",
+    "repo": "openownership/data-standard",
+    "branch": "main",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/openownership/data-standard/main/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.231043+00:00",
+    "status": 200,
+    "bytes": 5301,
+    "sha256": "ecf022e72df15a32101b91eec1890ab4698606feabaf1564e58b612e562cc750"
+  },
+  {
+    "key": "comtrade",
+    "repo": "uncomtrade/comtradeapicall",
+    "branch": "main",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/uncomtrade/comtradeapicall/main/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.231242+00:00",
+    "status": 200,
+    "bytes": 21749,
+    "sha256": "f36b0e4237ca7a6535f66713478f6f3ff439c081941dd6390e589ab5558a5f47"
+  },
+  {
+    "key": "hapi",
+    "repo": "OCHA-DAP/hdx-hapi",
+    "branch": "main",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/OCHA-DAP/hdx-hapi/main/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.231826+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "hapi-docs",
+    "repo": "OCHA-DAP/hdx-hapi-documentation",
+    "branch": "main",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/OCHA-DAP/hdx-hapi-documentation/main/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.907880+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "key": "fiscal",
+    "repo": "openspending/fiscal-data-package",
+    "branch": "master",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/openspending/fiscal-data-package/master/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.967485+00:00",
+    "status": 200,
+    "bytes": 1786,
+    "sha256": "9dade0c4ff51d5f5671ead2a754b9ef101e988002dc298fe430951ddaa6ce97f"
+  },
+  {
+    "key": "sdmx",
+    "repo": "sdmx-twg/sdmx-rest",
+    "branch": "master",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/sdmx-twg/sdmx-rest/master/README.md",
+    "retrieved_at": "2026-10-19T17:30:49.986334+00:00",
+    "status": 200,
+    "bytes": 1043,
+    "sha256": "bc9cd160345e4e80b99e76ec71f1bdfddc43e5ed924d40fbf9cda6a6bfe06381"
+  },
+  {
+    "key": "deck",
+    "repo": "visgl/deck.gl",
+    "branch": "master",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/visgl/deck.gl/master/README.md",
+    "retrieved_at": "2026-10-19T17:30:50.070681+00:00",
+    "status": 200,
+    "bytes": 4958,
+    "sha256": "4d392d6787f920f1181751dba014f520f021e4da40b0eb325d8f00a4c78524df"
+  },
+  {
+    "key": "wcag",
+    "repo": "w3c/wcag",
+    "branch": "main",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/w3c/wcag/main/README.md",
+    "retrieved_at": "2026-10-19T17:30:50.133177+00:00",
+    "status": 200,
+    "bytes": 21432,
+    "sha256": "fa2a43e2fa8e43fade0313289807eb11882d59c7c82e5cd76e8eaa8f640397ae"
+  },
+  {
+    "key": "wbgapi",
+    "repo": "tgherzog/wbgapi",
+    "branch": "master",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/tgherzog/wbgapi/master/README.md",
+    "retrieved_at": "2026-10-19T17:30:50.339101+00:00",
+    "status": 200,
+    "bytes": 12897,
+    "sha256": "3cb46a9d5309d752ec61a734c35e00b40e803d625af827bb9e1548f422e8d14f"
+  },
+  {
+    "key": "provenance",
+    "repo": "w3c/prov",
+    "branch": "main",
+    "path": "README.md",
+    "url": "https://raw.githubusercontent.com/w3c/prov/main/README.md",
+    "retrieved_at": "2026-10-19T17:30:50.538999+00:00",
+    "error": "HTTP Error 404: Not Found"
+  }
+]

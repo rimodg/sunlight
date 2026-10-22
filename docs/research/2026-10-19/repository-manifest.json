@@ -1,0 +1,57 @@
+[
+  {
+    "name": "ocds",
+    "repository": "open-contracting/standard",
+    "branch": "1.1-dev",
+    "returncode": 0,
+    "commit": "7876f2d57223caedc0c7359af9e93a8c8202e8ba"
+  },
+  {
+    "name": "iati",
+    "repository": "IATI/IATI-Schemas",
+    "branch": "version-2.03",
+    "returncode": 0,
+    "commit": "b4ead00528d3785b336d9847928274c207704deb"
+  },
+  {
+    "name": "iati-codes",
+    "repository": "IATI/IATI-Codelists",
+    "branch": "version-2.03",
+    "returncode": 0,
+    "commit": "e83832716be342b63e7b9fb9cb694220bd3551b2"
+  },
+  {
+    "name": "bods",
+    "repository": "openownership/data-standard",
+    "branch": "0.4.0",
+    "returncode": 0,
+    "commit": "acdc7fd13db478fb9ed17dbef3e6bf48768cd7ce"
+  },
+  {
+    "name": "sdmx",
+    "repository": "sdmx-twg/sdmx-rest",
+    "branch": "master",
+    "returncode": 0,
+    "commit": "46bba52cb8a8a21704019f949987ee21adefdd5e"
+  },
+  {
+    "name": "prov",
+    "repository": "w3c/prov",
+    "branch": "main",
+    "returncode": 0,
+    "commit": "aa82bd71b6bb1f7b735bf3f7f5b948fae87764f0"
+  },
+  {
+    "name": "hapi",
+    "repository": "OCHA-DAP/hdx-hapi",
+    "branch": "dev",
+    "returncode": 0,
+    "commit": "1187a59ff27d4907f779abca5aa3e3433f7eef5c"
+  },
+  {
+    "name": "worldbank-api",
+    "repository": "worldbank/open-api-specs",
+    "commit": "bbf93b34a3c78948d18f2ae40f5a31e4aa7a45a6",
+    "returncode": 0
+  }
+]

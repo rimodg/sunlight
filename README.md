@@ -1,16 +1,62 @@
 # SUNLIGHT
 
+The [offline local edition](docs/OFFLINE.md) runs the watch, monetary comparisons,
+procurement/delivery engines, PDF evidence search and follow-up without internet.
+Open **Offline workspace** in the header for source dates and full evidence
+checkpoints. A prepared Docker bundle includes its dependencies and local fonts;
+records remain in a durable local volume. New facts arrive through delivered
+records or an authorized local integration, while external refreshes and cloud
+AI are disabled by offline policy. Checkpoints preserve the ledger and verify
+files and engine/runtime compatibility before restoring into a new directory.
+
+The [institutional rebuild research](docs/INSTITUTIONAL_REBUILD_RESEARCH.md) grounds the next architecture in primary standards and documents what remains unconnected or unvalidated.
+
 The long-term direction is **The Global Humanitarian Watch**. Procurement is
 the operational entry point; broader categories must earn their own validated
 coverage. Read the [charter](docs/CHARTER_v2_global_humanitarian_watch.md) and the
 [institutional review brief](docs/INSTITUTIONAL_REVIEW.md) for current capability
 boundaries, the evaluation protocol, and a reproducible demonstration.
 
-The dashboard's default page is a live evidence workspace: supplied JSON goes
-through the API, and results expose findings, normalized-input gaps, calculation
-traces, and downloadable content-addressed receipts. It does not present random
-fixture scores as operational results. Historical evaluation metrics below must
-be interpreted with the sampling and corpus limits in the review brief.
+The dashboard opens on **Global watch**, with a shared country scope and a question bar linking the map to investigation. [Records & review](docs/OPERATIONS_PILOT.md) provides guided source forms, exact expected/observed comparisons, existing engine execution, review history and readable HTML briefs with print/save-to-PDF controls. JSON remains an advanced integration/audit option. Unknown observations and mismatched units do not become loss estimates. The ledger is a shared-access SQLite pilot; it needs a persistent hosting volume and validated institutional mappings before institutional use. No UN data connection is active.
+
+The [Delivery assurance workspace](docs/DELIVERY_ASSURANCE.md), at `/watch/#delivery`, follows one public obligation through sender debit, recipient credit, physical acceptance and service evidence. It provides exact claim-based reconciliations, missing-evidence issues, retained corrections, calibrated delivery checks, responsible follow-ups and readable briefs. The worked example is explicitly synthetic and isolated from institutional records. Bank feeds, independent issuer authentication and financial intervention are not connected.
+
+The [world workbench](docs/WORLD_WORKBENCH.md) keeps the globe visible as these tools open beside it. **Flow tracking** searches individual source relationships, traces their direction with labelled endpoints, and carries selected evidence into investigation. Geography and movement share a canvas camera; source-preserving corridors reduce overlap without adding unlike economic measures.
+
+The [institutional instrument assessment](docs/INSTITUTIONAL_INSTRUMENT.md) identifies the primary operators, their decisions and the evidence needed for adoption. **Review queue** (`/watch/#queue`) brings current registered obligations and source cases into one scope, with disclosed priorities, engine state, ownership, deadlines, direct evidence follow-ups and a readable meeting brief. Exact record handoffs preserve unsaved review drafts. Work-focus filters are task views, not institutional access roles.
+
+The [Monetary atlas](docs/MONETARY_ATLAS.md), at `/watch/#money`, adds 27 source-dated measures for trade, remittances, investment, development assistance, debt, income and economic context, plus directed bilateral aid relationships. Each global or covered total links to country evidence, its year and source. Stocks, signed net flows and overlapping measures remain separate. A country profile and 17-domain integration inventory expose both available figures and missing feeds.
+
+The [global monetary workbench](docs/GLOBAL_MONETARY_WORKBENCH.md) connects **Explore**, **Compare & history**, and **Coverage & sources** beside the globe. Select a measure, country and year; compare up to four countries; inspect annual observations on the map; and export a readable brief or exact CSV. Coverage changes block misleading aggregate differences. Shareable views retain their scope and source revision, and a scoped investigation or recipient-evidence review carries the work forward.
+
+The [Research desk](docs/RESEARCH_WORKSPACE.md) adds saved, source-cited inquiries across the economic context and operations ledger, text-readable PDF uploads with page references, review notes and following. Evidence retrieval works without AI. Optional model-assisted investigation can query selected evidence, compute source-specific statistics, inspect an operational case and read selected PDF pages. It needs securely configured credentials, a model ID and explicit authorization to share selected excerpts for each run. Questions, source facts, existing calculations and model hypotheses remain separate; national context does not establish community conditions or causes.
+
+The **Global watch** workspace retains source-dated geographic context, directional chevrons, a source-coverage register and the advanced session analysis workspace. Supplied OCDS-shaped JSON goes through the API, exposing findings, input gaps, calculation traces and downloadable content-addressed receipts. No random fixture scores are presented as operational results. Historical evaluation metrics below retain the sampling and corpus limits in the review brief.
+
+The [global watch interface](docs/INVESTIGATION_INTERFACE.md) provides country
+research, category/value drilldowns, document registers and completion-evidence
+gaps. The separately sourced trade layer uses a dated UN Comtrade preview;
+[data coverage and annual-counter configuration](docs/GLOBAL_WATCH_DATA.md)
+remain explicit. Published numbers are available immediately from a source-pinned
+Anti-Corruption Compass snapshot: 59 countries across 2017–2024, including
+US$4.30 trillion and 10,617,058 contracts across 52 countries in 2024. All 250
+country/territory catalog entries remain selectable. These aggregates are not
+a live worldwide procurement observation feed or SUNLIGHT analysis findings.
+
+White moving globe points add material-export context from a pinned CEPII BACI-derived
+snapshot: **US$3.95 trillion**, **223 exporting economies**, **85 selected HS4
+headings**, **2023**. Click the white total to explore country contributions,
+material composition and rounded leading-partner shares. Gross exports measure
+documented cross-border material trade, not GDP, domestic extraction or real-time
+shipments. Source coverage, the selected basket and calculations are exposed.
+
+Small, steady red points add dated conflict context from **UCDP Candidate
+26.0.8**: 1,018 named/nearby-location records at 658 reference coordinates.
+The capped extract has event starts in **August 2026**; it is preliminary and
+partial. Click a point or the red legend for dates, precision, source IDs and
+provenance. Co-location with exports/procurement does not establish corruption.
+
+Small blue moving points add [historical arms-reporting context](docs/GLOBAL_WATCH_DATA.md#arms-declarations-and-accountability): UNROCA declarations for 2020–2022, exporter/importer category comparisons, source reports and separately attributed audit summaries. Reporting discrepancies do not establish diversion. Verified recovery locations and a global missing-weapons total are unavailable; no such locations or total are invented. All flow layers use points without tails along thin fixed connections. Click a line or **Explore connections** to trace origin/destination, inspect the source measure and follow reporting discrepancies to the records needed for review.
 
 **Procurement Integrity Verification Infrastructure**
 
@@ -22,7 +68,7 @@ SUNLIGHT verifies the structural integrity of public contracts before money is s
 
 Existing institutional tools measure statistical deviation — they flag contracts where the price looks unusual. SUNLIGHT looks at the structure behind the contract: whether the awarded entity has the required capability, whether a competitive process actually occurred, whether the stakeholder dependencies and procedural commitments are internally consistent. It detects structural contradictions that live in the topology of a contract's dependency graph, a class of finding that indicator-based methods are architecturally unable to produce. Contracts where the price was calibrated to look clean but the structure underneath is broken.
 
-The system is deterministic. Given the same input, it produces the same output. No machine learning, no stochastic components. Every flag traces to a rule, every rule traces to a jurisdiction-specific legal citation, every finding is framed as a risk indicator, not an allegation.
+The core verification engines are deterministic: the same input and calibration produce the same output. Optional research-model synthesis is separate, may vary between runs, and does not modify those engine results. Every flag traces to a rule, every rule traces to a jurisdiction-specific legal citation, every finding is framed as a risk indicator, not an allegation.
 
 SUNLIGHT integrates once at the institutional level and covers an entire operational footprint. Each contract is analyzed against its execution country's legal framework through jurisdiction profiles. Adding a new country is a data task — authoring a profile — not a code change.
 

@@ -880,7 +880,6 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100vh", background: C.page, fontFamily: F.sans }}>
-      <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
       <header style={{
         height: 56, background: C.header, display: "flex", alignItems: "center",
