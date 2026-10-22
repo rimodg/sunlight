@@ -225,3 +225,14 @@ Interface captures use fictional validation records:
 
 - [Desktop offline workspace](interface/Offline-Workspace.png)
 - [Mobile offline workspace](interface/Offline-Workspace-Mobile.png)
+
+The prepared `linux/amd64` installation was also started using its generated
+checksum-checking shell launcher. The local health endpoint, loopback port,
+read-only application filesystem and complete cold-browser journey passed
+against that image. Application policy blocks external Python requests; Docker's
+bridge permits the local browser connection. This is distinct from the separate
+`--network none` engine test.
+
+Prepared image: `sha256:264c0b5a749324febe2b3c92402759ac5afc6a5e66d15dc0e107052561adcffb`.
+Source revision: `a800f85` (subsequent documentation changes do not change the engine).
+Installation ZIP SHA-256: `8724a53847c153cc8a121456c3a5835cbec095c3e8017a6450e39c9d589cd58a`.
