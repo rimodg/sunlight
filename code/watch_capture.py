@@ -127,7 +127,7 @@ def adapt(source, body):
             # unmatched suppliers as explicit unresolved parties, never discard.
             for a, award in enumerate(row.get("awards", [])):
                 for s, supplier in enumerate(award.get("suppliers", [])):
-                    if supplier.get("id") not in known:
+                    if supplier.get("id") is None or supplier.get("id") not in known:
                         ids = [supplier["identifier"]] if isinstance(supplier.get("identifier"), dict) else []
                         parties.append(party(ids, f"/releases/{i}/awards/{a}/suppliers/{s}/identifier"))
             records.append({"key": row["ocid"], "release_id": row["id"], "category": "procurement",

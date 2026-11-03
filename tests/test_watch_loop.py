@@ -202,6 +202,15 @@ class LoopTests(unittest.TestCase):
             with self.assertRaises(BlockingIOError):
                 engine.tick()
 
+    def test_real_rule_outputs_replay_without_timestamps_or_random_ids(self):
+        from watch_packet import packet, replay
+        engine=WatchEngine(self.j,{'schema':'sunlight.watch-source-policy.v1','sources':[CF]},
+                           transport=lambda u:response({'releases':[release()]}),clock=lambda:self.time)
+        result=engine.tick()
+        self.assertGreater(len(result['readings']),10)
+        value=packet(self.j,self.j.events(kind='examination')[-1]['id'])
+        self.assertEqual(canonical(replay(value)),canonical(result))
+
 
 if __name__ == "__main__":
     unittest.main()

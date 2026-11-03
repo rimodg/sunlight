@@ -144,6 +144,24 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('macOS launchd is required',run.stderr)
         self.assertFalse(data.exists())
 
+    def test_failed_environment_creation_is_preserved_without_loading_agent(self):
+        self.args.environment=str(self.root/'new-runtime')
+        self.args._created=[]
+        def command(args, **kwargs):
+            if 'venv' in args:
+                Path(args[-1]).mkdir()
+                return subprocess.CompletedProcess(args,0,'','')
+            if 'pip' in args:
+                raise subprocess.CalledProcessError(1,args)
+            self.fail('Service command must not run after dependency failure')
+        with patch.object(service,'run',side_effect=command), patch.object(service,'pinned'), patch.object(service,'loaded') as loaded:
+            with self.assertRaises(subprocess.CalledProcessError):
+                service.install(self.args)
+            loaded.assert_not_called()
+        self.assertTrue(Path(self.args.environment).exists())
+        self.assertIn(self.args.environment,self.args._created)
+        self.assertFalse((Path(self.args.launch_agents_dir)/(self.args.label+'.plist')).exists())
+
 
 if __name__ == '__main__':
     unittest.main()
