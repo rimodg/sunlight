@@ -175,6 +175,33 @@ class LoopTests(unittest.TestCase):
         engine.clock = lambda: self.fail("Replay called wall clock")
         self.assertEqual(canonical(replay(value, reader=reader)), canonical(replay(value, reader=reader)))
 
+    def test_additional_identifier_locator_and_missing_party_reference(self):
+        row = release()
+        row['parties'][0]['additionalIdentifiers']=[{'scheme':'GB-COH','id':'OC123456'}]
+        row['awards'][0]['suppliers']=[{'id':'not-in-parties'}]
+        records, _ = adapt(CF, json.dumps({'releases':[row]}).encode())
+        self.assertEqual(records[0]['parties'][0]['identifiers'][1]['locator'],
+                         '/releases/0/parties/0/additionalIdentifiers/0')
+        self.assertEqual(records[0]['parties'][1]['identifiers'],[])
+
+    def test_malformed_body_and_body_read_failure_still_have_reach_receipts(self):
+        engine=self.engine(lambda u:response([]))
+        engine.tick()
+        self.assertIsNotNone(health(self.j,self.time)['sources'][0]['last_reached'])
+        self.time='2026-01-02T00:02:00Z'
+        engine.transport=lambda u:{'status':200,'body':b'', 'read_failed':True}
+        engine.tick()
+        self.assertEqual(len(self.j.events(kind='source_receipt')),2)
+        self.assertEqual(self.j.events(kind='capture'),[])
+
+    def test_concurrent_scheduler_does_not_capture(self):
+        import fcntl
+        engine=self.engine(lambda u:self.fail('Concurrent scheduler captured'))
+        with open(self.j.path.with_suffix('.lock'),'a') as handle:
+            fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            with self.assertRaises(BlockingIOError):
+                engine.tick()
+
 
 if __name__ == "__main__":
     unittest.main()

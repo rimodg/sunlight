@@ -107,6 +107,12 @@ class JournalTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.j.verify()
 
+    def test_bundle_is_atomic_when_admission_fails(self):
+        with self.assertRaises(ValueError):
+            self.j.append_many([("receipt", "2026-01-01T00:00:00Z", {}),
+                                ("receipt", "2026-01-01T00:00:00Z", {"email": "redacted"})])
+        self.assertEqual(self.j.events(), [])
+
 
 if __name__ == "__main__":
     unittest.main()

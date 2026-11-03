@@ -71,9 +71,9 @@ def examine(observations, as_of, *, procurement_reader=procurement):
                                  "id": digest({"observation": r["id"], "rule": output["rule"], "version": VERSION})})
             if r.get("published_at") is None:
                 questions.append({"observation": r["id"], "reason": "publication_time_not_supplied", "status": "UNAVAILABLE"})
-    for s in subjects:
-        s["categories"] = sorted({r["category"] for r in history if r["id"] in s["observations"]})
     by_id = {r["id"]: r for r in history}
+    for s in subjects:
+        s["categories"] = sorted({by_id[oid]["category"] for oid in s["observations"]})
     for q in questions:
         q["since"] = by_id[q["observation"]]["captured_at"]
         q["age_seconds"] = (datetime.fromisoformat(cutoff) - datetime.fromisoformat(q["since"])).total_seconds()

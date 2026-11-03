@@ -97,6 +97,8 @@ class WatchEngine:
                     response = self.transport(url)
                     reached = utc(self.clock())
                     status = response["status"]
+                    if response.get("read_failed"):
+                        raise ValueError("response_body_read_failed")
                     if status != 200:
                         hint = response.get("retry_after")
                         retry = max(60, min(86400, int(hint))) if hint and str(hint).isdigit() else min(86400, 60 * 2 ** min(10, state.get("failures", 0)))
@@ -109,7 +111,7 @@ class WatchEngine:
                                         "next": next_url, "due": due, "seen": (seen + [url]) if next_url else [],
                                         "failures": 0, "cycle_complete": next_url is None})
                     outcome = "captured"
-                except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError):
+                except Exception:
                     failed = True
                     # No source text, exception body or untrusted payload in failure receipts.
                     if status == 200:

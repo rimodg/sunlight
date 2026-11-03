@@ -15,6 +15,8 @@ MAX_BYTES = 8 * 1024 * 1024
 
 
 def checked_url(url, base=None):
+    if not isinstance(url, str):
+        raise ValueError("source_url_refused")
     p = urlparse(url)
     if p.scheme != "https" or not p.hostname or p.username or p.password or p.fragment:
         raise ValueError("source_url_refused")
@@ -26,10 +28,12 @@ def checked_url(url, base=None):
 
 
 def policy(value):
-    if value.get("schema") != "sunlight.watch-source-policy.v1" or not isinstance(value.get("sources"), list):
+    if not isinstance(value, dict) or value.get("schema") != "sunlight.watch-source-policy.v1" or not isinstance(value.get("sources"), list):
         raise ValueError("source_policy_schema")
     seen = set()
     for s in value["sources"]:
+        if not isinstance(s, dict):
+            raise ValueError("source_policy_schema")
         if not isinstance(s.get("id"), str) or not s["id"] or s["id"] in seen:
             raise ValueError("duplicate_or_missing_source_id")
         seen.add(s["id"])
@@ -66,7 +70,11 @@ def fetch(url):
     request = Request(url, headers={"Accept": "application/json", "User-Agent": "SUNLIGHT-watch/1"})
     try:
         with build_opener(NoRedirect).open(request, timeout=30) as response:
-            body = response.read(MAX_BYTES + 1)
+            try:
+                body = response.read(MAX_BYTES + 1)
+            except OSError:
+                # Headers were reached even when downloading the body failed.
+                return {"status": response.status, "body": b"", "read_failed": True}
             return {"status": response.status, "body": body, "retry_after": None}
     except HTTPError as error:
         # Do not admit or log error bodies. Receiving an HTTP failure is a reach.
@@ -83,7 +91,7 @@ def party(identifiers, locator):
             continue
         out.append({"scheme": scheme, "value": value, "published_value": value,
                     "normalised_value": normalise(scheme, value), "policy": POLICY,
-                    "locator": locator})
+                    "locator": item.get("_locator", locator)})
     return {"identifiers": out}
 
 
@@ -96,6 +104,8 @@ def adapt(source, body):
     """
     doc = json.loads(body)
     admit(doc)
+    if not isinstance(doc, dict):
+        raise ValueError("source_document_must_be_object")
     records = []
     if source["adapter"] == "contracts_finder":
         rows = doc.get("releases")
@@ -107,8 +117,19 @@ def adapt(source, body):
                 raise ValueError("missing_release_identity")
             parties = []
             for j, p in enumerate(row.get("parties", [])):
-                ids = ([p["identifier"]] if isinstance(p.get("identifier"), dict) else []) + p.get("additionalIdentifiers", [])
-                parties.append(party(ids, f"/releases/{i}/parties/{j}/identifier"))
+                loc = f"/releases/{i}/parties/{j}"
+                ids = ([{**p["identifier"], "_locator": loc + "/identifier"}] if isinstance(p.get("identifier"), dict) else [])
+                ids += [{**item, "_locator": f"{loc}/additionalIdentifiers/{k}"}
+                        for k, item in enumerate(p.get("additionalIdentifiers", [])) if isinstance(item, dict)]
+                parties.append(party(ids, loc))
+            known = {p.get("id") for p in row.get("parties", [])}
+            # Publisher-local party references are not company identifiers. Keep
+            # unmatched suppliers as explicit unresolved parties, never discard.
+            for a, award in enumerate(row.get("awards", [])):
+                for s, supplier in enumerate(award.get("suppliers", [])):
+                    if supplier.get("id") not in known:
+                        ids = [supplier["identifier"]] if isinstance(supplier.get("identifier"), dict) else []
+                        parties.append(party(ids, f"/releases/{i}/awards/{a}/suppliers/{s}/identifier"))
             records.append({"key": row["ocid"], "release_id": row["id"], "category": "procurement",
                             "published_at": utc(row["date"]) if row.get("date") else None,
                             "parties": parties, "locator": f"/releases/{i}", "record": row})
