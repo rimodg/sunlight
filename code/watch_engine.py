@@ -23,7 +23,10 @@ def now():
 
 def build_identity(root=None):
     root = Path(root or Path(__file__).resolve().parents[1])
-    files = sorted((root / "code").glob("watch_*.py")) + [root / "requirements.lock"]
+    files = sorted((root / "code").glob("*.py")) + [root / "requirements.lock"]
+    files += [root / p for p in ["scripts/watch_service.py", "scripts/run_watch_service.py",
+                                "scripts/watch-service", "scripts/install-watch", "scripts/uninstall-watch",
+                                "config/watch-runtime.json", "deploy/launchd/org.sunlight.watch.plist"] if (root / p).exists()]
     hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     try:
         commit = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], stderr=subprocess.DEVNULL, text=True).strip()
@@ -62,11 +65,24 @@ class WatchEngine:
         self.journal.verify()
 
     def tick(self):
+        # A crashed process releases the OS lock. Manual ticks cannot race the
+        # service into duplicate captures or contradictory cursor updates.
+        import fcntl
+        with open(self.journal.path.with_suffix(".lock"), "a") as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            try:
+                return self._tick()
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+
+    def _tick(self):
         at = utc(self.clock())
         run = self.journal.append("scheduler_started", at, {"interval_seconds": self.interval, "build": self.build})
         self.journal.append("source_policy", at, {"policy": self.policy})
         failed = False
         try:
+            if build_identity()["source_sha256"] != self.build["source_sha256"]:
+                raise ValueError("running_source_drift")
             for source in self.policy["sources"]:
                 states = [e for e in self.journal.events(kind="source_state")
                           if e["payload"]["source"] == source["id"] and e["payload"]["policy_hash"] == digest(source)]

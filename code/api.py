@@ -552,6 +552,11 @@ app = FastAPI(
 # Module-level calibration store instance (shared across all requests)
 calibration_store = EmpiricalCalibrationStore(base_dir="calibration")
 
+# The organizational watch is a read-only view of an external operator journal.
+# Importing this router does not start a scheduler, capture data or enable a model.
+from watch_api import router as watch_ledger_router
+app.include_router(watch_ledger_router)
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # INPUT FORMAT ADAPTER REGISTRY

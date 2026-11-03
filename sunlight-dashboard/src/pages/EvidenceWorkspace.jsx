@@ -126,6 +126,7 @@ export default function EvidenceWorkspace() {
         <p className="ev-caption">This workspace runs procurement analysis. Delivery and corroboration require their own evidence and API workflows.</p>
       </section>
       <nav className="ev-tabs" aria-label="Workspace sections">
+        <a href="/watch-engine/ui">Subject ledger and watch health</a>
         {[['review', 'Evidence workspace'], ['method', 'Method & interpretation'], ['assurance', 'Institutional readiness']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}
       </nav>
 
