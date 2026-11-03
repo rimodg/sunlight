@@ -71,21 +71,27 @@ class Journal:
         self.db.close()
 
     def append(self, kind, at, payload):
-        at = utc(at)
-        admit(payload)
-        body = {"kind": kind, "at": at, "payload": payload}
-        event_id = digest(body)
+        return self.append_many([(kind, at, payload)])[0]
+
+    def append_many(self, entries):
+        prepared = []
+        for kind, at, payload in entries:
+            at = utc(at)
+            admit(payload)
+            prepared.append((kind, at, payload, digest({"kind": kind, "at": at, "payload": payload})))
+        ids = []
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
-            existing = self.db.execute("SELECT id FROM watch_events WHERE id=?", (event_id,)).fetchone()
-            if existing:
-                return event_id
-            last = self.db.execute("SELECT hash FROM watch_events ORDER BY seq DESC LIMIT 1").fetchone()
-            previous = last[0] if last else "0" * 64
-            chain_hash = digest({"id": event_id, "previous": previous})
-            self.db.execute("INSERT INTO watch_events(id,kind,at,payload,previous,hash) VALUES(?,?,?,?,?,?)",
-                            (event_id, kind, at, canonical(payload), previous, chain_hash))
-        return event_id
+            for kind, at, payload, event_id in prepared:
+                ids.append(event_id)
+                if self.db.execute("SELECT id FROM watch_events WHERE id=?", (event_id,)).fetchone():
+                    continue
+                last = self.db.execute("SELECT hash FROM watch_events ORDER BY seq DESC LIMIT 1").fetchone()
+                previous = last[0] if last else "0" * 64
+                chain_hash = digest({"id": event_id, "previous": previous})
+                self.db.execute("INSERT INTO watch_events(id,kind,at,payload,previous,hash) VALUES(?,?,?,?,?,?)",
+                                (event_id, kind, at, canonical(payload), previous, chain_hash))
+        return ids
 
     def events(self, *, as_of=None, kind=None):
         clauses, args = [], []
@@ -106,14 +112,18 @@ class Journal:
             previous = e["hash"]
         return previous
 
-    def freeze(self, source, url, at, body, policy_hash):
+    def freeze(self, source, url, at, body, policy_hash, observations=None):
         # Hash exact bytes. Parsing never substitutes a reformatted document.
         import hashlib
         parsed = json.loads(body)
         admit(parsed)
-        return self.append("capture", at, {"source": source, "url": url,
-                           "sha256": hashlib.sha256(body).hexdigest(),
-                           "body": body.decode("utf-8"), "policy_hash": policy_hash})
+        payload = {"source": source, "url": url, "sha256": hashlib.sha256(body).hexdigest(),
+                   "body": body.decode("utf-8"), "policy_hash": policy_hash}
+        cid = digest({"kind": "capture", "at": utc(at), "payload": payload})
+        entries = [("capture", at, payload)]
+        if observations is not None:
+            entries.append(("observations", at, {**observations, "capture": cid}))
+        return self.append_many(entries)[0]
 
     def capture(self, event_id):
         row = self.db.execute("SELECT payload FROM watch_events WHERE id=? AND kind='capture'", (event_id,)).fetchone()
