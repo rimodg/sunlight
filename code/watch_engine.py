@@ -24,6 +24,12 @@ def now():
 def build_identity(root=None):
     root = Path(root or Path(__file__).resolve().parents[1])
     files = sorted((root / "code").glob("*.py")) + [root / "requirements.lock"]
+    files += sorted((root / "code").glob("*.json"))
+    # This is executable rule data, not an operator capture or acceptance feed.
+    # Missing or changed calibration input must not hide behind unchanged code.
+    files += [root / "research/corpus/prosecuted_cases_global_v0.1.json"]
+    files += sorted((root / "data/cpd_profiles").glob("*.json"))
+    files += sorted((root / "data/evidence_maps").glob("*.json"))
     files += [root / p for p in ["scripts/watch_service.py", "scripts/run_watch_service.py",
                                 "scripts/watch-service", "scripts/install-watch", "scripts/uninstall-watch",
                                 "config/watch-runtime.json", "deploy/launchd/org.sunlight.watch.plist"] if (root / p).exists()]

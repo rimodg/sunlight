@@ -272,6 +272,22 @@ class LoopTests(unittest.TestCase):
             opener.open.side_effect=HTTPError(CF['url'],302,'synthetic redirect',{},None)
             self.assertEqual(fetch(CF['url'])['status'],302)
 
+    def test_build_fingerprint_includes_rule_data_not_only_python(self):
+        from watch_engine import build_identity
+        root=Path(self.temp.name)/'synthetic-source'
+        (root/'code').mkdir(parents=True)
+        (root/'research/corpus').mkdir(parents=True)
+        (root/'requirements.lock').write_text('synthetic==1\n')
+        (root/'code/rule.py').write_text('POLICY = 1\n')
+        corpus=root/'research/corpus/prosecuted_cases_global_v0.1.json'
+        corpus.write_text('{"synthetic":1}\n')
+        before=build_identity(root)['source_sha256']
+        corpus.write_text('{"synthetic":2}\n')
+        self.assertNotEqual(before,build_identity(root)['source_sha256'])
+        corpus.unlink()
+        with self.assertRaises(FileNotFoundError):
+            build_identity(root)
+
 
 if __name__ == "__main__":
     unittest.main()
