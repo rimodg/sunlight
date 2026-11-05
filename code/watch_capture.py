@@ -59,7 +59,8 @@ def policy(value):
 
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
-        raise ValueError("redirect_refused")
+        # Let urllib produce an HTTP failure receipt without following it.
+        return None
 
 
 def fetch(url):
@@ -72,13 +73,15 @@ def fetch(url):
         with build_opener(NoRedirect).open(request, timeout=30) as response:
             try:
                 body = response.read(MAX_BYTES + 1)
-            except OSError:
+            except Exception:
                 # Headers were reached even when downloading the body failed.
                 return {"status": response.status, "body": b"", "read_failed": True}
             return {"status": response.status, "body": body, "retry_after": None}
     except HTTPError as error:
         # Do not admit or log error bodies. Receiving an HTTP failure is a reach.
-        return {"status": error.code, "body": b"", "retry_after": error.headers.get("Retry-After")}
+        result = {"status": error.code, "body": b"", "retry_after": (error.headers or {}).get("Retry-After")}
+        error.close()
+        return result
 
 
 def party(identifiers, locator):

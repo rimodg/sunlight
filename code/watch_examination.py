@@ -122,19 +122,21 @@ def examine(observations, as_of, *, procurement_reader=procurement):
             if r.get("published_at") is None:
                 questions.append({"observation": r["id"], "reason": "publication_time_not_supplied", "status": "UNAVAILABLE"})
     by_id = {r["id"]: r for r in history}
+    first_seen = {}
+    for r in history:
+        first_seen.setdefault((r["source"], r["key"]), r["captured_at"])
     for s in subjects:
         s["categories"] = sorted({by_id[oid]["category"] for oid in s["observations"]})
     for q in questions:
         record = by_id[q["observation"]]
         q["source"], q["record_key"] = record["source"], record["key"]
         q["id"] = digest({"source": q["source"], "record_key": q["record_key"], "reason": q["reason"]})
-        same_record = [r for r in history if (r["source"], r["key"]) == (record["source"], record["key"])]
         if q["reason"] == "ambiguous_record_versions":
             # Age refers to this selected ambiguous capture group, not an
             # unsupported claim about when the publisher first became ambiguous.
             q["since"] = latest[(record["source"], record["key"])][0][1]
         else:
-            q["since"] = min(r["captured_at"] for r in same_record)
+            q["since"] = first_seen[(record["source"], record["key"])]
         q["age_seconds"] = (datetime.fromisoformat(cutoff) - datetime.fromisoformat(q["since"])).total_seconds()
         q["evidence"] = by_id[q["observation"]]["evidence"]
     return {"schema": VERSION, "as_of": cutoff, "subjects": subjects,

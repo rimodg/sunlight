@@ -256,6 +256,22 @@ class LoopTests(unittest.TestCase):
         self.assertFalse(delta['questions_opened'])
         self.assertEqual(len(delta['questions_closed']),1)  # Publication time became available.
 
+    def test_transport_preserves_headers_reach_when_body_fails(self):
+        import os
+        from contextlib import nullcontext
+        from types import SimpleNamespace
+        from unittest.mock import patch,Mock
+        from urllib.error import HTTPError
+        from watch_capture import fetch
+        response_body=SimpleNamespace(status=200,read=Mock(side_effect=ValueError('synthetic chunk failure')))
+        opener=Mock();opener.open.return_value=nullcontext(response_body)
+        with patch.dict(os.environ,{'SUNLIGHT_OFFLINE':'0'}),patch('watch_capture.build_opener',return_value=opener):
+            result=fetch(CF['url'])
+            self.assertTrue(result['read_failed'])
+            self.assertEqual(result['status'],200)
+            opener.open.side_effect=HTTPError(CF['url'],302,'synthetic redirect',{},None)
+            self.assertEqual(fetch(CF['url'])['status'],302)
+
 
 if __name__ == "__main__":
     unittest.main()
