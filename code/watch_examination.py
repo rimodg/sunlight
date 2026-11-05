@@ -125,7 +125,16 @@ def examine(observations, as_of, *, procurement_reader=procurement):
     for s in subjects:
         s["categories"] = sorted({by_id[oid]["category"] for oid in s["observations"]})
     for q in questions:
-        q["since"] = by_id[q["observation"]]["captured_at"]
+        record = by_id[q["observation"]]
+        q["source"], q["record_key"] = record["source"], record["key"]
+        q["id"] = digest({"source": q["source"], "record_key": q["record_key"], "reason": q["reason"]})
+        same_record = [r for r in history if (r["source"], r["key"]) == (record["source"], record["key"])]
+        if q["reason"] == "ambiguous_record_versions":
+            # Age refers to this selected ambiguous capture group, not an
+            # unsupported claim about when the publisher first became ambiguous.
+            q["since"] = latest[(record["source"], record["key"])][0][1]
+        else:
+            q["since"] = min(r["captured_at"] for r in same_record)
         q["age_seconds"] = (datetime.fromisoformat(cutoff) - datetime.fromisoformat(q["since"])).total_seconds()
         q["evidence"] = by_id[q["observation"]]["evidence"]
     return {"schema": VERSION, "as_of": cutoff, "subjects": subjects,
@@ -142,7 +151,7 @@ def changes(previous, current):
     previous_readings = {digest(r) for r in (previous or {}).get("readings", [])}
     readings = {digest(r) for r in current["readings"]}
     def question_key(q):
-        return canonical({k: q[k] for k in ("observation", "reason", "status")})
+        return canonical({"id": q.get("id", q["observation"]), "reason": q["reason"], "status": q["status"]})
     previous_questions = {question_key(q) for q in (previous or {}).get("open_questions", [])}
     questions = {question_key(q) for q in current["open_questions"]}
     return {"observations_added": sorted(new - old),

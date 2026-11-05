@@ -241,6 +241,21 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(result.returncode,1)
         self.assertIn('watch_tick_failed',result.stdout)
 
+    def test_open_question_survives_record_revision_with_its_original_age(self):
+        row={'aid':'synthetic-activity','reporting_ref':'GB-COH-00123456'}
+        engine=self.engine(lambda u:response({'rows':[dict(row)]}),[IATI])
+        first=engine.tick()
+        self.time='2026-01-02T00:02:00Z';row['updated_at']='2026-01-01T12:00:00Z'
+        second=engine.tick()
+        before=next(q for q in first['open_questions'] if q['reason']=='aid_reporting_observation_only')
+        after=next(q for q in second['open_questions'] if q['reason']=='aid_reporting_observation_only')
+        self.assertEqual(after['id'],before['id'])
+        self.assertEqual(after['since'],before['since'])
+        self.assertEqual(after['age_seconds'],120)
+        delta=changes(first,second)
+        self.assertFalse(delta['questions_opened'])
+        self.assertEqual(len(delta['questions_closed']),1)  # Publication time became available.
+
 
 if __name__ == "__main__":
     unittest.main()
