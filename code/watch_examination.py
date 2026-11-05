@@ -4,8 +4,46 @@ from __future__ import annotations
 from watch_identity import canonical, digest, resolve
 from watch_journal import utc
 from datetime import datetime
+import re
 
-VERSION = "sunlight.watch-examination.v1"
+VERSION = "sunlight.watch-examination.v2"
+
+
+def input_basis(rule, record, fields, currency):
+    """Availability of the actual inputs, without repairing or retuning a rule."""
+    tender = record.get("tender") or {}
+    awards = record.get("awards") or []
+    award = awards[0] if awards else {}
+    tv, av = tender.get("value") or {}, award.get("value") or {}
+    def numeric(value):
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    tender_value = numeric(tv.get("amount")) and tv.get("currency") == currency
+    comparable_values = (tender_value and numeric(av.get("amount")) and av.get("currency") == currency
+                         and tv["amount"] > 0 and av["amount"] > 0)
+    bidders = isinstance(tender.get("numberOfTenderers"), int) and not isinstance(tender.get("numberOfTenderers"), bool) and tender["numberOfTenderers"] >= 0
+    suppliers = fields.get("suppliers") or []
+    explicit_ids = len(suppliers) >= 2 and all(isinstance(s.get("id"), str) and bool(s["id"]) for s in suppliers)
+    geography = bool(re.fullmatch(r"[a-z]{2}", fields.get("country_code") or "")) and bool(fields["supplier_countries"]) and all(re.fullmatch(r"[a-z]{2}", s) for s in fields["supplier_countries"])
+    requirements = {
+        "PROC-001": (bool(fields["procurement_method"]) and tender_value, "Published procurement method and numeric tender value in profile currency"),
+        "PROC-002": (bool(fields["procurement_method"]) and bidders, "Published procurement method and non-negative integer bidder count"),
+        "PROC-003": (isinstance(record.get("parties"), list), "Published parties array; absence of a named review body is about this document only"),
+        "PROC-004": (isinstance(record.get("parties"), list), "Published parties array"),
+        "PROC-005": (bool(fields["procurement_method"]) and bidders, "Published procurement method and non-negative integer bidder count"),
+        "ENT-001": (len(fields["supplier_addresses"]) >= 2, "At least two published organizational street addresses"),
+        "ENT-002": (explicit_ids, "At least two explicit supplier identifiers; names are not identity"),
+        "ENT-003": (bool(suppliers) and bidders, "Published suppliers and bidder count"),
+        "FIN-001": (comparable_values, "Positive tender and award values in the same profile currency"),
+        "FIN-002": (comparable_values and bidders, "Positive comparable tender and award values, plus bidder count"),
+        "FIN-003": (comparable_values, "Positive tender and award values in the same profile currency"),
+        "TIME-001": (fields["award_month"] is not None and fields["award_day"] is not None, "Parseable published award date"),
+        "TIME-002": (fields["award_month"] is not None, "Parseable published award month"),
+        "TIME-003": (fields["award_month"] is not None, "Parseable published award month"),
+        "GEO-001": (geography, "Contract and supplier jurisdictions in the same two-letter code vocabulary"),
+        "GEO-002": (geography, "Contract and supplier jurisdictions in the same two-letter code vocabulary"),
+    }
+    available, requires = requirements.get(rule, (False, "Input contract not reviewed for this rule"))
+    return {"available": bool(available), "requires": requires}
 
 
 def procurement(record):
@@ -15,7 +53,7 @@ def procurement(record):
     Those engines need additional dossiers; their absence is stated explicitly.
     """
     from sunlight_core import SunlightPipeline
-    from tca_rules import TCAGraphRuleEngineAdapter
+    from tca_rules import TCAGraphRuleEngineAdapter, _extract
     from jurisdiction_profile import UK_CENTRAL_GOVERNMENT
     grapher = TCAGraphRuleEngineAdapter(profile=UK_CENTRAL_GOVERNMENT)
     pipeline = SunlightPipeline(grapher=grapher)
@@ -24,10 +62,22 @@ def procurement(record):
         raise ValueError("procurement_rule_execution_failed")
     results = []
     log = dossier.graph["metadata"]["rule_fire_log"]
+    fields = _extract(dossier)
     for rule in grapher.engine.rules:
+        basis = input_basis(rule.rule_id, record, fields, UK_CENTRAL_GOVERNMENT.currency)
+        relations = sorted({edge["type"] for edge in dossier.graph["edges"] if edge.get("rule") == rule.rule_id})
+        if not basis["available"]:
+            status = "UNASSESSABLE"
+        elif not log[rule.rule_id]:
+            status = "NOT_TRIGGERED"
+        elif relations and set(relations) <= {"VERIFIES", "EXPRESSES"}:
+            status = "DOCUMENTED_SIGNAL"
+        else:
+            status = "INDICATOR"
         results.append({"rule": rule.rule_id, "dimension": rule.layer,
-                        "status": "INDICATOR" if log[rule.rule_id] else "NOT_TRIGGERED",
-                        "citation": rule.evidence, "description": rule.description})
+                        "status": status, "rule_fired": log[rule.rule_id],
+                        "input_basis": basis, "relation_types": relations,
+                        "citation": rule.evidence, "description": rule.description.replace("\u2014", ";")})
     return results
 
 
@@ -42,18 +92,18 @@ def examine(observations, as_of, *, procurement_reader=procurement):
     history = sorted(unique.values(), key=lambda r: (r["captured_at"], r["id"]))
     subjects = resolve(history)
     latest = {}
-    for r in history:
+    for r in admitted:
         key = (r["source"], r["key"])
         # Equal capture times with different versions are ambiguous, not ordered by arrival.
         rank = (r.get("published_at") or "", r["captured_at"])
         old = latest.get(key)
         if old is None or rank > old[0]:
-            latest[key] = (rank, [r])
+            latest[key] = (rank, {r["id"]: unique[r["id"]]})
         elif rank == old[0]:
-            old[1].append(r)
+            old[1][r["id"]] = unique[r["id"]]
     readings, questions = [], []
     for _, versions in sorted(latest.values(), key=lambda x: canonical(x[1])):
-        for r in versions:
+        for r in sorted(versions.values(), key=lambda x: x["id"]):
             if len(versions) > 1:
                 questions.append({"observation": r["id"], "reason": "ambiguous_record_versions", "status": "UNASSESSABLE"})
                 continue

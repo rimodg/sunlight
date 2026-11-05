@@ -219,6 +219,9 @@ def verify(args):
     finally:
         journal.close()
     h = status["scheduler"]
+    live_pid = re.search(r"pid\s*=\s*([1-9][0-9]*)", text)
+    if not live_pid or h.get("pid") != int(live_pid[1]):
+        raise ValueError("Journal run is not from the running launchd process")
     if h["outcome"] != "completed" or h["overdue"] is not False or h["build"] != config["build"]:
         raise ValueError("A recent completed journal run from the installed build is required")
     current_boot = boot_epoch()

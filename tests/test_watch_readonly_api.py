@@ -62,6 +62,15 @@ class ReadOnlyTests(unittest.TestCase):
             self.assertEqual(value.status_code,503)
             self.assertIn('No observations claimed',value.text)
 
+    def test_historical_examination_is_a_direct_journal_view(self):
+        eid=self.j.events(kind='examination')[-1]['id']
+        index=self.client.get('/watch-engine/examinations').json()
+        self.assertEqual(index['examinations'][0]['id'],eid)
+        page=self.client.get('/watch-engine/ui?examination='+eid)
+        self.assertEqual(page.status_code,200)
+        self.assertIn('examination='+eid,page.text)
+        self.assertEqual(self.client.get('/watch-engine/ui?examination=absent').status_code,404)
+
 
 if __name__=='__main__':
     unittest.main()

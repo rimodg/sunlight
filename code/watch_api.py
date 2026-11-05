@@ -59,6 +59,13 @@ def subjects():
                 "subjects": last["payload"]["result"]["subjects"] if last else []}
 
 
+@router.get("/examinations")
+def examinations():
+    with opened() as journal:
+        return {"examinations": [{"id": e["id"], "as_of": e["at"], "changes": e["payload"]["changes"],
+                                    "build": e["payload"]["build"]} for e in journal.events(kind="examination")]}
+
+
 @router.get("/subjects/{subject_id}")
 def subject(subject_id: str):
     with opened() as journal:
@@ -114,10 +121,14 @@ def receipt(value):
 
 
 @router.get("/ui", response_class=HTMLResponse)
-def ui(subject: str | None = None):
+def ui(subject: str | None = None, examination: str | None = None):
     with opened() as journal:
         h = health(journal, now())
         last = latest(journal)
+        if examination:
+            last = next((e for e in journal.events(kind="examination") if e["id"] == examination), None)
+            if last is None:
+                raise HTTPException(404, "No such historical examination")
         result = last["payload"]["result"] if last else None
         schedule = h["scheduler"]
         state = "Overdue" if schedule["overdue"] else "Unknown" if schedule["overdue"] is None else "Within interval"
@@ -128,11 +139,16 @@ def ui(subject: str | None = None):
                 f'<h2>Watch health: {state}</h2><p>Last run: {text(schedule["last_started"])}. Outcome: {text(schedule["outcome"])}. Poll: {text(schedule["interval_seconds"])} seconds.</p>',
                 f'<small>Receipt: {receipt(schedule["receipt"])}. Receipts do not prove current process liveness.</small>',
                 f'<p>Last-run build: <code>{text(canonical(schedule["build"]) if schedule["build"] else None)}</code></p>',
-                '<div class=scroll><table><tr><th>Source</th><th>Last reached</th><th>Outcome</th><th>Silence / interval</th><th>Schedule</th><th>Receipt</th></tr>']
+                '<div class=scroll><table><tr><th>Source</th><th>Last reached</th><th>Outcome</th><th>Silence / interval</th><th>Schedule</th><th>Last good capture</th><th>Receipt</th></tr>']
         for s in h["sources"]:
             state = "Overdue" if s["overdue"] else "Unknown" if s["overdue"] is None else "Within interval"
-            html.append(f'<tr><td>{text(s["source"])}</td><td>{text(s["last_reached"])}</td><td>{text(s["outcome"])}</td><td>{text(s["silence_seconds"])} / {text(s["interval_seconds"])} seconds</td><td>{state}</td><td>{receipt(s["receipt"])}</td></tr>')
+            good = f'<a href="./captures/{s["last_good_capture"]}">{text(s["last_good_capture"])}</a>' if s["last_good_capture"] else 'Not recorded'
+            html.append(f'<tr><td>{text(s["source"])}</td><td>{text(s["last_reached"])}</td><td>{text(s["outcome"])}</td><td>{text(s["silence_seconds"])} / {text(s["interval_seconds"])} seconds</td><td>{state}</td><td>{good}</td><td>{receipt(s["receipt"])}</td></tr>')
         html.append('</table></div>')
+        html.append('<details><summary>Examination history</summary><p>Health above is current. A selected examination below is historical.</p>')
+        for e in reversed(journal.events(kind="examination")):
+            html.append(f'<p><a href="./ui?examination={e["id"]}">{text(e["at"])}</a> | {receipt(e["id"])}</p>')
+        html.append('</details>')
         if not h["sources"]:
             html.append('<p>No configured sources recorded. This is silence, not zero world activity.</p>')
         if result is None:
@@ -143,7 +159,7 @@ def ui(subject: str | None = None):
             for s in result["subjects"]:
                 if subject and subject != s["id"]:
                     continue
-                html.append(f'<article><h3><a href="./ui?subject={s["id"]}">{text(canonical(s["identifiers"]) if s["identifiers"] else s["id"])}</a></h3><p>{text(s["state"])} | {text(", ".join(s["categories"]))}</p>')
+                html.append(f'<article><h3><a href="./ui?subject={s["id"]}&amp;examination={last["id"]}">{text(canonical(s["identifiers"]) if s["identifiers"] else s["id"])}</a></h3><p>{text(s["state"])} | {text(", ".join(s["categories"]))}</p>')
                 if subject:
                     ids = set(s["observations"])
                     for mapping in s["citations"]:
@@ -157,6 +173,8 @@ def ui(subject: str | None = None):
                         for reading in result["readings"]:
                             if reading["observation"] == obs["id"]:
                                 html.append(f'<p><strong>{text(reading["rule"])}: {text(reading["status"])}</strong> {text(reading["description"])}<small>{text(reading["citation"])}</small></p>')
+                                if reading.get("input_basis"):
+                                    html.append(f'<p>Input basis: {text(reading["input_basis"]["requires"])}. Available: {text(reading["input_basis"]["available"])}.</p>')
                         for q in result["open_questions"]:
                             if q["observation"] == obs["id"]:
                                 html.append(f'<p>{text(q["status"])}: {text(q["reason"])}. Open since {text(q["since"])}; {text(q["age_seconds"])} seconds at examination.</p>')

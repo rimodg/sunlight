@@ -211,6 +211,36 @@ class LoopTests(unittest.TestCase):
         value=packet(self.j,self.j.events(kind='examination')[-1]['id'])
         self.assertEqual(canonical(replay(value)),canonical(result))
 
+    def test_republished_version_can_be_current_without_becoming_new_history(self):
+        amount=[100]
+        engine=self.engine(lambda u:response({'releases':[release(amount[0])]}))
+        first=engine.tick()
+        self.time='2026-01-02T00:01:01Z'; amount[0]=150; second=engine.tick()
+        self.time='2026-01-02T00:02:02Z'; amount[0]=100; third=engine.tick()
+        self.assertEqual(len(third['observations']),2)
+        self.assertEqual(third['readings'],first['readings'])
+        self.assertTrue(changes(second,third)['readings_superseded'])
+
+    def test_sparse_inputs_are_not_clean_and_positive_signals_are_not_risk(self):
+        sparse=procurement({'ocid':'synthetic-sparse'})
+        self.assertTrue(all(r['status']=='UNASSESSABLE' for r in sparse))
+        row=release()
+        row['parties'].append({'id':'synthetic-review','roles':['reviewBody']})
+        outputs={r['rule']:r for r in procurement(row)}
+        self.assertEqual(outputs['PROC-004']['status'],'DOCUMENTED_SIGNAL')
+        self.assertEqual(outputs['FIN-001']['status'],'UNASSESSABLE')
+
+    def test_once_returns_failure_when_source_fails(self):
+        import os,subprocess
+        root=Path(__file__).resolve().parents[1]
+        p=Path(self.temp.name)/'policy.json'
+        p.write_text(json.dumps({'schema':'sunlight.watch-source-policy.v1','sources':[CF]}))
+        result=subprocess.run([sys.executable,'-m','watch_engine','--data-dir',str(Path(self.temp.name)/'cli-data'),
+                               '--policy',str(p),'--once'],capture_output=True,text=True,
+                              env={**os.environ,'PYTHONPATH':str(root/'code'),'SUNLIGHT_OFFLINE':'1'})
+        self.assertEqual(result.returncode,1)
+        self.assertIn('watch_tick_failed',result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,6 +2,7 @@
 import argparse
 import copy
 import json
+import os
 from pathlib import Path
 import plistlib
 import subprocess
@@ -47,7 +48,7 @@ class ServiceTests(unittest.TestCase):
         stack.enter_context(patch.object(service, "pinned", return_value={"python": service.PIN}))
         stack.enter_context(patch.object(service, "run", side_effect=self.command))
         stack.enter_context(patch.object(service, "boot_epoch", return_value=123))
-        stack.enter_context(patch.object(service, "loaded", side_effect=lambda label: (self.active, "state = running\npid = 4321")))
+        stack.enter_context(patch.object(service, "loaded", side_effect=lambda label: (self.active, f"state = running\npid = {os.getpid()}")))
         return stack
 
     def test_install_idempotent_and_uninstall_keeps_every_data_file(self):
@@ -161,6 +162,18 @@ class ServiceTests(unittest.TestCase):
         self.assertTrue(Path(self.args.environment).exists())
         self.assertIn(self.args.environment,self.args._created)
         self.assertFalse((Path(self.args.launch_agents_dir)/(self.args.label+'.plist')).exists())
+
+    def test_live_label_with_different_pid_cannot_validate_another_process_run(self):
+        with self.simulation():
+            service.install(self.args)
+            j=Journal(Path(self.args.data_dir)/'journal.sqlite3')
+            try:
+                WatchEngine(j,json.loads(self.pol.read_text())).tick()
+            finally:
+                j.close()
+            with patch.object(service,'loaded',return_value=(True,f'state = running\npid = {os.getpid()+1000}')):
+                with self.assertRaises(ValueError):
+                    service.verify(self.args)
 
 
 if __name__ == '__main__':

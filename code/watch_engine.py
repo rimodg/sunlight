@@ -77,7 +77,8 @@ class WatchEngine:
 
     def _tick(self):
         at = utc(self.clock())
-        run = self.journal.append("scheduler_started", at, {"interval_seconds": self.interval, "build": self.build})
+        run = self.journal.append("scheduler_started", at, {"interval_seconds": self.interval, "build": self.build,
+                                                           "pid": os.getpid()})
         self.journal.append("source_policy", at, {"policy": self.policy})
         failed = False
         try:
@@ -91,7 +92,7 @@ class WatchEngine:
                     continue
                 url = state.get("next") or source["url"]
                 reached, status, capture_id = None, None, None
-                outcome, retry = "unavailable", 60
+                outcome, retry = "unavailable", min(86400, 60 * 2 ** min(10, state.get("failures", 0)))
                 try:
                     checked_url(url, source["url"])
                     response = self.transport(url)
@@ -171,7 +172,10 @@ def main():
         while True:
             try:
                 engine.tick()
-                print(canonical({"event": "watch_tick_recorded", "at": now()}), flush=True)
+                failed = health(journal, now())["scheduler"]["outcome"] == "failed"
+                print(canonical({"event": "watch_tick_failed" if failed else "watch_tick_recorded", "at": now()}), flush=True)
+                if args.once and failed:
+                    raise SystemExit(1)
             except Exception:
                 print(canonical({"event": "watch_tick_failed", "at": now()}), flush=True)
                 if args.once:

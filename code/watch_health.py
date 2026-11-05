@@ -17,7 +17,9 @@ def health(journal, now, policy=None, interval=None):
     schedule = {"last_started": last["at"] if last else None, "last_finished": end["at"] if end else None,
                 "outcome": end["kind"].removeprefix("scheduler_") if end else "unfinished" if last else "never_recorded",
                 "interval_seconds": interval, "overdue": seconds(now, last["at"]) > interval if last and interval else None,
-                "build": last["payload"]["build"] if last else None, "receipt": (end or last)["id"] if last else None}
+                "build": last["payload"]["build"] if last else None,
+                "pid": last["payload"].get("pid") if last else None,
+                "receipt": (end or last)["id"] if last else None}
     if policy is None:
         configs = [e for e in events if e["kind"] == "source_policy"]
         policy = configs[-1]["payload"]["policy"] if configs else {"sources": []}
