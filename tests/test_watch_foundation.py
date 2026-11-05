@@ -1,5 +1,6 @@
 """Offline tests. All parties, records, dates and URLs below are synthetic."""
 import itertools
+import hashlib
 import json
 import sqlite3
 import tempfile
@@ -112,6 +113,25 @@ class JournalTests(unittest.TestCase):
             self.j.append_many([("receipt", "2026-01-01T00:00:00Z", {}),
                                 ("receipt", "2026-01-01T00:00:00Z", {"email": "redacted"})])
         self.assertEqual(self.j.events(), [])
+
+
+class FrozenAcceptanceTests(unittest.TestCase):
+    def test_supplied_bytes_and_manifest_remain_frozen(self):
+        root=Path(__file__).resolve().parents[1]/'acceptance/2026-10-27'
+        expected={
+            'candidates.json':'bdb4a985a7fe493550f60f335ce0ce824378a7691bc56819a41db217784e1f42',
+            'intersection.json':'c625b6489b23257eee10507e4d3a64c48a414ac076f10a4483ab7d9a1fdbb4b7',
+            'cf_state.json':'06154c5380520a40d0348d3d4b667a9b6ceca5ff4fed890e36ac5c72e95e50b4',
+            'hashes.txt':'bd070d01c8825345f6801795e47e65ec3167df6164040d63c61b0721fbd4e172'}
+        manifest=json.loads((root/'manifest.json').read_text())
+        entries={f['name']:f for f in manifest['files']}
+        self.assertEqual(set(entries),set(expected))
+        for name,sha in expected.items():
+            with self.subTest(file=name):
+                data=(root/name).read_bytes()
+                self.assertEqual(hashlib.sha256(data).hexdigest(),sha)
+                self.assertEqual(entries[name]['sha256'],sha)
+                self.assertEqual(entries[name]['size_bytes'],len(data))
 
 
 if __name__ == "__main__":

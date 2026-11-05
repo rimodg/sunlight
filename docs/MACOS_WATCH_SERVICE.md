@@ -137,7 +137,9 @@ Reboot, log in, allow a poll cycle to complete, then save a fresh receipt:
 
 Verification refuses unless launchd reports a running PID, the exact environment
 and source policy match, a recent completed journal run matches the installed
-build and occurred after the current boot, and that boot is later than install.
+build and that same PID, the run occurred after the current boot, and that boot
+is later than install. A manual run from another process cannot validate a
+different worker merely because it wrote a recent receipt.
 Reinstalling or changing configuration resets this reboot requirement. The
 JSON remains on stdout; the shell's final exit receipt is on stderr. This proves
 service persistence only, not completeness of capture from enabled sources.

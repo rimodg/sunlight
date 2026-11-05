@@ -2,7 +2,7 @@ name: SUNLIGHT CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, milestone-1a-rebuild]
   pull_request:
     branches: [main]
 
@@ -13,6 +13,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  watch-lock:
+    name: Watch (exact runtime lock, py3.12.14)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.14"
+          cache: pip
+      - name: Install exact runtime, without dependency resolution
+        run: python -m pip install --no-deps --only-binary=:all: -r requirements.lock
+      - name: Run offline watch and service simulations
+        env:
+          SUNLIGHT_OFFLINE: "1"
+        run: python -m unittest discover -s tests -p 'test_watch_*.py' -v
+
   suite:
     name: Suite (py${{ matrix.python }})
     runs-on: ubuntu-latest

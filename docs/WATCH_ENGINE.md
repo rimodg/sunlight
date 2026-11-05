@@ -25,7 +25,11 @@ The Contracts Finder adapter accepts OCDS release pages of at most 100 releases.
 Every admitted procurement record is processed through the existing UK profile's
 complete TCA structural rule family. Rule citations and source pointers are
 retained. No thresholds or existing rules were changed. A rule not triggered is
-not a declaration of no risk. Missing publication time stays explicitly unknown.
+not a declaration of no risk. Every rule carries an explicit input-availability
+statement. Missing or non-comparable inputs are UNASSESSABLE. Favorable rule
+outputs are DOCUMENTED_SIGNAL, distinct from risk indicators. The underlying
+rule-fire log is retained separately; this wrapper does not retune the rules.
+Missing publication time stays explicitly unknown.
 
 The d-portal adapter accepts JSON rows carrying `aid` and `reporting_ref`, with
 `reporting_ref_like` wildcard required in the reviewed endpoint. The reporter's
@@ -41,6 +45,10 @@ these two feeds. The watch states this scope rather than producing findings for
 those engines without their inputs. Duplicate unchanged captures do not become
 new analytical observations. Two differing versions with the same publication
 and capture times are unassessable, not resolved by arrival order.
+When an earlier version is republished, the most recent applicable occurrence
+selects the active version while history retains one immutable observation per
+content version. A source failure makes `--once` exit nonzero, even when the
+last good data can still be examined.
 
 ## Protection and source review
 
