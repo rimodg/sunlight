@@ -1,5 +1,7 @@
 # SUNLIGHT
 
+See the [organizational watch rebuild and measured verification](docs/MILESTONE_1A_REBUILD_2026-11-05.md), with the [macOS service guide](docs/MACOS_WATCH_SERVICE.md). Native Mac/reboot and full-suite acceptance remain open.
+
 The long-term direction is **The Global Humanitarian Watch**. Procurement is
 the operational entry point; broader categories must earn their own validated
 coverage. Read the [charter](docs/CHARTER_v2_global_humanitarian_watch.md) and the
