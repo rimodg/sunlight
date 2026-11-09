@@ -198,10 +198,13 @@ python code/evaluation.py --db /path/to/reference.db --cases /path/to/prosecuted
 python code/doj_validation.py --db /path/to/reference.db --cases /path/to/prosecuted_cases.json --seed 42 --bootstrap 1000 --clean 200
 ```
 
-The historic confusion matrix TP 9, FN 0, FP 18, TN 182 describes the evaluated
-sample, not 42,835 independently labeled outcomes. Observing no misses among
-nine evaluated positive cases does not establish universal recall. Test results,
-evaluation metrics, and operational field performance are different evidence.
+The historic confusion matrix TP 9, FN 0, FP 18, TN 182 describes a constructed
+reference population: nine synthesized price positives, 200 presumed negatives
+and one excluded reference. It is not 42,835 independently labeled outcomes or
+a measurement on observed prosecuted contracts. The November 9 provenance
+correction changed wording and metadata without rerunning evaluation or changing
+any numeric result. Test results, constructed-reference regression and field
+performance are different evidence.
 
 This increment changes the output, triage allocation, presentation, fallback
 normalization, and supplier feature-extraction paths. It does not change rule

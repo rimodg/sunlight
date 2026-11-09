@@ -22,13 +22,22 @@ Structural and statistical analysis for institutional procurement oversight.
 
 ## What It Does
 
-SUNLIGHT verifies the structural integrity of public contracts before money is spent, then verifies whether that spending delivered the intended development outcome after money moves. When procurement corruption is caught, the system tracks recovered funds, maps them against the institution's own stated development goals, computes gap-weighted reallocation recommendations proportional to where the institution is furthest behind its own stated goals, verifies that redeployed funds deliver results, and corroborates the claimed outcome against independent evidence that never routes through the party being verified. Procurement integrity, delivery verification, intelligence alerting, recovery redirection, and independent evidence corroboration — the full lifecycle of institutional funds. Catch, redirect, verify, corroborate, report.
+SUNLIGHT analyzes supplied procurement, delivery, corroboration and recovery
+records through distinct workflows. A procurement response does not run or
+substantiate all those stages. Findings identify conditions requiring review;
+they do not establish theft, intent, legal responsibility or harm. Institutions
+retain authority over investigation, recovery and allocation decisions.
 
-Existing institutional tools measure statistical deviation — they flag contracts where the price looks unusual. SUNLIGHT looks at the structure behind the contract: whether the awarded entity has the required capability, whether a competitive process actually occurred, whether the stakeholder dependencies and procedural commitments are internally consistent. It detects structural contradictions that live in the topology of a contract's dependency graph, a class of finding that indicator-based methods are architecturally unable to produce. Contracts where the price was calibrated to look clean but the structure underneath is broken.
+The rebuilt watch adds continuity: organizational identities joined only by cited
+identifiers, admitted frozen captures, an append-only subject history and as-of
+re-examination. It reports newly known evidence, changed readings and open items.
+The current adapters and unattended public-source acceptance still need live
+validation. No source is enabled by default.
 
-The system is deterministic. Given the same input, it produces the same output. No machine learning, no stochastic components. Every flag traces to a rule, every rule traces to a jurisdiction-specific legal citation, every finding is framed as a risk indicator, not an allegation.
-
-SUNLIGHT integrates once at the institutional level and covers an entire operational footprint. Each contract is analyzed against its execution country's legal framework through jurisdiction profiles. Adding a new country is a data task — authoring a profile — not a code change.
+The analytical path uses no model. A reading is reproducible from the same
+frozen inputs, parameters, code, reference data and seed. Statistical resampling
+is seeded. Operational timing and health receipts are separate from the reading.
+SUNLIGHT does not execute payments, hold funds or recover money itself.
 
 ## Architecture
 
@@ -63,9 +72,15 @@ Each profile defines its own legal citation set, threshold calibration, and rule
 
 ## Living Standard (MJPIS)
 
-These four prosecution corpora are not independent calibrations. The Multi-Jurisdiction Procurement Integrity Standard derives its thresholds from the intersection of all four — the strictest value across each dimension — producing a single global calibration that would hold up in Washington, London, Paris, and at the World Bank Sanctions Board simultaneously.
+MJPIS is an implemented versioned parameter registry and derivation mechanism.
+The available profiles and their citations do not establish four independently
+validated prosecution corpora, legal recognition or adoption by institutions.
+Inspect `/assurance` and the source corpus for the current calibration basis and
+any fallback state. A derived threshold is not evidence of field accuracy.
 
-For the approximately 150 countries without mature local prosecution data, MJPIS is the default. The countries with the least local oversight get the highest evidentiary bar, not the lowest. When the corpus expands with new prosecuted cases from additional jurisdictions, the derivation reruns automatically and every deployment referencing the MJPIS version string inherits the updated values. The standard breathes with the data.
+The master plan's proposed standard is the published invariants. The existing
+registry is one implementation component, not a claim that SUNLIGHT owns an
+international standard or already covers every jurisdiction.
 
 ## Evaluation
 
@@ -103,7 +118,7 @@ rerun for this branch. A previous result is not a new measurement.
 
 ## API
 
-REST API via FastAPI with auto-generated OpenAPI documentation. Supplied-record analysis and the persistent organizational watch are distinct workflows. The watch journal retains admitted frozen response bytes, observations, findings and operational receipts in the operator-configured external data directory. Other API workflows also maintain operational calibration or recovery state, so the application must not be described as wholly stateless. The one exception is deliberate and bounded: corroboration dossiers are held in an in-process cache so a result can be inspected after the fact. That cache is capped, evicts oldest-first, does not survive a restart, and says so in its own responses — it is not a database, and no audit trail should be built on it. It retains provenance (source, digest, timestamp) and never artifact content. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
+REST API via FastAPI with auto-generated OpenAPI documentation. Supplied-record analysis and the persistent organizational watch are distinct workflows. The watch journal retains admitted frozen response bytes, observations, findings and operational receipts in the operator-configured external data directory. Other API workflows also maintain operational calibration or recovery state, so the application must not be described as wholly stateless. The corroboration workflow also uses a bounded in-process cache so a result can be inspected after the fact. That cache is capped, evicts oldest-first, does not survive a restart, and says so in its own responses — it is not a database, and no audit trail should be built on it. It retains provenance (source, digest, timestamp) and never artifact content. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
 
 **Core Pipeline**
 - `POST /analyze` — Single contract structural analysis with jurisdiction profile
@@ -157,20 +172,21 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-The last locally measured watch subset, from a fresh clone on November 5,
-2026, passed **50 tests**. It covers the rebuilt identity, journal, capture,
+The watch subset passed **50 tests** in the November 9 offline checks.
+Packaging/build-identity, reference-admission and report-provenance checks are
+separate subsets; none is a complete-backend-suite measurement. It covers the rebuilt identity, journal, capture,
 re-examination, replay, health, read-only routes and service simulations.
 
 | Verification | Measured state |
 |---|---|
-| Watch subset | 50 passed, November 5, 2026 |
+| Watch subset | 50 passed, November 9, 2026 |
 | Complete backend suite on this branch | Not verified; local pytest/dependencies unavailable |
 | Exact production dependency lock | CI check configured; outcome not observed locally |
 | Historical reference floor | Not rerun; exact database unavailable |
 | Native Mac install and reboot | Not verified; requires the owner's Mac |
 | Real-source unattended acceptance | Not verified |
 
-These are separate gates. The watch subset is not the whole backend suite, a
+These are separate gates. These subsets are not the whole backend suite, a
 native launchd test, a live-source run or a reference-floor measurement. Earlier
 full-suite counts describe earlier builds and are not advertised as current.
 See the [measured rebuild closeout](docs/MILESTONE_1A_REBUILD_2026-11-05.md).
