@@ -30,7 +30,10 @@ jobs:
       - name: Run offline watch and service simulations
         env:
           SUNLIGHT_OFFLINE: "1"
-        run: python -m unittest discover -s tests -p 'test_watch_*.py' -v
+        run: |
+          python -m unittest discover -s tests -p 'test_watch_*.py' -v
+          python -m unittest discover -s tests -p 'test_build_identity.py' -v
+          python -m unittest discover -s tests -p 'test_reference_inputs.py' -v
 
   suite:
     name: Suite (py${{ matrix.python }})
