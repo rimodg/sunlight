@@ -199,7 +199,7 @@ re-examination, replay, health, read-only routes and service simulations.
 These are separate gates. These subsets are not the whole backend suite, a
 native launchd test, a live-source run or a reference-floor measurement. Earlier
 full-suite counts describe earlier builds and are not advertised as current.
-See the [measured rebuild closeout](docs/MILESTONE_1A_REBUILD_2026-11-05.md).
+See the [November 9 measured foundation verification](docs/MASTER_PLAN_PROGRESS_2026-11-09.md) and the earlier [November 5 rebuild closeout](docs/MILESTONE_1A_REBUILD_2026-11-05.md).
 
 ```bash
 SUNLIGHT_OFFLINE=1 python -m unittest discover -s tests -p 'test_watch_*.py' -v

@@ -33,3 +33,5 @@ producer-share calculation is enabled by this plan.
 The payment layer remains a future constitutional decision requiring a separate,
 explicit, dated authorization and institutional delegation. It is not part of
 this implementation work.
+
+See the [November 9 implementation and verification record](../MASTER_PLAN_PROGRESS_2026-11-09.md) for the changes made after this plan was supplied.
