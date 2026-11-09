@@ -393,5 +393,20 @@
       "correct": true
     }
   ],
-  "non_price_fraud_note": "1 case(s) involve non-price fraud (e.g., false certification) which is outside the scope of statistical price analysis. These are excluded from precision/recall calculations."
+  "non_price_fraud_note": "1 case(s) involve non-price fraud (e.g., false certification) which is outside the scope of statistical price analysis. These are excluded from precision/recall calculations.",
+  "method_qualification": {
+    "schema": "sunlight.constructed-reference-qualification.v1",
+    "population": "Synthesized positive price examples and presumed-negative comparisons",
+    "accuracy": "Metrics describe this constructed population only; real-case precision and recall are unmeasured",
+    "legacy_label_fields": "ground_truth and FRAUD/CLEAN are compatibility keys for constructed labels, not independently verified outcomes",
+    "legacy_money_fields": "total_fraud_value and detected_fraud_value are supplied settlement-reference weights, not detected losses, harm or recovered money",
+    "workload": "Analyst-time figures are configured scenario assumptions, not measured institutional efficiency",
+    "computation": "This qualification changes provenance and presentation only, not scoring, thresholds, labels used in the calculation or numeric outputs"
+  },
+  "provenance_correction": {
+    "date": "2026-11-09",
+    "status": "Metadata and wording correction only; no evaluation rerun",
+    "original_git_commit": "106e113ac7250ec4e37def70b6c7c846ecdea570",
+    "original_git_blob": "75d1e7be542403a0eb097775a86f5d05614d0376"
+  }
 }
