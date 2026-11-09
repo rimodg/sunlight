@@ -11,8 +11,10 @@ boundaries, the evaluation protocol, and a reproducible demonstration.
 The dashboard's default page is a live evidence workspace: supplied JSON goes
 through the API, and results expose findings, normalized-input gaps, calculation
 traces, and downloadable content-addressed receipts. It does not present random
-fixture scores as operational results. Historical evaluation metrics below must
-be interpreted with the sampling and corpus limits in the review brief.
+fixture scores as operational results. Historical evaluation metrics below come from a constructed regression population,
+not independently labeled prosecuted outcomes. They do not establish field accuracy.
+
+Read the [master plan and implementation notes](docs/plans/README.md) for the next proof gates and the distinction between implemented, measured and proposed work.
 
 **Procurement Integrity Verification Infrastructure**
 
@@ -67,8 +69,11 @@ For the approximately 150 countries without mature local prosecution data, MJPIS
 
 ## Evaluation
 
-The historical readiness assessment reports a comparison database of 42,835
-US federal procurement contracts and the following sampled evaluation result:
+The stored historical report used a 42,835-contract comparison database to
+construct a regression evaluation: nine synthesized positive price examples,
+200 presumed-negative comparisons and one excluded case. These are not nine
+independently observed prosecuted contracts. The figures below describe that
+constructed population only; they do not measure field accuracy.
 
 | Metric | Reported result |
 |--------|-----------------|
@@ -80,7 +85,7 @@ US federal procurement contracts and the following sampled evaluation result:
 
 The recorded confusion matrix is TP 9, FN 0, FP 18, TN 182. These are sampled
 evaluation counts, not 42,835 independently labeled outcomes. No misses among
-nine evaluated positive cases does not establish universal recall. A separate
+nine synthesized positive examples does not establish recall on real cases. A separate
 multi-jurisdiction research corpus contains 32 case records; that count must not
 be substituted for the evaluated positives in this confusion matrix.
 
@@ -91,11 +96,14 @@ unit-test results and browser demonstrations are separate evidence. See the
 [institutional review protocol](docs/INSTITUTIONAL_REVIEW.md) before citing a
 performance claim.
 
-Evaluation is deterministic and reproducible: `--seed 42 --clean 200 --profile doj_federal`.
+The recorded protocol uses `--seed 42 --clean 200 --profile doj_federal`.
+Reproduction also requires the exact reference database and case fixture. The
+current sandbox lacks that database, so neither reference protocol has been
+rerun for this branch. A previous result is not a new measurement.
 
 ## API
 
-REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — contract in, verdict out, nothing persisted. The one exception is deliberate and bounded: corroboration dossiers are held in an in-process cache so a result can be inspected after the fact. That cache is capped, evicts oldest-first, does not survive a restart, and says so in its own responses — it is not a database, and no audit trail should be built on it. It retains provenance (source, digest, timestamp) and never artifact content. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
+REST API via FastAPI with auto-generated OpenAPI documentation. Supplied-record analysis and the persistent organizational watch are distinct workflows. The watch journal retains admitted frozen response bytes, observations, findings and operational receipts in the operator-configured external data directory. Other API workflows also maintain operational calibration or recovery state, so the application must not be described as wholly stateless. The one exception is deliberate and bounded: corroboration dossiers are held in an in-process cache so a result can be inspected after the fact. That cache is capped, evicts oldest-first, does not survive a restart, and says so in its own responses — it is not a database, and no audit trail should be built on it. It retains provenance (source, digest, timestamp) and never artifact content. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
 
 **Core Pipeline**
 - `POST /analyze` — Single contract structural analysis with jurisdiction profile
@@ -140,7 +148,7 @@ REST API via FastAPI with auto-generated OpenAPI documentation. Stateless — co
 
 ## Deployment
 
-Containerized via Docker. Stateless architecture — the engine persists nothing across a restart, and evidence content is hashed at ingestion and discarded rather than stored. Contract data enters, case packets exit. The deploying institution controls data residency, authentication, and routing at the deployment boundary.
+Containerized via Docker. The deploying institution controls data residency, authentication, backups and routing. The watch is a separate persistent service: its admitted frozen capture bodies and journal survive restarts in operator storage. Corroboration artifacts use a separate digest-only path; that does not mean the whole system discards all source content. Preserve operational state before taking an old deployment offline or replacing it.
 
 ```bash
 docker build -t sunlight .
@@ -149,24 +157,26 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-1,889 tests across five build phases plus two cross-cutting suites. Zero regressions.
+The last locally measured watch subset, from a fresh clone on November 5,
+2026, passed **50 tests**. It covers the rebuilt identity, journal, capture,
+re-examination, replay, health, read-only routes and service simulations.
 
-| Phase | Description | Tests |
-|-------|-------------|-------|
-| Side 1 | Procurement verification (CRI + TCA + EVG) | 734 |
-| Side 2 | Delivery verification | 242 |
-| Side 3 | Intelligence alerts | 129 |
-| Side 4 | Recovery intelligence | 79 |
-| Side 5 | Evidence corroboration | 570 |
-| Output layer | Three-tier structural scoring + Fazekas mapping | 96 |
-| Hardening | Volume, determinism, no-silent-drop, edge honesty | 39 |
+| Verification | Measured state |
+|---|---|
+| Watch subset | 50 passed, November 5, 2026 |
+| Complete backend suite on this branch | Not verified; local pytest/dependencies unavailable |
+| Exact production dependency lock | CI check configured; outcome not observed locally |
+| Historical reference floor | Not rerun; exact database unavailable |
+| Native Mac install and reboot | Not verified; requires the owner's Mac |
+| Real-source unattended acceptance | Not verified |
 
-Every number above is measured, not estimated. The pre-Side-5 baseline was 1,182,
-itself above the original 1,133 after an institution-readiness pass.
-
-DOJ regression baseline preserved across every commit: 33.3% / 100% / 9.0% / 0.746 / 129.2.
+These are separate gates. The watch subset is not the whole backend suite, a
+native launchd test, a live-source run or a reference-floor measurement. Earlier
+full-suite counts describe earlier builds and are not advertised as current.
+See the [measured rebuild closeout](docs/MILESTONE_1A_REBUILD_2026-11-05.md).
 
 ```bash
+SUNLIGHT_OFFLINE=1 python -m unittest discover -s tests -p 'test_watch_*.py' -v
 PYTHONPATH=code python -m pytest tests/ -q
 ```
 
@@ -180,7 +190,7 @@ TCA operationalizes the i* Strategic Dependency Framework published by Dr. Chris
 - Every detection explainable in language an investigator understands
 - A flag is a risk indicator, not an allegation
 - An allocation is a recommendation, not a directive
-- 100% DOJ recall is the institutional credibility floor — zero tolerance, CI-gated
+- Preserve the constructed reference regression separately from claims of real-case detection; publish a new measured result only after replaying the exact inputs
 - Jurisdiction calibration is a data task, not a code task
 - The living standard is primary calibration for the majority of the operational footprint
 - Recovered funds are redirected using the institution's own published commitments, not external opinion
