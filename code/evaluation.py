@@ -5,14 +5,14 @@ SUNLIGHT Evaluation Framework
 Produces defensible, reproducible evaluation metrics for institutional review.
 
 Label Set:
-  - POSITIVE: DOJ-prosecuted price-fraud cases with documented markup > 0%
-  - NEGATIVE: Below-median contracts from agencies with 10+ contracts
+  - POSITIVE: Synthesized price examples parameterized by case references
+  - NEGATIVE: Presumed negatives from below-median agency contracts
   - EXCLUDED: Non-price fraud (false certification, etc.) — outside detection scope
 
 Split Method:
   - No train/test split (SUNLIGHT is unsupervised anomaly detection, not ML classification)
-  - DOJ cases serve as external validation ground truth, not training data
-  - Clean contracts are stratified random sample from production database
+  - Constructed labels are not independent field-validation ground truth
+  - Comparison records are sampled, not independently established as clean
 
 Operational Threshold:
   - Classification: RED/YELLOW = flagged, GREEN/GRAY = not flagged
@@ -49,6 +49,7 @@ from doj_validation import (
 )
 from calibration_config import get_profile, get_tier_thresholds
 from sunlight_logging import get_logger
+from evaluation_provenance import qualify_reference_report
 
 logger = get_logger("evaluation")
 
@@ -293,8 +294,8 @@ def run_full_evaluation(db_path: str, cases_path: str,
 
     # --- Label set definition ---
     label_set = {
-        'positive_definition': 'DOJ-prosecuted price-fraud cases with documented markup > 0%',
-        'negative_definition': 'Below-median, randomly sampled contracts from agencies with 10+ contracts',
+        'positive_definition': 'Synthesized price examples parameterized by case references',
+        'negative_definition': 'Presumed-negative, below-median comparison contracts',
         'excluded_definition': 'Non-price fraud (false certification, kickbacks without price inflation) — outside detection scope',
         'threshold_definition': 'RED or YELLOW tier = flagged; GREEN or GRAY = not flagged',
     }
@@ -446,7 +447,7 @@ def run_full_evaluation(db_path: str, cases_path: str,
             'negatives': n_negatives,
             'excluded': len(excluded),
             'prevalence_in_eval_set': round(prevalence, 4),
-            'split_method': 'External validation (DOJ cases are not training data; system is unsupervised)',
+            'split_method': 'Constructed reference regression, not independently labeled field validation',
         },
         'classification_metrics': {
             'precision': round(precision, 4),
@@ -489,15 +490,17 @@ def run_full_evaluation(db_path: str, cases_path: str,
                        "flags_per_1k": round(flags_per_1k, 1),
                        "pr_auc": pr_curve['pr_auc']})
 
-    return report
+    return qualify_reference_report(report)
 
 
 def write_evaluation_report_json(report: Dict, path: str):
+    report = qualify_reference_report(report)
     with open(path, 'w') as f:
         json.dump(report, f, indent=2, default=str)
 
 
 def write_evaluation_report_md(report: Dict, path: str):
+    report = qualify_reference_report(report)
     m = report['classification_metrics']
     cm = report['confusion_matrix']
     ci = report['confidence_intervals_95pct']
@@ -511,6 +514,8 @@ def write_evaluation_report_md(report: Dict, path: str):
 
     lines = [
         "# SUNLIGHT Evaluation Report",
+        "",
+        "Constructed reference regression. These are synthesized price examples and presumed-negative comparisons, not independently labeled field outcomes.",
         "",
         f"**Date:** {report['evaluation_date'][:10]}",
         f"**Rulepack Version:** {report['rulepack_version']}",
@@ -548,10 +553,10 @@ def write_evaluation_report_md(report: Dict, path: str):
         "",
         "## 3. Confusion Matrix",
         "",
-        "| | Predicted Flagged (RED/YELLOW) | Predicted Clean (GREEN/GRAY) |",
+        "| | Predicted Flagged (RED/YELLOW) | Not flagged (GREEN/GRAY) |",
         "|---|---|---|",
-        f"| **Actual Fraud** (DOJ price cases) | TP = {cm['true_positive']} | FN = {cm['false_negative']} |",
-        f"| **Actual Clean** (below-median) | FP = {cm['false_positive']} | TN = {cm['true_negative']} |",
+        f"| **Synthesized positive examples** | TP = {cm['true_positive']} | FN = {cm['false_negative']} |",
+        f"| **Presumed-negative comparisons** | FP = {cm['false_positive']} | TN = {cm['true_negative']} |",
         "",
         "---",
         "",
@@ -567,13 +572,14 @@ def write_evaluation_report_md(report: Dict, path: str):
         "",
         "---",
         "",
-        "## 5. Value-Weighted Metrics",
+        "## 5. Reference Settlement Weights",
         "",
+        "These are reference weights, not detected losses, harm or recovered money. Legacy JSON field names are retained for compatibility.",
         "| Metric | Value |",
         "|---|---|",
-        f"| Total fraud value | ${vw['total_fraud_value']:,.0f} |",
-        f"| Detected fraud value | ${vw['detected_fraud_value']:,.0f} |",
-        f"| **Value recall** | {vw['value_recall']:.1%} |",
+        f"| Total supplied settlement weights | ${vw['total_fraud_value']:,.0f} |",
+        f"| Weights attached to flagged examples | ${vw['detected_fraud_value']:,.0f} |",
+        f"| **Reference-weight recall** | {vw['value_recall']:.1%} |",
         "",
         "---",
         "",
@@ -609,24 +615,18 @@ def write_evaluation_report_md(report: Dict, path: str):
         "",
         "### What these metrics mean",
         "",
-        f"- **Precision {m['precision']:.1%}**: Of every 100 contracts flagged, ~{int(m['precision']*100)} are confirmed DOJ-grade fraud. "
-        "The remainder are statistical anomalies that warrant investigation but may have legitimate explanations.",
-        f"- **Recall {m['recall']:.1%}**: SUNLIGHT detects {m['recall']:.0%} of DOJ-prosecuted price-fraud patterns. "
-        f"No known price-inflation case in the validation set was missed.",
-        f"- **Flags per 1,000: {wl['flags_per_1000_contracts']:.0f}**: At current thresholds, a portfolio of "
-        f"1,000 contracts would generate ~{int(wl['flags_per_1000_contracts'])} flags requiring analyst review.",
+        f"- **Precision {m['precision']:.1%}**: Share of flagged rows labeled positive in this constructed population, not a probability of actual fraud.",
+        f"- **Recall {m['recall']:.1%}**: Share of synthesized positive price examples flagged under this protocol, not measured recall on observed prosecuted contracts.",
+        f"- **Flags per 1,000: {wl['flags_per_1000_contracts']:.0f}**: Normalized workload within the evaluated population, not a forecast for a real portfolio. Analyst-time figures are configured assumptions.",
         "",
         "### Limitations",
         "",
-        "1. **Scope**: SUNLIGHT detects statistical price anomalies. It does NOT detect: false certification, "
-        "bid rigging without price impact, conflict of interest, or quality fraud.",
-        "2. **Prevalence dependency**: Real-world fraud prevalence (~2-5%) differs from the evaluation set. "
-        "Operational precision will differ from reported figures.",
+        "1. **Scope**: This protocol tests the price screen, not the other structural, delivery or evidence engines.",
+        "2. **Constructed labels**: Operational prevalence and field accuracy have not been measured by this protocol.",
         "3. **A flag is a risk indicator, not an allegation.** Every flag requires human review and investigation.",
         "4. **Unsupervised system**: SUNLIGHT is not trained on labeled fraud data. It uses statistical "
         "methods (bootstrap CIs, Bayesian posteriors) calibrated against DOJ prosecution thresholds.",
-        "5. **Validation set is small**: " + str(ds['positives']) + " positive cases. Confidence intervals "
-        "reflect this uncertainty.",
+        "5. **Reference set is small**: " + str(ds['positives']) + " synthesized positives. Resampling intervals do not repair constructed labels or establish field generalization.",
         "",
         "---",
         "",

@@ -34,6 +34,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_watch_*.py' -v
           python -m unittest discover -s tests -p 'test_build_identity.py' -v
           python -m unittest discover -s tests -p 'test_reference_inputs.py' -v
+          python -m unittest discover -s tests -p 'test_evaluation_provenance.py' -v
 
   suite:
     name: Suite (py${{ matrix.python }})
