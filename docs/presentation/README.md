@@ -1,6 +1,6 @@
 # SUNLIGHT presentation downloads
 
-These files are copies of the verified presentation artifacts, provided through GitHub so they can be opened and downloaded outside the Codex cloud workspace.
+These are historical presentation artifacts from an earlier build, retained for provenance and download. Their embedded test and GitHub validation metadata is not verification of the current branch. See the [November 9 foundation record](../MASTER_PLAN_PROGRESS_2026-11-09.md) for current measured subsets and open gates. Historical detection figures describe a constructed reference population, not observed-case accuracy.
 
 - [Read the three-page briefing](SUNLIGHT-Briefing.pdf).
 - [Download the presentation bundle](SUNLIGHT-Presentation.zip) using GitHub’s Download raw control.
