@@ -33,6 +33,9 @@ watch-captures/
 watch-packets/
 source-policy.local.json
 
+# Generated packaged-build metadata, not operational journal data.
+/build_identity.json
+
 # Sensitive ground-truth (contains case details)
 prosecuted_cases.json
 
