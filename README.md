@@ -127,12 +127,19 @@ REST API via FastAPI with auto-generated OpenAPI documentation. Supplied-record 
 - `GET /version` — Deployment metadata, MJPIS version, registered profiles
 - `GET /profiles` — All registered jurisdiction profiles with metadata
 
-**Evidence and Reporting**
-- `POST /evidence-packet` — Generate evidence packet for a contract
-- `GET /case-packet/{contract_id}` — Retrieve investigator-ready case packet
-- `POST /portfolio/screen` — Portfolio-level screening
-- `POST /doj/validate` — DOJ standard validation
-- `POST /certify` — Certification issuance
+**Watch ledger and reporting**
+- `GET /watch-engine/status` - Recorded watch health and latest examination
+- `GET /watch-engine/subjects` - Organizational subject register
+- `GET /watch-engine/subjects/{subject_id}` - One subject's sourced observations and readings
+- `GET /watch-engine/examinations` - Historical examination index
+- `GET /watch-engine/captures/{capture_id}` - Exact admitted frozen source document
+- `GET /watch-engine/packets/{examination_id}` - Frozen-input replay packet
+- `GET /watch-engine/ui` - Readable journal interface
+- `GET /assurance` - Capability and calibration boundaries
+
+Procurement receipts are included in `/analyze` and `/batch` responses. CLI
+reference evaluation is separate from these HTTP routes; no certification or
+prosecution-validation endpoint is claimed here.
 
 **Delivery Verification**
 - `POST /delivery/analyze` — Single contract delivery verification
@@ -180,6 +187,9 @@ re-examination, replay, health, read-only routes and service simulations.
 | Verification | Measured state |
 |---|---|
 | Watch subset | 50 passed, November 9, 2026 |
+| Build identity subset | 8 passed, November 9, 2026 |
+| Reference-admission subset | 6 passed, November 9, 2026; not a floor run |
+| Report-provenance subset | 4 passed, November 9, 2026; numeric outputs unchanged |
 | Complete backend suite on this branch | Not verified; local pytest/dependencies unavailable |
 | Exact production dependency lock | CI check configured; outcome not observed locally |
 | Historical reference floor | Not rerun; exact database unavailable |
