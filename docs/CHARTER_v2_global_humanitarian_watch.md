@@ -160,6 +160,10 @@ A top-level observatory directory per category and country: sources with hashes 
 
 ## 7. Open defects and debts, recorded so no one discovers them for us
 
+Dated infrastructure defects and decisions are tracked in the
+[defect register](DEFECT_REGISTER.md), including RUNTIME-001 on interpreter
+patch pinning.
+
 Engine and output: PROC-001 attaches the profile's whole citation dictionary joined with em-dashes; Side 3 pattern text attributes motive and is procurement-specific; ingestion_quality computed but not surfaced; the single-contract composite band understates a procedural fire (section 3.1, founder decision pending, gates the first tag); triage summary punctuation; AlertInput's profile-name validation to confirm.
 
 Arms domain: mirror rules deferred until import tables are validated; 2012 and 2014 compilations not located; the Register's database and the Secretariat's report application refuse programmatic access; Comtrade weak for chapter 93; 38 rows quarantined; 2011 state detection incomplete (Serbia, Romania, Bulgaria, Croatia on unread pages); the adapter outside the tree without fixture tests.
