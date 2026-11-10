@@ -26,7 +26,7 @@
 
 ## RUNTIME-002: Native Mac service tests compare unresolved and resolved paths
 
-- Recorded: 2026-11-10. Status: open; blocks a green rebuild backend suite.
+- Recorded: 2026-11-10. Status: closed for the test path-comparison defect.
 - Observed on CPython 3.12.14, macOS arm64, source c2ba06a:
   `test_failed_environment_creation_is_preserved_without_loading_agent` and
   `test_install_idempotent_and_uninstall_keeps_every_data_file` fail in
@@ -35,8 +35,12 @@
   `/var/folders/...` strings with resolved `/private/var/folders/...` strings.
   This is evidence of a test portability mismatch, not evidence that launchd
   installation, restart or reboot persistence has been validated.
-- No test, runtime code or path protection was changed to hide the failures.
-  Resolve the path expectations without weakening the path checks, then rerun
-  the service tests and complete backend suite. Later assertions may expose
-  further mismatches once these first failures are corrected.
+- Correction authorized by the owner: apply `Path.resolve()` to both actual
+  and expected paths. The stderr assertion now compares the exact resolved
+  log-file path rather than accepting a textual prefix. Environment-preservation
+  assertions still require the expected resolved path in the created-path list.
+  No runtime code or path protection changed.
+- Verification: complete rebuild suite on 2026-11-10, CPython 3.12.14:
+  2056 passed, 13 skipped, 0 failed, 17 passing subtests, 17.63 seconds.
+  Skips and native service limitations remain explicitly open.
 - Full measured results and exclusions: [Task 1 report](TASK1_RUNTIME_2026-11-10.md).

@@ -119,3 +119,24 @@ test-packages.json b4f3baeafc16e3183ff0e3ac078f1ba39dcacfac34119272ebbdb46b9fc68
 
 Stop at this checkpoint as instructed. Task 2 has not started, the service is
 not installed, and no payment, law, human-layer or deployed Render change was made.
+
+## RUNTIME-002 follow-up, November 10, 2026
+
+At the owner's direction, both sides of path comparisons now use Path.resolve().
+The stderr-path assertion checks the exact resolved file, and the failed-install
+test still checks membership in the created-path list after resolving both sides.
+Production path protection and installer logic are unchanged.
+
+The same complete backend command, after the fix, returned:
+
+```text
+2056 passed, 13 skipped, 2 warnings, 17 subtests passed in 17.63s
+```
+
+Exit code 0. The skipped tests have the same reasons as the earlier run; this
+does not close the Docker, database or native service gates. The initial failed
+run remains above as history. The local output directory also retains
+rebuild-fixed-tests.log and rebuild-fixed-tests.xml for this follow-up.
+The README now distinguishes main's 1989 passing tests from this rebuild's
+2056 passing tests and records the date. See the README figure audit for the
+remaining numerical claims and their evidence limits.

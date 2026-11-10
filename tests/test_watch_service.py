@@ -67,8 +67,10 @@ class ServiceTests(unittest.TestCase):
             self.assertEqual((plist.read_bytes(), plist.stat().st_mtime_ns), initial_plist)
             definition = plistlib.loads(plist.read_bytes())
             self.assertTrue(definition["RunAtLoad"])
-            self.assertEqual(definition["ProgramArguments"][0], str(self.environment / 'bin/python'))
-            self.assertTrue(definition["StandardErrorPath"].startswith(str(data)))
+            self.assertEqual(Path(definition["ProgramArguments"][0]).resolve(),
+                             (self.environment / 'bin/python').resolve())
+            self.assertEqual(Path(definition["StandardErrorPath"]).resolve(),
+                             (data / 'logs/stderr.log').resolve())
             service.uninstall(self.args)
             self.assertFalse(plist.exists())
             for p, expected in original.items():
@@ -160,7 +162,8 @@ class ServiceTests(unittest.TestCase):
                 service.install(self.args)
             loaded.assert_not_called()
         self.assertTrue(Path(self.args.environment).exists())
-        self.assertIn(self.args.environment,self.args._created)
+        self.assertIn(Path(self.args.environment).resolve(),
+                      [Path(path).resolve() for path in self.args._created])
         self.assertFalse((Path(self.args.launch_agents_dir)/(self.args.label+'.plist')).exists())
 
     def test_live_label_with_different_pid_cannot_validate_another_process_run(self):
