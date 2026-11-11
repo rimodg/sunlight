@@ -112,13 +112,18 @@ class Journal:
             previous = e["hash"]
         return previous
 
-    def freeze(self, source, url, at, body, policy_hash, observations=None):
-        # Hash exact bytes. Parsing never substitutes a reformatted document.
-        import hashlib
-        parsed = json.loads(body)
-        admit(parsed)
-        payload = {"source": source, "url": url, "sha256": hashlib.sha256(body).hexdigest(),
-                   "body": body.decode("utf-8"), "policy_hash": policy_hash}
+    def freeze(self, source, url, at, projection, policy_hash, observations=None, *, source_sha256):
+        from watch_projection import SCHEMA, VERSIONS
+        if (not isinstance(projection, dict) or projection.get("schema") != SCHEMA
+                or projection.get("adapter_version") != VERSIONS.get(projection.get("adapter"))):
+            raise ValueError("projection_schema")
+        if not isinstance(source_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", source_sha256):
+            raise ValueError("source_digest_required")
+        admit(projection)
+        payload = {"source": source, "url": url, "sha256": source_sha256,
+                   "projection": projection, "projection_sha256": digest(projection),
+                   "adapter_version": projection["adapter_version"], "policy_hash": policy_hash,
+                   "captured_at": utc(at)}
         cid = digest({"kind": "capture", "at": utc(at), "payload": payload})
         entries = [("capture", at, payload)]
         if observations is not None:
@@ -130,7 +135,8 @@ class Journal:
         if row is None:
             raise KeyError(event_id)
         payload = json.loads(row[0])
-        import hashlib
-        if hashlib.sha256(payload["body"].encode()).hexdigest() != payload["sha256"]:
+        if "body" in payload:
+            raise ValueError("legacy_raw_capture_requires_explicit_migration")
+        if digest(payload["projection"]) != payload["projection_sha256"]:
             raise ValueError("capture_integrity_failed")
         return payload

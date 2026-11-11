@@ -97,8 +97,10 @@ def capture(capture_id: str):
             item = journal.capture(capture_id)
         except KeyError:
             raise HTTPException(404, "No such frozen capture")
-        return Response(item["body"].encode(), media_type="application/json",
-                        headers={"X-Content-SHA256": item["sha256"], "X-Content-Type-Options": "nosniff"})
+        return Response(canonical(item["projection"]), media_type="application/json",
+                        headers={"X-Content-SHA256": item["projection_sha256"],
+                                 "X-Source-SHA256": item["sha256"],
+                                 "X-Content-Type-Options": "nosniff"})
 
 
 @router.get("/packets/{examination_id}")
@@ -169,7 +171,7 @@ def ui(subject: str | None = None, examination: str | None = None):
                             continue
                         ev = obs["evidence"]
                         html.append(f'<h4>{text(obs["category"])} | {text(obs["key"])}</h4><p>Captured {text(obs["captured_at"])}. Published {text(obs["published_at"])}.</p>')
-                        html.append(f'<p><a href="./captures/{ev["capture"]}">Frozen source document</a> | <a href="{text(ev["url"])}">Publisher URL</a><small>Locator: {text(ev["locator"])}. SHA-256: {text(ev["sha256"])}</small></p>')
+                        html.append(f'<p><a href="./captures/{ev["capture"]}">Retained organizational projection</a> | <a href="{text(ev["url"])}">Publisher URL</a><small>Original-source locator: {text(ev["locator"])}. Original-response SHA-256: {text(ev["sha256"])}. Projection SHA-256: {text(ev.get("projection_sha256", "unavailable"))}. Original response is not retained.</small></p>')
                         for reading in result["readings"]:
                             if reading["observation"] == obs["id"]:
                                 html.append(f'<p><strong>{text(reading["rule"])}: {text(reading["status"])}</strong> {text(reading["description"])}<small>{text(reading["citation"])}</small></p>')

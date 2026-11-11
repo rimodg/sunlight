@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 from watch_api import router
 from watch_engine import WatchEngine
 from watch_journal import Journal
+from watch_identity import canonical
 from test_watch_loop import CF, release, response, reader
 
 
@@ -46,8 +47,9 @@ class ReadOnlyTests(unittest.TestCase):
         data = self.client.get('/watch-engine/subjects/'+sid).json()
         obs = data['observations'][0]
         capture = self.client.get('/watch-engine/captures/'+obs['evidence']['capture'])
-        self.assertEqual(capture.headers['x-content-sha256'],obs['evidence']['sha256'])
-        self.assertEqual(capture.content,self.j.capture(obs['evidence']['capture'])['body'].encode())
+        self.assertEqual(capture.headers['x-content-sha256'],obs['evidence']['projection_sha256'])
+        self.assertEqual(capture.headers['x-source-sha256'],obs['evidence']['sha256'])
+        self.assertEqual(capture.content,canonical(self.j.capture(obs['evidence']['capture'])['projection']).encode())
         html = self.client.get('/watch-engine/ui?subject='+sid).text
         self.assertIn(obs['evidence']['sha256'],html)
         self.assertIn(obs['evidence']['locator'],html)

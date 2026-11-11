@@ -24,6 +24,14 @@ def checked_url(url, base=None):
         b = urlparse(base)
         if (p.scheme, p.netloc, p.path) != (b.scheme, b.netloc, b.path):
             raise ValueError("pagination_scope_refused")
+        from urllib.parse import parse_qs
+        query, original = parse_qs(p.query), parse_qs(b.query)
+        stable = lambda q: {k: v for k, v in q.items() if k not in {"cursor", "offset"}}
+        if stable(query) != stable(original):
+            raise ValueError("pagination_filter_drift")
+        # Check decoded values too, rather than letting percent encoding hide
+        # personal-shaped query text from the journal boundary.
+        admit(query)
     return url
 
 
@@ -98,65 +106,106 @@ def party(identifiers, locator):
     return {"identifiers": out}
 
 
-def adapt(source, body):
-    """Records retain their document pointers and published identifiers.
-
-    Bodies are admitted before freezing. Unknown parties remain unresolved.
-    D-portal JSON rows must supply an activity ID and reporting_ref; titles,
-    personnel and beneficiary data are neither required nor invented.
-    """
+def project_page(source, body, *, url=None):
+    """Project before admission. Refused rows keep only a fixed reason and path."""
+    from watch_projection import SCHEMA, VERSIONS, FieldRefusal, project_record
+    from urllib.parse import parse_qs, urlencode, urlunparse
+    if len(body) > MAX_BYTES:
+        raise ValueError("source_body_too_large")
     doc = json.loads(body)
-    admit(doc)
     if not isinstance(doc, dict):
         raise ValueError("source_document_must_be_object")
-    records = []
-    if source["adapter"] == "contracts_finder":
-        rows = doc.get("releases")
-        if not isinstance(rows, list) or len(rows) > 100:
-            raise ValueError("invalid_ocds_page")
-        next_url = (doc.get("links") or {}).get("next")
-        for i, row in enumerate(rows):
-            if not isinstance(row.get("ocid"), str) or not row.get("id"):
-                raise ValueError("missing_release_identity")
-            parties = []
-            for j, p in enumerate(row.get("parties", [])):
-                loc = f"/releases/{i}/parties/{j}"
-                ids = ([{**p["identifier"], "_locator": loc + "/identifier"}] if isinstance(p.get("identifier"), dict) else [])
-                ids += [{**item, "_locator": f"{loc}/additionalIdentifiers/{k}"}
-                        for k, item in enumerate(p.get("additionalIdentifiers", [])) if isinstance(item, dict)]
-                parties.append(party(ids, loc))
-            known = {p.get("id") for p in row.get("parties", [])}
-            # Publisher-local party references are not company identifiers. Keep
-            # unmatched suppliers as explicit unresolved parties, never discard.
-            for a, award in enumerate(row.get("awards", [])):
-                for s, supplier in enumerate(award.get("suppliers", [])):
-                    if supplier.get("id") is None or supplier.get("id") not in known:
-                        ids = [supplier["identifier"]] if isinstance(supplier.get("identifier"), dict) else []
-                        parties.append(party(ids, f"/releases/{i}/awards/{a}/suppliers/{s}/identifier"))
-            records.append({"key": row["ocid"], "release_id": row["id"], "category": "procurement",
-                            "published_at": utc(row["date"]) if row.get("date") else None,
-                            "parties": parties, "locator": f"/releases/{i}", "record": row})
-    else:
-        rows = doc.get("rows")
-        if not isinstance(rows, list):
-            raise ValueError("invalid_iati_page")
-        next_url = (doc.get("links") or {}).get("next")
-        # A naked full limit page is not evidence that the population ended.
-        if len(rows) >= source.get("page_limit", 100) and not next_url and doc.get("complete") is not True:
+    adapter = source["adapter"]
+    key = "releases" if adapter == "contracts_finder" else "rows"
+    rows = doc.get(key)
+    if not isinstance(rows, list):
+        raise ValueError("invalid_source_page")
+    if adapter == "contracts_finder" and len(rows) > 100:
+        raise ValueError("invalid_ocds_page")
+    version = doc.get("version") if adapter == "contracts_finder" else None
+    if version not in (None, "1.1"):
+        raise ValueError("unsupported_source_version")
+    records, refusals = [], []
+    for index, row in enumerate(rows):
+        try:
+            record, coverage = project_record(adapter, row, version)
+            records.append({"index": index, "record": record, "coverage": coverage})
+        except FieldRefusal as error:
+            refusals.append({"index": index, "field": error.field, "reason": error.reason})
+    links = doc.get("links")
+    next_url = links.get("next") if isinstance(links, dict) else None
+    if adapter == "iati_dportal" and not next_url:
+        current = url or source["url"]
+        parsed = urlparse(current)
+        query = parse_qs(parsed.query)
+        # Live q responses expose LIMIT/OFFSET in their generated dquery SQL.
+        # Only synthesize paging for this explicit reviewed query contract.
+        if "limit" in query and query.get("orderby") == ["aid"]:
+            limit = int(query["limit"][0])
+            offset = int(query.get("offset", ["0"])[0])
+            if not 1 <= limit <= 100 or offset < 0:
+                raise ValueError("invalid_iati_paging")
+            if len(rows) >= limit:
+                query["offset"] = [str(offset + limit)]
+                next_url = urlunparse(parsed._replace(query=urlencode(query, doseq=True)))
+        elif len(rows) >= source.get("page_limit", 100):
             raise ValueError("iati_pagination_not_proven")
-        for i, row in enumerate(rows):
-            if not isinstance(row.get("aid"), str) or not isinstance(row.get("reporting_ref"), str):
-                raise ValueError("missing_iati_identity")
-            ref = row["reporting_ref"]
-            ids = [{"scheme": "GB-COH", "id": ref[len("GB-COH-"):]}] if ref.startswith("GB-COH-") else []
-            records.append({"key": row["aid"], "category": "aid",
-                            "published_at": utc(row["updated_at"]) if row.get("updated_at") else None,
-                            "parties": [party(ids, f"/rows/{i}/reporting_ref")],
-                            "locator": f"/rows/{i}", "record": row})
     if next_url:
         checked_url(next_url, source["url"])
-    for record in records:
-        # An observation's identity does not depend on unrelated rows on its page.
+        admit(next_url)
+    projected = {"schema": SCHEMA, "adapter": adapter, "adapter_version": VERSIONS[adapter],
+                 "records": records, "refusals": refusals, "received_count": len(rows), "next": next_url}
+    admit(projected)
+    return projected
+
+
+def records_from_projection(source, projection):
+    """Replay retained organizational data, never re-fetch the original body."""
+    from watch_projection import SCHEMA, VERSIONS
+    if projection.get("schema") != SCHEMA or projection.get("adapter") != source["adapter"]:
+        raise ValueError("projection_schema")
+    if projection.get("adapter_version") != VERSIONS[source["adapter"]]:
+        raise ValueError("replay_requires_matching_adapter")
+    admit(projection)
+    records = []
+    for item in projection["records"]:
+        i, row = item["index"], item["record"]
+        parties = []
+        if source["adapter"] == "contracts_finder":
+            def projected_party(p, loc):
+                ids = ([{**p["identifier"], "_locator": loc + "/identifier"}]
+                       if isinstance(p.get("identifier"), dict) else [])
+                ids += [{**v, "_locator": loc + "/additionalIdentifiers/" + str(j)}
+                        for j, v in enumerate(p.get("additionalIdentifiers", []))]
+                # This is an explicitly published internal ID, never GB-COH.
+                local = p.get("id", "")
+                if local.startswith("GB-CFS-"):
+                    ids.append({"scheme": "GB-CFS", "id": local[len("GB-CFS-"):],
+                                "_locator": loc + "/id"})
+                return party(ids, loc)
+            for j, p in enumerate(row.get("parties", [])):
+                if p:
+                    parties.append(projected_party(p, f"/releases/{i}/parties/{j}"))
+            known = {p.get("id") for p in row.get("parties", []) if p.get("id")}
+            buyer = row.get("buyer")
+            if buyer and buyer.get("id") not in known:
+                parties.append(projected_party(buyer, f"/releases/{i}/buyer"))
+            for a, award in enumerate(row.get("awards", [])):
+                for j, supplier in enumerate(award.get("suppliers", [])):
+                    if supplier.get("id") is None or supplier["id"] not in known:
+                        parties.append(projected_party(supplier, f"/releases/{i}/awards/{a}/suppliers/{j}"))
+            record = {"key": row["ocid"], "release_id": row["id"], "category": "procurement",
+                      "published_at": utc(row["date"]) if row.get("date") else None,
+                      "parties": parties, "locator": f"/releases/{i}",
+                      "record": {**row, "_watch_projection": projection["adapter_version"]}}
+        else:
+            ref = row["reporting_ref"]
+            ids = [{"scheme": "GB-COH", "id": ref[len("GB-COH-"):]}] if ref.startswith("GB-COH-") else []
+            record = {"key": row["aid"], "category": "aid",
+                      "published_at": utc(row["updated_at"]) if row.get("updated_at") else None,
+                      "parties": [party(ids, f"/rows/{i}/reporting_ref")],
+                      "locator": f"/rows/{i}", "record": row}
+        record["coverage"] = item["coverage"]
         record["source"] = source["id"]
         def without_locators(value):
             if isinstance(value, dict):
@@ -165,16 +214,21 @@ def adapt(source, body):
                 return [without_locators(v) for v in value]
             return value
         record["id"] = digest(without_locators(record))
-    return records, next_url
+        records.append(record)
+    return records, projection["next"]
+
+
+def adapt(source, body):
+    return records_from_projection(source, project_page(source, body))
 
 
 def frozen_records(journal, source, url, at, body, policy_hash, seen=()):
-    if len(body) > MAX_BYTES:
-        raise ValueError("source_body_too_large")
-    records, next_url = adapt(source, body)
+    projection = project_page(source, body, url=url)
+    records, next_url = records_from_projection(source, projection)
     if next_url and (next_url == url or next_url in seen):
         raise ValueError("pagination_cycle")
-    capture_id = journal.freeze(source["id"], url, at, body, policy_hash,
+    capture_id = journal.freeze(source["id"], url, at, projection, policy_hash,
                                 {"records": records, "adapter": source["adapter"],
-                                 "source_policy": source, "next": next_url})
+                                 "source_policy": source, "next": next_url},
+                                source_sha256=hashlib.sha256(body).hexdigest())
     return capture_id, records, next_url

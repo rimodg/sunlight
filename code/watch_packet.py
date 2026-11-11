@@ -14,13 +14,13 @@ def packet(journal, examination_id):
         raise KeyError(examination_id)
     cutoff = examination["at"]
     inputs = [e for e in journal.events(as_of=cutoff) if e["kind"] in {"capture", "observations"}]
-    return {"schema": "sunlight.watch-packet.v1", "examination": examination,
+    return {"schema": "sunlight.watch-packet.v2", "examination": examination,
             "inputs": inputs, "result_sha256": digest(examination["payload"]["result"]),
-            "limits": "This replays frozen inputs. It does not authenticate a publisher or prove a source claim."}
+            "limits": "This replays retained organizational projections, not original response bytes. Original-response hashes cannot be reverified without an independently obtained original. It does not authenticate a publisher or prove a source claim."}
 
 
 def replay(value, *, reader=None):
-    if value.get("schema") != "sunlight.watch-packet.v1":
+    if value.get("schema") != "sunlight.watch-packet.v2":
         raise ValueError("packet_schema")
     exam = value["examination"]
     if digest({"kind": exam["kind"], "at": exam["at"], "payload": exam["payload"]}) != exam["id"]:

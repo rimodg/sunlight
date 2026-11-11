@@ -59,10 +59,11 @@ A source policy has this shape. URLs below are synthetic schema examples:
 ```
 
 Replace endpoints only after reviewing scope, access, organizational fields and
-paging. This build has not validated either adapter against a public endpoint.
-Known personal-data fields and email-shaped content cause the entire response
-to be refused before persistence. A source with contact data needs an appropriate
-organization-only endpoint; do not switch off protection to make it pass.
+paging. Both adapters have passed one-page live probes; population acceptance is separate.
+Only the adapter's declared organizational projection reaches admission. Contact
+fields are discarded in memory; personal-shaped content inside an allowed field
+refuses that record before persistence. Do not switch off protection to make a
+source pass. Review the projection exclusions and per-record coverage gaps.
 The review flag is an operator assertion, not an automated privacy certificate.
 See [the engine's scope and refusal rules](WATCH_ENGINE.md).
 
@@ -76,7 +77,7 @@ There are no hardcoded user home paths.
 | Virtual environment | `DATA/runtime`, configurable with `--environment` |
 | Configuration | `DATA/service.json` |
 | Reviewed policy copy | `DATA/source-policy.json` |
-| Journal and frozen capture bodies | `DATA/journal.sqlite3` |
+| Journal, projections and original-response digests | `DATA/journal.sqlite3` |
 | Scheduler mutual-exclusion lock | `DATA/journal.lock` |
 | Standard output and error | `DATA/logs/stdout.log`, `DATA/logs/stderr.log` |
 | Installation/build receipt | `DATA/install-receipt.json` |
@@ -116,8 +117,8 @@ Do not expose the journal API publicly without the institution's access controls
 
 The interface queries the journal for scheduler receipts, source last reach,
 outcome, unknown silence, last good capture, overdue state, startup build,
-subjects, findings and open questions. Source document links return the exact
-frozen bytes with their SHA-256; every reading retains a locator and citation.
+subjects, findings and open questions. Source links return the retained organizational projection with its SHA-256
+and the original-response digest; every reading retains a source locator and citation.
 Packets are downloads from recorded examinations. No separate UI data store is
 populated. Health receipts do not independently prove current process liveness.
 

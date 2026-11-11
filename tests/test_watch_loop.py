@@ -116,11 +116,14 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(changes(first, second)["observations_added"], [])
         self.assertEqual(changes(first, second)["readings_added"], [])
 
-    def test_protection_failure_retains_receipt_but_no_body(self):
-        row = release(); row["parties"][0]["contactPoint"] = {"name": "redacted"}
+    def test_protected_identifier_retains_refusal_but_no_source_value(self):
+        row = release(); row["parties"][0]["identifier"]["id"] = "person@example.invalid"
         self.engine(lambda url: response({"releases": [row]})).tick()
-        self.assertEqual(self.j.events(kind="capture"), [])
-        self.assertEqual(health(self.j, self.time)["sources"][0]["outcome"], "admission_or_adapter_failed")
+        capture = self.j.capture(self.j.events(kind="capture")[0]["id"])
+        self.assertEqual(capture["projection"]["records"], [])
+        self.assertEqual(capture["projection"]["refusals"][0]["reason"], "protection_boundary")
+        self.assertNotIn("person@example.invalid", canonical(self.j.events()))
+        self.assertEqual(health(self.j, self.time)["sources"][0]["outcome"], "captured_with_refusals")
 
     def test_unsafe_paging_and_cycles_do_not_admit_capture(self):
         for url in ["https://other.invalid/ocds?limit=100", CF["url"]]:
@@ -162,7 +165,7 @@ class LoopTests(unittest.TestCase):
         value = packet(self.j, eid)
         self.assertEqual(canonical(replay(value, reader=reader)), canonical(result))
         bad = copy.deepcopy(value)
-        bad["inputs"][0]["payload"]["body"] = '{}'
+        bad["inputs"][0]["payload"]["projection"] = {}
         with self.assertRaises(ValueError):
             replay(bad, reader=reader)
 

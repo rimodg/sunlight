@@ -10,7 +10,7 @@ from pathlib import Path
 import subprocess
 import time
 
-from watch_capture import adapt, fetch, frozen_records, policy, checked_url
+from watch_capture import records_from_projection, fetch, frozen_records, policy, checked_url
 from watch_examination import examine, changes
 from watch_health import health
 from watch_identity import canonical, digest
@@ -49,12 +49,13 @@ def snapshot(journal, as_of, *, reader=None):
     for event in journal.events(as_of=as_of, kind="observations"):
         p = event["payload"]
         capture = journal.capture(p["capture"])
-        reproduced, next_url = adapt(p["source_policy"], capture["body"].encode())
+        reproduced, next_url = records_from_projection(p["source_policy"], capture["projection"])
         if reproduced != p["records"] or next_url != p["next"]:
             raise ValueError("adapter_replay_mismatch")
         for row in p["records"]:
             records.append({**row, "captured_at": event["at"],
                             "evidence": {"capture": p["capture"], "sha256": capture["sha256"],
+                                         "projection_sha256": capture["projection_sha256"],
                                          "url": capture["url"], "locator": row["locator"]}})
     kwargs = {"procurement_reader": reader} if reader is not None else {}
     return examine(records, as_of, **kwargs)
@@ -98,6 +99,7 @@ class WatchEngine:
                     continue
                 url = state.get("next") or source["url"]
                 reached, status, capture_id = None, None, None
+                admitted_count, refusals = None, []
                 outcome, retry = "unavailable", min(86400, 60 * 2 ** min(10, state.get("failures", 0)))
                 try:
                     checked_url(url, source["url"])
@@ -113,11 +115,13 @@ class WatchEngine:
                         raise ValueError("http_failure")
                     seen = state.get("seen", [])
                     capture_id, records, next_url = frozen_records(self.journal, source, url, reached, response["body"], digest(source), seen)
+                    admitted_count = len(records)
+                    refusals = self.journal.capture(capture_id)["projection"]["refusals"]
                     due = reached if next_url else (datetime.fromisoformat(reached) + timedelta(seconds=source["interval_seconds"])).isoformat()
                     self.journal.append("source_state", reached, {"source": source["id"], "policy_hash": digest(source),
                                         "next": next_url, "due": due, "seen": (seen + [url]) if next_url else [],
                                         "failures": 0, "cycle_complete": next_url is None})
-                    outcome = "captured"
+                    outcome = "captured_with_refusals" if refusals else "captured"
                 except Exception:
                     failed = True
                     # No source text, exception body or untrusted payload in failure receipts.
@@ -127,7 +131,8 @@ class WatchEngine:
                     self.journal.append("source_state", at, {**state, "source": source["id"], "policy_hash": digest(source),
                                         "due": due, "failures": state.get("failures", 0) + 1, "cycle_complete": False})
                 self.journal.append("source_receipt", utc(self.clock()), {"source": source["id"], "outcome": outcome,
-                                    "reached_at": reached, "http_status": status, "capture": capture_id})
+                                    "reached_at": reached, "http_status": status, "capture": capture_id,
+                                    "admitted_count": admitted_count, "refusals": refusals})
             cutoff = utc(self.clock())
             current = snapshot(self.journal, cutoff, reader=self.reader)
             previous = self.journal.events(kind="examination")

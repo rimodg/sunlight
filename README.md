@@ -31,8 +31,8 @@ retain authority over investigation, recovery and allocation decisions.
 The rebuilt watch adds continuity: organizational identities joined only by cited
 identifiers, admitted frozen captures, an append-only subject history and as-of
 re-examination. It reports newly known evidence, changed readings and open items.
-The current adapters and unattended public-source acceptance still need live
-validation. No source is enabled by default.
+Both adapters passed one-page live validation on November 10, 2026. Population
+and unattended public-source acceptance remain open. No source is enabled by default.
 
 The analytical path uses no model. A reading is reproducible from the same
 frozen inputs, parameters, code, reference data and seed. Statistical resampling
@@ -127,7 +127,7 @@ rerun for this branch. A previous result is not a new measurement.
 
 ## API
 
-REST API via FastAPI with auto-generated OpenAPI documentation. Supplied-record analysis and the persistent organizational watch are distinct workflows. The watch journal retains admitted frozen response bytes, observations, findings and operational receipts in the operator-configured external data directory. Other API workflows also maintain operational calibration or recovery state, so the application must not be described as wholly stateless. The corroboration workflow also uses a bounded in-process cache so a result can be inspected after the fact. That cache is capped, evicts oldest-first, does not survive a restart, and says so in its own responses - it is not a database, and no audit trail should be built on it. It retains provenance (source, digest, timestamp) and never artifact content. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
+REST API via FastAPI with auto-generated OpenAPI documentation. Supplied-record analysis and the persistent organizational watch are distinct workflows. The watch journal retains admitted organizational projections and original-response digests, observations, findings and operational receipts in the operator-configured external data directory. Other API workflows also maintain operational calibration or recovery state, so the application must not be described as wholly stateless. The corroboration workflow also uses a bounded in-process cache so a result can be inspected after the fact. That cache is capped, evicts oldest-first, does not survive a restart, and says so in its own responses - it is not a database, and no audit trail should be built on it. It retains provenance (source, digest, timestamp) and never artifact content. Designed for integration into institutional pipelines behind the deploying institution's own authentication layer.
 
 **Core Pipeline**
 - `POST /analyze` - Single contract structural analysis with jurisdiction profile
@@ -141,7 +141,7 @@ REST API via FastAPI with auto-generated OpenAPI documentation. Supplied-record 
 - `GET /watch-engine/subjects` - Organizational subject register
 - `GET /watch-engine/subjects/{subject_id}` - One subject's sourced observations and readings
 - `GET /watch-engine/examinations` - Historical examination index
-- `GET /watch-engine/captures/{capture_id}` - Exact admitted frozen source document
+- `GET /watch-engine/captures/{capture_id}` - Retained organizational projection, with original-response digest
 - `GET /watch-engine/packets/{examination_id}` - Frozen-input replay packet
 - `GET /watch-engine/ui` - Readable journal interface
 - `GET /assurance` - Capability and calibration boundaries
@@ -179,7 +179,7 @@ prosecution-validation endpoint is claimed here.
 
 ## Deployment
 
-Containerized via Docker. The deploying institution controls data residency, authentication, backups and routing. The watch is a separate persistent service: its admitted frozen capture bodies and journal survive restarts in operator storage. Corroboration artifacts use a separate digest-only path; that does not mean the whole system discards all source content. Preserve operational state before taking an old deployment offline or replacing it.
+Containerized via Docker. The deploying institution controls data residency, authentication, backups and routing. The watch is a separate persistent service: its admitted projections and journal survive restarts in operator storage. Corroboration artifacts use a separate digest-only path; that does not mean the whole system discards all source content. Preserve operational state before taking an old deployment offline or replacing it.
 
 ```bash
 docker build -t sunlight .
@@ -187,6 +187,10 @@ docker run -p 8000:8000 sunlight
 ```
 
 ## Test Suite
+
+Latest measured branch result: **2,073 passed, 13 skipped, 0 failed** on
+November 10, 2026 after [Tasks 2 and 3](docs/TASK2_PROJECTION_2026-11-10.md).
+The earlier same-day baselines below remain attributed to their tested builds.
 
 On **November 10, 2026**, the complete backend command measured **1,989 passed,
 12 skipped, 0 failed on main** at `bd9ebef`, and **2,056 passed, 13 skipped,
@@ -199,6 +203,7 @@ reported 17 passing subtests, separately from the passed-test count.
 |---|---|
 | Main backend suite | 1,989 passed, 12 skipped, 0 failed; November 10, 2026 |
 | Rebuild backend suite after RUNTIME-002 | 2,056 passed, 13 skipped, 0 failed; November 10, 2026 |
+| After organizational projection | 2,073 passed, 13 skipped, 0 failed; November 10, 2026 |
 | Exact runtime dependency lock | All 35 pins installed and passed the service runtime verifier; November 10, 2026 |
 | Historical reference floor | Not rerun; exact database unavailable |
 | Native Mac install and reboot | Not verified; requires the owner's Mac |

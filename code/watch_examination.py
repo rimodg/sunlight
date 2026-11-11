@@ -11,6 +11,8 @@ VERSION = "sunlight.watch-examination.v2"
 
 def input_basis(rule, record, fields, currency):
     """Availability of the actual inputs, without repairing or retuning a rule."""
+    if record.get("_watch_projection") and rule in {"PROC-003", "PROC-004"}:
+        return {"available": False, "requires": "Review-body roles are excluded by organizational projection policy"}
     tender = record.get("tender") or {}
     awards = record.get("awards") or []
     award = awards[0] if awards else {}

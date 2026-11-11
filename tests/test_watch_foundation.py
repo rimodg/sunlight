@@ -66,11 +66,17 @@ class JournalTests(unittest.TestCase):
     def tearDown(self):
         self.j.close(); self.temp.cleanup()
 
-    def test_capture_keeps_exact_bytes_and_idempotent_retry(self):
+    def test_capture_keeps_projection_and_original_digest_with_idempotent_retry(self):
+        from watch_capture import project_page
+        from test_watch_loop import CF
         body = b'{"releases": [ ]}\n'
-        cid = self.j.freeze("synthetic", "https://example.invalid/data", "2026-01-01T00:00:00Z", body, "0" * 64)
-        self.assertEqual(self.j.capture(cid)["body"].encode(), body)
-        self.assertEqual(self.j.freeze("synthetic", "https://example.invalid/data", "2026-01-01T00:00:00Z", body, "0" * 64), cid)
+        projection = project_page(CF, body)
+        sha = hashlib.sha256(body).hexdigest()
+        cid = self.j.freeze("synthetic", "https://example.invalid/data", "2026-01-01T00:00:00Z", projection, "0" * 64, source_sha256=sha)
+        self.assertNotIn("body", self.j.capture(cid))
+        self.assertEqual(self.j.capture(cid)["projection"], projection)
+        self.assertEqual(self.j.capture(cid)["sha256"], sha)
+        self.assertEqual(self.j.freeze("synthetic", "https://example.invalid/data", "2026-01-01T00:00:00Z", projection, "0" * 64, source_sha256=sha), cid)
         self.assertEqual(len(self.j.events()), 1)
         self.j.verify()
 
@@ -97,7 +103,7 @@ class JournalTests(unittest.TestCase):
     def test_personal_data_is_rejected_before_capture(self):
         for data in [{"email": "redacted"}, {"contactPoint": {}}, {"name": "person@example.invalid"}]:
             with self.assertRaises(ValueError):
-                self.j.freeze("synthetic", "https://example.invalid", "2026-01-01T00:00:00Z", json.dumps(data).encode(), "0" * 64)
+                self.j.freeze("synthetic", "https://example.invalid", "2026-01-01T00:00:00Z", data, "0" * 64, source_sha256="0" * 64)
         self.assertEqual(self.j.events(), [])
 
     def test_integrity_detects_tampering(self):

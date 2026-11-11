@@ -38,6 +38,8 @@ def health(journal, now, policy=None, interval=None):
                         "interval_seconds": source["interval_seconds"],
                         "overdue": seconds(now, anchor) > source["interval_seconds"] if anchor else None,
                         "last_good_capture": good[-1]["payload"]["capture"] if good else None,
+                        "admitted_count": latest["payload"].get("admitted_count") if latest else None,
+                        "refusals": latest["payload"].get("refusals", []) if latest else [],
                         "receipt": latest["id"] if latest else None})
     return {"as_of": utc(now), "scheduler": schedule, "sources": sources,
             "note": "Receipts describe recorded runs, not proof that a process is currently alive."}

@@ -35,3 +35,11 @@ explicit, dated authorization and institutional delegation. It is not part of
 this implementation work.
 
 See the [November 9 implementation and verification record](../MASTER_PLAN_PROGRESS_2026-11-09.md) for the changes made after this plan was supplied.
+
+## November 10 follow-up
+
+The raw-body statement above describes the pre-projection rebuild. Tasks 2 and
+3 now retain only organizational projections plus original-response digests.
+The original master plan remains preserved as supplied. See the
+[projection and live-source report](../TASK2_PROJECTION_2026-11-10.md) for current
+retention, replay limits and the measured 2073-pass backend run.
