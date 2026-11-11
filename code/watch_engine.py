@@ -17,6 +17,24 @@ from watch_identity import canonical, digest
 from watch_journal import Journal, utc
 
 
+def retry_delay(failures, hint, reached_at):
+    """Exponential backoff, never retry earlier than a valid Retry-After."""
+    from email.utils import parsedate_to_datetime
+    import math
+    delay = min(86400, 60 * 2 ** min(10, failures))
+    if hint is not None:
+        try:
+            text = str(hint).strip()
+            if text.isdigit():
+                requested = int(text)
+            else:
+                requested = math.ceil((parsedate_to_datetime(text) - datetime.fromisoformat(utc(reached_at))).total_seconds())
+            delay = max(delay, requested)
+        except (ValueError, TypeError, OverflowError):
+            pass
+    return delay
+
+
 def now():
     return datetime.now(timezone.utc).isoformat(timespec="microseconds")
 
@@ -71,21 +89,22 @@ class WatchEngine:
         self.build = build_identity()  # Frozen at startup, not a later request's HEAD.
         self.journal.verify()
 
-    def tick(self):
+    def tick(self, *, examine=True):
         # A crashed process releases the OS lock. Manual ticks cannot race the
         # service into duplicate captures or contradictory cursor updates.
         import fcntl
         with open(self.journal.path.with_suffix(".lock"), "a") as handle:
             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
             try:
-                return self._tick()
+                return self._tick(examine=examine)
             finally:
                 fcntl.flock(handle, fcntl.LOCK_UN)
 
-    def _tick(self):
+    def _tick(self, *, examine=True):
         at = utc(self.clock())
         run = self.journal.append("scheduler_started", at, {"interval_seconds": self.interval, "build": self.build,
-                                                           "pid": os.getpid()})
+                                                           "pid": os.getpid(),
+                                                           "mode": "examination" if examine else "capture_only"})
         self.journal.append("source_policy", at, {"policy": self.policy})
         failed = False
         try:
@@ -110,7 +129,7 @@ class WatchEngine:
                         raise ValueError("response_body_read_failed")
                     if status != 200:
                         hint = response.get("retry_after")
-                        retry = max(60, min(86400, int(hint))) if hint and str(hint).isdigit() else min(86400, 60 * 2 ** min(10, state.get("failures", 0)))
+                        retry = retry_delay(state.get("failures", 0), hint, reached)
                         outcome = "http_" + str(status)
                         raise ValueError("http_failure")
                     seen = state.get("seen", [])
@@ -127,18 +146,23 @@ class WatchEngine:
                     # No source text, exception body or untrusted payload in failure receipts.
                     if status == 200:
                         outcome = "admission_or_adapter_failed"
-                    due = (datetime.fromisoformat(at) + timedelta(seconds=retry)).isoformat()
+                    due = (datetime.fromisoformat(reached or at) + timedelta(seconds=retry)).isoformat()
                     self.journal.append("source_state", at, {**state, "source": source["id"], "policy_hash": digest(source),
                                         "due": due, "failures": state.get("failures", 0) + 1, "cycle_complete": False})
                 self.journal.append("source_receipt", utc(self.clock()), {"source": source["id"], "outcome": outcome,
                                     "reached_at": reached, "http_status": status, "capture": capture_id,
-                                    "admitted_count": admitted_count, "refusals": refusals})
+                                    "admitted_count": admitted_count, "refusals": refusals,
+                                    "request_url": url, "retry_seconds": retry if capture_id is None else None})
             cutoff = utc(self.clock())
-            current = snapshot(self.journal, cutoff, reader=self.reader)
-            previous = self.journal.events(kind="examination")
-            delta = changes(previous[-1]["payload"]["result"] if previous else None, current)
-            self.journal.append("examination", cutoff, {"result": current, "changes": delta,
-                                "policy_hash": digest(self.policy), "build": self.build})
+            if examine:
+                current = snapshot(self.journal, cutoff, reader=self.reader)
+                previous = self.journal.events(kind="examination")
+                delta = changes(previous[-1]["payload"]["result"] if previous else None, current)
+                self.journal.append("examination", cutoff, {"result": current, "changes": delta,
+                                    "policy_hash": digest(self.policy), "build": self.build})
+            else:
+                current = {"scope": "capture_only", "at": cutoff,
+                           "limits": "No examination or analytical finding is claimed by this population capture."}
         except Exception:
             self.journal.append("scheduler_failed", utc(self.clock()), {"run": run, "reason": "watch_execution_failed"})
             raise
