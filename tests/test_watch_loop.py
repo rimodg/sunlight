@@ -1,0 +1,296 @@
+"""Synthetic transport tests, never requests to public endpoints."""
+import copy
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "code"))
+from watch_capture import adapt, policy
+from watch_engine import WatchEngine, snapshot
+from watch_examination import changes, procurement
+from watch_health import health
+from watch_identity import canonical
+from watch_journal import Journal
+
+CF = {"id": "synthetic-cf", "adapter": "contracts_finder", "url": "https://example.invalid/ocds?limit=100",
+      "interval_seconds": 60, "organisation_only_reviewed": True}
+IATI = {"id": "synthetic-iati", "adapter": "iati_dportal", "url": "https://example.invalid/q?reporting_ref_like=GB-COH-%25",
+        "interval_seconds": 60, "organisation_only_reviewed": True}
+
+
+def release(amount=100):
+    return {"id": "synthetic-release", "ocid": "synthetic-contract", "date": "2026-01-01T00:00:00Z",
+            "parties": [{"id": "supplier-a", "roles": ["supplier"],
+                         "identifier": {"scheme": "GB-COH", "id": "123456"}}],
+            "awards": [{"value": {"amount": amount, "currency": "GBP"}}]}
+
+
+def response(data, status=200, **kw):
+    return {"body": json.dumps(data).encode(), "status": status, **kw}
+
+
+def reader(record):
+    return [{"rule": "SYNTHETIC-001", "dimension": "synthetic", "status": "INDICATOR",
+             "citation": "Synthetic test provision", "description": "Test reading"}]
+
+
+class LoopTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.j = Journal(Path(self.temp.name) / "journal.sqlite3")
+        self.time = "2026-01-02T00:00:00Z"
+
+    def tearDown(self):
+        self.j.close(); self.temp.cleanup()
+
+    def engine(self, transport, sources=None):
+        return WatchEngine(self.j, {"schema": "sunlight.watch-source-policy.v1", "sources": sources or [CF]},
+                           transport=transport, clock=lambda: self.time, reader=reader)
+
+    def test_two_categories_one_party_and_automatic_real_shape_change(self):
+        amount = [100]
+        def transport(url):
+            if "/q?" in url:
+                return response({"rows": [{"aid": "synthetic-activity", "reporting_ref": "GB-COH-00123456"}]})
+            return response({"releases": [release(amount[0])]})
+        engine = self.engine(transport, [CF, IATI])
+        first = engine.tick()
+        self.assertEqual(len(first["subjects"]), 1)
+        self.assertEqual(first["subjects"][0]["categories"], ["aid", "procurement"])
+        first_bytes = canonical(snapshot(self.j, self.time, reader=reader))
+        self.time = "2026-01-02T00:01:01Z"; amount[0] = 150
+        second = engine.tick()
+        self.assertEqual(len(second["observations"]), 3)
+        self.assertEqual(len(changes(first, second)["observations_added"]), 1)
+        self.assertEqual(canonical(snapshot(self.j, "2026-01-02T00:00:00Z", reader=reader)), first_bytes)
+        self.assertTrue(self.j.events(kind="examination")[-1]["payload"]["changes"]["readings_superseded"])
+
+    def test_resume_after_restart_pages_without_restarting_at_first(self):
+        calls = []
+        next_url = CF["url"] + "&cursor=two"
+        def transport(url):
+            calls.append(url)
+            return response({"releases": [release()], "links": {"next": next_url}}) if len(calls) == 1 else response({"releases": []})
+        self.engine(transport).tick()
+        self.time = "2026-01-02T00:00:01Z"
+        self.engine(transport).tick()
+        self.assertEqual(calls, [CF["url"], next_url])
+        self.assertTrue(self.j.events(kind="source_state")[-1]["payload"]["cycle_complete"])
+
+    def test_429_is_reached_backoff_and_last_good_survives(self):
+        engine = self.engine(lambda url: response({"releases": [release()]}))
+        engine.tick()
+        good = health(self.j, self.time)["sources"][0]["last_good_capture"]
+        self.time = "2026-01-02T00:01:01Z"
+        engine.transport = lambda url: response({}, 429, retry_after="120")
+        engine.tick()
+        h = health(self.j, self.time)
+        self.assertEqual(h["scheduler"]["outcome"], "failed")
+        self.assertEqual(h["sources"][0]["outcome"], "http_429")
+        self.assertEqual(h["sources"][0]["last_good_capture"], good)
+        self.assertIsNotNone(h["sources"][0]["last_reached"])
+        engine.transport = lambda url: self.fail("Backoff must not call transport")
+        self.time = "2026-01-02T00:02:00Z"; engine.tick()
+
+    def test_network_failure_receipt_and_overdue_not_no_data(self):
+        def failure(url):
+            raise OSError("untrusted body must not enter journal")
+        engine = self.engine(failure)
+        engine.tick()
+        self.time = "2026-01-02T00:02:00Z"
+        h = health(self.j, self.time)
+        self.assertTrue(h["scheduler"]["overdue"])
+        self.assertEqual(h["scheduler"]["outcome"], "failed")
+        self.assertTrue(h["sources"][0]["overdue"])
+        self.assertIsNone(h["sources"][0]["last_reached"])
+        self.assertIsNone(h["sources"][0]["silence_seconds"])
+        self.assertNotIn("untrusted", canonical(self.j.events()))
+
+    def test_unchanged_capture_does_not_invent_observation_change(self):
+        engine = self.engine(lambda url: response({"releases": [release()]}))
+        first = engine.tick()
+        self.time = "2026-01-02T00:01:01Z"
+        second = engine.tick()
+        self.assertEqual(changes(first, second)["observations_added"], [])
+        self.assertEqual(changes(first, second)["readings_added"], [])
+
+    def test_protected_identifier_retains_refusal_but_no_source_value(self):
+        row = release(); row["parties"][0]["identifier"]["id"] = "person@example.invalid"
+        self.engine(lambda url: response({"releases": [row]})).tick()
+        capture = self.j.capture(self.j.events(kind="capture")[0]["id"])
+        self.assertEqual(capture["projection"]["records"], [])
+        self.assertEqual(capture["projection"]["refusals"][0]["reason"], "protection_boundary")
+        self.assertNotIn("person@example.invalid", canonical(self.j.events()))
+        self.assertEqual(health(self.j, self.time)["sources"][0]["outcome"], "captured_with_refusals")
+
+    def test_unsafe_paging_and_cycles_do_not_admit_capture(self):
+        for url in ["https://other.invalid/ocds?limit=100", CF["url"]]:
+            self.time = "2026-01-02T00:01:02Z" if url == CF["url"] else self.time
+            self.engine(lambda u: response({"releases": [], "links": {"next": url}})).tick()
+            self.assertEqual(self.j.events(kind="capture"), [])
+
+    def test_bad_policy_refused(self):
+        for source in [{**CF, "organisation_only_reviewed": False}, {**CF, "url": "http://example.invalid"},
+                       {**CF, "url": "https://example.invalid/ocds?limit=1000"}, {**IATI, "url": "https://example.invalid/q"}]:
+            with self.assertRaises(ValueError):
+                policy({"schema": "sunlight.watch-source-policy.v1", "sources": [source]})
+
+    def test_record_moving_page_position_is_not_new_observation(self):
+        a = release(); b = {**release(), "ocid": "synthetic-other", "id": "other"}
+        first, _ = adapt(CF, json.dumps({"releases": [a, b]}).encode())
+        second, _ = adapt(CF, json.dumps({"releases": [b, a]}).encode())
+        self.assertEqual(first[0]["id"], second[1]["id"])
+
+    def test_unknown_reach_and_unfinished_scheduler(self):
+        h = health(self.j, self.time, {"sources": [CF]})
+        self.assertEqual(h["scheduler"]["outcome"], "never_recorded")
+        self.assertIsNone(h["sources"][0]["overdue"])
+        self.j.append("scheduler_started", self.time, {"interval_seconds": 60, "build": {"synthetic": True}})
+        h = health(self.j, "2026-01-02T00:01:01Z")
+        self.assertEqual(h["scheduler"]["outcome"], "unfinished")
+        self.assertTrue(h["scheduler"]["overdue"])
+
+    def test_existing_procurement_rule_family_is_used(self):
+        outputs = procurement(release())
+        self.assertGreater(len(outputs), 10)
+        self.assertTrue(all(o["citation"] and o["rule"] for o in outputs))
+
+    def test_frozen_packet_replays_byte_for_byte_and_rejects_tamper(self):
+        from watch_packet import packet, replay
+        engine = self.engine(lambda url: response({"releases": [release()]}))
+        result = engine.tick()
+        eid = self.j.events(kind="examination")[-1]["id"]
+        value = packet(self.j, eid)
+        self.assertEqual(canonical(replay(value, reader=reader)), canonical(result))
+        bad = copy.deepcopy(value)
+        bad["inputs"][0]["payload"]["projection"] = {}
+        with self.assertRaises(ValueError):
+            replay(bad, reader=reader)
+
+    def test_no_clock_or_network_on_replay(self):
+        from watch_packet import packet, replay
+        engine = self.engine(lambda url: response({"releases": [release()]}))
+        engine.tick()
+        value = packet(self.j, self.j.events(kind="examination")[-1]["id"])
+        engine.transport = lambda u: self.fail("Replay called transport")
+        engine.clock = lambda: self.fail("Replay called wall clock")
+        self.assertEqual(canonical(replay(value, reader=reader)), canonical(replay(value, reader=reader)))
+
+    def test_additional_identifier_locator_and_missing_party_reference(self):
+        row = release()
+        row['parties'][0]['additionalIdentifiers']=[{'scheme':'GB-COH','id':'OC123456'}]
+        row['awards'][0]['suppliers']=[{'id':'not-in-parties'}]
+        records, _ = adapt(CF, json.dumps({'releases':[row]}).encode())
+        self.assertEqual(records[0]['parties'][0]['identifiers'][1]['locator'],
+                         '/releases/0/parties/0/additionalIdentifiers/0')
+        self.assertEqual(records[0]['parties'][1]['identifiers'],[])
+
+    def test_malformed_body_and_body_read_failure_still_have_reach_receipts(self):
+        engine=self.engine(lambda u:response([]))
+        engine.tick()
+        self.assertIsNotNone(health(self.j,self.time)['sources'][0]['last_reached'])
+        self.time='2026-01-02T00:02:00Z'
+        engine.transport=lambda u:{'status':200,'body':b'', 'read_failed':True}
+        engine.tick()
+        self.assertEqual(len(self.j.events(kind='source_receipt')),2)
+        self.assertEqual(self.j.events(kind='capture'),[])
+
+    def test_concurrent_scheduler_does_not_capture(self):
+        import fcntl
+        engine=self.engine(lambda u:self.fail('Concurrent scheduler captured'))
+        with open(self.j.path.with_suffix('.lock'),'a') as handle:
+            fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            with self.assertRaises(BlockingIOError):
+                engine.tick()
+
+    def test_real_rule_outputs_replay_without_timestamps_or_random_ids(self):
+        from watch_packet import packet, replay
+        engine=WatchEngine(self.j,{'schema':'sunlight.watch-source-policy.v1','sources':[CF]},
+                           transport=lambda u:response({'releases':[release()]}),clock=lambda:self.time)
+        result=engine.tick()
+        self.assertGreater(len(result['readings']),10)
+        value=packet(self.j,self.j.events(kind='examination')[-1]['id'])
+        self.assertEqual(canonical(replay(value)),canonical(result))
+
+    def test_republished_version_can_be_current_without_becoming_new_history(self):
+        amount=[100]
+        engine=self.engine(lambda u:response({'releases':[release(amount[0])]}))
+        first=engine.tick()
+        self.time='2026-01-02T00:01:01Z'; amount[0]=150; second=engine.tick()
+        self.time='2026-01-02T00:02:02Z'; amount[0]=100; third=engine.tick()
+        self.assertEqual(len(third['observations']),2)
+        self.assertEqual(third['readings'],first['readings'])
+        self.assertTrue(changes(second,third)['readings_superseded'])
+
+    def test_sparse_inputs_are_not_clean_and_positive_signals_are_not_risk(self):
+        sparse=procurement({'ocid':'synthetic-sparse'})
+        self.assertTrue(all(r['status']=='UNASSESSABLE' for r in sparse))
+        row=release()
+        row['parties'].append({'id':'synthetic-review','roles':['reviewBody']})
+        outputs={r['rule']:r for r in procurement(row)}
+        self.assertEqual(outputs['PROC-004']['status'],'DOCUMENTED_SIGNAL')
+        self.assertEqual(outputs['FIN-001']['status'],'UNASSESSABLE')
+
+    def test_once_returns_failure_when_source_fails(self):
+        import os,subprocess
+        root=Path(__file__).resolve().parents[1]
+        p=Path(self.temp.name)/'policy.json'
+        p.write_text(json.dumps({'schema':'sunlight.watch-source-policy.v1','sources':[CF]}))
+        result=subprocess.run([sys.executable,'-m','watch_engine','--data-dir',str(Path(self.temp.name)/'cli-data'),
+                               '--policy',str(p),'--once'],capture_output=True,text=True,
+                              env={**os.environ,'PYTHONPATH':str(root/'code'),'SUNLIGHT_OFFLINE':'1'})
+        self.assertEqual(result.returncode,1)
+        self.assertIn('watch_tick_failed',result.stdout)
+
+    def test_open_question_survives_record_revision_with_its_original_age(self):
+        row={'aid':'synthetic-activity','reporting_ref':'GB-COH-00123456'}
+        engine=self.engine(lambda u:response({'rows':[dict(row)]}),[IATI])
+        first=engine.tick()
+        self.time='2026-01-02T00:02:00Z';row['updated_at']='2026-01-01T12:00:00Z'
+        second=engine.tick()
+        before=next(q for q in first['open_questions'] if q['reason']=='aid_reporting_observation_only')
+        after=next(q for q in second['open_questions'] if q['reason']=='aid_reporting_observation_only')
+        self.assertEqual(after['id'],before['id'])
+        self.assertEqual(after['since'],before['since'])
+        self.assertEqual(after['age_seconds'],120)
+        delta=changes(first,second)
+        self.assertFalse(delta['questions_opened'])
+        self.assertEqual(len(delta['questions_closed']),1)  # Publication time became available.
+
+    def test_transport_preserves_headers_reach_when_body_fails(self):
+        import os
+        from contextlib import nullcontext
+        from types import SimpleNamespace
+        from unittest.mock import patch,Mock
+        from urllib.error import HTTPError
+        from watch_capture import fetch
+        response_body=SimpleNamespace(status=200,read=Mock(side_effect=ValueError('synthetic chunk failure')))
+        opener=Mock();opener.open.return_value=nullcontext(response_body)
+        with patch.dict(os.environ,{'SUNLIGHT_OFFLINE':'0'}),patch('watch_capture.build_opener',return_value=opener):
+            result=fetch(CF['url'])
+            self.assertTrue(result['read_failed'])
+            self.assertEqual(result['status'],200)
+            opener.open.side_effect=HTTPError(CF['url'],302,'synthetic redirect',{},None)
+            self.assertEqual(fetch(CF['url'])['status'],302)
+
+    def test_build_fingerprint_includes_rule_data_not_only_python(self):
+        from watch_engine import build_identity
+        root=Path(self.temp.name)/'synthetic-source'
+        (root/'code').mkdir(parents=True)
+        (root/'research/corpus').mkdir(parents=True)
+        (root/'requirements.lock').write_text('synthetic==1\n')
+        (root/'code/rule.py').write_text('POLICY = 1\n')
+        corpus=root/'research/corpus/prosecuted_cases_global_v0.1.json'
+        corpus.write_text('{"synthetic":1}\n')
+        before=build_identity(root)['source_sha256']
+        corpus.write_text('{"synthetic":2}\n')
+        self.assertNotEqual(before,build_identity(root)['source_sha256'])
+        corpus.unlink()
+        with self.assertRaises(FileNotFoundError):
+            build_identity(root)
+
+
+if __name__ == "__main__":
+    unittest.main()

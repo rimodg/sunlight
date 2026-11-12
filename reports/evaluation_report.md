@@ -1,4 +1,36 @@
+# Stale archived result: marked November 12, 2026
+
+The preserved result below predates deterministic comparison sampling. Its
+last numerical writer was `c515bd8` (February 23); the SQL random draw was not
+controlled by `--seed`. Do not cite it as the current measured reference.
+See the [history audit](../docs/EVAL001_HISTORY_2026-11-12.md).
+
+## Current measured reference, November 12, 2026
+
+| Metric | Newly measured result |
+|---|---:|
+| TP / FN / FP / TN | 9 / 0 / 18 / 182 |
+| Precision | 33.33% |
+| Recall | 100% |
+| F1 | 50% |
+| Specificity | 91% |
+| PR-AUC | 0.7456 |
+
+These measurements describe nine synthesized positive price examples and 200
+presumed-negative comparisons, not field accuracy. The
+[dated receipts](reference-2026-11-12/summary.json) record the exact verified
+inputs, code, runtime and commands. The historical content below is preserved;
+its original execution provenance is qualified in the history audit.
+
+---
+
+## Preserved historical report
+
+Historical constructed-reference result. Re-rendered November 9, 2026 to correct provenance and wording. No evaluation was rerun; numeric results and the original measurement date are unchanged. See the adjacent JSON provenance correction for the preserved original Git blob.
+
 # SUNLIGHT Evaluation Report
+
+Constructed reference regression. These are synthesized price examples and presumed-negative comparisons, not independently labeled field outcomes.
 
 **Date:** 2026-02-23
 **Rulepack Version:** 2.0.0
@@ -10,11 +42,11 @@
 
 | Property | Value |
 |---|---|
-| **Positive** | DOJ-prosecuted price-fraud cases with documented markup > 0% |
-| **Negative** | Below-median, randomly sampled contracts from agencies with 10+ contracts |
+| **Positive** | Synthesized price examples parameterized by case references; not observed prosecuted contracts |
+| **Negative** | Presumed negatives sampled from below-median contracts; not independently adjudicated clean outcomes |
 | **Excluded** | Non-price fraud (false certification, kickbacks without price inflation) — outside detection scope |
 | **Threshold** | RED or YELLOW tier = flagged; GREEN or GRAY = not flagged |
-| Split method | External validation (DOJ cases are not training data; system is unsupervised) |
+| Split method | Constructed reference regression, not independently labeled field validation |
 
 **Composition:** 9 positives, 200 negatives, 1 excluded. Prevalence in eval set: 4.3%.
 
@@ -35,10 +67,10 @@
 
 ## 3. Confusion Matrix
 
-| | Predicted Flagged (RED/YELLOW) | Predicted Clean (GREEN/GRAY) |
+| | Predicted Flagged (RED/YELLOW) | Not flagged (GREEN/GRAY) |
 |---|---|---|
-| **Actual Fraud** (DOJ price cases) | TP = 9 | FN = 0 |
-| **Actual Clean** (below-median) | FP = 15 | TN = 185 |
+| **Synthesized positive examples** | TP = 9 | FN = 0 |
+| **Presumed-negative comparisons** | FP = 15 | TN = 185 |
 
 ---
 
@@ -54,13 +86,14 @@
 
 ---
 
-## 5. Value-Weighted Metrics
+## 5. Reference Settlement Weights
 
+These are reference weights, not detected losses, harm or recovered money. Legacy JSON field names are retained for compatibility.
 | Metric | Value |
 |---|---|
-| Total fraud value | $941,400,000 |
-| Detected fraud value | $941,400,000 |
-| **Value recall** | 100.0% |
+| Total supplied settlement weights | $941,400,000 |
+| Weights attached to flagged examples | $941,400,000 |
+| **Reference-weight recall** | 100.0% |
 
 ---
 
@@ -107,17 +140,17 @@
 
 ### What these metrics mean
 
-- **Precision 37.5%**: Of every 100 contracts flagged, ~37 are confirmed DOJ-grade fraud. The remainder are statistical anomalies that warrant investigation but may have legitimate explanations.
-- **Recall 100.0%**: SUNLIGHT detects 100% of DOJ-prosecuted price-fraud patterns. No known price-inflation case in the validation set was missed.
-- **Flags per 1,000: 115**: At current thresholds, a portfolio of 1,000 contracts would generate ~114 flags requiring analyst review.
+- **Precision 37.5%**: Share of flagged rows labeled positive in this constructed population, not a probability of actual fraud.
+- **Recall 100.0%**: Share of synthesized positive price examples flagged under this protocol, not measured recall on observed prosecuted contracts.
+- **Flags per 1,000: 115**: Normalized workload within the evaluated population, not a forecast for a real portfolio. Analyst-time figures are configured assumptions.
 
 ### Limitations
 
-1. **Scope**: SUNLIGHT detects statistical price anomalies. It does NOT detect: false certification, bid rigging without price impact, conflict of interest, or quality fraud.
-2. **Prevalence dependency**: Real-world fraud prevalence (~2-5%) differs from the evaluation set. Operational precision will differ from reported figures.
+1. **Scope**: This protocol tests the price screen, not the other structural, delivery or evidence engines.
+2. **Constructed labels**: Operational prevalence and field accuracy have not been measured by this protocol.
 3. **A flag is a risk indicator, not an allegation.** Every flag requires human review and investigation.
 4. **Unsupervised system**: SUNLIGHT is not trained on labeled fraud data. It uses statistical methods (bootstrap CIs, Bayesian posteriors) calibrated against DOJ prosecution thresholds.
-5. **Validation set is small**: 9 positive cases. Confidence intervals reflect this uncertainty.
+5. **Reference set is small**: 9 synthesized positives. Resampling intervals do not repair constructed labels or establish field generalization.
 
 ---
 

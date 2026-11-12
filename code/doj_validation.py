@@ -2,13 +2,13 @@
 SUNLIGHT DOJ Validation Suite
 ==============================
 
-Runs every DOJ-prosecuted case through the full scoring pipeline.
+Runs synthesized price examples based on reference-case parameters through the scoring pipeline.
 Generates precision, recall, F1, confusion matrix, and per-fraud-category
 breakdowns.
 
 Approach:
-- DOJ cases are ground-truth positives (fraud=True)
-- Below-median, competitively-bid contracts from the DB are ground-truth negatives
+- Synthesized examples are constructed positives, not observed prosecuted contracts
+- Below-median comparison contracts are presumed negatives, not adjudicated clean outcomes
 - Each case gets comparable contracts from the actual database
 - Each case runs through score_contract + assign_tier (the real pipeline path)
 - Classification: RED/YELLOW = predicted positive, GREEN/GRAY = predicted negative
@@ -42,6 +42,7 @@ from institutional_pipeline import (
     derive_contract_seed, _get_size_bin, _is_defense, _is_it,
 )
 from sunlight_logging import get_logger
+from evaluation_provenance import qualify_reference_report
 
 logger = get_logger("doj_validation")
 
@@ -385,16 +386,18 @@ def run_validation(db_path: str, cases_path: str, run_seed: int = 42,
                        "f1": round(f1, 4),
                        "tp": tp, "fn": fn, "fp": fp, "tn": tn})
 
-    return report
+    return qualify_reference_report(report)
 
 
 def write_json_report(report: Dict, path: str):
+    report = qualify_reference_report(report)
     with open(path, 'w') as f:
         json.dump(report, f, indent=2, default=str)
     logger.info("JSON report written", extra={"path": path})
 
 
 def write_markdown_report(report: Dict, path: str):
+    report = qualify_reference_report(report)
     m = report['classification_metrics']
     cm = report['confusion_matrix']
     vw = report['value_weighted_metrics']
@@ -402,6 +405,8 @@ def write_markdown_report(report: Dict, path: str):
 
     lines = [
         "# SUNLIGHT DOJ Validation Report",
+        "",
+        "Constructed reference regression, not independently labeled field validation. Settlement-reference weights are not detected losses, harm or recovered money.",
         "",
         f"**Date:** {report['validation_date'][:10]}",
         f"**Methodology Version:** {report['methodology_version']}",
@@ -411,8 +416,8 @@ def write_markdown_report(report: Dict, path: str):
         "",
         "## Executive Summary",
         "",
-        f"Validated SUNLIGHT scoring pipeline against **{params['n_doj_cases']} DOJ-prosecuted fraud cases** "
-        f"and **{params['n_clean_contracts']} known-clean contracts**.",
+        f"Constructed a regression population from **{params['n_doj_cases']} reference-case parameters** "
+        f"and **{params['n_clean_contracts']} presumed-negative comparisons**.",
         "",
         f"- **{params['n_price_fraud_cases']}** cases involve price-based fraud (detectable by statistical analysis)",
         f"- **{params['n_non_price_cases']}** case(s) involve non-price fraud (outside scope — e.g., false certification)",
@@ -435,8 +440,8 @@ def write_markdown_report(report: Dict, path: str):
         "",
         "| | Predicted Positive (RED/YELLOW) | Predicted Negative (GREEN/GRAY) |",
         "|---|---|---|",
-        f"| **Actual Fraud** (DOJ price cases) | TP = {cm['true_positive']} | FN = {cm['false_negative']} |",
-        f"| **Actual Clean** (below-median) | FP = {cm['false_positive']} | TN = {cm['true_negative']} |",
+        f"| **Synthesized positive examples** | TP = {cm['true_positive']} | FN = {cm['false_negative']} |",
+        f"| **Presumed-negative comparisons** | FP = {cm['false_positive']} | TN = {cm['true_negative']} |",
         "",
         "---",
         "",
@@ -444,9 +449,9 @@ def write_markdown_report(report: Dict, path: str):
         "",
         "| Metric | Value |",
         "|---|---|",
-        f"| Total fraud value (price cases) | ${vw['total_fraud_value']:,.0f} |",
-        f"| Detected fraud value | ${vw['detected_fraud_value']:,.0f} |",
-        f"| **Value recall** | {vw['value_recall']:.1%} |",
+        f"| Total supplied settlement weights | ${vw['total_fraud_value']:,.0f} |",
+        f"| Weights attached to flagged examples | ${vw['detected_fraud_value']:,.0f} |",
+        f"| **Reference-weight recall** | {vw['value_recall']:.1%} |",
         "",
         "---",
         "",
@@ -510,14 +515,13 @@ def write_markdown_report(report: Dict, path: str):
         "",
         "1. DOJ cases are scored using **synthesized contract amounts** that produce the "
         "documented markup relative to real comparable contracts from the database.",
-        "2. Clean contracts are **below-median, randomly sampled** from agencies with 10+ contracts.",
+        "2. Presumed-negative contracts are **below-median, randomly sampled** from agencies with 10+ contracts; they are not independently adjudicated clean outcomes.",
         "3. Each case runs through the full `score_contract` + `assign_tier` pipeline path "
         "(Bootstrap CI, Bayesian posterior, z-scores).",
         "4. **Non-price fraud** (e.g., General Dynamics false certification, 0% markup) is "
-        "correctly excluded from precision/recall — SUNLIGHT is a price-anomaly detector, "
-        "not a universal fraud detector.",
+        "excluded from this price-screen protocol; other SUNLIGHT engines are not evaluated here.",
         "5. FDR correction is **not applied** to individual DOJ case scoring (single-case mode). "
-        "In production batch mode, FDR would further reduce false positives.",
+        "No field false-positive rate is established by this constructed population.",
         "",
     ])
 

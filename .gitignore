@@ -22,6 +22,20 @@ data/
 !data/evidence_maps/
 *.db
 
+# Operator watch state, frozen captures, packets and logs stay outside the clone.
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.log
+watch-data/
+watch-runtime/
+watch-captures/
+watch-packets/
+source-policy.local.json
+
+# Generated packaged-build metadata, not operational journal data.
+/build_identity.json
+
 # Sensitive ground-truth (contains case details)
 prosecuted_cases.json
 

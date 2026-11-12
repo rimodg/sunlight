@@ -21,6 +21,7 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/analyze': { target: apiTarget, changeOrigin: true },
+      '/watch-engine': { target: apiTarget, changeOrigin: true },
       '/batch': { target: apiTarget, changeOrigin: true },
       '/profiles': { target: apiTarget, changeOrigin: true },
       '/assurance': { target: apiTarget, changeOrigin: true },

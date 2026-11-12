@@ -69,6 +69,11 @@ from input_adapters import build_default_registry
 from sunlight_logging import get_logger
 from ingestion_quality import assess_ingestion_quality, input_mapping_gaps
 from analysis_receipt import build_receipt, content_digest, source_manifest
+from build_identity import runtime_identity, version_label
+
+# Freeze executed build identity at process startup. A bad packaged manifest
+# refuses startup rather than attributing changed code to an old revision.
+_RUNNING_BUILD_IDENTITY = runtime_identity()
 
 # SUNLIGHT Side 2 imports
 from delivery_schema import (
@@ -500,6 +505,8 @@ class VersionResponse(BaseModel):
     mjpis_version: str
     profiles: List[str]
     api_version: str = "v1"
+    git_commit: Optional[str] = None
+    build: Dict[str, Any] = Field(default_factory=dict)
 
 
 class ProfileListResponse(BaseModel):
@@ -551,6 +558,11 @@ app = FastAPI(
 
 # Module-level calibration store instance (shared across all requests)
 calibration_store = EmpiricalCalibrationStore(base_dir="calibration")
+
+# The organizational watch is a read-only view of an external operator journal.
+# Importing this router does not start a scheduler, capture data or enable a model.
+from watch_api import router as watch_ledger_router
+app.include_router(watch_ledger_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -692,20 +704,9 @@ def create_analysis_pipeline(profile: JurisdictionProfile) -> SunlightPipeline:
     )
 
 
-def get_git_commit() -> str:
-    """Get current git commit hash if available."""
-    try:
-        result = subprocess.run(
-            ["git", "rev-parse", "--short", "HEAD"],
-            capture_output=True,
-            text=True,
-            timeout=2,
-        )
-        if result.returncode == 0:
-            return result.stdout.strip()
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        pass
-    return "unknown"
+def get_git_commit() -> Optional[str]:
+    """The startup revision, if known. A source fingerprint is not a Git commit."""
+    return _RUNNING_BUILD_IDENTITY["git_commit"]
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1092,13 +1093,15 @@ async def version():
     and list of registered jurisdiction profiles.
     """
     git_commit = get_git_commit()
-    sunlight_version = f"4.0.0+{git_commit}"
+    sunlight_version = version_label(_RUNNING_BUILD_IDENTITY)
 
     return VersionResponse(
         sunlight_version=sunlight_version,
         mjpis_version=MJPIS_DRAFT_V0.version,
         profiles=list_profiles(),
         api_version="v1",
+        git_commit=git_commit,
+        build=dict(_RUNNING_BUILD_IDENTITY),
     )
 
 

@@ -1,0 +1,49 @@
+{
+  "captured_pages": 28,
+  "received_releases": 2799,
+  "admitted_occurrences": 2799,
+  "distinct_admitted_versions": 2799,
+  "refused_releases": 0,
+  "refusal_reasons": {},
+  "identifier_scheme_occurrences": {
+    "GB-CFS": 3500,
+    "GB-CHC": 7,
+    "GB-COH": 1196,
+    "GB-GOR": 86,
+    "GB-LAE": 158,
+    "GB-SRS": 966
+  },
+  "admitted_award_rows": 2845,
+  "awards_with_supplier_registry_identifier": 1172,
+  "registry_share_of_admitted_awards": 0.41195079086115993,
+  "award_rows_missing_id": 0,
+  "awards_missing_supplier_references": 0,
+  "registry_release_count": 1096,
+  "supplier_occurrences": {
+    "total_occurrences": 3121,
+    "published_gb_coh": 1203,
+    "joinable_gb_coh": 1191,
+    "other_joinable": 0,
+    "only_gb_cfs": 1911,
+    "other_nonjoinable": 19,
+    "no_supplied_scheme_identifier": 0,
+    "nothing_joinable": 1930,
+    "ambiguous_party_reference": 0
+  },
+  "supplier_scheme_occurrences": {
+    "GB-CFS": 1911,
+    "GB-CHC": 7,
+    "GB-COH": 1203
+  },
+  "distinct_supplier_gb_coh_identifiers": 724,
+  "distinct_only_cfs_identifier_values": 1374,
+  "supplier_count_basis": "One occurrence per award supplier entry in distinct admitted release versions, linked to at most one party by exact local ID. Buyers excluded. Nothing joinable includes only-GB-CFS, other unsupported/invalid identifiers and missing scheme identifiers. Repeated supplier appearances are not distinct companies; distinct identifier values are reported separately, without name-based deduplication.",
+  "cycle_complete": true,
+  "http_status_counts": {
+    "200": 28
+  },
+  "processes": 2,
+  "resumed_at_saved_cursor": true,
+  "limits": "Award share is among admitted award rows, not refused releases or all procurement. Scheme occurrences include explicit GB-CFS prefixes and buyer identifiers; supplier registry coverage is counted separately. Registry identifiers are potential joins, not proof of an external match. Mutable API traversal is not a publisher snapshot.",
+  "journal_head": "1b9550e83d03391fc1d7024e38ab345286c7d3522dbf84ba29de3e4283bbfdac"
+}

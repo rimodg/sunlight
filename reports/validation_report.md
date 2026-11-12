@@ -1,4 +1,35 @@
+# Stale archived result: marked November 12, 2026
+
+The preserved result below predates deterministic comparison sampling. Its
+last numerical writer was `c515bd8` (February 23); the SQL random draw was not
+controlled by `--seed`. Do not cite it as the current measured reference.
+See the [history audit](../docs/EVAL001_HISTORY_2026-11-12.md).
+
+## Current measured reference, November 12, 2026
+
+| Metric | Newly measured result |
+|---|---:|
+| TP / FN / FP / TN | 9 / 0 / 18 / 182 |
+| Precision | 33.33% |
+| Recall | 100% |
+| F1 | 50% |
+| Specificity | 91% |
+
+These measurements describe nine synthesized positive price examples and 200
+presumed-negative comparisons, not field accuracy. The
+[dated receipts](reference-2026-11-12/summary.json) record the exact verified
+inputs, code, runtime and commands. The historical content below is preserved;
+its original execution provenance is qualified in the history audit.
+
+---
+
+## Preserved historical report
+
+Historical constructed-reference result. Re-rendered November 9, 2026 to correct provenance and wording. No evaluation was rerun; numeric results and the original measurement date are unchanged. See the adjacent JSON provenance correction for the preserved original Git blob.
+
 # SUNLIGHT DOJ Validation Report
+
+Constructed reference regression, not independently labeled field validation. Settlement-reference weights are not detected losses, harm or recovered money.
 
 **Date:** 2026-02-23
 **Methodology Version:** 2.0.0
@@ -8,7 +39,7 @@
 
 ## Executive Summary
 
-Validated SUNLIGHT scoring pipeline against **10 DOJ-prosecuted fraud cases** and **200 known-clean contracts**.
+Constructed a regression population from **10 reference-case parameters** and **200 presumed-negative comparisons**.
 
 - **9** cases involve price-based fraud (detectable by statistical analysis)
 - **1** case(s) involve non-price fraud (outside scope — e.g., false certification)
@@ -31,8 +62,8 @@ Validated SUNLIGHT scoring pipeline against **10 DOJ-prosecuted fraud cases** an
 
 | | Predicted Positive (RED/YELLOW) | Predicted Negative (GREEN/GRAY) |
 |---|---|---|
-| **Actual Fraud** (DOJ price cases) | TP = 9 | FN = 0 |
-| **Actual Clean** (below-median) | FP = 23 | TN = 177 |
+| **Synthesized positive examples** | TP = 9 | FN = 0 |
+| **Presumed-negative comparisons** | FP = 23 | TN = 177 |
 
 ---
 
@@ -40,9 +71,9 @@ Validated SUNLIGHT scoring pipeline against **10 DOJ-prosecuted fraud cases** an
 
 | Metric | Value |
 |---|---|
-| Total fraud value (price cases) | $941,400,000 |
-| Detected fraud value | $941,400,000 |
-| **Value recall** | 100.0% |
+| Total supplied settlement weights | $941,400,000 |
+| Weights attached to flagged examples | $941,400,000 |
+| **Reference-weight recall** | 100.0% |
 
 ---
 
@@ -105,7 +136,7 @@ Validated SUNLIGHT scoring pipeline against **10 DOJ-prosecuted fraud cases** an
 ## Methodology Notes
 
 1. DOJ cases are scored using **synthesized contract amounts** that produce the documented markup relative to real comparable contracts from the database.
-2. Clean contracts are **below-median, randomly sampled** from agencies with 10+ contracts.
+2. Presumed-negative contracts are **below-median, randomly sampled** from agencies with 10+ contracts; they are not independently adjudicated clean outcomes.
 3. Each case runs through the full `score_contract` + `assign_tier` pipeline path (Bootstrap CI, Bayesian posterior, z-scores).
-4. **Non-price fraud** (e.g., General Dynamics false certification, 0% markup) is correctly excluded from precision/recall — SUNLIGHT is a price-anomaly detector, not a universal fraud detector.
-5. FDR correction is **not applied** to individual DOJ case scoring (single-case mode). In production batch mode, FDR would further reduce false positives.
+4. **Non-price fraud** (e.g., General Dynamics false certification, 0% markup) is excluded from this price-screen protocol; other SUNLIGHT engines are not evaluated here.
+5. FDR correction is **not applied** to individual DOJ case scoring (single-case mode). No field false-positive rate is established by this constructed population.

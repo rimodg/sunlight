@@ -40,6 +40,7 @@ COPY --from=builder /root/.local /home/sunlight/.local
 
 # Copy application code
 COPY --chown=sunlight:sunlight code/ ./code/
+COPY --chown=sunlight:sunlight requirements.txt requirements.lock ./
 
 # Ship calibration inputs, not the ignored evaluation-only prosecution fixture.
 COPY --chown=sunlight:sunlight research/corpus/ ./research/corpus/
@@ -55,6 +56,12 @@ ENV PATH=/home/sunlight/.local/bin:$PATH \
     PYTHONUNBUFFERED=1 \
     SUNLIGHT_LOG_LEVEL=INFO \
     SUNLIGHT_CALIBRATION_DIR=/app/calibration
+
+# Git is excluded from the build context. Preserve an explicit revision when
+# supplied, and always fingerprint the actual packaged files and environment.
+ARG SUNLIGHT_BUILD_COMMIT
+ARG RENDER_GIT_COMMIT
+RUN PYTHONUSERBASE=/home/sunlight/.local python /app/code/build_identity.py write --root /app
 
 # Security: Switch to non-root user
 USER sunlight

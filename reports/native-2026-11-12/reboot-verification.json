@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-12",
+  "timezone": "America/New_York",
+  "boot_epoch_before": 1794493394,
+  "boot_epoch_after": 1794510819,
+  "verification": {
+    "after_reboot_verified": true,
+    "health": {
+      "as_of": "2026-11-12T19:17:22.134065+00:00",
+      "note": "Receipts describe recorded runs, not proof that a process is currently alive.",
+      "scheduler": {
+        "build": {
+          "git_commit": "5a224c86a88408b7cb19564a2e6582bb425fb539",
+          "lock_sha256": "2b7343dce9882b86f1da44576cde46863ebaa1114f44e1818e533b406662827b",
+          "python": "3.12.14",
+          "source_sha256": "324cd5431e2e86d5422a0bb3eb19c7c06192b4f0031f3a17f7163ac89ef325de"
+        },
+        "interval_seconds": 300,
+        "last_finished": "2026-11-12T19:16:56.170517+00:00",
+        "last_started": "2026-11-12T19:16:41.400962+00:00",
+        "outcome": "completed",
+        "overdue": false,
+        "pid": 1155,
+        "receipt": "b09fdfe8ea3bb2d0c0d5238a381dcbb1205c30b45b0f5537ad660dd693d3b459"
+      },
+      "sources": [
+        {
+          "admitted_count": 96,
+          "interval_seconds": 1800,
+          "last_attempt": "2026-11-12T19:16:46.479636+00:00",
+          "last_good_capture": "ab96c6436ab077be77885337cb6b7030e420e413f34fdf7f3846b343a6cc5d2c",
+          "last_reached": "2026-11-12T19:16:46.013229+00:00",
+          "outcome": "captured",
+          "overdue": false,
+          "receipt": "0dea977a85e995a3612ad8f0934eea449f5f17b719645f3df2702cb8636a3f57",
+          "refusals": [],
+          "silence_seconds": 36.120836,
+          "source": "contracts-finder-20261112-14"
+        },
+        {
+          "admitted_count": 9,
+          "interval_seconds": 1800,
+          "last_attempt": "2026-11-12T19:16:47.449377+00:00",
+          "last_good_capture": "04ee263f4067c39a8f85843e42c14c24043afd8c93636fc4bcd9eb4e44334dfa",
+          "last_reached": "2026-11-12T19:16:47.435014+00:00",
+          "outcome": "captured",
+          "overdue": false,
+          "receipt": "e5a772c4b4f02daf71884ece381e435d15bd1f65ce71d50632e54a1d8d316881",
+          "refusals": [],
+          "silence_seconds": 34.699051,
+          "source": "dportal-gb-coh-1869600"
+        }
+      ]
+    },
+    "running": true
+  },
+  "verification_receipt_sha256": "3c8363e827d17b165fa16433bb0ce459c7f2de4ebf6e45a382bef3776fd3b251",
+  "qualification": "One actual reboot/login and automatic service start verified. No reinstall, launchctl kickstart or manual watch tick was used. Full-day acceptance remains separate."
+}

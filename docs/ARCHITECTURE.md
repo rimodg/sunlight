@@ -62,7 +62,14 @@ In SUNLIGHT every finding carries a rule-fire history with explicit rule IDs, se
 
 Perpetual systems need hard gates that cannot be silently violated. Soft gates drift; hard gates do not. The invariants the system commits to must be encoded in tests that block merges, enforced by CI, and written as absolute thresholds rather than advisory targets.
 
-In SUNLIGHT the hard invariant is 100% recall on the validated prosecution corpus. Every commit preserves this floor with zero tolerance. The CI accuracy check gates it. No refactor, no threshold update, no rule change can merge unless all prosecuted reference cases are detected at CONCERN, COMPROMISED, or CRITICAL verdict. The current corpus is 9 US DOJ cases; it will grow to 40-60 cases across four mature legal systems (US DOJ, UK SFO, French PNF, World Bank INT) through the Jurisprudence Engine work tracked in Phase B of TODO.md . As the corpus grows, the invariant stays absolute: 100% recall on the whole corpus, every commit, forever.
+SUNLIGHT's current reference gate measures a fixed constructed population:
+nine synthesized positive price examples and 200 presumed-negative comparisons,
+with one non-price reference excluded. Preserve its reproducible results using
+the exact verified inputs, recorded sampling policy, code revision and runtime.
+A passing regression gate does not establish recall on independently observed
+prosecutions, field accuracy, or guaranteed accuracy as the corpus grows. A
+changed corpus or protocol requires a new dated measurement and an explicit
+statement of what population the result describes.
 
 ## 4 — Composition and the monotonic property
 

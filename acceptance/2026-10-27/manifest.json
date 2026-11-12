@@ -1,0 +1,29 @@
+{
+  "schema": "sunlight.owner-acceptance-manifest.v1",
+  "run_date": "2026-10-27",
+  "verified_on": "2026-11-03",
+  "algorithm": "sha256",
+  "files": [
+    {
+      "name": "candidates.json",
+      "sha256": "bdb4a985a7fe493550f60f335ce0ce824378a7691bc56819a41db217784e1f42",
+      "size_bytes": 18731
+    },
+    {
+      "name": "intersection.json",
+      "sha256": "c625b6489b23257eee10507e4d3a64c48a414ac076f10a4483ab7d9a1fdbb4b7",
+      "size_bytes": 13552
+    },
+    {
+      "name": "cf_state.json",
+      "sha256": "06154c5380520a40d0348d3d4b667a9b6ceca5ff4fed890e36ac5c72e95e50b4",
+      "size_bytes": 1550963
+    },
+    {
+      "name": "hashes.txt",
+      "sha256": "bd070d01c8825345f6801795e47e65ec3167df6164040d63c61b0721fbd4e172",
+      "size_bytes": 312
+    }
+  ],
+  "scope": "Frozen owner-supplied evidence, not a build-environment source run. Hashes authenticate these bytes against the supplied hash list, not the underlying public records."
+}
