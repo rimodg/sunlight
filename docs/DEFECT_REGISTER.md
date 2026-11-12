@@ -44,3 +44,18 @@
   2056 passed, 13 skipped, 0 failed, 17 passing subtests, 17.63 seconds.
   Skips and native service limitations remain explicitly open.
 - Full measured results and exclusions: [Task 1 report](TASK1_RUNTIME_2026-11-10.md).
+
+## RUNTIME-003: Pre-journal native verification lacks a structured failure
+
+- Recorded: 2026-11-12. Status: open; does not bypass the OS permission gate.
+- Native launchd loaded the service, but macOS paused Python on its Documents
+  access prompt before the journal was created. The verify command raised an
+  uncaught `sqlite3.OperationalError: unable to open database file` instead of
+  a structured not-started receipt.
+- Evidence: Task 6 native installation record, TCC AUTHREQ_PROMPTING and absent
+  journal at the first verification attempt. No healthy receipt was returned.
+- Required correction: catch the journal-open failure and report a safe
+  not-started/unavailable state while still requiring an actual completed run
+  from the live launchd PID for successful verification. OS permission must
+  still be handled by the owner. This is diagnostic handling, not permission
+  to treat a loaded process as healthy.

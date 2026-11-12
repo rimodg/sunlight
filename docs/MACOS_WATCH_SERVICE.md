@@ -2,12 +2,14 @@
 
 The service is a per-user LaunchAgent. It starts at login, including login after
 a reboot, and restarts after failure. It is not a daemon that runs before login.
-Native installation and reboot persistence have not been exercised in this Linux
-build environment. The final verification below must run on the owner's Mac.
+Native installation has been attempted on macOS; the November 12 run is
+waiting for the owner to approve Python's Documents-folder access prompt.
+See the [observed native gate](TASK6_NATIVE_2026-11-12.md). Reboot persistence
+remains unverified; use the checks below on the actual service host.
 
 ## One command from the fresh clone
 
-Check out `milestone-1a-rebuild`. Have CPython **3.12.14** available and supply its
+Check out the tested `watch-live-sources` revision. Have CPython **3.12.14** available and supply its
 absolute executable path. The installer refuses any other version. It does not
 install an interpreter or fall back to a system Python.
 
@@ -19,8 +21,7 @@ The one command creates an external virtual environment using that interpreter,
 installs every exact `requirements.lock` distribution with no dependency
 resolution or source-build fallback, verifies the environment, writes the agent
 and reports whether launchd loaded it. Network access is needed on the Mac for
-package wheels and enabled public sources. No package or source requests were
-made from the build sandbox.
+package wheels and enabled public sources. The live probes and locked-package installation were executed on the Mac.
 
 If the environment cannot be created or verified, the service is not loaded.
 Partial state is retained for diagnosis. No fallback environment is used. The
@@ -90,7 +91,8 @@ environment and interval can be overridden with the install options shown by
 
 The default scheduler poll is 60 seconds. A poll reads at most one due page from
 each source. A cursor resumes next poll. After a completed page cycle the
-source's own interval applies. HTTP 429 honors bounded integer Retry-After;
+source's own interval applies. HTTP 429 honors integer or HTTP-date Retry-After
+and never retries earlier than that deadline;
 other failures use backoff and keep the previous cursor and last good capture.
 A page cycle represents the reviewed endpoint's coverage, not all global flows.
 
@@ -99,6 +101,10 @@ reload a loaded unchanged agent. Changed source, policy or configuration causes
 an explicit retained-data reload. A foreign agent with the same label is
 refused. Reinstall after code changes: the runtime verifies the source and lock
 before starting and refuses source drift during the loop.
+
+If macOS asks for Documents-folder access for the selected Python, the owner
+must handle that OS prompt. A loaded agent can be paused before creating its
+journal. Do not count that state as successful startup or unattended runtime.
 
 ## Ledger interface and health
 
