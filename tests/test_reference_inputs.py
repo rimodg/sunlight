@@ -38,6 +38,12 @@ class ReferenceInputTests(unittest.TestCase):
         self.assertEqual(result["artifacts"]["cases"]["state"], "not_configured")
         self.assertFalse(absent.exists())
 
+    def test_matching_hash_does_not_hide_incorrect_recorded_size(self):
+        self.manifest["artifacts"]["database"]["size_bytes"] = self.db.stat().st_size + 1
+        result = verify_reference_inputs(self.manifest, database=self.db, cases=self.cases)
+        self.assertEqual(result["artifacts"]["database"]["state"], "size_mismatch")
+        self.assertFalse(result["ready_to_run_reference_protocols"])
+
     def test_a_wrong_file_is_preserved_and_refused(self):
         self.db.write_bytes(b"different synthetic data")
         result = verify_reference_inputs(self.manifest, database=self.db, cases=self.cases)

@@ -1,40 +1,44 @@
-# Locate and verify the exact reference inputs
+# Corpus location of record
 
-The reference protocols require two exact files. `config/reference-inputs.json`
-records their expected SHA-256 identities and provenance, without storing either
-artifact or inventing a storage location. A null locator means that a durable,
-reviewer-accessible location has not been registered. A hash alone is not storage.
+Both exact files were independently read and verified on November 12, 2026,
+on the owner's Mac. These locators are now committed in
+`config/reference-inputs.json`; neither artifact is committed to Git.
 
-The database digest comes from the prior attached-file receipt. The owner reports
-169,349,120 bytes in the November 9 plan. The current sandbox has no copy and has
-not independently reverified that size or digest. The historical case fixture
-can be restored byte for byte from its recorded Git blob using the existing
-`scripts/restore_reference_cases.py`; it remains ignored and must not be
-reconstructed from descriptions or a different corpus.
+| Artifact | Absolute path | Measured bytes | SHA-256 |
+|---|---|---:|---|
+| Database | `/Users/rimodg/brain/SUNLIGHT/data/sunlight.db` | 169349120 | `d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e` |
+| Cases | `/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json` | 6821 | `f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f` |
 
-Pass operator-managed paths explicitly or set `SUNLIGHT_REFERENCE_DB` and
-`SUNLIGHT_REFERENCE_CASES`. No user's home path is hardcoded and no file is
-downloaded, modified or created by admission:
+The cases file is restored byte for byte from Git blob
+`b0043dca177daffb6bce8c05363efba617ce31d4`, not reconstructed from descriptions.
+The database's measured digest and size both match the owner's supplied receipt.
+The source files remain in place and are not modified by verification.
+A recorded local location is not a backup or access for another reviewer.
+
+## Required pre-run verification command
+
+Run this exact command before either evaluator. Exit 0 requires both SHA-256
+hashes and both recorded byte sizes to match; a mismatch exits 2. Do not proceed
+on failure or substitute a different corpus.
 
 ```bash
-python scripts/verify_reference_inputs.py --db /absolute/operator-storage/sunlight.db --cases /absolute/operator-storage/prosecuted_cases.json
+'/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/runtime-3.12.14/bin/python' \
+  '/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/scripts/verify_reference_inputs.py' \
+  --db '/Users/rimodg/brain/SUNLIGHT/data/sunlight.db' \
+  --cases '/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json'
 ```
 
-An exit code of 0 means the bytes match both expected digests. It does not mean
-either validator ran or the floor passed. Exit 2 reports missing, unconfigured
-or mismatching inputs, with null measurements for missing files. The helper
-never substitutes another database or repeats an earlier measurement as new.
+Admission only verifies inputs. It does not assert that an evaluator ran or a
+floor passed. The exact run settings are seed 42, 1,000 bootstrap iterations,
+200 presumed-negative comparisons and `doj_federal` for `evaluation.py`.
+The second evaluator, `doj_validation.py`, has no profile option. Pass the same
+explicit input paths and separate external report destinations to both.
+Unset `SUNLIGHT_DB_PATH` before the first evaluator, since that environment
+variable takes precedence over its `--db` argument.
 
-Only after admission, run the recorded protocols with those same paths and
-retain the commands, source build, dependency environment and new outputs.
-The historically used settings are seed 42, 1,000 bootstrap iterations and 200
-presumed-negative comparisons; they belong to the constructed regression
-protocol, not a field-accuracy claim. Read the validator's CLI options before
-execution and retain its full configuration.
-
-Durability remains an operator decision: preserve the original file, place a
-reviewed copy in private storage accessible to the intended reviewer, verify its
-hash there, and register only a non-secret locator and custody instructions.
-Do not commit the database, credentials or a replacement fixture to Git. This
-document and manifest make the missing location explicit; they do not claim that
-the database has been backed up or independently reproduced.
+The reference population consists of synthesized positive price examples and
+presumed-negative comparisons. A new regression measurement is not field
+accuracy, a money-recovery result or independent verification of the case claims.
+Preserve new output separately from historical reports and record the source
+revision, runtime, command, input hashes and date. Verify hashes again after
+execution. If these files move, update the committed locators and reverify them.

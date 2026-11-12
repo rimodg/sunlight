@@ -4,14 +4,18 @@
     "database": {
       "sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
       "owner_reported_size_bytes": 169349120,
-      "locator": null,
-      "provenance": "Digest from the prior uploaded-file receipt; byte size from the owner's November 9 master plan. Not reverified in this checkout."
+      "locator": "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db",
+      "provenance": "Owner located original database; byte size and SHA-256 independently reverified on the Mac on November 12, 2026.",
+      "size_bytes": 169349120,
+      "verified_on": "2026-11-12"
     },
     "cases": {
       "sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
       "source_git_blob": "b0043dca177daffb6bce8c05363efba617ce31d4",
-      "locator": null,
-      "provenance": "Historical root fixture. Restored and hash-checked offline on November 5; reconstruction of case contents is not authorized."
+      "locator": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json",
+      "provenance": "Historical root fixture restored from recorded Git blob; byte size and SHA-256 independently reverified on November 12, 2026.",
+      "size_bytes": 6821,
+      "verified_on": "2026-11-12"
     }
   },
   "qualification": "These are expected reference-artifact identities, not a new floor result. The constructed labels do not establish field accuracy."

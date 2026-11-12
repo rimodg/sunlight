@@ -13,7 +13,11 @@ def verify_reference_inputs(manifest, *, database=None, cases=None):
         expected = spec.get("sha256")
         if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected):
             raise ValueError("A SHA-256 digest is required for each reference artifact")
-        row = {"expected_sha256": expected, "state": "not_configured", "observed_sha256": None,
+        expected_size = spec.get("size_bytes")
+        if expected_size is not None and (type(expected_size) is not int or expected_size < 0):
+            raise ValueError("Reference artifact size must be a nonnegative integer")
+        row = {"expected_sha256": expected, "expected_size_bytes": expected_size,
+               "state": "not_configured", "observed_sha256": None,
                "observed_size_bytes": None, "storage_locator_registered": bool(spec.get("locator"))}
         if supplied:
             path = Path(supplied).expanduser()
@@ -29,6 +33,8 @@ def verify_reference_inputs(manifest, *, database=None, cases=None):
                         value.update(chunk); size += len(chunk)
                 row["observed_sha256"], row["observed_size_bytes"] = value.hexdigest(), size
                 row["state"] = "verified" if value.hexdigest() == expected else "hash_mismatch"
+                if row["state"] == "verified" and expected_size is not None and size != expected_size:
+                    row["state"] = "size_mismatch"
         rows[name] = row
     ready = all(r["state"] == "verified" for r in rows.values())
     return {"schema": "sunlight.reference-admission.v1", "artifacts": rows,
