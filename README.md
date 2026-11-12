@@ -111,7 +111,10 @@ real-case precision, recovered funds or institutional savings.
 The new general result matches the historical docs/ report. It differs from
 the separate reports/ evaluation copy, and the new DOJ result differs from
 the reports/ validation copy, despite matching recorded run settings. The
-provenance discrepancy is recorded as EVAL-001; the cause remains unestablished.
+[history audit](docs/EVAL001_HISTORY_2026-11-12.md) identifies the old unseeded
+SQL sampler. The general archive exactly replays from its stored draw; the DOJ
+negative draw was not retained, so its historical execution remains unverified.
+Both reports/ copies are marked stale with current figures beside them.
 Historical artifacts remain preserved rather than silently overwritten.
 
 See the [dated execution report](docs/TASK7_REFERENCE_2026-11-12.md),
@@ -120,6 +123,26 @@ and [fresh aggregate results and receipts](reports/reference-2026-11-12/summary.
 The run used `--seed 42 --bootstrap 1000 --clean 200`; the general evaluator
 also used `--profile doj_federal`. A flag remains a screening indicator that
 requires review, never an allegation.
+
+## Observed supplier identifier coverage
+
+The October 2026 capture contained 3,121 award-supplier appearances across
+2,845 award rows. These are repeated appearances, not distinct companies.
+Measured November 12 from the retained projections:
+
+| Supplier coverage | Appearances |
+|---|---:|
+| Publishes GB-COH | 1,203 |
+| Valid GB-COH under the current normalizer | 1,191 |
+| Only GB-CFS | 1,911 |
+| Nothing joinable under the current policy | 1,930 |
+
+Nothing joinable includes the 1,911 GB-CFS entries, seven GB-CHC entries and
+12 invalid GB-COH entries; these rows overlap and must not be added together.
+The valid GB-COH appearances contain 724 distinct normalized identifiers.
+Names and buyer-only identifiers were not used as supplier joins. See the
+[supplier-only report](docs/TASK5_IDENTITY_2026-11-12.md) for the denominator,
+internal-identifier counts and limits of the supported registry policy.
 
 ## API
 
@@ -236,7 +259,7 @@ TCA operationalizes the i* Strategic Dependency Framework published by Dr. Chris
 - Every detection explainable in language an investigator understands
 - A flag is a risk indicator, not an allegation
 - An allocation is a recommendation, not a directive
-- Preserve the constructed reference regression separately from claims of real-case detection; publish a new measured result only after replaying the exact inputs
+- Keep the constructed reference regression reproducible: nine synthesized positive price examples and 200 presumed-negative comparisons. Passing this gate does not establish field accuracy or universal recall.
 - Jurisdiction calibration is a data task, not a code task
 - The living standard is primary calibration for the majority of the operational footprint
 - Recovered funds are redirected using the institution's own published commitments, not external opinion

@@ -1,3 +1,30 @@
+# Stale archived result: marked November 12, 2026
+
+The preserved result below predates deterministic comparison sampling. Its
+last numerical writer was `c515bd8` (February 23); the SQL random draw was not
+controlled by `--seed`. Do not cite it as the current measured reference.
+See the [history audit](../docs/EVAL001_HISTORY_2026-11-12.md).
+
+## Current measured reference, November 12, 2026
+
+| Metric | Newly measured result |
+|---|---:|
+| TP / FN / FP / TN | 9 / 0 / 18 / 182 |
+| Precision | 33.33% |
+| Recall | 100% |
+| F1 | 50% |
+| Specificity | 91% |
+
+These measurements describe nine synthesized positive price examples and 200
+presumed-negative comparisons, not field accuracy. The
+[dated receipts](reference-2026-11-12/summary.json) record the exact verified
+inputs, code, runtime and commands. The historical content below is preserved;
+its original execution provenance is qualified in the history audit.
+
+---
+
+## Preserved historical report
+
 Historical constructed-reference result. Re-rendered November 9, 2026 to correct provenance and wording. No evaluation was rerun; numeric results and the original measurement date are unchanged. See the adjacent JSON provenance correction for the preserved original Git blob.
 
 # SUNLIGHT DOJ Validation Report

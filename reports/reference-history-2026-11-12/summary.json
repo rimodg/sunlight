@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-11-12T19:58:44.962509+00:00",
+  "historical_commit": "c515bd8fe5b7b1c5cee85bec4ff5929be9a3afe3",
+  "historical_environment_recreated": false,
+  "runtime": "Current locked CPython 3.12.14; historical dependencies were not recorded in these reports.",
+  "sampling_probe": {
+    "same_seed": 42,
+    "draw_sizes": [
+      200,
+      200
+    ],
+    "same_draw": false,
+    "set_overlap": 0,
+    "draw_sha256": [
+      "2c8c0fd1eb505f321365573281a576a3a02e29d4080e35b408f5aca149d88c7f",
+      "2ff690f2394126a65560425dac4fe51fa0765315fa2e2706b572fb52b3cfd2c0"
+    ]
+  },
+  "general_archived_sample_replay": {
+    "sample_rows_found_in_verified_database": 200,
+    "sampling_intervention": "Only sample selection replaced with the 200 IDs retained in the archived report, in archived order; all values and comparables read from verified current database. Historical scoring code unchanged.",
+    "case_details_equal": true,
+    "classification_metrics_equal": true,
+    "confusion_matrix_equal": true,
+    "pr_curve_equal": true,
+    "threshold_sweep_equal": true,
+    "confidence_intervals_equal": true
+  },
+  "doj_positive_diagnostic": {
+    "positive_case_details_equal": true,
+    "case_count": 10,
+    "negative_draw_retained_in_archive": false,
+    "qualification": "Diagnostic with zero negative comparisons, not a replay of the archived full DOJ result; exact negative draw cannot be recovered from that report."
+  },
+  "finished_at": "2026-11-12T20:03:59.154659+00:00",
+  "database_unchanged": true,
+  "cases_sha256_after": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+  "artifact_sha256": {
+    "audit.py": "6b1c070fdf1833cc64f5f3f034f35ff8b7438dd87b251ef7e5b96f92985d760a",
+    "audit.log": "097435afa31dab894b732012530293faa975481770655e079de5ebe52c73b24c",
+    "archived-sample-replay.json": "1cfe37fa865b0ef1484780df13a6f0b610d4e684b37d8131d5f13f91261e2147"
+  }
+}

@@ -121,3 +121,12 @@ in. Then run this from the immutable installed checkout, not the newer branch:
   --data-dir '/Users/rimodg/Library/Application Support/SUNLIGHT/watch-live-sources-20261112' \
   --after-reboot
 ```
+
+## EVAL-001 follow-up, November 12
+
+The subsequent [history investigation](EVAL001_HISTORY_2026-11-12.md) identifies
+the pre-April unseeded SQL sample selection and exactly reproduces the archived
+general report from its stored sample on the verified corpus. Both reports/
+copies are now marked stale with current measurements beside them. The DOJ
+negative draw and original execution receipt remain unavailable, so that narrow
+provenance gap is still open.

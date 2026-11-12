@@ -64,15 +64,25 @@
   empty journal. Complete backend: 2082 passed, 13 skipped, 0 failed on
   November 12, 2026. No process-liveness or completed-run assertion was removed.
 
-## EVAL-001: Published reference reports disagree under the same recorded settings
+## EVAL-001: stale reference sampling and incomplete historical provenance
 
-- Recorded: 2026-11-12. Status: open provenance discrepancy; no scoring change.
-- Both fresh evaluators used the exact verified database/cases, seed 42,
-  bootstrap 1000 and clean 200. Both measured TP 9, FN 0, FP 18 and TN 182.
-- The general result agrees with docs/evaluation_report.json but differs from
-  reports/evaluation_report.json. The DOJ result differs from
-  reports/validation_report.json. Their recorded run parameters match the new
-  run, so a parameter difference has not explained the discrepancy.
-- Preserve the historical files. The dated Task 7 aggregate and execution
-  receipts are the new measured reference. The older artifacts' source/input
-  provenance must be established before asserting why they differ.
+- Recorded: 2026-11-12. Status: partially resolved, not fully closed.
+- Cause established: c515bd8 wrote both numerical report versions with SQLite
+  ORDER BY RANDOM(), outside the CLI seed's control. Commit 99991fa later
+  introduced deterministic sampling. The docs/ copy was refreshed afterward;
+  the reports/ copies retained the earlier measurements.
+- Executed proof: the old general evaluator, given its archived 200 sample IDs
+  and the current verified corpus, exactly reproduces all case details, metrics,
+  confusion matrix, confidence intervals, PR curve and threshold sweep.
+- DOJ limit: all ten positive case-detail records reproduce exactly, but the
+  archived negative sample IDs and original execution receipt were not saved.
+  That full historical result cannot be independently reconstructed. No finding
+  that the report was fabricated or never run is supported.
+- Public correction: both JSON and Markdown artifacts have dated stale notices
+  and current measured figures beside the untouched historical contents.
+  COR-001 records the stale-result and reproducibility correction.
+- Remaining closure gate: recover the original DOJ negative draw with execution
+  evidence or obtain an explicit author correction. Do not substitute a newly
+  selected random draw or claim a proved original execution.
+- Evidence: [history audit](EVAL001_HISTORY_2026-11-12.md) and the committed
+  historical-code audit harness/receipt. No scoring or threshold change.

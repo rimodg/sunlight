@@ -1,4 +1,30 @@
 {
+  "archive_status": {
+    "state": "stale",
+    "marked_on": "2026-11-12",
+    "last_numeric_writer_commit": "c515bd8fe5b7b1c5cee85bec4ff5929be9a3afe3",
+    "sampling_at_measurement": "SQLite ORDER BY RANDOM() LIMIT 200; --seed did not seed SQLite random selection.",
+    "sampling_replacement_commit": "99991fafb628e4182273a84b063c907bda895cc6",
+    "current_measured_on": "2026-11-12",
+    "current_measured_metrics": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1_score": 0.5,
+      "false_positive_rate": 0.09,
+      "specificity": 0.91
+    },
+    "current_measured_confusion_matrix": {
+      "true_positive": 9,
+      "false_negative": 0,
+      "false_positive": 18,
+      "true_negative": 182
+    },
+    "current_measured_source_commit": "40c5dd742e4e2e7d557a8247040e8b5905c8832c",
+    "current_measured_reference": "reference-2026-11-12/summary.json",
+    "provenance_audit": "../docs/EVAL001_HISTORY_2026-11-12.md",
+    "historical_values_preserved": true,
+    "current_measured_pr_auc": 0.7456
+  },
   "evaluation_date": "2026-02-23T04:07:57.066563+00:00",
   "rulepack_version": "2.0.0",
   "evaluation_config": {
