@@ -1,0 +1,362 @@
+{
+  "date": "2026-11-12",
+  "timezone": "America/New_York",
+  "source_commit": "40c5dd742e4e2e7d557a8247040e8b5905c8832c",
+  "build": {
+    "schema": "sunlight.build-identity.v1",
+    "state": "working_tree",
+    "identity_sha256": "907d3836d1d017753a504e7d13c0855eb15c64cb1a01869bf71b25212791e6ac",
+    "source_sha256": "8cba1437e2e19ad46803cae28712e23fa7bf9379ffec5638542524f6e1546fa8",
+    "git_commit": "40c5dd742e4e2e7d557a8247040e8b5905c8832c",
+    "git_commit_basis": "local_git_head",
+    "dirty": false,
+    "python": "3.12.14",
+    "implementation": "CPython",
+    "packages_sha256": "81aa6978df5c255b2b532a98cbc7cbb3a28e77c09812df3f222654949117e736",
+    "qualification": "Content equality is not publisher authentication or a signed attestation."
+  },
+  "input_manifest": {
+    "schema": "sunlight.reference-inputs.v1",
+    "artifacts": {
+      "database": {
+        "sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+        "owner_reported_size_bytes": 169349120,
+        "locator": "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db",
+        "provenance": "Owner located original database; byte size and SHA-256 independently reverified on the Mac on November 12, 2026.",
+        "size_bytes": 169349120,
+        "verified_on": "2026-11-12"
+      },
+      "cases": {
+        "sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+        "source_git_blob": "b0043dca177daffb6bce8c05363efba617ce31d4",
+        "locator": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json",
+        "provenance": "Historical root fixture restored from recorded Git blob; byte size and SHA-256 independently reverified on November 12, 2026.",
+        "size_bytes": 6821,
+        "verified_on": "2026-11-12"
+      }
+    },
+    "qualification": "These are expected reference-artifact identities, not a new floor result. The constructed labels do not establish field accuracy."
+  },
+  "measured_contract_rows": 42835,
+  "evaluation": {
+    "evaluation_config": {
+      "run_seed": 42,
+      "n_bootstrap_iterations": 1000,
+      "n_clean_contracts": 200,
+      "n_doj_cases": 10,
+      "n_evaluable": 209,
+      "n_excluded": 1,
+      "operational_threshold": "RED or YELLOW tier",
+      "calibration_profile": "doj_federal",
+      "base_rate": 0.03,
+      "red_posterior_threshold": 0.72,
+      "yellow_posterior_threshold": 0.38
+    },
+    "dataset_composition": {
+      "positives": 9,
+      "negatives": 200,
+      "excluded": 1,
+      "prevalence_in_eval_set": 0.0431,
+      "split_method": "Constructed reference regression, not independently labeled field validation"
+    },
+    "classification_metrics": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1_score": 0.5,
+      "false_positive_rate": 0.09,
+      "specificity": 0.91
+    },
+    "confidence_intervals_95pct": {
+      "precision": {
+        "mean": 0.3318,
+        "ci_lower": 0.1562,
+        "ci_upper": 0.5152
+      },
+      "recall": {
+        "mean": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0
+      },
+      "f1": {
+        "mean": 0.4913,
+        "ci_lower": 0.2703,
+        "ci_upper": 0.68
+      },
+      "fpr": {
+        "mean": 0.0903,
+        "ci_lower": 0.0542,
+        "ci_upper": 0.132
+      }
+    },
+    "confusion_matrix": {
+      "true_positive": 9,
+      "false_negative": 0,
+      "false_positive": 18,
+      "true_negative": 182
+    },
+    "ci_gate": {
+      "precision_check": {
+        "threshold": 0.25,
+        "actual": 0.3333,
+        "pass": true
+      },
+      "recall_check": {
+        "threshold": 0.9,
+        "actual": 1.0,
+        "pass": true
+      },
+      "flags_per_1k_check": {
+        "threshold": 150,
+        "actual": 129.2,
+        "pass": true
+      },
+      "all_pass": true
+    },
+    "method_qualification": {
+      "schema": "sunlight.constructed-reference-qualification.v1",
+      "population": "Synthesized positive price examples and presumed-negative comparisons",
+      "accuracy": "Metrics describe this constructed population only; real-case precision and recall are unmeasured",
+      "legacy_label_fields": "ground_truth and FRAUD/CLEAN are compatibility keys for constructed labels, not independently verified outcomes",
+      "legacy_money_fields": "total_fraud_value and detected_fraud_value are supplied settlement-reference weights, not detected losses, harm or recovered money",
+      "workload": "Analyst-time figures are configured scenario assumptions, not measured institutional efficiency",
+      "computation": "This qualification changes provenance and presentation only, not scoring, thresholds, labels used in the calculation or numeric outputs"
+    },
+    "pr_auc": 0.7456,
+    "flags_per_1000_contracts": 129.2
+  },
+  "doj_validation": {
+    "parameters": {
+      "run_seed": 42,
+      "n_bootstrap": 1000,
+      "n_clean_contracts": 200,
+      "n_doj_cases": 10,
+      "n_price_fraud_cases": 9,
+      "n_non_price_cases": 1
+    },
+    "classification_metrics": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1_score": 0.5,
+      "accuracy": 0.9139,
+      "specificity": 0.91
+    },
+    "confusion_matrix": {
+      "true_positive": 9,
+      "false_negative": 0,
+      "false_positive": 18,
+      "true_negative": 182
+    },
+    "method_qualification": {
+      "schema": "sunlight.constructed-reference-qualification.v1",
+      "population": "Synthesized positive price examples and presumed-negative comparisons",
+      "accuracy": "Metrics describe this constructed population only; real-case precision and recall are unmeasured",
+      "legacy_label_fields": "ground_truth and FRAUD/CLEAN are compatibility keys for constructed labels, not independently verified outcomes",
+      "legacy_money_fields": "total_fraud_value and detected_fraud_value are supplied settlement-reference weights, not detected losses, harm or recovered money",
+      "workload": "Analyst-time figures are configured scenario assumptions, not measured institutional efficiency",
+      "computation": "This qualification changes provenance and presentation only, not scoring, thresholds, labels used in the calculation or numeric outputs"
+    }
+  },
+  "executions": {
+    "evaluation": {
+      "command": [
+        "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/runtime-3.12.14/bin/python",
+        "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/code/evaluation.py",
+        "--db",
+        "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db",
+        "--cases",
+        "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json",
+        "--seed",
+        "42",
+        "--bootstrap",
+        "1000",
+        "--clean",
+        "200",
+        "--profile",
+        "doj_federal",
+        "--out-dir",
+        "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/task7/evaluation"
+      ],
+      "cwd": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)",
+      "started_at": "2026-11-12T17:52:43.855895+00:00",
+      "input_admission": {
+        "schema": "sunlight.reference-admission.v1",
+        "artifacts": {
+          "database": {
+            "expected_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "expected_size_bytes": 169349120,
+            "state": "verified",
+            "observed_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "observed_size_bytes": 169349120,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db"
+          },
+          "cases": {
+            "expected_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "expected_size_bytes": 6821,
+            "state": "verified",
+            "observed_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "observed_size_bytes": 6821,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json"
+          }
+        },
+        "ready_to_run_reference_protocols": true,
+        "reference_protocols_executed": false,
+        "qualification": "Artifact identity only. No evaluation numbers recomputed and no field-accuracy claim."
+      },
+      "build": {
+        "schema": "sunlight.build-identity.v1",
+        "state": "working_tree",
+        "identity_sha256": "907d3836d1d017753a504e7d13c0855eb15c64cb1a01869bf71b25212791e6ac",
+        "source_sha256": "8cba1437e2e19ad46803cae28712e23fa7bf9379ffec5638542524f6e1546fa8",
+        "git_commit": "40c5dd742e4e2e7d557a8247040e8b5905c8832c",
+        "git_commit_basis": "local_git_head",
+        "dirty": false,
+        "python": "3.12.14",
+        "implementation": "CPython",
+        "packages_sha256": "81aa6978df5c255b2b532a98cbc7cbb3a28e77c09812df3f222654949117e736",
+        "qualification": "Content equality is not publisher authentication or a signed attestation."
+      },
+      "environment_override": "SUNLIGHT_DB_PATH unset",
+      "exit_code": 0,
+      "finished_at": "2026-11-12T17:58:04.479063+00:00",
+      "post_run_admission": {
+        "schema": "sunlight.reference-admission.v1",
+        "artifacts": {
+          "database": {
+            "expected_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "expected_size_bytes": 169349120,
+            "state": "verified",
+            "observed_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "observed_size_bytes": 169349120,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db"
+          },
+          "cases": {
+            "expected_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "expected_size_bytes": 6821,
+            "state": "verified",
+            "observed_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "observed_size_bytes": 6821,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json"
+          }
+        },
+        "ready_to_run_reference_protocols": true,
+        "reference_protocols_executed": false,
+        "qualification": "Artifact identity only. No evaluation numbers recomputed and no field-accuracy claim."
+      }
+    },
+    "doj_validation": {
+      "command": [
+        "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/runtime-3.12.14/bin/python",
+        "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/code/doj_validation.py",
+        "--db",
+        "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db",
+        "--cases",
+        "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json",
+        "--seed",
+        "42",
+        "--bootstrap",
+        "1000",
+        "--clean",
+        "200",
+        "--out-json",
+        "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/task7/doj/validation_report.json",
+        "--out-md",
+        "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/task7/doj/validation_report.md"
+      ],
+      "cwd": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)",
+      "started_at": "2026-11-12T17:52:43.855477+00:00",
+      "input_admission": {
+        "schema": "sunlight.reference-admission.v1",
+        "artifacts": {
+          "database": {
+            "expected_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "expected_size_bytes": 169349120,
+            "state": "verified",
+            "observed_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "observed_size_bytes": 169349120,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db"
+          },
+          "cases": {
+            "expected_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "expected_size_bytes": 6821,
+            "state": "verified",
+            "observed_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "observed_size_bytes": 6821,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json"
+          }
+        },
+        "ready_to_run_reference_protocols": true,
+        "reference_protocols_executed": false,
+        "qualification": "Artifact identity only. No evaluation numbers recomputed and no field-accuracy claim."
+      },
+      "build": {
+        "schema": "sunlight.build-identity.v1",
+        "state": "working_tree",
+        "identity_sha256": "907d3836d1d017753a504e7d13c0855eb15c64cb1a01869bf71b25212791e6ac",
+        "source_sha256": "8cba1437e2e19ad46803cae28712e23fa7bf9379ffec5638542524f6e1546fa8",
+        "git_commit": "40c5dd742e4e2e7d557a8247040e8b5905c8832c",
+        "git_commit_basis": "local_git_head",
+        "dirty": false,
+        "python": "3.12.14",
+        "implementation": "CPython",
+        "packages_sha256": "81aa6978df5c255b2b532a98cbc7cbb3a28e77c09812df3f222654949117e736",
+        "qualification": "Content equality is not publisher authentication or a signed attestation."
+      },
+      "environment_override": "SUNLIGHT_DB_PATH unset",
+      "exit_code": 0,
+      "finished_at": "2026-11-12T17:58:04.490685+00:00",
+      "post_run_admission": {
+        "schema": "sunlight.reference-admission.v1",
+        "artifacts": {
+          "database": {
+            "expected_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "expected_size_bytes": 169349120,
+            "state": "verified",
+            "observed_sha256": "d90c30354df7a5c5ffe912d3fff095d6387ae5a568a38975853cd778d7aeeb8e",
+            "observed_size_bytes": 169349120,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/brain/SUNLIGHT/data/sunlight.db"
+          },
+          "cases": {
+            "expected_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "expected_size_bytes": 6821,
+            "state": "verified",
+            "observed_sha256": "f196d1f3a36dc820ce3fe33fc2885faad791700b0326a0e81a07dd9db850dc2f",
+            "observed_size_bytes": 6821,
+            "storage_locator_registered": true,
+            "path": "/Users/rimodg/Documents/ChatGPT/Sunlight(the new SIGI)/prosecuted_cases.json"
+          }
+        },
+        "ready_to_run_reference_protocols": true,
+        "reference_protocols_executed": false,
+        "qualification": "Artifact identity only. No evaluation numbers recomputed and no field-accuracy claim."
+      }
+    }
+  },
+  "output_sha256": {
+    "evaluation/evaluation_report.json": "d16ebe255142d643368f0f051d612220e5b8d61a794cb8f23cb6dcf8936caf86",
+    "evaluation/evaluation_report.md": "00e60252a4b08659e8d45bb8d8e7c17b73c9b30c991467a57758b58429f734b5",
+    "evaluation/precision_recall_curve.json": "d99de2c6c549a6501a1b87ed460b89560dd3614190e26374f2dd29440828c68b",
+    "doj/validation_report.json": "c4e8c4eb36dca4b00032d13b24d5f7de6cdb0fab2a654f9938fd04c72e36ad76",
+    "doj/validation_report.md": "b8455d76728a4544a327eaf8d783bfec84ce554fb81c216973b5c6d8471c841a",
+    "backend-tests.xml": "64df6799b71806b66a2675697992705ecbb1428fb494aa5e2027c4b769a14585",
+    "october-suppliers.json": "115fbc72f47a0153b264499a3dade261d35a256e26fd8deae7685dbaa3ce8f8a"
+  },
+  "published_comparison": {
+    "docs/evaluation_report.json": "Measured classification metrics, confusion matrix, PR-AUC and workload match this copy.",
+    "reports/evaluation_report.json": "Measured classification metrics and confusion matrix differ despite identical recorded evaluation configuration; cause not established.",
+    "reports/validation_report.json": "Measured classification metrics and confusion matrix differ despite identical recorded parameters; cause not established."
+  },
+  "backend_suite": {
+    "passed": 2087,
+    "skipped": 10,
+    "failed": 0,
+    "subtests_passed": 17,
+    "seconds": 18.43
+  }
+}

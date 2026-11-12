@@ -19,6 +19,19 @@ def registry_identifiers(party):
             if normalise(x.get("scheme"), x.get("id")) is not None}
 
 
+def supplier_identifiers(parties):
+    """Published supplier identifiers only, including explicit internal prefixes."""
+    result = set()
+    for party in parties:
+        ids = ([party["identifier"]] if isinstance(party.get("identifier"), dict) else [])
+        ids += party.get("additionalIdentifiers", [])
+        result.update((i.get("scheme"), i["id"]) for i in ids if i.get("id"))
+        local = party.get("id", "")
+        if local.startswith("GB-CFS-") and local[7:]:
+            result.add(("GB-CFS", local[7:]))
+    return result
+
+
 def summarize(events):
     captures = [e for e in events if e["kind"] == "capture"]
     received = sum(e["payload"]["projection"]["received_count"] for e in captures)
@@ -34,6 +47,8 @@ def summarize(events):
     missing_supplier_refs = 0
     missing_award_ids = 0
     cohort_releases = set()
+    supplier_counts, supplier_schemes = Counter(), Counter()
+    supplier_coh, only_cfs_ids = set(), set()
     for row in releases.values():
         for party in row["parties"]:
             for identifier in party["identifiers"]:
@@ -55,6 +70,28 @@ def summarize(events):
                 candidates = party_map.get(supplier.get("id"), [])
                 if len(candidates) == 1:
                     supplier_ids.update(registry_identifiers(candidates[0]))
+                identifiers = supplier_identifiers([supplier] + (candidates if len(candidates) == 1 else []))
+                schemes_present = {s for s, value in identifiers}
+                joinable = {(s, normalise(s, value)) for s, value in identifiers if normalise(s, value)}
+                coh = {value for scheme, value in joinable if scheme == "GB-COH"}
+                supplier_counts["total_occurrences"] += 1
+                supplier_counts["ambiguous_party_reference"] += int(len(candidates) > 1)
+                supplier_schemes.update(s or "scheme_not_supplied" for s in schemes_present)
+                supplier_counts["published_gb_coh"] += int("GB-COH" in schemes_present)
+                if coh:
+                    supplier_counts["joinable_gb_coh"] += 1
+                    supplier_coh.update(coh)
+                elif joinable:
+                    supplier_counts["other_joinable"] += 1
+                else:
+                    supplier_counts["nothing_joinable"] += 1
+                    if schemes_present == {"GB-CFS"}:
+                        supplier_counts["only_gb_cfs"] += 1
+                        only_cfs_ids.update(value for scheme, value in identifiers if scheme == "GB-CFS")
+                    elif not identifiers:
+                        supplier_counts["no_supplied_scheme_identifier"] += 1
+                    else:
+                        supplier_counts["other_nonjoinable"] += 1
             if supplier_ids:
                 registry_awards += 1
                 registry.update(supplier_ids)
@@ -73,6 +110,14 @@ def summarize(events):
             "award_rows_missing_id": missing_award_ids,
             "awards_missing_supplier_references": missing_supplier_refs,
             "registry_identifiers": sorted(registry), "registry_release_count": len(cohort_releases),
+            "supplier_occurrences": {key: supplier_counts[key] for key in [
+                "total_occurrences", "published_gb_coh", "joinable_gb_coh", "other_joinable",
+                "only_gb_cfs", "other_nonjoinable", "no_supplied_scheme_identifier",
+                "nothing_joinable", "ambiguous_party_reference"]},
+            "supplier_scheme_occurrences": dict(sorted(supplier_schemes.items())),
+            "distinct_supplier_gb_coh_identifiers": len(supplier_coh),
+            "distinct_only_cfs_identifier_values": len(only_cfs_ids),
+            "supplier_count_basis": "One occurrence per award supplier entry in distinct admitted release versions, linked to at most one party by exact local ID. Buyers excluded. Nothing joinable includes only-GB-CFS, other unsupported/invalid identifiers and missing scheme identifiers. Repeated supplier appearances are not distinct companies; distinct identifier values are reported separately, without name-based deduplication.",
             "cycle_complete": bool(states and states[-1]["cycle_complete"]),
             "http_status_counts": dict(Counter(str(r["http_status"]) for r in receipts)),
             "processes": len(starts),

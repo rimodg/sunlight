@@ -88,42 +88,38 @@ international standard or already covers every jurisdiction.
 
 ## Evaluation
 
-The stored historical report used a 42,835-contract comparison database to
-construct a regression evaluation: nine synthesized positive price examples,
-200 presumed-negative comparisons and one excluded case. These are not nine
-independently observed prosecuted contracts. The figures below describe that
-constructed population only; they do not measure field accuracy.
+Both reference evaluators were executed on **November 12, 2026**, using the
+hash-verified database and exact restored case fixture. A read-only count
+measured 42,835 database contracts. The evaluation population contains nine
+synthesized positive price examples, 200 presumed-negative comparisons and one
+excluded non-price case; it is not independently labeled field evidence.
 
-These values were matched to the stored report dated June 11, 2026 during the
-November 10 README audit. That was an inspection of historical output, not a
-new evaluator run witnessed here. The claimed 42,835-row source database could
-not be independently counted because the database is unavailable.
+| Newly measured metric | General evaluator | DOJ validator |
+|---|---:|---:|
+| Precision | 33.33% | 33.33% |
+| Recall | 100% | 100% |
+| F1 | 50% | 50% |
+| Specificity | 91% | 91% |
+| PR-AUC | 0.7456 | Not reported |
+| Flag rate per 1,000 evaluated records | 129.2 | Not reported |
 
-| Metric | Reported result |
-|--------|-----------------|
-| Precision | 33.3% |
-| Recall | 100% |
-| False Positive Rate | 9.0% |
-| PR-AUC | 0.746 |
-| Flag Rate | 129.2 per 1,000 evaluated contracts |
+Both measured **TP 9, FN 0, FP 18, TN 182**. The general evaluator's configured
+gates passed; the DOJ result satisfied its recall criterion. These figures
+were recomputed, not copied from an archived report. They do not establish
+real-case precision, recovered funds or institutional savings.
 
-The recorded confusion matrix is TP 9, FN 0, FP 18, TN 182. These are sampled
-evaluation counts, not 42,835 independently labeled outcomes. No misses among
-nine synthesized positive examples does not establish recall on real cases. A separate
-multi-jurisdiction research corpus contains 32 case records; that count must not
-be substituted for the evaluated positives in this confusion matrix.
+The new general result matches the historical docs/ report. It differs from
+the separate reports/ evaluation copy, and the new DOJ result differs from
+the reports/ validation copy, despite matching recorded run settings. The
+provenance discrepancy is recorded as EVAL-001; the cause remains unestablished.
+Historical artifacts remain preserved rather than silently overwritten.
 
-The intended operational use is analyst screening: flagged records need review,
-and a flag is not an allegation. The complete reference database and exact
-sampling protocol are required to reproduce these historical results. Current
-unit-test results and browser demonstrations are separate evidence. See the
-[institutional review protocol](docs/INSTITUTIONAL_REVIEW.md) before citing a
-performance claim.
-
-The recorded protocol uses `--seed 42 --clean 200 --profile doj_federal`.
-Reproduction also requires the exact reference database and case fixture. The
-current verification checkout lacks that database, so neither reference protocol has been
-rerun for this branch. A previous result is not a new measurement.
+See the [dated execution report](docs/TASK7_REFERENCE_2026-11-12.md),
+[committed input locations and verification command](docs/REFERENCE_INPUTS.md),
+and [fresh aggregate results and receipts](reports/reference-2026-11-12/summary.json).
+The run used `--seed 42 --bootstrap 1000 --clean 200`; the general evaluator
+also used `--profile doj_federal`. A flag remains a screening indicator that
+requires review, never an allegation.
 
 ## API
 
@@ -188,8 +184,9 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-Latest measured branch result: **2,082 passed, 13 skipped, 0 failed** on
-November 12, 2026 after the native-verifier and unattended-report tests. The live
+Latest measured branch result: **2,087 passed, 10 skipped, 0 failed** on
+November 12, 2026 with the verified reference database enabled. All three
+production-database invariance tests now passed. The live
 [identity proof](docs/TASK5_IDENTITY_2026-11-12.md) passed on November 12.
 The earlier same-day baselines below remain attributed to their tested builds.
 
@@ -207,12 +204,14 @@ reported 17 passing subtests, separately from the passed-test count.
 | After organizational projection | 2,073 passed, 13 skipped, 0 failed; November 10, 2026 |
 | After paging and population tests | 2,078 passed, 13 skipped, 0 failed; November 10, 2026 |
 | Native verifier and unattended report tests | 2,082 passed, 13 skipped, 0 failed; November 12, 2026 |
+| Verified-database backend suite | 2,087 passed, 10 skipped, 0 failed; November 12, 2026 |
 | Exact runtime dependency lock | All 35 pins installed and passed the service runtime verifier; November 10, 2026 |
-| Historical reference floor | Not rerun; exact database unavailable |
+| Reference protocols | Both executed November 12; measured results and discrepancy recorded in Task 7 |
 | Native Mac service | Running and verified November 12; both sources captured; reboot unverified |
 | Real-source unattended acceptance | First scheduled capture passed; full day and published-change proof pending; [native gate](docs/TASK6_NATIVE_2026-11-12.md) |
 
-Both suites skipped nine live-container tests because Docker was unavailable
+The latest run skipped nine unavailable Docker tests and the non-Mac-only
+host test. The earlier baseline suites skipped nine live-container tests because Docker was unavailable
 and three invariance tests because the production database was absent. The
 rebuild also skipped one non-Mac-host test on this Mac. Both emitted two
 dependency deprecation warnings. Service tests use launchctl simulations and

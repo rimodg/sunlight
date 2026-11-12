@@ -63,3 +63,16 @@
 - Verification: the loaded-agent/no-journal test refuses without creating an
   empty journal. Complete backend: 2082 passed, 13 skipped, 0 failed on
   November 12, 2026. No process-liveness or completed-run assertion was removed.
+
+## EVAL-001: Published reference reports disagree under the same recorded settings
+
+- Recorded: 2026-11-12. Status: open provenance discrepancy; no scoring change.
+- Both fresh evaluators used the exact verified database/cases, seed 42,
+  bootstrap 1000 and clean 200. Both measured TP 9, FN 0, FP 18 and TN 182.
+- The general result agrees with docs/evaluation_report.json but differs from
+  reports/evaluation_report.json. The DOJ result differs from
+  reports/validation_report.json. Their recorded run parameters match the new
+  run, so a parameter difference has not explained the discrepancy.
+- Preserve the historical files. The dated Task 7 aggregate and execution
+  receipts are the new measured reference. The older artifacts' source/input
+  provenance must be established before asserting why they differ.

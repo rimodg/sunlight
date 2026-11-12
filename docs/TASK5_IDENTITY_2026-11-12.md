@@ -65,3 +65,39 @@ and unknown denominators. The complete backend suite measured 2,078 passed,
 America/New_York. The identity helper subsequently executed its live proof and
 replay assertion on November 12. Docker, exact reference database and the
 non-Mac-only test remain the same documented skip reasons.
+
+
+## Supplier-only recount, November 12
+
+The earlier scheme table includes buyers. The owner requested a supplier-only
+count, now computed by `scripts/report_watch_population.py` from the same frozen
+October journal. The denominator is **3,121 supplier entries across 2,845 award
+rows**, not unique companies. Supplier references link only to a unique party
+with the exact same local identifier; buyer-only identifiers never count.
+
+| Supplier-entry classification | Count |
+|---|---:|
+| Publishes GB-COH | 1,203 |
+| GB-COH accepted by the current identifier rules | 1,191 |
+| Only GB-CFS | 1,911 |
+| Other nonjoinable identifiers | 19 |
+| No supplied scheme identifier | 0 |
+| Nothing joinable under the current policy, including only-GB-CFS | 1,930 |
+
+The 19 other nonjoinable entries consist of seven GB-CHC entries and 12 GB-COH
+entries that fail the current normalizer. No LEI or other supported registry
+join was found among suppliers. This is a limitation of the supported policy,
+not a claim that charity identifiers could never be joined by another adapter.
+The supplier-only scheme counts are GB-COH 1,203, GB-CFS 1,911 and GB-CHC 7.
+There were no ambiguous local-party references in this population.
+
+The valid GB-COH occurrences contain **724 distinct normalized identifiers**.
+Only-GB-CFS occurrences contain **1,374 distinct published internal identifier
+values**. These values must not be added together and called unique companies:
+there is no verified mapping between internal aliases and registry identities.
+Only-GB-CFS is a subset of nothing-joinable, not an additional disjoint group.
+
+Evidence: `outputs/task7/october-suppliers.json`, retained outside Git. Its
+journal head is the same completed October traversal recorded above.
+The supplier count tests cover buyer exclusion, repeated appearances,
+normalization of a repeated registry ID, unsupported schemes and missing IDs.
