@@ -184,8 +184,9 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-Latest measured branch result: **2,087 passed, 10 skipped, 0 failed** on
-November 12, 2026 with the verified reference database enabled. All three
+Latest measured branch result: **2,090 passed, 10 skipped, 0 failed** on
+November 12, 2026 after publication-proof tests, with the verified reference
+database enabled. All three
 production-database invariance tests now passed. The live
 [identity proof](docs/TASK5_IDENTITY_2026-11-12.md) passed on November 12.
 The earlier same-day baselines below remain attributed to their tested builds.
@@ -205,10 +206,11 @@ reported 17 passing subtests, separately from the passed-test count.
 | After paging and population tests | 2,078 passed, 13 skipped, 0 failed; November 10, 2026 |
 | Native verifier and unattended report tests | 2,082 passed, 13 skipped, 0 failed; November 12, 2026 |
 | Verified-database backend suite | 2,087 passed, 10 skipped, 0 failed; November 12, 2026 |
+| Publication-proof backend suite | 2,090 passed, 10 skipped, 0 failed; November 12, 2026 |
 | Exact runtime dependency lock | All 35 pins installed and passed the service runtime verifier; November 10, 2026 |
 | Reference protocols | Both executed November 12; measured results and discrepancy recorded in Task 7 |
 | Native Mac service | Running, both sources captured, and actual reboot/login verified November 12 |
-| Real-source unattended acceptance | First scheduled capture passed; full day and published-change proof pending; [native gate](docs/TASK6_NATIVE_2026-11-12.md) |
+| Real-source unattended acceptance | Reboot/login and new-publication proof passed; full-day report pending; [native gate](docs/TASK6_NATIVE_2026-11-12.md) |
 
 The latest run skipped nine unavailable Docker tests and the non-Mac-only
 host test. The earlier baseline suites skipped nine live-container tests because Docker was unavailable

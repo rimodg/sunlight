@@ -137,3 +137,54 @@ The subsequent journal snapshot recorded 52 completed ticks and eight failed
 ticks, with both sources later recovering. The maximum observed reach gap was
 approximately 79 minutes 50 seconds. These failures must remain in the final
 report; elapsed wall time does not mean uninterrupted successful capture.
+
+## Genuine new publication detected by the scheduled loop
+
+The retained baseline Contracts Finder response at 14:38:15 UTC on November 12
+contained 72 releases, no refused records and no continuation link. The same
+reviewed query at 15:08:27 UTC contained 76 releases, again with no refusals or
+continuation. The notice
+`ocds-b5fd17-0b9e381f-f055-4cd8-b636-54d57f738079` was absent from the baseline
+query and present at `/releases/3` in the later projection. Its publisher-supplied
+publication time is 14:41:26 UTC, strictly after the baseline and before capture.
+
+The actual loop examination
+`e5d95e909a28ed8d3ed51c129c7c82d4e8de89ac53166593f1090db23799262d`
+recorded that observation in observations_added. The associated completed
+scheduler run came from PID 3399, the automatically launched service process
+confirmed in the pre-reboot native receipts. No manual tick produced this event.
+Both retained before and after packets replayed to their recorded examinations.
+
+This closes a genuine newly-published-notice proof: an observed change in the
+scoped source population, with before/after evidence. It does not claim an edit
+to an existing notice or absence from all procurement. The publication timestamp
+is supplied by the publisher, not independently authenticated. The existing
+run report's published_change_proofs field is narrower: it counts revisions of
+existing records, which remain unobserved. That checker was not weakened.
+
+`scripts/prove_watch_publication.py` refuses partial baseline pages, changed
+queries or policies, refused records, old/future publication times, existing
+keys and observations absent from the loop's change receipt. It makes a
+separate proof for a new publication rather than relabeling initial discovery.
+The proof script's initial replay from the newer development checkout correctly
+failed the rule-build guard. Re-running with explicit --engine-root pointing
+to the immutable installed 5a224c8 checkout passed both packet replays; the
+matching-build requirement was preserved.
+
+The [committed publication receipt](../reports/native-2026-11-12/publication-verification.json)
+contains source and projection hashes, capture/examination/run identifiers,
+packet digests and the exact external proof location. Complete projections and
+packets remain outside Git under the chat workspace's
+`outputs/task6/published-notice-proof-verified/`. Original response bodies and
+personal fields remain excluded.
+
+Full backend after the new-publication proof tests: **2,090 passed, 10 skipped,
+0 failed**, 17 passing subtests, 18.29s on November 12. After adding explicit
+replay-engine selection, the three proof tests and actual two-packet replay
+passed again. The installed service build was not changed.
+
+Remaining Task 6 gate: the full-day operational report, no earlier than
+November 13 at 09:38:16 Eastern. Report failed polls, reach gaps, reboot downtime,
+record refusals and the running build rather than presenting elapsed time as
+continuous availability. Reboot/login and newly-published-notice detection have
+separate passing evidence; the full-day gate is still pending.

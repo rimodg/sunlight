@@ -1,0 +1,57 @@
+{
+  "kind": "newly_published_notice",
+  "key": "ocds-b5fd17-0b9e381f-f055-4cd8-b636-54d57f738079",
+  "source_policy": {
+    "adapter": "contracts_finder",
+    "id": "contracts-finder-20261112-14",
+    "interval_seconds": 1800,
+    "organisation_only_reviewed": true,
+    "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-11-12&publishedTo=2026-11-14&stages=award&limit=100"
+  },
+  "before": {
+    "capture": "b19381ca384d65a6eec405ec512ffb63417bdac5e891d0ffc39176f825adc138",
+    "captured_at": "2026-11-12T14:38:15.153915+00:00",
+    "presence": "absent_from_completed_query",
+    "received_count": 72,
+    "source_sha256": "db65db50583cf36adf3a6bf586aae6fd8d84452dd437800ad76169d42006f9ac",
+    "projection_sha256": "07467865a02f6647640b557ba66d4adf485a4de198c022fafe195be38570a1d0"
+  },
+  "packets": {
+    "before": {
+      "examination": "0cbb8484a2d95e0bf1fb2b0303609337949911841c7933736f73dd510cd4133c",
+      "packet_sha256": "c683e24a1ddabf02f2b2ba3de137111a3338b0c90a07eb1ee4931c40fe363ac6"
+    },
+    "after": {
+      "examination": "e5d95e909a28ed8d3ed51c129c7c82d4e8de89ac53166593f1090db23799262d",
+      "packet_sha256": "ecdca98ddb61053ba0c57882d6a46b8e81dc2afa199ea6c7899171907157b20d"
+    }
+  },
+  "packet_replay": "both_passed",
+  "recorded_build": {
+    "git_commit": "5a224c86a88408b7cb19564a2e6582bb425fb539",
+    "lock_sha256": "2b7343dce9882b86f1da44576cde46863ebaa1114f44e1818e533b406662827b",
+    "python": "3.12.14",
+    "source_sha256": "324cd5431e2e86d5422a0bb3eb19c7c06192b4f0031f3a17f7163ac89ef325de"
+  },
+  "qualification": "The publisher-supplied timestamp is after the complete one-page baseline and before capture. The scheduled loop recorded the added observation. This proves a newly published notice in this query, not an edit to an existing notice, absence from all procurement, or independently authenticated publisher time. Personal fields and original response bodies remain excluded.",
+  "after": {
+    "capture": "23f62d15d8bf1630421a621118abeef5eefbcce640b1a4443c4479fdd95ac6c6",
+    "captured_at": "2026-11-12T15:08:27.291087+00:00",
+    "received_count": 76,
+    "source_sha256": "8a9c4e23ac981bd714e8eb1dd6ea7aec8ea9e10316a290bcde5647000ef2c0c5",
+    "projection_sha256": "b3846721a1bce438dfc8c71661c26e879c2c486f5631acd8d2f608ecf5c5bdf3",
+    "observation_id": "2b1e79fd9909bc04328d03a06ae775927f15f73a7ddcb132aef460ccd51e157f",
+    "published_at": "2026-11-12T14:41:26.000000+00:00",
+    "locator": "/releases/3"
+  },
+  "automatic_run": {
+    "start_receipt": "cef275f092750d367f9d000ae90b35a543090490755caa9d7da81051338bda1c",
+    "started_at": "2026-11-12T15:08:25.612686+00:00",
+    "pid": 3399,
+    "completion_receipt": "8d8f8167a74e855095b6748d1d5ec085d09472364ffe37957693a8ac75f184ca",
+    "completed_at": "2026-11-12T15:08:30.082531+00:00",
+    "pid_basis": "Matches the pre-reboot native launchd verification receipts for the installed service."
+  },
+  "proof_location": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/task6/published-notice-proof-verified/proof.json",
+  "proof_sha256": "249e352ae63e6bd5501c05562162f68bdad408b7ab5f682639bb6a70f61008e1"
+}
