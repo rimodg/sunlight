@@ -101,3 +101,11 @@ Evidence: `outputs/task7/october-suppliers.json`, retained outside Git. Its
 journal head is the same completed October traversal recorded above.
 The supplier count tests cover buyer exclusion, repeated appearances,
 normalization of a repeated registry ID, unsupported schemes and missing IDs.
+
+## Recorded coverage finding
+
+These counts are recorded as [WATCH-001](FINDINGS.md): usable registry
+identifiers permit potential follow-up beyond the portal for only 38.2% of
+supplier appearances in the captured October window. The finding records the
+capture and measurement dates, the 61.8% coverage gap, and why portal-local
+GB-CFS references cannot substitute for external registry joins.

@@ -115,6 +115,8 @@ the reports/ validation copy, despite matching recorded run settings. The
 SQL sampler. The general archive exactly replays from its stored draw; the DOJ
 negative draw was not retained, so its historical execution remains unverified.
 Both reports/ copies are marked stale with current figures beside them.
+The [recorded lesson](docs/LEARNINGS.md) is that matching settings do not establish
+reproducibility; a verified re-run and comparison do.
 Historical artifacts remain preserved rather than silently overwritten.
 
 See the [dated execution report](docs/TASK7_REFERENCE_2026-11-12.md),
@@ -140,9 +142,14 @@ Measured November 12 from the retained projections:
 Nothing joinable includes the 1,911 GB-CFS entries, seven GB-CHC entries and
 12 invalid GB-COH entries; these rows overlap and must not be added together.
 The valid GB-COH appearances contain 724 distinct normalized identifiers.
-Names and buyer-only identifiers were not used as supplier joins. See the
-[supplier-only report](docs/TASK5_IDENTITY_2026-11-12.md) for the denominator,
-internal-identifier counts and limits of the supported registry policy.
+This is a coverage finding: only roughly a third of appearances (38.2%) have
+usable registry identifiers for potential follow-up beyond the portal. The
+remaining 61.8% cannot be joined through the current supported registry policy;
+full capture is not full cross-source identity coverage. The 724 is a count of
+company identifiers, not independently verified company identities or matches.
+Names and buyer-only identifiers were not used as supplier joins. See
+[WATCH-001](docs/FINDINGS.md) for capture dates and operational implications,
+and the [supplier-only report](docs/TASK5_IDENTITY_2026-11-12.md) for the method.
 
 ## API
 
