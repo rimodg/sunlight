@@ -188,8 +188,9 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-Latest measured branch result: **2,073 passed, 13 skipped, 0 failed** on
-November 10, 2026 after [Tasks 2 and 3](docs/TASK2_PROJECTION_2026-11-10.md).
+Latest measured branch result: **2,078 passed, 13 skipped, 0 failed** on
+November 10, 2026 after the paging and population tests. The live
+[identity proof](docs/TASK5_IDENTITY_2026-11-12.md) passed on November 12.
 The earlier same-day baselines below remain attributed to their tested builds.
 
 On **November 10, 2026**, the complete backend command measured **1,989 passed,
@@ -204,9 +205,10 @@ reported 17 passing subtests, separately from the passed-test count.
 | Main backend suite | 1,989 passed, 12 skipped, 0 failed; November 10, 2026 |
 | Rebuild backend suite after RUNTIME-002 | 2,056 passed, 13 skipped, 0 failed; November 10, 2026 |
 | After organizational projection | 2,073 passed, 13 skipped, 0 failed; November 10, 2026 |
+| After paging and population tests | 2,078 passed, 13 skipped, 0 failed; November 10, 2026 |
 | Exact runtime dependency lock | All 35 pins installed and passed the service runtime verifier; November 10, 2026 |
 | Historical reference floor | Not rerun; exact database unavailable |
-| Native Mac install and reboot | Not verified; requires the owner's Mac |
+| Native Mac install and reboot | Not yet verified on this Mac |
 | Real-source unattended acceptance | Not verified |
 
 Both suites skipped nine live-container tests because Docker was unavailable

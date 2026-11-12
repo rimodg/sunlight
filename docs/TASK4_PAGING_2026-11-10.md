@@ -33,5 +33,22 @@ Focused paging and loop tests: 26 passed. Complete backend after this change:
 2076 passed, 13 skipped, 0 failed, 17 subtests passed in 17.56s, November 10, 2026
 in America/New_York. Skips remain the documented Docker/database/non-Mac gates.
 
-Live full-month and interrupted-resume evidence will be appended after the run;
-this implementation record alone does not close those acceptance gates.
+## Observed full-month completion
+
+The fixed October 1 to November 1, 2026 award query finished at
+2026-11-11T03:52:23.767728+00:00 (November 10 in America/New_York).
+It captured 28 pages, received and admitted 2,799 releases, and refused none.
+All 28 HTTP receipts were 200. This run encountered no 429; the backoff proof
+is the synthetic failure test, not an invented live rate-limit event.
+
+The first process stopped after two committed pages. A second process began
+at the exact saved continuation URL and completed the remaining 26 pages.
+The completion receipt and checkpoint are retained in the external journal;
+verification on November 12 confirmed its hash-chain head:
+`1b9550e83d03391fc1d7024e38ab345286c7d3522dbf84ba29de3e4283bbfdac`.
+
+Evidence is under the chat workspace's `outputs/task4/october-population/`,
+with `first-process.log`, `resumed-process.log` and `month-policy.json` in
+`outputs/task4/`. The aggregate report is `outputs/task5/october-population.json`.
+This proves one completed traversal and a deliberate restart, not a consistent
+snapshot guaranteed by the publisher or survival through a power loss.
