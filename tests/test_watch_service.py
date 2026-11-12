@@ -137,6 +137,13 @@ class ServiceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 service.verify(self.args)
 
+    def test_loaded_agent_without_journal_is_not_healthy(self):
+        with self.simulation():
+            service.install(self.args)
+            with self.assertRaisesRegex(ValueError, "Service journal unavailable"):
+                service.verify(self.args)
+            self.assertFalse((Path(self.args.data_dir) / 'journal.sqlite3').exists())
+
     def test_linux_refuses_before_creating_data(self):
         if sys.platform == 'darwin':
             self.skipTest('Host-specific refusal test is for non-Mac builders')

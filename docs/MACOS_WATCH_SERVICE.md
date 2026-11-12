@@ -2,8 +2,8 @@
 
 The service is a per-user LaunchAgent. It starts at login, including login after
 a reboot, and restarts after failure. It is not a daemon that runs before login.
-Native installation has been attempted on macOS; the November 12 run is
-waiting for the owner to approve Python's Documents-folder access prompt.
+Native installation and running-process verification passed on November 12
+after the owner approved Python's Documents-folder access prompt.
 See the [observed native gate](TASK6_NATIVE_2026-11-12.md). Reboot persistence
 remains unverified; use the checks below on the actual service host.
 

@@ -1,4 +1,4 @@
-# Task 6: native installation and pending unattended acceptance
+# Task 6: running native service and pending full-day acceptance
 
 Read the native installer, startup verifier, loop, health receipts, Docker build
 manifest and version tests first. Install the tested build from a detached
@@ -63,3 +63,49 @@ The last complete backend result remains 2,078 passed, 13 skipped, 0 failed,
 the live identity helper and no-Git API route were executed separately.
 Native reboot survival and the exact-database reference evaluators remain
 unverified. No reboot was performed.
+
+## Owner approval and first scheduled capture
+
+The owner approved the macOS prompt. Native verification then exited 0 at
+2026-11-12T14:38:24.427149+00:00, confirming the running launchd PID 3399
+matches a recent completed journal run from the installed build.
+The first run finished at `2026-11-12T14:38:16.817244+00:00` and admitted
+72 Contracts Finder records and nine d-portal activity records, with no refusals.
+Both sources were reached successfully. The receipt is
+`outputs/task6/post-approval-verify.json`. The earlier permission blocker is
+resolved; it is preserved above as observed installation history.
+
+The earliest full-day completion is November 13 at 09:38:16 Eastern, after a
+scheduled completion at or beyond that point. Elapsed wall time alone does not
+prove uninterrupted uptime; any scheduler gaps and source silence must be
+reported. No published before/after change has yet been demonstrated.
+
+`scripts/report_watch_run.py` reports completed-run elapsed time, source capture
+and admission occurrence counts, per-field refusal reasons, last reach and
+maximum reach gaps, scheduler gaps/failures, and recorded build identities.
+It retains before/after proof only across completed source cycles, for an
+existing stable record key whose organizational projection and publication time
+advance, with the new observation explicitly noticed in an examination.
+Initial discovery, changed page positions and older versions disappearing do
+not satisfy this gate. An update without an advancing publisher timestamp is
+not automatically claimed by this conservative proof helper.
+
+Run the report against the service journal and save it outside the checkout;
+run the native verifier from the installed detached checkout separately for a
+current process-liveness receipt. Do not substitute a manual tick for launchd.
+The initial report is `outputs/task6/run-report.json`, with full_day_elapsed false
+and zero published-change proofs.
+
+The pre-journal verifier diagnostic was corrected on the development branch:
+a missing/unopenable journal now raises a structured failure without creating
+an empty journal or weakening the live-PID/completed-run checks. The installed
+service remains on the immutable `5a224c8` build; this diagnostic-only change
+was not deployed into the running acceptance period.
+
+Complete backend after the reporter and diagnostic correction, November 12,
+2026: **2,082 passed, 13 skipped, 0 failed**, 17 passing subtests, 18.37 seconds.
+Evidence: `outputs/task6/backend-tests.log` and `backend-tests.xml`. Three new
+reporter tests cover elapsed-day boundaries, exact refusal reasons, false page
+movement, first-discovery exclusion and the requirement for a recorded change
+notice. One new native-verifier test refuses a loaded agent without a journal.
+The documented Docker, reference-database and non-Mac skip gates remain open.

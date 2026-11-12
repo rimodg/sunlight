@@ -188,8 +188,8 @@ docker run -p 8000:8000 sunlight
 
 ## Test Suite
 
-Latest measured branch result: **2,078 passed, 13 skipped, 0 failed** on
-November 10, 2026 after the paging and population tests. The live
+Latest measured branch result: **2,082 passed, 13 skipped, 0 failed** on
+November 12, 2026 after the native-verifier and unattended-report tests. The live
 [identity proof](docs/TASK5_IDENTITY_2026-11-12.md) passed on November 12.
 The earlier same-day baselines below remain attributed to their tested builds.
 
@@ -206,10 +206,11 @@ reported 17 passing subtests, separately from the passed-test count.
 | Rebuild backend suite after RUNTIME-002 | 2,056 passed, 13 skipped, 0 failed; November 10, 2026 |
 | After organizational projection | 2,073 passed, 13 skipped, 0 failed; November 10, 2026 |
 | After paging and population tests | 2,078 passed, 13 skipped, 0 failed; November 10, 2026 |
+| Native verifier and unattended report tests | 2,082 passed, 13 skipped, 0 failed; November 12, 2026 |
 | Exact runtime dependency lock | All 35 pins installed and passed the service runtime verifier; November 10, 2026 |
 | Historical reference floor | Not rerun; exact database unavailable |
-| Native Mac service | Installed November 12; awaiting macOS Documents permission; reboot unverified |
-| Real-source unattended acceptance | Pending first scheduled capture and full day; [native gate](docs/TASK6_NATIVE_2026-11-12.md) |
+| Native Mac service | Running and verified November 12; both sources captured; reboot unverified |
+| Real-source unattended acceptance | First scheduled capture passed; full day and published-change proof pending; [native gate](docs/TASK6_NATIVE_2026-11-12.md) |
 
 Both suites skipped nine live-container tests because Docker was unavailable
 and three invariance tests because the production database was absent. The

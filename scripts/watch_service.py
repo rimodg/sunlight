@@ -10,6 +10,7 @@ from pathlib import Path
 import platform
 import plistlib
 import re
+import sqlite3
 import subprocess
 import sys
 import time
@@ -212,7 +213,10 @@ def verify(args):
     is_loaded, text = loaded(config["label"])
     if not is_loaded or not re.search(r"state\s*=\s*running", text) or not re.search(r"pid\s*=\s*[1-9][0-9]*", text):
         raise ValueError("LaunchAgent is not confirmed running")
-    journal = Journal(Path(config["data"]) / "journal.sqlite3", readonly=True)
+    try:
+        journal = Journal(Path(config["data"]) / "journal.sqlite3", readonly=True)
+    except sqlite3.Error:
+        raise ValueError("Service journal unavailable; no completed scheduled run verified. Check startup logs and macOS access prompts") from None
     try:
         journal.verify()
         status = health(journal, now(), json.loads(source_bytes), config["interval_seconds"])
