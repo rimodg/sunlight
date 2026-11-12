@@ -109,3 +109,31 @@ reporter tests cover elapsed-day boundaries, exact refusal reasons, false page
 movement, first-discovery exclusion and the requirement for a recorded change
 notice. One new native-verifier test refuses a loaded agent without a journal.
 The documented Docker, reference-database and non-Mac skip gates remain open.
+
+## Actual reboot and automatic startup verified, November 12
+
+The owner authorized an orderly Mac restart after confirming other work was
+saved. The boot epoch advanced from 1794493394 to 1794510819, corresponding to
+November 12 at 14:13:39 Eastern. After login, launchd automatically started the
+installed service as PID 1155, replacing pre-reboot PID 3399. No reinstall,
+manual watch tick or launchctl kickstart was used.
+
+The initial verification arrived while the new process's first examination was
+still in progress and correctly refused to assert completion. After that run
+finished at 19:16:56.170517 UTC (14:16:56 Eastern), the same native verify command
+with `--after-reboot` exited 0 at 19:17:22 UTC. Its receipt reports running true,
+after_reboot_verified true, the matching live PID and installed build 5a224c8,
+and a completed run after the new boot. The source, package lock, exact Python
+patch and reviewed policy checks passed unchanged.
+
+That automatic run captured 96 Contracts Finder records and nine d-portal
+activities, with no record refusals. The committed
+[reboot receipt](../reports/native-2026-11-12/reboot-verification.json) preserves
+the actual verifier output and both boot epochs. This closes the requested
+single-reboot/start-at-login proof, not a claim that every future boot succeeds.
+
+Task 6 remains open for the full-day report and published-change acceptance.
+The subsequent journal snapshot recorded 52 completed ticks and eight failed
+ticks, with both sources later recovering. The maximum observed reach gap was
+approximately 79 minutes 50 seconds. These failures must remain in the final
+report; elapsed wall time does not mean uninterrupted successful capture.

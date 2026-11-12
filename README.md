@@ -207,7 +207,7 @@ reported 17 passing subtests, separately from the passed-test count.
 | Verified-database backend suite | 2,087 passed, 10 skipped, 0 failed; November 12, 2026 |
 | Exact runtime dependency lock | All 35 pins installed and passed the service runtime verifier; November 10, 2026 |
 | Reference protocols | Both executed November 12; measured results and discrepancy recorded in Task 7 |
-| Native Mac service | Running and verified November 12; both sources captured; reboot unverified |
+| Native Mac service | Running, both sources captured, and actual reboot/login verified November 12 |
 | Real-source unattended acceptance | First scheduled capture passed; full day and published-change proof pending; [native gate](docs/TASK6_NATIVE_2026-11-12.md) |
 
 The latest run skipped nine unavailable Docker tests and the non-Mac-only

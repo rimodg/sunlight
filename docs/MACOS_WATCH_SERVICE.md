@@ -4,8 +4,9 @@ The service is a per-user LaunchAgent. It starts at login, including login after
 a reboot, and restarts after failure. It is not a daemon that runs before login.
 Native installation and running-process verification passed on November 12
 after the owner approved Python's Documents-folder access prompt.
-See the [observed native gate](TASK6_NATIVE_2026-11-12.md). Reboot persistence
-remains unverified; use the checks below on the actual service host.
+See the [observed native gate](TASK6_NATIVE_2026-11-12.md). One actual reboot/login and automatic startup passed on November 12; the
+[receipt](../reports/native-2026-11-12/reboot-verification.json) records the new
+boot epoch and matching live PID. Use the checks below for subsequent changes.
 
 ## One command from the fresh clone
 
