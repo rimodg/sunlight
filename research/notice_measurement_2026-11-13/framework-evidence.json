@@ -1,0 +1,82 @@
+[
+  {
+    "identifier": "RM1557.14",
+    "start": "2024-10-29",
+    "regulation": "PCR2015",
+    "type": "PCR15 Framework",
+    "source": {
+      "url": "https://www.gca.gov.uk/agreements/RM1557.14",
+      "final_url": "https://www.gca.gov.uk/agreements/RM1557.14",
+      "retrieved_at": "2026-11-13T05:18:28.342365+00:00",
+      "sha256": "3d0f7fef1fd1e497bbe20cb870321eac9b3a039811c23f08355b43f11f7acc8a",
+      "bytes": 67731,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/parents/RM1557.14.html"
+    },
+    "locator": "Agreement number / Key facts: Agreement ID, Start date, Regulation, Agreement type",
+    "fts_parent_notice": "037392-2024"
+  },
+  {
+    "identifier": "RM6124",
+    "start": "2021-09-06",
+    "regulation": "PCR2015",
+    "type": "Dynamic Purchasing System",
+    "source": {
+      "url": "https://www.gca.gov.uk/agreements/RM6124",
+      "final_url": "https://www.gca.gov.uk/agreements/RM6124",
+      "retrieved_at": "2026-11-13T05:18:29.302767+00:00",
+      "sha256": "cd6866e434c6a7f842c2ba8b56034492b759633f793eb2eb2a904401ddda159d",
+      "bytes": 108463,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/parents/RM6124.html"
+    },
+    "locator": "Agreement number / Key facts: Agreement ID, Start date, Regulation, Agreement type",
+    "fts_parent_notice": "018833-2021"
+  },
+  {
+    "identifier": "RM6285",
+    "start": "2025-02-18",
+    "regulation": "PCR2015",
+    "type": "PCR15 Framework",
+    "source": {
+      "url": "https://www.gca.gov.uk/agreements/RM6285",
+      "final_url": "https://www.gca.gov.uk/agreements/RM6285",
+      "retrieved_at": "2026-11-13T05:18:29.397736+00:00",
+      "sha256": "d59263578cb14820dc70cf29c4a55153540c6cfbf2ed3f7f8a96605d9adfd0a9",
+      "bytes": 107954,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/parents/RM6285.html"
+    },
+    "locator": "Agreement number / Key facts: Agreement ID, Start date, Regulation, Agreement type",
+    "fts_parent_notice": null
+  },
+  {
+    "identifier": "RM6244",
+    "start": "2022-11-29",
+    "regulation": "PCR2015",
+    "type": "PCR15 Framework",
+    "source": {
+      "url": "https://www.gca.gov.uk/agreements/RM6244",
+      "final_url": "https://www.gca.gov.uk/agreements/RM6244",
+      "retrieved_at": "2026-11-13T05:18:29.291225+00:00",
+      "sha256": "efe5df184b0afd23033dd12c0a5fcb7470d0d5c6dad7d4d96e02567bf1fc6159",
+      "bytes": 133747,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/parents/RM6244.html"
+    },
+    "locator": "Agreement number / Key facts: Agreement ID, Start date, Regulation, Agreement type",
+    "fts_parent_notice": null
+  },
+  {
+    "identifier": "RM6277",
+    "start": "2023-04-25",
+    "regulation": "PCR2015",
+    "type": "PCR15 Framework",
+    "source": {
+      "url": "https://www.gca.gov.uk/agreements/RM6277",
+      "final_url": "https://www.gca.gov.uk/agreements/RM6277",
+      "retrieved_at": "2026-11-13T05:18:31.305187+00:00",
+      "sha256": "811097928325a619c25815d48de9ef1f3a6f0fcec9cae5b253b54543acfa0c75",
+      "bytes": 96842,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/parents/RM6277.html"
+    },
+    "locator": "Agreement number / Key facts: Agreement ID, Start date, Regulation, Agreement type",
+    "fts_parent_notice": null
+  }
+]

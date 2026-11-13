@@ -12,7 +12,8 @@ from watch_journal import admit
 
 SCHEMA = "sunlight.organisation-projection.v1"
 VERSIONS = {"contracts_finder": "contracts-finder-organisations.v1",
-            "iati_dportal": "dportal-organisations.v1"}
+            "iati_dportal": "dportal-organisations.v1",
+            "central_platform": "central-platform-contract-details.v1"}
 IDENTIFIER = {"scheme": "scheme", "id": "identifier"}
 VALUE = {"amount": "amount", "currency": "currency"}
 PERIOD = {"startDate": "date", "endDate": "date"}
@@ -69,6 +70,8 @@ def scalar(value, kind, path):
             valid = type(value) in (int, float) and math.isfinite(value)
         except OverflowError:
             valid = False
+    elif kind == "boolean":
+        valid = type(value) is bool
     elif kind == "count":
         valid = type(value) is int and value >= 0
     if not valid:
@@ -102,6 +105,9 @@ def select_fields(value, schema, path, mapped, gaps):
 
 
 def project_record(adapter, row, source_version=None):
+    if adapter == "central_platform":
+        from central_platform import project_record as central_record
+        return central_record(row, source_version)
     mapped, gaps = [], {}
     if not isinstance(row, dict):
         raise FieldRefusal("/", "invalid_object")

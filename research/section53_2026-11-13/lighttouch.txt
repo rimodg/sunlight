@@ -1,0 +1,549 @@
+Schedules
+Light touch services
+Light touch services
+Additional light touch services for certain defence and security contracts
+Sch. 1  in force at 24.2.2025, see  reg. 1(2)
+
+Table rows (derived; consult the XML for row/column structure):
+CPV code | Service | Reservable
+(1) | (2) | (3)
+Health, social and related services
+75231200 | Services related to the detention or rehabilitation of criminals |
+75231240 | Probation services |
+79611000 | Job search services |
+79622000 | Supply services of domestic help personnel | R
+79624000 | Supply services of nursing personnel | R
+79625000 | Supply services of medical personnel | R
+85000000 | Health and social work services | R
+85100000 | Health services | R
+85110000 | Hospital and related services | R
+85111000 | Hospital services | R
+85111100 | Surgical hospital services | R
+85111200 | Medical hospital services | R
+85111300 | Gynaecological hospital services | R
+85111310 | In vitro fertilisation services | R
+85111320 | Obstetrical hospital services | R
+85111400 | Rehabilitation hospital services | R
+85111500 | Psychiatric hospital services | R
+85111600 | Orthotic services | R
+85111700 | Oxygen-therapy services | R
+85111800 | Pathology services | R
+85111810 | Blood analysis services | R
+85111820 | Bacteriological analysis services | R
+85111900 | Hospital dialysis services | R
+85112000 | Hospital support services | R
+85112100 | Hospital-bedding services | R
+85112200 | Outpatient care services | R
+85120000 | Medical practice and related services | R
+85121000 | Medical practice services | R
+85121100 | General-practitioner services | R
+85121200 | Medical specialist services | R
+85121210 | Gynaecologic or obstetric services | R
+85121220 | Nephrology or nervous system specialist services | R
+85121230 | Cardiology services or pulmonary specialists services | R
+85121231 | Cardiology services | R
+85121232 | Pulmonary specialists services | R
+85121240 | ENT or audiologist services | R
+85121250 | Gastroenterologist and geriatric services | R
+85121251 | Gastroenterologist services | R
+85121252 | Geriatric services | R
+85121270 | Psychiatrist or psychologist services | R
+85121271 | Home for the psychologically disturbed services | R
+85121280 | Ophthalmologist, dermatology or orthopedics services | R
+85121281 | Ophthalmologist services | R
+85121282 | Dermatology services | R
+85121283 | Orthopaedic services | R
+85121290 | Paediatric or urologist services | R
+85121291 | Paediatric services | R
+85121292 | Urologist services | R
+85121300 | Surgical specialist services | R
+85130000 | Dental practice and related services | R
+85131000 | Dental-practice services | R
+85131100 | Orthodontic services | R
+85131110 | Orthodontic-surgery services | R
+85140000 | Miscellaneous health services | R
+85141000 | Services provided by medical personnel | R
+85141100 | Services provided by midwives | R
+85141200 | Services provided by nurses | R
+85141210 | Home medical treatment services | R
+85141211 | Dialysis home medical treatment services | R
+85141220 | Advisory services provided by nurses | R
+85142000 | Paramedical services | R
+85142100 | Physiotherapy services | R
+85142200 | Homeopathic services | R
+85142300 | Hygiene services | R
+85142400 | Home delivery of incontinence products | R
+85143000 | Ambulance services | R
+85144000 | Residential health facilities services | R
+85144100 | Residential nursing care services | R
+85145000 | Services provided by medical laboratories | R
+85146000 | Services provided by blood banks | R
+85146100 | Services provided by sperm banks | R
+85146200 | Services provided by transplant organ banks | R
+85147000 | Company health services | R
+85148000 | Medical analysis services | R
+85149000 | Pharmacy services | R
+85150000 | Medical imaging services | R
+85160000 | Optician services | R
+85170000 | Acupuncture and chiropractor services | R
+85171000 | Acupuncture services | R
+85172000 | Chiropractor services | R
+85200000 | Veterinary services | R
+85210000 | Domestic animal nurseries | R
+85300000 | Social work and related services | R
+85310000 | Social work services | R
+85311000 | Social work services with accommodation | R
+85311100 | Welfare services for the elderly | R
+85311200 | Welfare services for disabled people | R
+85311300 | Welfare services for children and young people | R
+85312000 | Social work services without accommodation | R
+85312100 | Daycare services | R
+85312110 | Child daycare services | R
+85312120 | Daycare services for disabled children and young people | R
+85312200 | Home delivery of provisions | R
+85312300 | Guidance and counselling services | R
+85312310 | Guidance services | R
+85312320 | Counselling services | R
+85312330 | Family-planning services | R
+85312400 | Welfare services not delivered through residential institutions | R
+85312500 | Rehabilitation services | R
+85312510 | Vocational rehabilitation services | R
+85320000 | Social services | R
+85321000 | Administrative social services | R
+85322000 | Community action programme | R
+85323000 | Community health services | R
+98133000 | Services furnished by social membership organisations | R
+98133100 | Civic betterment and community facility support services | R
+98200000 | Equal opportunities consultancy services |
+98500000 | Private households with employed persons |
+98513000 | Manpower services for households |
+98513100 | Agency staff services for households |
+98513200 | Clerical staff services for households |
+98513300 | Temporary staff for households |
+98513310 | Home-help services |
+98514000 | Domestic services |
+Administrative social, educational, healthcare and cultural services
+75000000 | Administration, defence and social security services |
+75121000 | Administrative educational services | R
+75122000 | Administrative healthcare services | R
+75124000 | Administrative recreational, cultural and religious services |
+79950000 | Exhibition, fair and congress organisation services |
+79951000 | Seminar organisation services |
+79952000 | Event services |
+79952100 | Cultural event organisation services |
+79953000 | Festival organisation services |
+79954000 | Party organisation services |
+79955000 | Fashion shows organisation services |
+79956000 | Fair and exhibition organisation services |
+79995000 | Library management services |
+79995100 | Archiving services |
+79995200 | Cataloguing services |
+80000000 | Education and training services |
+80100000 | Primary education services |
+80110000 | Pre-school education services | R
+80200000 | Secondary education services |
+80210000 | Technical and vocational secondary education services |
+80211000 | Technical secondary education services |
+80212000 | Vocational secondary education services |
+80300000 | Higher education services | R
+80310000 | Youth education services | R
+80320000 | Medical education services | R
+80330000 | Safety education services | R
+80340000 | Special education services | R
+80400000 | Adult and other education services |
+80410000 | Various school services |
+80411000 | Driving-school services |
+80411100 | Driving-test services |
+80411200 | Driving lessons |
+80412000 | Flying-school services |
+80413000 | Sailing-school services |
+80414000 | Diving-school services |
+80415000 | Ski-training services |
+80420000 | E-learning services | R
+80430000 | Adult-education services at university level | R
+80490000 | Operation of an educational centre |
+80500000 | Training services |
+80510000 | Specialist training services |
+80511000 | Staff training services | R
+80512000 | Dog training services |
+80513000 | Horse riding school services |
+80520000 | Training facilities | R
+80521000 | Training programme services | R
+80522000 | Training seminars | R
+80530000 | Vocational training services |
+80531000 | Industrial and technical training services |
+80531100 | Industrial training services |
+80531200 | Technical training services |
+80532000 | Management training services |
+80533000 | Computer-user familiarisation and training services |
+80533100 | Computer training services |
+80533200 | Computer courses |
+80540000 | Environmental training services |
+80550000 | Safety training services |
+80560000 | Health and first-aid training services |
+80561000 | Health training services |
+80562000 | First-aid training services |
+80570000 | Personal development training services |
+80580000 | Provision of language courses |
+80590000 | Tutorial services | R
+80600000 | Training services in defence and security materials |
+80610000 | Training and simulation in security equipment |
+80620000 | Training and simulation in firearms and ammunition |
+80630000 | Training and simulation in military vehicles |
+80640000 | Training and simulation in warships |
+80650000 | Training and simulation in aircrafts, missiles and spacecrafts |
+80660000 | Training and simulation in military electronic systems |
+92000000 | Recreational, cultural and sporting services |
+92100000 | Motion picture and video services |
+92110000 | Motion picture and video tape production and related services |
+92111000 | Motion picture and video production services |
+92111100 | Training-film and video-tape production |
+92111200 | Advertising, propaganda and information film and video-tape production |
+92111210 | Advertising film production |
+92111220 | Advertising video-tape production |
+92111230 | Propaganda film production |
+92111240 | Propaganda video-tape production |
+92111250 | Information film production |
+92111260 | Information video-tape production |
+92111300 | Entertainment film and video-tape production |
+92111310 | Entertainment film production |
+92111320 | Entertainment video-tape production |
+92112000 | Services in connection with motion-picture and video-tape production |
+92120000 | Motion-picture or video-tape distribution services |
+92121000 | Video-tape distribution services |
+92122000 | Motion picture distribution services |
+92130000 | Motion picture projection services |
+92140000 | Video-tape projection services |
+92200000 | Radio and television services |
+92210000 | Radio services |
+92211000 | Radio production services |
+92213000 | Small scale radio systems services |
+92214000 | Radio studio or equipment services |
+92215000 | General Mobile Radio Services (GMRS) |
+92220000 | Television services |
+92221000 | Television production services |
+92222000 | Closed circuit television services |
+92224000 | Digital television |
+92225000 | Interactive television |
+92225100 | Film-on-demand television |
+92226000 | Teleprogrammation |
+92230000 | Radio and television cable services |
+92231000 | International bilateral services and international private leased lines |
+92232000 | Cable TV |
+92300000 | Entertainment services |
+92310000 | Artistic and literary creation and interpretation services |
+92311000 | Works of art |
+92312000 | Artistic services |
+92312100 | Theatrical producers’, singer groups’, bands’ and orchestras’ entertainment services |
+92312110 | Theatrical producer entertainment services |
+92312120 | Singer group entertainment services |
+92312130 | Band entertainment services |
+92312140 | Orchestral entertainment services |
+92312200 | Services provided by authors, composers, sculptors, entertainers and other individual artists |
+92312210 | Services provided by authors |
+92312211 | Writing agency services |
+92312212 | Services related to the preparation of training manuals |
+92312213 | Technical author services |
+92312220 | Services provided by composers |
+92312230 | Services provided by sculptors |
+92312240 | Services provided by entertainers |
+92312250 | Services provided by individual artists |
+92312251 | Disk-jockey services |
+92320000 | Arts-facility operation services |
+92330000 | Recreational-area services |
+92331000 | Fair and amusement park services |
+92331100 | Fair services |
+92331200 | Amusement park services |
+92331210 | Children animation services |
+92332000 | Beach services |
+92340000 | Dance and performance entertainment services |
+92341000 | Circus services |
+92342000 | Dance-instruction services |
+92342100 | Ballroom dance-instruction services |
+92342200 | Discotheque dance-instruction services |
+92350000 | Gambling and betting services |
+92351000 | Gambling services |
+92351100 | Lottery operating services |
+92351200 | Casino operating services |
+92352000 | Betting services |
+92352100 | Totalisator operating services |
+92352200 | Bookmaking services |
+92360000 | Pyrotechnic services |
+92370000 | Sound technician |
+92400000 | News-agency services |
+92500000 | Library, archives, museums and other cultural services | R
+92510000 | Library and archive services | R
+92511000 | Library services | R
+92512000 | Archive services | R
+92512100 | Archive destruction services | R
+92520000 | Museum services and preservation services of historical sites and buildings | R
+92521000 | Museum services | R
+92521100 | Museum-exhibition services | R
+92521200 | Preservation services of exhibits and specimens | R
+92521210 | Preservation services of exhibits | R
+92521220 | Preservation services of specimens | R
+92522000 | Preservation services of historical sites and buildings | R
+92522100 | Preservation services of historical sites | R
+92522200 | Preservation services of historical buildings | R
+92530000 | Botanical and zoological garden services and nature reserve services | R
+92531000 | Botanical garden services | R
+92532000 | Zoological garden services | R
+92533000 | Nature reserve services | R
+92534000 | Wildlife preservation services | R
+92600000 | Sporting services | R
+92610000 | Sports facilities operation services | R
+92620000 | Sport-related services | R
+92621000 | Sports-event promotion services | R
+92622000 | Sports-event organisation services | R
+92700000 | Cybercafé services |
+Compulsory social security services
+75300000 | Compulsory social security services |
+Benefit services
+75310000 | Benefit services |
+75311000 | Sickness benefits |
+75312000 | Maternity benefits |
+75313000 | Disability benefits |
+75313100 | Temporary disablement benefits |
+75314000 | Unemployment compensation benefits |
+75320000 | Government employee pension schemes |
+75330000 | Family allowances |
+75340000 | Child allowances |
+Other community, social and personal services including services furnished by trade unions, political organisations, youth associations and other membership organisations services
+98000000 | Other community, social and personal services |
+98120000 | Services furnished by trade unions |
+98130000 | Miscellaneous membership organisations services |
+98132000 | Services furnished by political organisations |
+98133110 | Services provided by youth associations | R
+Religious services
+98131000 | Religious services |
+Hotel and restaurant services
+55100000 | Hotel services |
+55110000 | Hotel accommodation services |
+55120000 | Hotel meeting and conference services |
+55130000 | Other hotel services |
+55200000 | Camping sites and other non-hotel accommodation |
+55210000 | Youth hostel services |
+55220000 | Camping-site services |
+55221000 | Caravan-site services |
+55240000 | Holiday centre and holiday home services |
+55241000 | Holiday centre services |
+55242000 | Holiday home services |
+55243000 | Children’s holiday-camp services |
+55250000 | Letting services of short-stay furnished accommodation |
+55260000 | Sleeping-car services |
+55270000 | Services provided by bed and breakfast establishments |
+55300000 | Restaurant and food-serving services |
+55310000 | Restaurant waiter services |
+55311000 | Restricted-clientele restaurant waiter services |
+55312000 | Unrestricted-clientele restaurant waiter services |
+55320000 | Meal-serving services |
+55321000 | Meal-preparation services |
+55322000 | Meal-cooking services |
+55330000 | Cafeteria services |
+55400000 | Beverage-serving services |
+55410000 | Bar management services |
+55510000 | Canteen services |
+55511000 | Canteen and other restricted-clientele cafeteria services |
+55512000 | Canteen management services |
+55520000 | Catering services |
+55521000 | Catering services for private households |
+55521100 | Meals-on-wheels services |
+55521200 | Meal delivery service |
+55522000 | Catering services for transport enterprises |
+55523000 | Catering services for other enterprises or other institutions |
+55523100 | School-meal services |
+55524000 | School catering services |
+Legal services, to the extent not included by paragraph 14 of Schedule 2 to the Procurement Act 2023
+75231100 | Law-courts-related administrative services |
+79100000 | Legal services |
+79110000 | Legal advisory and representation services |
+79111000 | Legal advisory services |
+79112000 | Legal representation services |
+79112100 | Stakeholders representation services |
+79120000 | Patent and copyright consultancy services |
+79121000 | Copyright consultancy services |
+79121100 | Software copyright consultancy services |
+79130000 | Legal documentation and certification services |
+79131000 | Documentation services |
+79132000 | Certification services |
+79132100 | Electronic signature certification services |
+79140000 | Legal advisory and information services |
+Other administrative services and government services
+75100000 | Administration services |
+75110000 | General public services |
+75111000 | Executive and legislative services |
+75111100 | Executive services |
+75111200 | Legislative services |
+75112000 | Administrative services for business operations |
+75112100 | Administrative development project services |
+75120000 | Administrative services of agencies |
+75123000 | Administrative housing services | R
+75125000 | Administrative services related to tourism affairs |
+75130000 | Supporting services for the government |
+75131000 | Government services |
+Provision of services to the community
+75200000 | Provision of services to the community |
+75210000 | Foreign affairs and other services |
+75211000 | Foreign-affairs services |
+75211100 | Diplomatic services |
+75211110 | Consular services |
+75211200 | Foreign economic-aid-related services |
+75211300 | Foreign military-aid-related services |
+75220000 | Defence services |
+75221000 | Military defence services |
+75222000 | Civil defence services |
+75230000 | Justice services |
+75231000 | Judicial services |
+Prison related services, public security and rescue services to the extent not excluded by paragraph 20 of Schedule 2 to the Procurement Act 2023
+75231210 | Imprisonment services |
+75231220 | Prisoner-escort services |
+75231230 | Prison services |
+75240000 | Public security, law and order services |
+75241000 | Public security services |
+75241100 | Police services |
+75242000 | Public law and order services |
+75242100 | Public-order services |
+75242110 | Bailiff services |
+75250000 | Fire-brigade and rescue services |
+75251000 | Fire-brigade services |
+75251100 | Firefighting services |
+75251110 | Fire-prevention services |
+75251120 | Forest-firefighting services |
+75252000 | Rescue services |
+79430000 | Crisis management services |
+98113100 | Nuclear safety services |
+Investigation and security services
+79700000 | Investigation and security services |
+79710000 | Security services |
+79711000 | Alarm-monitoring services |
+79713000 | Guard services |
+79714000 | Surveillance services |
+79714100 | Tracing system services |
+79714110 | Absconder-tracing services |
+79715000 | Patrol services |
+79716000 | Identification badge release services |
+79720000 | Investigation services |
+79721000 | Detective agency services |
+79722000 | Graphology services |
+79723000 | Waste analysis services |
+International services
+98900000 | Services provided by extra-territorial organisations and bodies |
+98910000 | Services specific to international organisations and bodies |
+Postal services
+64000000 | Postal and telecommunications services |
+64100000 | Post and courier services |
+64110000 | Postal services |
+64111000 | Postal services related to newspapers and periodicals |
+64112000 | Postal services related to letters |
+64113000 | Postal services related to parcels |
+64114000 | Post office counter services |
+64115000 | Mailbox rental |
+64116000 | Post-restante services |
+64122000 | Internal office mail and messenger services |
+Miscellaneous services
+50116510 | Tyre-remoulding services |
+71550000 | Blacksmith services |
+ | Service
+Hotel and restaurant services
+98340000 | Accommodation and office services
+98341000 | Accommodation services
+98341100 | Accommodation management services
+Support and auxiliary transport services
+63000000 | Supporting and auxiliary transport services; travel agencies services
+63100000 | Cargo handling and storage services
+63110000 | Cargo handling services
+63111000 | Container handling services
+63112000 | Baggage handling services
+63112100 | Passenger baggage handling services
+63112110 | Baggage collection services
+63120000 | Storage and warehousing services
+63121000 | Storage and retrieval services
+63121100 | Storage services
+63121110 | Gas storage services
+63122000 | Warehousing services
+63500000 | Travel agency, tour operator and tourist assistance services
+63510000 | Travel agency and similar services
+63511000 | Organisation of package tours
+63512000 | Sale of travel tickets and package tours services
+63513000 | Tourist information services
+63514000 | Tourist guide services
+63515000 | Travel services
+63516000 | Travel management services
+63520000 | Transport agency services
+63521000 | Freight transport agency services
+63522000 | Ship brokerage services
+63523000 | Port and forwarding agency services
+63524000 | Transport document preparation services
+63700000 | Support services for land, water and air transport
+63710000 | Support services for land transport
+63711000 | Support services for railway transport
+63711100 | Train monitoring services
+63712000 | Support services for road transport
+63712100 | Bus station services
+63712200 | Highway operation services
+63712210 | Highway toll services
+63712300 | Bridge and tunnel operation services
+63712310 | Bridge operating services
+63712311 | Bridge toll services
+63712320 | Tunnel operation services
+63712321 | Tunnel toll services
+63712400 | Parking services
+63712500 | Weighbridge services
+63712600 | Vehicle refuelling services
+63720000 | Support services for water transport
+63721000 | Port and waterway operation services and associated services
+63721100 | Bunkering services
+63721200 | Port operation services
+63721300 | Waterway operation services
+63721400 | Ship refuelling services
+63721500 | Passenger terminal operation services
+63722000 | Ship-piloting services
+63723000 | Berthing services
+63724000 | Navigation services
+63724100 | Offshore positioning services
+63724110 | Lightship positioning services
+63724200 | Lightship services
+63724300 | Buoy positioning services
+63724310 | Buoy marking services
+63724400 | Lighthouse services
+63725000 | Salvage and refloating services
+63725100 | Vessel-salvaging services
+63725200 | Standby vessel services
+63725300 | Vessel refloating services
+63726000 | Miscellaneous water transport support services
+63726100 | Vessel registration services
+63726200 | Ice-breaking services
+63726300 | Vessel storage services
+63726400 | Ship chartering services
+63726500 | Vessel laying-up services
+63726600 | Ship-operating services
+63726610 | Ship-launching services
+63726620 | ROV services
+63726700 | Fishing-vessel services
+63726800 | Research vessel services
+63726900 | Anchor handling services
+63727000 | Towing and pushing services of ships
+63727100 | Towing services
+63727200 | Pushing services
+63730000 | Support services for air transport
+63731000 | Airport operation services
+63731100 | Airport slot coordination services
+63732000 | Air-traffic control services
+63733000 | Aircraft refuelling services
+63734000 | Hangar services
+98361000 | Aquatic marine services
+Personal placement and supply services but not employment contracts
+79600000 | Recruitment services
+79610000 | Placement services of personnel
+79612000 | Placement services of office-support personnel
+79613000 | Employee relocation services
+79620000 | Supply services of personnel including temporary staff
+79621000 | Supply services of office personnel
+79623000 | Supply services of commercial or industrial workers
+79630000 | Personnel services except placement and supply services
+79631000 | Personnel and payroll services
+79634000 | Career guidance services
+79635000 | Assessment centre services for recruitment
+98510000 | Services of commercial and industrial workers
+98511000 | Services of commercial workers
+98512000 | Services of industrial workers
