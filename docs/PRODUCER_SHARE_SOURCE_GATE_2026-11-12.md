@@ -1,6 +1,11 @@
 # Producer share: primary-source gate, November 12, 2026
 
-Status: **BLOCKED at Task 1. No invariant, legal profile or tests implemented.**
+Status reconfirmed November 13, 2026: **UNASSESSABLE; parked, not dropped.**
+Task 1 remains open and the owner is obtaining the enacted Act. The two
+evidence gates are the missing official enacted text and the numerical
+realised-FOB denominator not found in the September release. This does not
+establish that the denominator is unpublished elsewhere. No invariant, legal
+profile or tests have been implemented for this producer-share rule.
 Branch invariant-producer-share starts at origin/main
 `0617f5c888c841a2293a28bf2e2509c059edaddd`. The running watch and its data were
 not read, changed, restarted or used by this investigation.
