@@ -148,7 +148,8 @@ The query window is November 12-14, 2026; this is not the earlier October
 population and is not a completeness claim for that window.
 
 There were 18 CF observation events and 96 distinct `(ocid, release_id)` pairs,
-using the last retained occurrence of each pair. These contained 96 awards.
+using the last retained occurrence of each pair. These contained 96 award appearances, representing 94 distinct award IDs
+across 93 procurement OCIDs (clarified November 13; COR-002).
 All 96 retained award date, award publication date, award value and contract
 period. Tender value was retained in 70, procurement method in 76, tender
 period end in 96 and tender period start in zero. A field being present does
