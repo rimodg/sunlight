@@ -1,0 +1,149 @@
+{
+  "records": [
+    {
+      "id": "price-2026",
+      "url": "https://cocobod.gh/news/review-of-the-producer-price-of-cocoa-for-the-202627-cocoa-season",
+      "retrieved_at_utc": "2026-11-13T04:52:07.500692+00:00",
+      "locator": "PRODUCER PRICE; EFFECTIVE DATE AND OPENING OF THE SEASON",
+      "status": 200,
+      "final_url": "https://cocobod.gh/news/review-of-the-producer-price-of-cocoa-for-the-202627-cocoa-season",
+      "content_type": "text/html; charset=UTF-8",
+      "sha256": "5c1ce485beec9159fb59689535cee9f8523dcc73ec37e4ca8e62f1dacdc6d681",
+      "size_bytes": 46829,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/price-2026.html",
+      "admission": "official_announcement_only_not_statutory_text"
+    },
+    {
+      "id": "price-2025",
+      "url": "https://cocobod.gh/news/government-announces-producer-price-of-cocoa-for-the-20252026-cocoa-season",
+      "retrieved_at_utc": "2026-11-13T04:52:07.501251+00:00",
+      "locator": "Numbered paragraphs 4-9 and 11-14",
+      "status": 200,
+      "final_url": "https://cocobod.gh/news/government-announces-producer-price-of-cocoa-for-the-20252026-cocoa-season",
+      "content_type": "text/html; charset=UTF-8",
+      "sha256": "656bcfb2daca72112c7cb402b9f1cbc0d3d5befca9593a74284e833f84dad9f8",
+      "size_bytes": 49512,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/price-2025.html",
+      "admission": "official_announcement_only_not_statutory_text"
+    },
+    {
+      "id": "revision-2025",
+      "url": "https://cocobod.gh/news/review-of-producer-price-for-the-202526-cocoa-season",
+      "retrieved_at_utc": "2026-11-13T04:52:07.501417+00:00",
+      "locator": "Numbered paragraphs 2-6",
+      "status": 200,
+      "final_url": "https://cocobod.gh/news/review-of-producer-price-for-the-202526-cocoa-season",
+      "content_type": "text/html; charset=UTF-8",
+      "sha256": "58d46fd457c371afb7ea3d8c95facd50a1c4e0cb7fa68b221df218f7c7628396",
+      "size_bytes": 43826,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/revision-2025.html",
+      "admission": "official_announcement_only_not_statutory_text"
+    },
+    {
+      "id": "assent",
+      "url": "https://www.isd.gov.gh/president-assents-to-10-bills-fulfils-cocoa-farmer-price-pledge/",
+      "retrieved_at_utc": "2026-11-13T04:52:07.501528+00:00",
+      "locator": "Article date; paragraph beginning The Ghana Cocoa Board Act",
+      "status": 200,
+      "final_url": "https://www.isd.gov.gh/president-assents-to-10-bills-fulfils-cocoa-farmer-price-pledge/",
+      "content_type": "text/html; charset=UTF-8",
+      "sha256": "5ebcac1e840eff1abc9201a165403fc80cb77e5bdb2614ef706e1ab1eb8b4076",
+      "size_bytes": 551561,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/assent.html",
+      "admission": "official_announcement_only_not_statutory_text"
+    },
+    {
+      "id": "parliament-acts",
+      "url": "https://www.parliament.gh/docs?type=Acts",
+      "retrieved_at_utc": "2026-11-13T04:52:07.501597+00:00",
+      "locator": "Acts listing, not the statutory text",
+      "status": 200,
+      "final_url": "https://www.parliament.gh/docs?type=Acts",
+      "content_type": "text/html; charset=UTF-8",
+      "sha256": "58378c68c0504856a7bfee86edb133e84c3f0ab38c8ea3bd36ff32ae679f7397",
+      "size_bytes": 43550,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/parliament-acts.html",
+      "admission": "discovery_or_access_receipt_not_statutory_text"
+    },
+    {
+      "id": "parliament-bills",
+      "url": "https://www.parliament.gh/docs?OT=&filter=A&type=Bills",
+      "retrieved_at_utc": "2026-11-13T04:52:07.501677+00:00",
+      "locator": "Ghana Cocoa Board Bill, 2026 entry",
+      "status": 200,
+      "final_url": "https://www.parliament.gh/docs?OT=&filter=A&type=Bills",
+      "content_type": "text/html; charset=UTF-8",
+      "sha256": "b8abd838a1626efadab5fe0938b0760690bfceb36aaeb6178c3ce90e7c092847",
+      "size_bytes": 45021,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/parliament-bills.html",
+      "admission": "discovery_or_access_receipt_not_statutory_text"
+    },
+    {
+      "id": "repository-search",
+      "url": "https://repository.parliament.gh/search?query=Ghana%20Cocoa%20Board%202026",
+      "retrieved_at_utc": "2026-11-13T04:52:08.580697+00:00",
+      "locator": "Search response",
+      "status": 403,
+      "error": "HTTP error; not admitted as source content",
+      "sha256": "03b65915a38e8a2aa59a6dcec0041013e917225a728bb062a170a08f5e161e65",
+      "size_bytes": 44,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/repository-search.html",
+      "admission": "discovery_or_access_receipt_not_statutory_text"
+    },
+    {
+      "id": "repository-report",
+      "url": "https://repository.parliament.gh/items/653df471-29ad-407c-960e-31dea375683a",
+      "retrieved_at_utc": "2026-11-13T04:52:08.583057+00:00",
+      "locator": "Bill urgency committee report listing, not enacted Act",
+      "status": 403,
+      "error": "HTTP error; not admitted as source content",
+      "sha256": "03b65915a38e8a2aa59a6dcec0041013e917225a728bb062a170a08f5e161e65",
+      "size_bytes": 44,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/repository-report.html",
+      "admission": "discovery_or_access_receipt_not_statutory_text"
+    },
+    {
+      "id": "legacy-repository",
+      "url": "https://ir.parliament.gh",
+      "retrieved_at_utc": "2026-11-13T04:52:08.583323+00:00",
+      "locator": "Access attempt",
+      "status": 403,
+      "error": "HTTP error; not admitted as source content",
+      "sha256": "03b65915a38e8a2aa59a6dcec0041013e917225a728bb062a170a08f5e161e65",
+      "size_bytes": 44,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/legacy-repository.html",
+      "admission": "discovery_or_access_receipt_not_statutory_text"
+    },
+    {
+      "id": "parliament-acts-navigation",
+      "url": "https://www.parliament.gh/docs?OT=&type=Acts",
+      "retrieved_at_utc": "2026-11-13T04:52:54.146727+00:00",
+      "locator": "Document listing; no Act 1182 text located",
+      "status": 200,
+      "final_url": "https://www.parliament.gh/docs?OT=&type=Acts",
+      "sha256": "ea2c5fc7f39451c3d0b17e440a54aac04138d576c2c8269113ea421a274d27e6",
+      "size_bytes": 38877,
+      "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/producer-share-sources/parliament-acts-navigation.html",
+      "admission": "discovery_or_access_receipt_not_statutory_text"
+    },
+    {
+      "id": "cocobod-resources",
+      "url": "https://cocobod.gh/resources",
+      "retrieved_at_utc": "2026-11-13T04:52:54.828609+00:00",
+      "locator": "Document listing; no Act 1182 text located",
+      "error": "HTTPError",
+      "admission": "discovery_or_access_receipt_not_statutory_text"
+    }
+  ],
+  "qualification": "Hashes identify retrieved bytes, not truth, authenticity of the Act, or completeness of a search.",
+  "date": "2026-11-12",
+  "branch_base": "0617f5c888c841a2293a28bf2e2509c059edaddd",
+  "statute_admission": "BLOCKED: official enacted Act text not obtained",
+  "scope": "Source reconnaissance only; no legal floor or rule encoded",
+  "unadmitted_discovery_leads": [
+    {
+      "url": "https://eskwai.kwame.ai/archives/gh/legislation/ghana-a-board-act-2026-act-1182",
+      "reason": "Third-party catalogue/preview; does not meet official-source requirement; not admitted or relied on as statutory text."
+    }
+  ]
+}
