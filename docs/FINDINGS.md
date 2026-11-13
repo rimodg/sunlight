@@ -54,3 +54,17 @@ October journal with head
 `1b9550e83d03391fc1d7024e38ab345286c7d3522dbf84ba29de3e4283bbfdac`.
 The source is mutable; this completed traversal is not a publisher-guaranteed
 consistent snapshot.
+
+## GHANA-PRODUCER-SHARE: UNASSESSABLE; parked, not dropped
+
+Recorded November 12, 2026. Task 1 remains open; the owner is obtaining the Act.
+
+1. The enacted text of Act 1182 has not been obtained from an official source.
+2. The September release declares 71.18%, but a numerical realised-FOB
+   denominator was **not found in the release**. This does not mean it has not
+   been published anywhere.
+
+No statutory HOLDS or BREAKS finding is made. The source note retains the
+three corrections: the intervening GHS58,000 price setting, the missing
+denominator and circular-reconstruction risk, and the unresolved tonne/bag
+pricing convention. See [the source gate](PRODUCER_SHARE_SOURCE_GATE_2026-11-12.md).
