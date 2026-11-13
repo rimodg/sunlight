@@ -1,0 +1,82 @@
+Key definitions
+Contracting authorities
+2
+1
+In this Act “ contracting authority ” means—
+a
+a public authority, or
+b
+in the case of a utilities contract, a public authority, public undertaking or private utility,
+other than an excluded authority.
+1A
+But see also section 83B(5)(b)(i) (which provides for “contracting authority” to have an extended meaning in relation to certain contracts regulated under Part 5A (outsourcing: protection of workers)).
+2
+In this Act—
+“ public authority ” means a person that is—
+wholly or mainly funded out of public funds, or
+subject to public authority oversight,
+and does not operate on a commercial basis (but see subsections (9) and (10));
+“ public undertaking ” means a person that—
+is subject to public authority oversight, and
+operates on a commercial basis;
+“ private utility ” means a person that—
+is not a public authority or public undertaking, and
+carries out a utility activity.
+3
+A person is subject to public authority oversight if the person is subject to the management or control of—
+a
+one or more public authorities, or
+b
+a board more than half of the members of which are appointed by one or more public authorities.
+4
+The following are examples of factors to be taken into account in determining whether a person operates on a commercial basis—
+a
+whether the person operates on the basis that its losses would be borne, or its continued operation secured, by a public authority (whether directly or indirectly);
+b
+whether the person contracts on terms more favourable than those that might reasonably have been available to it had it not been associated with a public authority;
+c
+whether the person operates on a market that is subject to fair and effective competition.
+5
+The following authorities are excluded authorities—
+a
+a devolved Scottish authority   , except where a devolved Scottish authority carries out procurement falling within section 115A ;
+b
+the Security Service, the Secret Intelligence Service and the Government Communications Headquarters;
+c
+the Advanced Research and Invention Agency;
+d
+any person that is subject to public authority oversight—
+i
+only by reference to a devolved Scottish authority, or
+ii
+by reference to an authority mentioned in paragraph (b) or (c).
+6
+An authority is a “devolved Scottish authority” if its functions are exercisable only in or as regards Scotland, and—
+a
+none of its functions relate to reserved matters, or
+b
+some of its functions relate to reserved matters and some do not.
+7
+A contracting authority that is a public undertaking or private utility is to be treated as a devolved Scottish authority for the purposes of this Act if it operates only in or as regards Scotland, and—
+a
+none of its activities relate to reserved matters, or
+b
+some of its activities relate to reserved matters and some do not.
+8
+In this Act, a reference to a devolved Scottish authority includes a reference to an authority that is to be treated as a devolved Scottish authority for the purposes of this Act.
+9
+In this Act, a reference to a public authority includes a reference to the Common Council of the City of London.
+10
+For the purposes of this Act, a person that operates on a commercial basis but is, as a controlled person, awarded an exempted contract by a public authority in reliance on paragraph 2 of Schedule 2 (vertical arrangements) is to be treated as a public authority in relation to any relevant sub-contract.
+11
+This Act does not apply to His Majesty acting in his private capacity.
+12
+In this section—
+“ relevant sub-contract ” means a contract substantially for the purpose of performing (or contributing to the performance of) all or any part of the exempted contract;
+“ reserved matters ” has the same meaning as in the Scotland Act 1998.
+S. 2  applied (24.2.2025) by  S.I. 2013/1582 ,  reg. 6(2) ,  Sch. 2 Pt. 1  (as amended by  The Procurement Act 2023 (Consequential and Other Amendments) Regulations 2025 (S.I. 2025/163) ,  regs. 1(2) ,  17  (with  reg. 33 ))
+Words in  s. 2(5)(a)  inserted (24.2.2025) by  The Procurement Regulations 2024 (S.I. 2024/692) ,  regs. 1(2) ,  47(2) ;  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+S. 2 in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+S. 2  not in force at Royal Assent, see  s. 127(2)
+S. 2(1A)  inserted (6.1.2026 for specified purposes) by  Employment Rights Act 2025 (c. 36) ,  ss. 32(3) ,  159(3) ;  S.I. 2026/3 ,  reg. 2(16)(b)
+S. 2(1) restricted (16.7.2026) by  The Modification of the Law (British Steel Limited Property Transfer) Regulations 2026 (S.I. 2026/833) ,  regs. 1(2) ,  7

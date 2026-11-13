@@ -1,0 +1,457 @@
+SCHEDULES
+Exempted contracts
+Counterparty exempted contracts
+General
+1
+A contract is an exempted contract if it is a contract of a kind listed in this Part of this Schedule.
+Vertical arrangements
+2
+1
+A contract between a contracting authority and a person that is controlled by—
+a
+the contracting authority,
+b
+the contracting authority acting jointly with one or more other contracting authorities,
+c
+another contracting authority, where that authority also controls the contracting authority referred to in paragraph (a), or
+d
+another contracting authority acting jointly with one or more other contracting authorities, where the authorities acting jointly also control the contracting authority referred to in paragraph (a).
+2
+A contracting authority, or a contracting authority acting jointly with one or more other contracting authorities, controls a person if—
+a
+the contracting authority is a parent undertaking, or the contracting authorities are parent undertakings, in relation to the person,
+b
+no person other than the authority, or authorities, exerts a decisive influence on the activities of the person (either directly or indirectly),
+c
+more than 80 per cent of the activities carried out by the person are carried out for or on behalf of—
+i
+the contracting authority or authorities, or
+ii
+another person that is, or other persons that are, controlled by the authority or the authorities acting jointly, and
+d
+in the case of joint control—
+i
+each of the contracting authorities is represented on the person’s board, or equivalent decision-making body, and
+ii
+the person does not carry out any activities that are contrary to the interests of one or more of the contracting authorities.
+3
+A person is not to be regarded as controlled by a contracting authority, or a contracting authority acting jointly with other contracting authorities, if any person that is not a public authority holds shares in the person.
+4
+In sub-paragraph (2)(a)—
+“ parent undertaking ” has the meaning given in section 1162 of the Companies Act 2006, save that an “ undertaking ” includes any person;
+“ parent undertakings ” means two or more contracting authorities acting jointly that would, if they were a single undertaking, be a parent undertaking.
+5
+For the purposes of sub-paragraph (2)(b), a person does not exercise a decisive influence on the activities of a person only by reason of being a director, officer or manager of the person acting in that capacity.
+6
+An appropriate authority may by regulations make provision about how a calculation as to the percentage of activities carried out by a person is to be made for the purposes of sub-paragraph (2)(c).
+7
+For the purposes of sub-paragraph (2)(d)(i), one representative may represent more than one contracting authority.
+8
+In this paragraph, references to a contracting authority do not include references to a public undertaking or a private utility.
+2A
+1
+A contract between a local government pension scheme manager acting in its capacity as a local government pension scheme manager and an asset pool company providing for the company—
+a
+to manage the funds and other assets for which the scheme manager is responsible,
+b
+to make and manage investments on behalf of the scheme manager, and
+c
+if the contract so provides, to carry out other investment management activities for or on behalf of the scheme manager,
+if each of the conditions set out in sub-paragraph (2) is met.
+2
+The conditions are—
+a
+that more than 80% of the activities of the company are investment management activities carried out for or on behalf of local government pension scheme managers acting in their capacity as local government pension scheme managers;
+b
+that no person exercises a decisive influence on the activities of the company (either directly or indirectly) other than—
+i
+the participating scheme managers in the company, acting in their capacity as local government pension scheme managers, and
+ii
+where the only shareholder in the company is another company (see section 1(9)(a) of the Pension Schemes Act 2026), that other company;
+c
+that the company does not carry out any activities that are contrary to the interests of—
+i
+the participating scheme managers in the company, in their capacity as local government pension scheme managers, or
+ii
+where the only shareholder in the company is another company, that other company.
+3
+The contracts covered by this paragraph include a contract where the local government pension scheme manager concerned is already a participating scheme manager in the company (as well as one where the scheme manager concerned will become a participating scheme manager in the company as a result of entering into it).
+4
+An appropriate authority may by regulations make provision about how a calculation as to the percentage of activities carried out by an asset pool company is to be made for the purposes of sub-paragraph (2)(a).
+5
+For the purposes of sub-paragraph (2)(b), a person does not exercise a decisive influence on the activities of the asset pool company only by reason of—
+a
+being a director, officer or manager of the company, acting in that capacity, or
+b
+where the only shareholder in the company is another company, being a director, officer or manager of that other company.
+6
+In this paragraph—
+“ asset pool company ” has the meaning given by section 1(9)(a) of the Pension Schemes Act 2026;
+“ investment management activities ” means activities involved in or connected with the management of funds or other assets for which a local government pension scheme manager is responsible (including making and managing investments on behalf of the scheme manager);
+“ local government pension scheme manager ” means a person who is, by virtue of section 4(5) of the Public Service Pensions Act 2013, a scheme manager for a pension scheme for local government workers in England and Wales;
+“ participating scheme manager ”, in relation to an asset pool company, means a local government pension scheme manager who participates in the company within the meaning of section 1(9)(b) of the Pension Schemes Act 2026.
+Horizontal arrangements
+3
+1
+A contract between contracting authorities only that relates to a horizontal arrangement between those authorities.
+2
+A “ horizontal arrangement ” means an arrangement—
+a
+entered into—
+i
+with the aim of achieving objectives the authorities have in common in connection with the exercise of their public functions;
+ii
+solely in the public interest;
+b
+in which no more than 20 per cent of the activities contemplated by the arrangement are intended to be carried out other than for the purposes of the authorities’ public functions.
+3
+An appropriate authority may by regulations make provision about how a calculation as to the percentage of activities carried out by a person is to be made for the purposes of sub-paragraph (2)(b).
+4
+In this paragraph, references to a contracting authority do not include references to a public undertaking or a private utility.
+Defence and security contracts
+4
+1
+A defence and security contract where the supplier is the government of another state or territory.
+2
+In this Schedule “ government ” includes—
+a
+any governing authority;
+b
+the government of a region or locality within a state or territory.
+Utilities contracts
+5
+1
+A utilities contract between a utility and a relevant joint venture to which that utility is party, where—
+a
+the joint venture was formed for the purpose of carrying out a utility activity for at least three years, and
+b
+the parties to the joint venture are committed, by way of a written agreement, to continue to be parties to the joint venture for a period of three years following the date of that agreement.
+2
+In this Schedule, “ relevant joint venture ” means a joint venture—
+a
+formed for the purpose of carrying out a utility activity;
+b
+where each party to the joint venture is a utility.
+6
+1
+A utilities contract awarded for the supply of goods, services or works—
+a
+by a utility to a person affiliated with the utility, or
+b
+where the utility in question is a relevant joint venture, by the utility to a person affiliated with any member of the joint venture,
+but only if the turnover test is met by the affiliated person in relation to goods, services or (as the case may be) works.
+2
+A person is “affiliated” with another if the person is in the position of a group undertaking of the other person, within the meaning given in section 1161(5) of the Companies Act 2006, whether or not either of them is an undertaking within the meaning given in section 1161(1) of that Act.
+3
+The “turnover test” is met in relation to goods, services or works if the affiliated person’s turnover deriving from the supply of goods, services or (as the case may be) works to the utility and other persons affiliated with the utility (their “ affiliated turnover amount ”) exceeds 80 per cent of their total turnover amount deriving from the supply of goods, services or works.
+4
+An appropriate authority may by regulations make provision about how to calculate a person’s affiliated turnover amount and total turnover amount for the purposes of sub-paragraph (3).
+5
+The regulations may, in particular, make provision—
+a
+for those amounts to be calculated by reference to—
+i
+an average amount for a period specified in the regulations;
+ii
+another reasonable method so specified;
+b
+to secure that, in calculating those amounts in relation to a person (“ A ”), turnover of a person who is an affiliated person in relation to A is to be treated as part of A’s turnover.
+Subject-matter exempted contracts
+General
+7
+1
+A contract is an exempted contract if it is—
+a
+a contract of a kind listed in this Part of this Schedule;
+b
+a framework for the future award of contracts only of a kind listed in this Part of this Schedule.
+2
+But a Part 2-only contract is not an exempted contract if, on award of the contract, a contracting authority considers that—
+a
+the goods, services or works representing the main purpose of the contract could reasonably be supplied under a separate contract, and
+b
+that contract would not be a contract of a kind listed in this Part of this Schedule.
+3
+In considering whether goods, services or works could reasonably be supplied under a separate contract, a contracting authority may, for example, have regard to the practical and financial consequences of awarding more than one contract.
+4
+In this paragraph “ Part 2-only contract ” means a contract of a kind listed in this Part of this Schedule that is not of a kind listed in Part 1 of this Schedule.
+Land and buildings etc
+8
+1
+A contract—
+a
+for the acquisition, by whatever means, of land, buildings or any other complete work, or of an interest in or right over any of them, or
+b
+which concerns an interest in or right over any of them.
+2
+In this paragraph “ complete work ” has the meaning given in Schedule 1.
+Broadcasting
+9
+A contract for the acquisition, development, production or co-production of material intended for broadcast (by any means) by a contracting authority to the general public.
+10
+A contract for the broadcast (by any means) by a contracting authority to the general public of material (including, for example, a programme or an advertisement) supplied by the supplier.
+Electronic communications services
+11
+A contract the main purpose of which is facilitating the provision by a contracting authority to the general public of an electronic communications service (within the meaning given in section 32 of the Communications Act 2003).
+12
+A contract the main purpose of which is permitting a contracting authority to provide, maintain or use a public electronic communications network (within the meaning given in section 151 of the Communications Act 2003).
+Alternative dispute resolution
+13
+A contract for the provision to a contracting authority of arbitration, mediation or conciliation services, or of any other similar services.
+Legal services
+14
+1
+A contract for the provision of exempt legal services to a contracting authority.
+2
+The following services are “exempt legal services”—
+a
+legal representation by a lawyer in judicial proceedings or other dispute resolution proceedings, whether in or outside the United Kingdom;
+b
+the giving of legal advice by a lawyer in connection with, or in contemplation of, any such proceedings;
+c
+document certification or authentication services provided by a notary in circumstances where the certification or authentication is required under an enactment or other rule of law to be performed by a notary;
+d
+legal services provided by a person required to provide them under an enactment or an order of a court or tribunal.
+3
+In this paragraph—
+“ judicial proceedings ” includes proceedings before a court, tribunal or public authority;
+“ lawyer ” means—
+a person who is an authorised person or an exempt person in relation to a reserved legal activity for the purposes of the Legal Services Act 2007 (see sections 18 and 19 of that Act);
+a solicitor or advocate in Scotland;
+a solicitor or barrister in Northern Ireland;
+a person who is a member, and entitled to practise as such, of a legal profession regulated in a jurisdiction outside the United Kingdom;
+“ other dispute resolution proceedings ” includes arbitration, mediation and conciliation.
+Financial services
+15
+A contract for the lending of money in any currency to a contracting authority.
+16
+1
+A contract for the provision or carrying out of an investment service or activity, or of an ancillary service, in relation to a financial instrument by an investment firm or a qualifying credit institution.
+2
+In this paragraph—
+“ ancillary service ” means a service listed as such in Part 3A of Schedule 2 to the Financial Services and Markets Act 2000 (Regulated Activities) Order 2001 ( S.I. 2001/544 );
+“ financial instrument ”, “ investment firm ” and “ qualifying credit institution ” have the meanings given in Article 3 of that Order;
+“ investment service or activity ” means a service or activity listed as such in Part 3 of Schedule 2 to that Order.
+17
+A contract for the provision of services by the Bank of England.
+Employment
+18
+1
+A contract of employment or a worker’s contract.
+2
+In this paragraph, the expressions “contract of employment” and “worker’s contract”—
+a
+in the case of a contract awarded by a transferred Northern Ireland contracting authority or awarded as part of a procurement under a transferred Northern Ireland procurement arrangement, have the meanings given in Article 3 of the Employment Rights (Northern Ireland) Order 1996 ( S.I. 1996/1919 (N.I. 16) );
+b
+in any other case, have the meanings given in section 230 of the Employment Rights Act 1996.
+19
+Any other contract between a contracting authority and an individual for the remuneration or compensation of that individual where they are appointed to a public office by the contracting authority, including as a—
+a
+non-executive director of a public authority, or
+b
+member of a public inquiry.
+Emergency services
+20
+A contract for the provision by an organisation or association not run for profit of one or more of the following services—
+a
+services relating to the promotion of fire safety;
+b
+fire extinguishing services;
+c
+services for the protection of life and property in the event of fires;
+d
+search and rescue services;
+e
+civil defence services;
+f
+nuclear safety services;
+g
+ambulance services provided in respect of medical emergencies.
+Public passenger transport services
+21
+1
+A contract that is required to be awarded in accordance with the public service obligations regulations.
+2
+In this paragraph, “ the public service obligations regulations ” has the meaning given by section 136(11) of the Railways Act 1993.
+Research and development services
+22
+1
+A contract for the provision of research and development services to a contracting authority, where—
+a
+the services are intended by the authority to be for, or to result in, benefit to the public, and
+b
+the contract does not also provide for the provision of goods or works.
+2
+In this paragraph, “ research and development services ” means services that consist of one or more of the following activities—
+a
+research to acquire new scientific or technical knowledge without any particular application or use in view;
+b
+research directed mainly at generating scientific or technical knowledge for the purposes of a particular objective;
+c
+development which uses existing knowledge to initiate the manufacture of new materials or products, establish new processes, systems or services, or to achieve a substantial improvement in existing materials, products, processes, systems or services;
+d
+the manufacture and testing of prototypes.
+3
+But services are not “research and development services” if they include—
+a
+the production of tools for manufacture, or
+b
+the development of industrial processes to manufacture goods or works arising from research or development.
+International agreements and organisations
+23
+A contract awarded under a procedure specified in an international agreement of which the United Kingdom is a signatory relating to—
+a
+the stationing of military personnel, or
+b
+the implementation of a joint project between the signatories to that agreement.
+24
+A contract awarded under a procedure—
+a
+adopted by an international organisation of which the United Kingdom is a member, and
+b
+that is inconsistent in any material respect with the procedure for the award of the contract in accordance with this Act.
+But this paragraph does not apply to a defence and security contract (as to which, see paragraph  29 ).
+National security
+25
+A contract that the contracting authority determines should not, in the interests of national security, be subject to this Act or a part of this Act.
+Intelligence activities
+26
+A contract for the purposes of carrying out, facilitating or supporting intelligence activities.
+Defence and security contracts
+27
+A defence and security contract where—
+a
+the supplier is located in an area outside the United Kingdom in which the armed forces are deployed, and
+b
+the operational needs of the armed forces require the contract to be awarded to that supplier.
+28
+A defence and security contract where—
+a
+the supplier is located in a state or territory outside the United Kingdom in which the armed forces maintain a military presence,
+b
+that state or territory requires, in connection with that presence, that the supplier supplies the goods, services or works to which the contract relates.
+29
+A defence and security contract awarded under a procedure adopted by an international organisation of which the United Kingdom is a member.
+30
+A defence and security contract awarded under an arrangement between the United Kingdom and one or more other states or territories, where the purpose of that arrangement is, or is in connection with—
+a
+the joint development of a new product by or on behalf of the parties to the arrangement, or
+b
+the exploitation of that product once developed.
+Utilities contracts
+31
+A utilities contract for the supply of goods, services or works to a utility other than one acting as a centralised procurement authority, where—
+a
+the purpose of the contract is to allow the further sale or lease of those goods, services or works to a third party,
+b
+the utility does not have a special or exclusive right, within the meaning given by section 6(3), to sell or lease those goods, services or works, and
+c
+other persons may sell or lease those goods, services or works under the same conditions as the utility.
+32
+A utilities contract for the supply of water to a utility carrying out a utility activity referred to in paragraph 3(1)(a) or (b) of Schedule 4.
+33
+A utilities contract for the supply of energy, or fuel for the production of energy, to a utility carrying out a utility activity referred to in paragraph 1, 2 or 6 of Schedule 4.
+34
+A contract for the supply of goods, services or works wholly or mainly for the purpose of an activity that would be a utility activity if it were not specified in Part 2 of Schedule 4.
+Concession contracts
+35
+A concession contract for the carrying out of a utility activity within paragraph 3(1) or (2) of Schedule 4 (water services), ignoring for this purpose the effect of paragraph 3(4) of that Schedule.
+36
+1
+A concession contract that—
+a
+confers an exclusive right to operate a relevant scheduled air service for a period of four years or a series of periods falling within a period of four years, and
+b
+imposes minimum service requirements in respect of that service during those periods.
+2
+In this paragraph—
+“ air service ” means a flight, or a series of flights, carrying passengers or cargo (including mail);
+“ airport ” means any area especially adapted for air services;
+“ relevant scheduled air service ” means an air service that—
+operates between two airports within the United Kingdom or within the United Kingdom and Gibraltar, and
+the Secretary of State considers to be necessary in order to maintain sufficient transport links between the areas served by the airports.
+37
+A concession contract for the provision of public passenger transport services.
+Commercial contracts of the City of London
+38
+A contract for the supply of goods, services or works to the Common Council of the City of London other than for the purposes of its functions as a local authority, police authority or port health authority.
+Sch. 2 para. 13  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 10  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 21  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 11  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 19  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 9  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 37  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 35  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 8  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 29  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 25  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 14  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 6(1)-(3) in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 26  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 3(1) (2) (4)  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 26  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 24  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 27  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 7  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 16  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 23  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 11  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 3(3) in force at 12.3.2024 by  S.I. 2024/361 ,  reg. 2(s)
+Sch. 2 para. 38  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 13  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 5  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 29  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 31  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 36  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 15  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 2(1)-(5)(7)(8) in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 16  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 22  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 35  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 28  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 30  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 10  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 15  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 1 in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 23  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 34  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 32  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 17  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 38  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 6  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 14  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 1  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 37  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 36  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 2  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 8  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 25  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 12  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 2(6) in force at 12.3.2024 by  S.I. 2024/361 ,  reg. 2(s)
+Sch. 2 para. 7  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 21  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 9  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 18  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 30  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 22  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 33  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 31  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 17  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 19  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 27  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 3  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 34  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 18  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 5 in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 20  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 24  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 4  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 20  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 32  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 12  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 4 in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 33  not in force at Royal Assent, see  s. 127(2)
+Sch. 2 para. 28  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+Sch. 2 para. 6(4)(5) in force at 12.3.2024 by  S.I. 2024/361 ,  reg. 2(s)
+Sch. 2 para. 2A inserted (29.4.2026 for specified purposes) by  Pension Schemes Act 2026 (c. 22) ,  ss. 4 ,  133(1) (3)  (with  s. 8(3) )

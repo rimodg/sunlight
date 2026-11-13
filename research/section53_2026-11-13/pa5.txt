@@ -1,0 +1,32 @@
+Key definitions
+Mixed procurement: above and below threshold
+5
+1
+Subsection (3) applies if, on award of a below-threshold contract other than a framework, a contracting authority considers that—
+a
+certain of the goods, services or works to be supplied under the contract could reasonably be supplied under a separate contract, and
+b
+that contract would have an estimated value of not less than the threshold amount for a contract of its type.
+2
+Subsection (3) applies if, on award of a below-threshold contract that is a framework, a contracting authority considers that—
+a
+certain of the goods, services or works to be supplied under contracts awarded in accordance with the framework could reasonably be supplied under a contract not awarded in accordance with the framework, and
+b
+that contract would have an estimated value of not less than the threshold amount for a contract of its type.
+3
+The contract is to be treated as having an estimated value of not less than the threshold amount for the type of contract.
+4
+In considering whether goods, services or works could reasonably be supplied under a separate contract, a contracting authority may, for example, have regard to the practical and financial consequences of awarding more than one contract.
+5
+In this Act “ below-threshold contract ” means—
+a
+a contract for the supply, for pecuniary interest, of goods, services or works to a contracting authority,
+b
+a framework, or
+c
+a concession contract,
+that has an estimated value of less than the threshold amount for the type of contract.
+6
+This section does not apply to a contract awarded in accordance with a framework.
+S. 5  in force at 24.2.2025 by  S.I. 2024/716 ,  Sch.  (as amended by  S.I. 2024/959 ,  regs. 1(2) ,  2(7)(a) )
+S. 5  not in force at Royal Assent, see  s. 127(2)
