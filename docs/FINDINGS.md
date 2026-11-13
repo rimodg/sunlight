@@ -86,3 +86,34 @@ This demonstrates an elapsed reporting day, not continuous successful capture.
 The retained receipts do not identify the unavailable attempts' network root
 cause. See the [full operational report](WATCH_FIRST_DAY_2026-11-13.md) and
 WATCH-OPS-001 for the remaining reliability investigation.
+
+## WATCH-004: available signature dates do not establish the legal entry date
+
+Recorded November 13, 2026, issue #20. The completed FTS update-window scan
+from November 12 00:00 through November 13 00:00 returned 430 releases, with
+126 contract-details releases and 150 contract/notice rows. All 150 carry
+`dateSigned` and the notice's `datePublished`; 45 are labelled above threshold
+and 105 below threshold. The protected adapter admitted all 430 releases and
+refused zero. A second completed scan through the production adapter retained
+the same counts. These are release/contract appearances, not 150 independent
+procurements or a national census.
+
+**Legal assessability: 0/150 assessable, 150/150 UNASSESSABLE.** None has an
+admitted source explicitly establishing its legal contract-entry date. The
+platform publishes the signature field; section 53 counts from contract entry.
+Their equivalence is not established by the admitted fields. This does not
+claim that entry evidence is unpublished everywhere or absent from every
+contract attachment. Complete scope also remains to be admitted; the 105
+below-threshold flags cannot justify section 53's fixed deadline.
+
+Signature-to-publication gaps in the stated civil-date measurement range from
+0 to 447 days, with no negative gaps in these rows. For the 45 above-threshold
+rows the range is 0 to 349 days. These are **plain measurements, not legal
+assessments**, lateness findings, or bounds on the entry date. The rule does
+not infer a fixed order between signature and entry. HOLDS/BREAKS require
+explicit entry evidence and reviewed scope; a late public timestamp alone
+also does not exclude an earlier legally qualifying publication event.
+
+[Full source note, arithmetic, tests and limits](SECTION53_2026-11-13.md);
+[protected results](../research/section53_2026-11-13/adapter-run/results.json);
+[future legal-review question](LEGAL_REVIEW_QUESTIONS.md).

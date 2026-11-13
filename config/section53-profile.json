@@ -1,0 +1,44 @@
+{
+  "schema": "sunlight.section53-profile.v1",
+  "instrument": "Procurement Act 2023, section 53(1)",
+  "binding_status": "BINDING",
+  "commencement": "2025-02-24",
+  "commencement_source": {
+    "source": "https://www.legislation.gov.uk/uksi/2024/716/schedule/data.xml",
+    "locator": "Schedule, section 53 and heading",
+    "sha256": "da8e15821886289df707a959ae0c0c32cf5a98cff6c2a3d6ba14a4f3428be238"
+  },
+  "unit": "calendar_days",
+  "calendar_basis": "UK civil calendar",
+  "calendar_basis_limit": "Only dates admitted in the same civil calendar; no implicit UTC/local conversion in the rule.",
+  "first_day": {
+    "amount": "1",
+    "source": {
+      "source": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml",
+      "locator": "section 53(1): beginning with the day on which the contract is entered into",
+      "sha256": "11b80c792bc3736eeaddbe966bf3372cd8a1b12689f000eb5b1345c49d2e92be"
+    }
+  },
+  "variants": {
+    "ordinary": {
+      "days": "30",
+      "source": {
+        "source": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml",
+        "locator": "section 53(1)(b)",
+        "sha256": "11b80c792bc3736eeaddbe966bf3372cd8a1b12689f000eb5b1345c49d2e92be"
+      },
+      "provision_text": "before the end of the period of 30 days beginning with the day on which the contract is entered into",
+      "selection_limit": "Requires cited scope identifying this contract category; missing light-touch evidence does not select ordinary."
+    },
+    "light_touch": {
+      "days": "120",
+      "source": {
+        "source": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml",
+        "locator": "section 53(1)(a)",
+        "sha256": "11b80c792bc3736eeaddbe966bf3372cd8a1b12689f000eb5b1345c49d2e92be"
+      },
+      "provision_text": "before the end of the period of 120 days beginning with the day on which the contract is entered into",
+      "selection_limit": "Requires cited scope identifying this contract category; missing light-touch evidence does not select ordinary."
+    }
+  }
+}

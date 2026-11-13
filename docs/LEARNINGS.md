@@ -42,3 +42,14 @@ one update window is not an all-time notice search. Preserve release-version
 denominators and do not backfill an unavailable historical version with a
 fresh document. A running scheduler and a completed examination also do not
 prove fresh source contact: report backoff and source silence separately.
+
+## November 13, 2026: a populated date field is not automatically the legal event
+
+The FTS sample supplies both signature and publication dates for all 150
+contract-details rows. It supplies no admitted equivalence between signature
+and the contract-entry event used by section 53. Field coverage is therefore
+100% for that pair while legal assessability is zero under the owner's
+conservative scope. Keep those denominators separate. A name resemblance,
+common practice, or a fact-specific guidance example cannot establish a
+universal date mapping or ordering. Report plain measured gaps separately,
+keep undefined statutory margins null, and retain the legal-review question.

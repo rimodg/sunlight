@@ -71,6 +71,8 @@ def counts(records):
     return {'admitted_release_rows': len(records), 'distinct_release_keys': len({(r['ocid'],r['release_id']) for r in records}), 'release_rows_with_contract_details_marker': sum(any(c['notices'] for c in r['contracts']) for r in records), 'contract_rows_with_contract_details_marker': len(contracts), 'contract_rows_with_both_dates': len(both), 'contract_rows_missing_signature_date': sum(c['dateSigned'] is None for c in contracts), 'contract_rows_missing_notice_publication_date': sum(not any(n['datePublished'] for n in c['notices']) for c in contracts), 'pa_labelled_contract_details_rows': len(pa), 'pa_labelled_above_threshold_rows': sum(c['aboveThreshold'] is True for c in pa), 'pa_labelled_below_threshold_rows': sum(c['aboveThreshold'] is False for c in pa), 'pa_labelled_threshold_unknown_rows': sum(c['aboveThreshold'] is None for c in pa), 'pa_labelled_above_threshold_rows_with_both_dates': sum(c['aboveThreshold'] is True and c['dateSigned'] is not None and any(n['datePublished'] for n in c['notices']) for c in pa)}
 
 def main():
+    if (HERE / 'coverage.json').exists():
+        raise SystemExit('Existing measurement preserved; use scripts/measure_section53.py for a new capture')
     url, pages, records, refusals, seen = URL, [], [], [], set()
     complete = False
     for page in range(30):
@@ -89,6 +91,8 @@ def main():
             break  # no retry; preserve failure, never call a partial scan complete
         body = response['body']
         receipt.update({'sha256': hashlib.sha256(body).hexdigest(), 'bytes': len(body)})
+        if len(body) > 8 * 1024 * 1024:
+            raise ValueError('source_body_too_large')
         doc = json.loads(body)
         rows = doc.get('releases')
         if not isinstance(rows, list) or len(rows) > 100:

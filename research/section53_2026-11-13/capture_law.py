@@ -33,6 +33,8 @@ def capture(item):
             'extract_path': f'{key}.txt', 'extract_sha256': hashlib.sha256(encoded).hexdigest()}
 
 if __name__ == '__main__':
+    if (HERE / 'law-sources.json').exists():
+        raise SystemExit('Existing source receipts preserved; use a new dated directory for a fresh capture')
     ARCHIVE.mkdir(parents=True, exist_ok=True)
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
         manifest = sorted(pool.map(capture, SOURCES.items()), key=lambda x: x['id'])

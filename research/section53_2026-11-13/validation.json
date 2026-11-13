@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-13",
+  "recorded_at": "2026-11-13T22:27:37.880027+00:00",
+  "python": "3.12.14",
+  "command": "SUNLIGHT_DB_PATH=/Users/rimodg/brain/SUNLIGHT/data/sunlight.db PYTHONPATH=code:tests:. ../test-runtime-3.12.14/bin/python -m pytest tests/ -q -ra --junitxml=../outputs/section53-2026-11-13/verification/backend-final.xml",
+  "passed": 2193,
+  "skipped": 10,
+  "failed": 0,
+  "subtests_passed": 17,
+  "warnings": 2,
+  "elapsed_seconds": "19.33",
+  "new_adapter_rule_tests": 49,
+  "log": "backend-test-output.txt",
+  "log_sha256": "2096bbeafaf81a524743862c85a39927e6a5b8e229aec9e24c0560b2a233e5bf",
+  "junit": {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/backend-final.xml",
+    "sha256": "091ef230c278df1c243d127890fc9568b9f7e2be32416ab5bdc65dd984be098a"
+  },
+  "files": {
+    "code/central_platform.py": "fcc7f258614593f23ded66409cd6df222285656e6d6be05d0f71f07e93b95a0d",
+    "code/section53.py": "12b9031f68f7bc126979aaac423f1ef98797b2be38671316510ec9a54a57297f",
+    "code/watch_capture.py": "b2ddf27d5a752de8442bc2f95fd8a6b1216400fc620b0b27b3bbb53337b2ee1f",
+    "code/watch_projection.py": "46b01738d5c3b2554d8db61f2d6f74ca752569f79a5ea369cd9734e39ed1be2f",
+    "code/invariant_core.py": "087e050ef7cc3a64033167fa00b8b15e7408f1dead6a816430c17b1d3b17ce2a",
+    "config/section53-profile.json": "c90e4dac51af91ca798167f1097c8ec98d81d9a9b68be36af6ea51670565caab",
+    "scripts/measure_section53.py": "5134c96a39e7b93a00c279c6cab0238ec414f7aa4fd580f700cb7936575dac93",
+    "scripts/verify_section53_evidence.py": "ff3aece210d5552c091ca2286cce8a46fa85522c4a66e5272aad11f8565ead6d",
+    "tests/test_central_platform.py": "860f3e82f14c1ffd7d15d5d2b758a3e0607a01f983407bc932e55f7cce9cd56c",
+    "tests/test_section53.py": "444966661415109cb995990e968c0141b28a946f2d22232ae47c2be1f616f2ba"
+  },
+  "invariant_core_unchanged_from_pr18": true
+}
