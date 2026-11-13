@@ -51,3 +51,30 @@ No backend tests were rerun for this documentation-only scoreboard. The
 invariant-core count is its recorded run, not a claim about current main.
 Failure cause remains open in [WATCH-OPS-001, #21](https://github.com/rimodg/sunlight/issues/21).
 No source migration is authorized by these counts; that is [proposal #22](https://github.com/rimodg/sunlight/issues/22).
+
+## Section 53 coverage and implementation, November 13, 2026
+
+[Issue #20](https://github.com/rimodg/sunlight/issues/20),
+[draft implementation PR #24](https://github.com/rimodg/sunlight/pull/24).
+The completed FTS update-window scan for November 12 00:00 through November 13
+00:00 admitted 430 release rows and refused zero. Among 126 contract-details
+releases, 150 contract/notice rows have both signature and publication dates:
+45 flagged above threshold, 105 below threshold.
+
+| Measurement | Result |
+|---|---:|
+| Contract/notice rows with both published date fields | 150 / 150 |
+| Rows with admitted explicit contract-entry evidence | 0 / 150 |
+| Legally assessable under the approved conservative scope | 0 / 150 |
+| UNASSESSABLE | 150 / 150 |
+| Full backend on rule-section53, Nov 13 | 2,193 passed, 10 skipped, 0 failed; 17 subtests passed |
+
+**Why assessability did not move:** the signature field does not establish the
+contract-entry event from which the law counts. The owner expressly prohibited
+substitution. Signature-to-publication gaps range from 0 to 447 civil days;
+these are plain measurements, not legal assessments. No live HOLDS or BREAKS
+is claimed, and this does not close PR #18's first-assessable-real-rule gate.
+
+[Source note, per-record results and verification at the measured commit](https://github.com/rimodg/sunlight/blob/75b02e0/docs/SECTION53_2026-11-13.md).
+The adapter is implemented and tested but not deployed; the existing watch
+source policy and service data were not changed.
