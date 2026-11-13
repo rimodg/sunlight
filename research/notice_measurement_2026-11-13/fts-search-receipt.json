@@ -1,0 +1,59 @@
+{
+  "window": {
+    "updatedFrom": "2026-11-12T00:00:00",
+    "updatedTo": "2026-11-13T05:20:00"
+  },
+  "complete": true,
+  "pages": [
+    {
+      "page": 0,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00%3A00%3A00&updatedTo=2026-11-13T05%3A20%3A00&limit=100",
+      "retrieved_at": "2026-11-13T05:20:58.222815+00:00",
+      "bytes": 1039205,
+      "sha256": "6aa56875fd2585b633c5de51bf04cf469c0798ff8705d29748b2e38a3a1ac35f",
+      "releases": 100,
+      "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTY4Nw=="
+    },
+    {
+      "page": 1,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTY4Nw==",
+      "retrieved_at": "2026-11-13T05:21:04.968828+00:00",
+      "bytes": 1027803,
+      "sha256": "8d27c69880b11a9dd9b2d83978d346d27822736a0203c319be9273e9f71632b6",
+      "releases": 100,
+      "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTU4Nw=="
+    },
+    {
+      "page": 2,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTU4Nw==",
+      "retrieved_at": "2026-11-13T05:21:09.688527+00:00",
+      "bytes": 927272,
+      "sha256": "7dfa33d349acbf9a7cb8356389d31ab1983fdefe8660b9adb6e6eac7c27947b6",
+      "releases": 100,
+      "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTQ4Nw=="
+    },
+    {
+      "page": 3,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTQ4Nw==",
+      "retrieved_at": "2026-11-13T05:21:15.363024+00:00",
+      "bytes": 1032449,
+      "sha256": "07b8ce27a9fc83b16b003ea7a5fe6210ff22252d62fd3c38e263efab19efae51",
+      "releases": 100,
+      "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTM4Nw=="
+    },
+    {
+      "page": 4,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T05:20:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwNToyMDowMHxuZXh0Q3Vyc29yPTc1OTM4Nw==",
+      "retrieved_at": "2026-11-13T05:21:20.022146+00:00",
+      "bytes": 310323,
+      "sha256": "550d246da026cec64c809f0b14b5fc56d63d84d5a80b3b7e3bdbc7a35d98daef",
+      "releases": 31,
+      "next": null
+    }
+  ],
+  "records": 431,
+  "distinct_release_ids": 431,
+  "retained_cf_crosslinks": 0,
+  "exact_tender_reference_intersections": [],
+  "limits": "Completed returned pagination in a bounded update window; not an all-time search or proof an unmatched notice does not exist. No current comparison from search absence."
+}

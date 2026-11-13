@@ -188,3 +188,12 @@ November 13 at 09:38:16 Eastern. Report failed polls, reach gaps, reboot downtim
 record refusals and the running build rather than presenting elapsed time as
 continuous availability. Reboot/login and newly-published-notice detection have
 separate passing evidence; the full-day gate is still pending.
+
+## First full-day report delivered, November 13
+
+The [full-day operational report](WATCH_FIRST_DAY_2026-11-13.md) covers
+24h 4m 19.814s through 09:42:36.631 Eastern: 241 completed runs, 21 failed
+runs and a longest source reach gap of about 5h 13m. The elapsed-day reporting
+gate is complete. Reboot/login and new-publication evidence remain valid;
+continuous reliable coverage is not claimed. WATCH-OPS-001 preserves the
+remaining reliability investigation. The installed service was not changed.

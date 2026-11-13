@@ -1,0 +1,87 @@
+[
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/cohort.json",
+    "bytes": 584648,
+    "sha256": "ac81dda5013dd38d0aa927a6b27252429e9b149a0edb6e9da3ff6de534ffc72f"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/cf-supplement.json",
+    "bytes": 117280,
+    "sha256": "5bb00afe8fc6f1d8e7be1cbb3c3c4fb2d99914da68b2850aa64cc55e610e9b8f"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/fts-scan.json",
+    "bytes": 311792,
+    "sha256": "b6236af3145a9f9040b8d56cbb2e3e64f89a104ca33ffb27f207f9c9dfc06baa"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/gcloud-relationship-review.json",
+    "bytes": 2400,
+    "sha256": "4d156e23870ea7c5e51d4157dcfe12fa6deb7e705c859ba8f52448b0895f73e7"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/watch-first-day.json",
+    "bytes": 2106,
+    "sha256": "158f67afce9d1ca739ffef59009668da57cc8f3ec55e9569d94017b7a3e805d6"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/watch-full-report.json",
+    "bytes": 1897,
+    "sha256": "daa7835e124c867117fa6a46ac4f617e5c699c47e20cfebf8fe5c456c54aefeb"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/watch-failure-detail.json",
+    "bytes": 36952,
+    "sha256": "2d79db01e627116535e473f4f0f356f2bbaa968d5a5bb1cc5287334c5b0afc33"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/operational-detail.json",
+    "bytes": 50334,
+    "sha256": "030e3808552f15764d2f03eca4e3a9cf2d241f525cbfeaf99760836d75129c16"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/native-verify-final-error.json",
+    "bytes": 104,
+    "sha256": "595d69ec2f9a02039f97e8ba48238f04abfb7773e5a649bbf67b95a5ea70ef04"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/native-verify-recheck.json",
+    "bytes": 1565,
+    "sha256": "6f2f333fe96d93539b39af32eea77a8706e08f7bd44a22ee959f7eaf2b3b0b2b"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pa84.xml",
+    "bytes": 10699,
+    "sha256": "91ec2a18f0862d3a5a52067e228d228a0d8d184fe96e017e52e9aacd3a773715"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pa87.xml",
+    "bytes": 17458,
+    "sha256": "2d2bdda9d284ca7b63486b12de7c247dfaa571218abe220b46f4a19091502d4f"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr1.xml",
+    "bytes": 9026,
+    "sha256": "f764b03e6d82c67ac7d3e35f64f45588dfbac7b7f218afb3b01c1c03ad3a9417"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr24.xml",
+    "bytes": 20718,
+    "sha256": "8bed8f9bcd069ef44199caad9d7f3055476274fbe3b0e5232708350104588f2f"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr32.xml",
+    "bytes": 24541,
+    "sha256": "bd0752fa03b5953639e942386c820bf3c686bb72906299986e6e07470491c2d8"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr5.xml",
+    "bytes": 28049,
+    "sha256": "5f7ecfb0863d8fe006e145a14d907905a70f7ca0fb41ead45a6d025242e3f895"
+  },
+  {
+    "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr8.xml",
+    "bytes": 12893,
+    "sha256": "6ed837ec76b36b5ce58d261d8afdcce98b88fd3d89cf54e8ca73fe91766fa819"
+  }
+]

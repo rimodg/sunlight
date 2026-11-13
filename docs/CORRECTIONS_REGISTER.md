@@ -22,3 +22,17 @@
   examples and 200 presumed negatives and disclaims field-accuracy inference.
   The same misleading principle was corrected in docs/ARCHITECTURE.md.
 - Detailed evidence: [history audit](EVAL001_HISTORY_2026-11-12.md).
+
+## COR-002: the 96-record invariant cohort is not 96 distinct awards
+
+- Recorded November 13, 2026. Affected artifact: the initial invariant-core
+  report and its description of 96 awards in the captured population.
+- Correction: 96 `(ocid, release_id)` pairs contain 96 award appearances,
+  **94 distinct award IDs across 93 procurement OCIDs**. Two award IDs occur
+  in two release versions. Three procurement OCIDs have two release versions;
+  one of those contains different award IDs.
+- The original 96-record denominator is retained for the authorized regime
+  and matching measurement, with the distinct counts beside it. No records
+  were silently dropped or replaced with later captures.
+- The initial report is clarified in place. See the
+  [per-record measurement](NOTICE_REGIME_MEASUREMENT_2026-11-13.md).
