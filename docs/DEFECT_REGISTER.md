@@ -86,3 +86,12 @@
   selected random draw or claim a proved original execution.
 - Evidence: [history audit](EVAL001_HISTORY_2026-11-12.md) and the committed
   historical-code audit harness/receipt. No scoring or threshold change.
+
+## GHANA-SOURCE-001: producer-share evidence gate
+
+Recorded November 12, 2026. Status: parked, not dropped; Task 1 open.
+Assessment: UNASSESSABLE. Official enacted Act 1182 text has not been obtained.
+A numerical realised-FOB denominator was not found in the September release
+that declares 71.18%; availability elsewhere is not determined. The owner is
+obtaining the Act. This is an evidence gap, not a statutory finding or a
+software defect. Preserve all three corrections in the source note.
