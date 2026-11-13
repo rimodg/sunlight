@@ -1,0 +1,49 @@
+{
+  "first_completed_at": "2026-11-12T14:38:16.817244+00:00",
+  "last_completed_at": "2026-11-13T14:42:36.630759+00:00",
+  "recorded_elapsed_seconds": 86659.813515,
+  "full_day_elapsed": true,
+  "scheduler_completed": 241,
+  "scheduler_failed": 21,
+  "maximum_scheduler_start_gap_seconds": 416.979095,
+  "recorded_builds": [
+    {
+      "git_commit": "5a224c86a88408b7cb19564a2e6582bb425fb539",
+      "lock_sha256": "2b7343dce9882b86f1da44576cde46863ebaa1114f44e1818e533b406662827b",
+      "python": "3.12.14",
+      "source_sha256": "324cd5431e2e86d5422a0bb3eb19c7c06192b4f0031f3a17f7163ac89ef325de"
+    }
+  ],
+  "sources": {
+    "contracts-finder-20261112-14": {
+      "captures": 40,
+      "admitted_occurrences": 3344,
+      "refusals": {},
+      "outcomes": {
+        "captured": 40,
+        "unavailable": 20
+      },
+      "last_reached": "2026-11-13T14:35:37.055925+00:00",
+      "silence_at_last_completion_seconds": 419.574834,
+      "maximum_observed_reach_gap_seconds": 18791.022092
+    },
+    "dportal-gb-coh-1869600": {
+      "captures": 33,
+      "admitted_occurrences": 297,
+      "refusals": {},
+      "outcomes": {
+        "captured": 33,
+        "unavailable": 21
+      },
+      "last_reached": "2026-11-13T14:29:35.262390+00:00",
+      "silence_at_last_completion_seconds": 781.368369,
+      "maximum_observed_reach_gap_seconds": 18791.273199
+    }
+  },
+  "published_change_proofs": [],
+  "limits": "Elapsed time is not uninterrupted uptime. Counts are repeated admitted occurrences. Silence is measured at the last completed run, not now. An independent native verify receipt is required for current process liveness. Change proofs require completed source cycles, a stable record key, advancing publication time and a recorded examination; new discoveries and page movement are excluded.",
+  "journal_head": "acb935d41f559ae309fa425902cde1f6ad63055d042add871949675d14ddce9f",
+  "journal_seq": 1422,
+  "target_full_day_at": "2026-11-13T14:38:16.817244+00:00",
+  "definition": "From first completed run to first completed run at or beyond 24 hours; receipts include the initial run."
+}

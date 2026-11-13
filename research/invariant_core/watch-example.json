@@ -1,0 +1,168 @@
+{
+  "capture_id": "f3564c86a5031506b61572653ff198023b229e40a74169adf0f531bd83c488f3",
+  "capture_receipt": {
+    "adapter_version": "contracts-finder-organisations.v1",
+    "captured_at": "2026-11-13T01:05:45.361474+00:00",
+    "policy_hash": "ce6fd55c56e5e5644a44ac8c591d118f700c2abb4cbec27d9e5f87e21002bcd6",
+    "projection_sha256": "0435ab9d4df23276c82a82d0a968c6aaaa7b5004e32912fe55f592df5c9339cb",
+    "sha256": "5c0bc5798152b87147e207df9bcde17a178a2c6a12db8992e4ba087910e136e0",
+    "source": "contracts-finder-20261112-14",
+    "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-11-12&publishedTo=2026-11-14&stages=award&limit=100"
+  },
+  "captured_at": "2026-11-13T01:05:45.361474+00:00",
+  "journal_event_sha256": "59a10ab1aad6337b3e13c27cb4e5fa3cde44b45a4e79f30dd17a73647e35e447",
+  "journal_seq": 664,
+  "record": {
+    "category": "procurement",
+    "coverage": {
+      "adapter_version": "contracts-finder-organisations.v1",
+      "excluded_by_policy": [
+        "names",
+        "addresses",
+        "contacts",
+        "descriptions",
+        "documents",
+        "review_body_roles"
+      ],
+      "gaps": {
+        "/awards/0/suppliers/0/additionalIdentifiers": "not_supplied_in_record",
+        "/awards/0/suppliers/0/identifier": "not_supplied_in_record",
+        "/buyer/additionalIdentifiers": "not_supplied_in_record",
+        "/buyer/identifier": "not_supplied_in_record",
+        "/parties/0/additionalIdentifiers": "not_supplied_in_record",
+        "/parties/0/identifier/id": "not_supplied_in_record",
+        "/parties/0/identifier/scheme": "not_supplied_in_record",
+        "/parties/1/additionalIdentifiers": "not_supplied_in_record",
+        "/parties/1/identifier/id": "not_supplied_in_record",
+        "/parties/1/identifier/scheme": "not_supplied_in_record",
+        "/tender/numberOfTenderers": "not_supplied_in_record",
+        "/tender/tenderPeriod/startDate": "not_supplied_in_record"
+      },
+      "limits": "Missing fields are not claims that the publisher cannot supply them elsewhere.",
+      "mapped_fields": [
+        "/awards/0/contractPeriod/endDate",
+        "/awards/0/contractPeriod/startDate",
+        "/awards/0/date",
+        "/awards/0/datePublished",
+        "/awards/0/id",
+        "/awards/0/suppliers/0/id",
+        "/awards/0/value/amount",
+        "/awards/0/value/currency",
+        "/buyer/id",
+        "/date",
+        "/id",
+        "/ocid",
+        "/parties/0/id",
+        "/parties/0/roles",
+        "/parties/1/id",
+        "/parties/1/roles",
+        "/tender/contractPeriod/endDate",
+        "/tender/contractPeriod/startDate",
+        "/tender/procurementMethod",
+        "/tender/tenderPeriod/endDate",
+        "/tender/value/amount",
+        "/tender/value/currency"
+      ],
+      "population_absence_reason": "single_page_does_not_prove_population_coverage",
+      "population_complete": null,
+      "publisher": {
+        "basis": "reviewed_source_policy",
+        "service": "Contracts Finder"
+      },
+      "publisher_version": "1.1",
+      "publisher_version_absence_reason": null,
+      "written_against": "OCDS 1.1 award release JSON"
+    },
+    "id": "0519948b3cca2aef9d7b290141172a07621386a374e7dc0bfa48ad8129fc625a",
+    "key": "ocds-b5fd17-c8fceea3-acd2-4db9-a7b9-70192ea24eef",
+    "locator": "/releases/24",
+    "parties": [
+      {
+        "identifiers": [
+          {
+            "locator": "/releases/24/parties/0/id",
+            "normalised_value": null,
+            "policy": "sunlight.cited-organisations.gb-coh-pad8.v1",
+            "published_value": "310656",
+            "scheme": "GB-CFS",
+            "value": "310656"
+          }
+        ]
+      },
+      {
+        "identifiers": [
+          {
+            "locator": "/releases/24/parties/1/id",
+            "normalised_value": null,
+            "policy": "sunlight.cited-organisations.gb-coh-pad8.v1",
+            "published_value": "340027",
+            "scheme": "GB-CFS",
+            "value": "340027"
+          }
+        ]
+      }
+    ],
+    "published_at": "2026-11-12T14:35:22.000000+00:00",
+    "record": {
+      "_watch_projection": "contracts-finder-organisations.v1",
+      "awards": [
+        {
+          "contractPeriod": {
+            "endDate": "2029-10-26T23:59:59+01:00",
+            "startDate": "2026-10-27T00:00:00Z"
+          },
+          "date": "2026-10-27T00:00:00Z",
+          "datePublished": "2026-11-12T14:32:49Z",
+          "id": "ocds-b5fd17-c8fceea3-acd2-4db9-a7b9-70192ea24eef-1",
+          "suppliers": [
+            {
+              "id": "GB-CFS-340027"
+            }
+          ],
+          "value": {
+            "amount": 129885.45,
+            "currency": "GBP"
+          }
+        }
+      ],
+      "buyer": {
+        "id": "GB-CFS-310656"
+      },
+      "date": "2026-11-12T14:35:22Z",
+      "id": "20d29989-e0cd-4541-b765-7cf3a60287e3-921417",
+      "ocid": "ocds-b5fd17-c8fceea3-acd2-4db9-a7b9-70192ea24eef",
+      "parties": [
+        {
+          "id": "GB-CFS-310656",
+          "identifier": {},
+          "roles": [
+            "buyer"
+          ]
+        },
+        {
+          "id": "GB-CFS-340027",
+          "identifier": {},
+          "roles": [
+            "supplier"
+          ]
+        }
+      ],
+      "tender": {
+        "contractPeriod": {
+          "endDate": "2029-10-26T23:59:59+01:00",
+          "startDate": "2026-10-27T00:00:00Z"
+        },
+        "procurementMethod": "selective",
+        "tenderPeriod": {
+          "endDate": "2026-10-01T17:00:00+01:00"
+        },
+        "value": {
+          "amount": 129885.45,
+          "currency": "GBP"
+        }
+      }
+    },
+    "release_id": "20d29989-e0cd-4541-b765-7cf3a60287e3-921417",
+    "source": "contracts-finder-20261112-14"
+  }
+}
