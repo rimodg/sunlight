@@ -1,0 +1,384 @@
+Guidance: Contract Details Notices (HTML) - GOV.UK
+Cookies on GOV.UK
+We use some essential cookies to make this website work.
+We’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.
+We also use cookies set by other sites to help us deliver content from their services.
+You have accepted additional cookies.
+You can
+change your cookie settings
+at any time.
+You have rejected additional cookies.
+You can
+change your cookie settings
+at any time.
+Accept additional cookies
+Reject additional cookies
+View cookies
+Hide cookie message
+Skip to main content
+GOV.UK
+Navigation menu
+Menu
+Menu
+Services and information
+Benefits
+Births, death, marriages and care
+Business and self-employed
+Childcare and parenting
+Citizenship and living in the UK
+Crime, justice and the law
+Disabled people
+Driving and transport
+Education and learning
+Employing people
+Environment and countryside
+Housing and local services
+Money and tax
+Passports, travel and living abroad
+Visas and immigration
+Working, jobs and pensions
+Government activity
+Departments
+Departments, agencies and public bodies
+News
+News stories, speeches, letters and notices
+Guidance and regulation
+Detailed guidance, regulations and rules
+Research and statistics
+Reports, analysis and official statistics
+Policy papers and consultations
+Consultations and strategy
+Transparency
+Data, Freedom of Information releases and corporate reports
+Search GOV.UK
+×
+Search GOV.UK
+Search
+Search GOV.UK
+Search
+Home
+Government
+Government efficiency, transparency and accountability
+Government spending
+Procurement Act 2023 guidance documents - Procure phase
+Cabinet Office
+Guidance
+Guidance: Contract Details Notices (HTML)
+Updated 17 August 2026
+Contents
+What is a contract details notice?
+What is the legal framework that governs contract details notices?
+What has changed?
+Key points and policy intent
+What notices are linked to this aspect of the Act?
+What other guidance is of particular relevance to this topic area?
+Annex 1: Table setting out when contract details notices, contract documents and KPIs are required to be published
+Print this page
+© Crown copyright 2026
+This publication is licensed under the terms of the Open Government Licence v3.0 except where otherwise stated. To view this licence, visit
+nationalarchives.gov.uk/doc/open-government-licence/version/3
+or write to the Information Policy Team, The National Archives, Kew, London TW9 4DU, or email:
+psi@nationalarchives.gov.uk
+.
+Where we have identified any third party copyright information you will need to obtain permission from the copyright holders concerned.
+This publication is available at https://www.gov.uk/government/publications/procurement-act-2023-guidance-documents-procure-phase/guidance-contract-details-notices-html
+What is a contract details notice?
+1. A contract details notice informs suppliers and the public that the contracting authority has entered into a contract. It provides key information about the contract that has been entered into.
+2. Where the contracting authority has entered into a public contract with an estimated value of more than £5 million, the contract details notice:
+a. provides access to the contract (and therefore serves to fulfil the obligation in
+section 52(3)
+to publish the KPIs); and
+b. where relevant, sets out the three key performance indicators (KPIs) that the contracting authority regards as most material to performance of the contract obligations at the time the contract details notice is published.
+3. Publication of the contract details notice takes place after any standstill period has ended and the contract has been entered into. The contract details notice is required to be published on the central digital platform.
+What is the legal framework that governs contract details notices?
+4.
+Section 53
+of the
+Procurement Act (Act)
+requires contracting authorities to publish a contract details notice setting out that it has entered into a public contract within 30 days of the contract being entered into, except in relation to light touch contracts for which the period is 120 days.
+Regulations 32-35
+set out the information required to be included in the notice. It also requires contracting authorities to publish a copy of any public contract it enters into with an estimated value of more than £5 million. The obligation to publish a contract details notice or a public contract does not apply to private utilities or to direct award: user choice contracts (see
+Schedule 5, paragraph 15
+).
+5.
+Section 87
+of the Act requires contracting authorities to publish a contract details notice as soon as reasonably practicable after entering into a ‘notifiable below-threshold contract’.
+6. This guidance deals with contract details notices required to be published under
+section 53
+, following entry into a public contract. See guidance on
+below-threshold contracts
+for guidance on
+contract details notices
+for regulated below-threshold procurements.
+What has changed?
+7. The contract details notice is published on the central digital platform after the contract has been entered into. It replaces the contract award notice published on the Find a Tender Service and the awarded opportunity notice published on Contracts Finder under the previous legislation. For public contracts with an estimated value of more than £5 million, there are also new requirements to publish copies of the contract and the KPIs set in accordance with
+section 52(1)
+.
+Key points and policy intent
+8. A contract details notice serves to tell interested parties that the contract has been entered into and to provide details about that contract. Its publication is mandatory for all contracting authorities except for private utilities and for all public contracts (including call-off contracts that are public contracts) except contracts awarded under
+section 41
+by reference to
+paragraph 15 of Schedule 5
+(direct award: user choice contracts). Where a contract details notice is published for a contract over £5 million, the contracting authority must also publish a copy of the contract. These requirements are set out in tabular form in Annex A.
+9. There are four separate regulations (
+regulations 32-35
+) that set out the information which must be included in a contract details notice published under
+section 53
+, with different information required depending on the circumstances (i.e. whether the notice is published following a competitive tendering procedure, direct award, the award of a framework or the award of a ‘call-off contract’ awarded under a framework).
+10. There is no requirement to publish contracts over £5 million awarded by a devolved Welsh authority or a transferred Northern Ireland authority (unless it is awarded under a reserved procurement arrangement) or contracts awarded under a devolved Welsh procurement arrangement or a transferred Northern Ireland procurement arrangement (see guidance on
+Devolved Contracting Authorities
+). This is the case even though there is a requirement to publish a contract details notice. Devolved Welsh authorities should refer to the Welsh-specific guidance.
+Content of contract details notices: competitive tendering procedures
+11. The information to be published in a contract details notice where an open or competitive flexible procedure is used to award a public contract is set out in
+regulation 32
+. It includes much of the same information published in previous notices (such as in the tender notice, transparency notice and contract award notice) for the relevant procurement, but with new and updated information to reflect that the contract has been entered into. Points to consider are set out below.
+KPIs
+12. Where
+section 52
+of the Act applies and KPIs have been set, contracting authorities must provide a description of the three KPIs which the contracting authority regards, at the time the contract details notice is published, as most material to performance of the contract obligations.
+[1]
+If the three KPIs that are most material to performance of the contract obligations at the time the contract details notice is published are only a snapshot in time and different KPIs would be relevant when considering those that are most material to performance of the contract obligations over the life of the contract, contracting authorities should also include those KPIs in the contract details notice. Circumstances when details of the KPIs must be included in the contract details notice are summarised in Annex A.  See the guidance on
+KPIs
+for further information.
+13. Where KPIs have not been set under
+section 52
+, the contract details notice must include an explanation of why KPIs were not appropriate to assess the performance of the supplier.
+Contract value, duration and options
+14. A procurement may result in more than one contract, all of which can be set out in the same contract details notice. Where this is the case, required information on contract value and duration must be included for each individual contract. This means that for each contract, there will be the option to include the minimum value and a requirement to include the maximum value, which must include the value of any options in the public contract. The contract details notice must also set out the estimated date when, or period over which, the goods, services or works will be supplied (this is part of the ‘contract subject-matter’ as defined in
+regulation 14
+) and the end date of any options to extend or renew the term of the contract.
+15. As options that increase the value and/or duration of a contract are included in the maximum estimated value/duration of the contract as awarded and published in the contract details notice, modifications that rely on
+Schedule 8, paragraph 1
+and increase the value or term of a contract are exempt in effect from the requirement to publish a contract change notice. If an option that is included in the contract details notice is not exercised before a contract is terminated, the final value of the contract set out in the contract termination notice may be lower than the value set out in the contract details notice.
+Conflicts assessments
+16. A contracting authority must confirm in the contract details notice that a conflicts assessment has been prepared and revised as necessary, as required by
+section 83(5)
+(note conflicts assessments themselves are not required to be published).
+Content of contract details notices: frameworks
+17.
+Regulation 33
+sets out the information required to be included in a contract details notice published following the award of a framework that is a public contract. This is largely the information required by
+regulation 32
+plus some additional information. The additional information includes details of any selection process to be followed when subsequent call-off contracts are awarded under the framework.
+18. When publishing a contract details notice, the contracting authority will usually be able to set out comprehensive details of the contract subject-matter (as required by
+regulation 32(2)(f)
+and
+regulation 14
+). However, in some instances, the full extent of the contract subject-matter may not be known, which is recognised by
+regulation 14
+which requires the contract subject-matter to be set out so far as it is known at the time the notice is published. This may be the case, for example, following the award of a framework where it is not known how the goods, services or works will be supplied for all call-off contracts that may be awarded under the framework.
+Content of contract details notices: call-off contracts awarded under frameworks
+19.
+Regulation 34
+sets out the information required to be included in a contract details notice published following the award of a call-off contract that is a public contract. This is largely the information required by
+regulation 32
+plus some additional information. The additional information includes whether the award was made following a competitive selection process (under
+section 46
+of the Act) or without further competition (under
+section 45(4)
+of the Act) and, if the latter, an explanation as to why the contracting authority considered no further competition was required (by reference to
+section 45(4)
+).
+Content of contract details notices: direct award
+20.
+Regulation 35
+sets out the information required to be included in a contract details notice published following the direct award of a public contract. This is largely the information required by
+regulation 32
+plus some additional information, such as which direct award ground in
+Schedule 5
+applies or whether the contract was awarded pursuant to regulations made under
+section 42
+.
+Timing of publication
+21.
+Section 53(1)
+provides that the the contract details notice must be published:
+a. within 30 days of the contract being entered into; or
+b. in the case of a light touch contract, within 120 days of the contract being entered into.
+22. The 30 or 90 (calendar) day period begins with the day the contract is entered into; the period may end on a non-working day and contracting authorities should take this into account (although the central digital platform will be available for use on non-working days).
+23. The definition of what it means for a contracting authority to enter into a contract is not set out in the Act or the regulations. It is the point when a legally binding contract comes into effect, which will be when the essential elements under contract law are satisfied (offer and acceptance; consideration; and intention to create legally binding relations).
+24. When all of those elements have been satisfied will be fact-specific. For example, it may be when the contract is signed and dated, and it is expected that will be the relevant date in the majority of cases. However, the date the contract is entered into may instead be, for example, after a particular event has occurred or based on when services or works start under the contract. It is for the contracting authority to determine the relevant date based on the circumstances. In doing so, contracting authorities must continue to have regard to the objective of information-sharing set out in
+section 12(1)
+and be transparent about when contracts have been entered into.
+Publication of the contract
+25. As set out in
+section 53
+(Contract details notices and publication of contracts) contracting authorities that enter into a public contract with an estimated value of more than £5 million must publish a copy of the contract. The contract details notice will be the vehicle for publication of the contract where this threshold is met. This will be done by including the contract as an attachment to the notice.
+Timing of publication of the contract
+26. For most contracts, publication must take place before the end of the period of 90 days beginning with the day on which the contract is entered into. For light touch contracts, a copy of the contract must be published before the end of the period of 180 days beginning with the day on which the contract is entered into.
+27. These are the maximum timeframes for publication and mean that a contract may be published some time after the contract details notice is published. For efficiency, and to save having to add the contract to the notice later, the contract can be published at the same time as the contract details notice.
+28. The contract may be redacted in accordance with the exemptions set out in
+section 94
+(General exemptions from duties to publish or disclose information). The guidance on the
+central digital platform
+provides further information.
+Contract change prior to publication of the contract details notice
+29. The contract published with the contract details notice must be the contract that was originally entered into. There may be cases where there is an immediate change to a contract after it has been entered into i.e. a modification occurs immediately after the contract commences. This could trigger the requirement to publish a contract change notice (under
+section 77
+of the Act) during the period in which the contract details notice would be published; this is in addition to the requirement under
+section 53(3)
+to publish the contract entered into.
+30. In these cases, contracting authorities must not use the contract details notice to record the contract change. They must publish the contract details notice and a copy of the contract that was entered into; and then subsequently publish the contract change notice (and a copy of the contract as modified or the modification) to document the contract change. Please see the guidance on
+contract modifications
+for further information.
+What notices are linked to this aspect of the Act?
+31. Generally, the contract details notice will be preceded by the contract award notice under
+section 50
+; with one signalling the contracting authority’s intent to enter into a specific contract and the other confirming that this has taken place.
+32. The next notice in the sequence could be any of the following:
+a. contract change notice: a contract may be modified after the contract has been entered into, with the changes published in a contract change notice;
+b. contract performance notice
+[footnote 2]
+: if KPIs were required to be included in the contract under
+section 52
+, a contract performance notice must be published at least annually to record the contracting authority’s assessment of the supplier’s performance against them. It must also be published if a breach occurs that results in partial termination, damages, or a settlement, or the contracting authority considers there to be poor performance. It may also be published in respect of a framework where the contracting authority is using the notice to notify framework users of the removal of a supplier (see guidance on
+contract performance notices
+and
+frameworks
+); or
+c. contract termination notice: when the contract ends, for whatever reason, there is a requirement to publish a contract termination notice.
+33. If any of the events which require these notices to be published take place in the period after the contract has been entered into but before the contract details notice has been published, the contracting authority must first publish the contract details notice in respect of the contract that was entered into.
+What other guidance is of particular relevance to this topic area?
+Guidance on
+contract award notices and standstill
+Guidance on
+key performance indicators
+Guidance on
+publication of information
+Annex 1: Table setting out when contract details notices, contract documents and KPIs are required to be published
+Circumstance
+Requires contract details notice
+Section reference
+Requires contract publication if over £5m
+Section reference
+Requires KPI listing in contract details notice if contract over £5m
+Section reference
+Public contract (except where specified below)
+Y
+53(1)
+Y
+53(3)
+Y
+[footnote 3]
+52(3)/53(2)
+Framework (public contract)
+Y
+53(1)
+Y
+53(3)
+N
+52(6)
+Concession contract
+Y
+53(1)
+Y
+53(3)
+N
+52(6)
+Light touch contract
+Y
+53(1)
+Y
+53(3)
+N
+52(6)
+Public contract awarded by a devolved Welsh authority or a transferred Northern Ireland authority, unless awarded under a reserved procurement arrangement.
+Y
+53(1)
+N
+53(4)
+Y
+52(3)/53(2)
+Public contract awarded under a devolved Welsh procurement arrangement or a
+transferred Northern Ireland procurement arrangement.
+Y
+53(1)
+N
+53(4)
+Y
+52(3)/53(2)
+Contract awarded by a private utility
+N
+53(6)
+N
+53(6)
+N
+52(6)
+Direct award: user choice contract
+N
+53(6)
+N
+53(6)
+N
+[footnote 4]
+52(6)
+This guidance reflects planned changes to the KPI information required in the contract performance notice at
+regulation 39(4)(d-e)
+. The regulations will be amended to reflect this position before the Act comes into force
+↩
+Does not apply if the contracting authority considers that the supplier’s performance under the contract could not appropriately be assessed by reference to KPIs.
+↩
+All direct award: user choice contracts are light touch contracts and as such are exempt from the requirement to set and publish KPIs.
+↩
+Back to top
+Is this page useful?
+Maybe
+Yes
+this page is useful
+No
+this page is not useful
+Thank you for your feedback
+Report a problem with this page
+Help us improve GOV.UK
+Do not include personal or financial information like your National Insurance number or credit card details.
+This field is for robots only. Please leave blank
+What were you doing?
+What went wrong?
+Send
+Cancel
+Help us improve GOV.UK
+To help us improve GOV.UK, we’d like to know more about your visit today.
+Please fill in this survey (opens in a new tab
+and requires JavaScript
+)
+.
+Cancel
+Services and information
+Benefits
+Births, death, marriages and care
+Business and self-employed
+Childcare and parenting
+Citizenship and living in the UK
+Crime, justice and the law
+Disabled people
+Driving and transport
+Education and learning
+Employing people
+Environment and countryside
+Housing and local services
+Money and tax
+Passports, travel and living abroad
+Visas and immigration
+Working, jobs and pensions
+Government activity
+Departments
+News
+Guidance and regulation
+Research and statistics
+Policy papers and consultations
+Transparency
+How government works
+Get involved
+Support links
+Help
+Privacy
+Cookies
+Accessibility statement
+Contact
+Terms and conditions
+Rhestr o Wasanaethau Cymraeg
+Government Digital Service
+All content is available under the
+Open Government Licence v3.0
+, except where otherwise stated
+© Crown copyright

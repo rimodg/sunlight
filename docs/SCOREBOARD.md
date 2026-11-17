@@ -78,3 +78,22 @@ is claimed, and this does not close PR #18's first-assessable-real-rule gate.
 [Source note, per-record results and verification at the measured commit](https://github.com/rimodg/sunlight/blob/75b02e0/docs/SECTION53_2026-11-13.md).
 The adapter is implemented and tested but not deployed; the existing watch
 source policy and service data were not changed.
+
+## Section 53 contract-details rule: task #20
+
+Measured November 13, 2026, on the central platform sample in
+`research/section53_2026-11-13/`.
+
+| Measurement | Result |
+|---|---:|
+| Releases captured | 430 |
+| Rows carrying both dates | 150 |
+| Assessable (cited entry date and scope) | 0 / 150 |
+| HOLDS or BREAKS on a real record | 0 |
+
+**Finding:** the feed publishes a signature date, not a cited date the
+contract was entered into, so every real row is UNASSESSABLE. The invariant
+core is proven on constructed test cases only. Three rules in a row have now
+measured zero assessable real records; that is a coverage finding about the
+published data, not evidence of compliance or non-compliance.
+[Full report](SECTION53_2026-11-13.md).

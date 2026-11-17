@@ -1,0 +1,163 @@
+[
+  {
+    "id": "pa53",
+    "url": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml",
+    "final_url": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml",
+    "retrieved_at": "2026-11-13T05:03:58.205624+00:00",
+    "status": 200,
+    "path": "pa53.xml",
+    "bytes": 13956,
+    "sha256": "11b80c792bc3736eeaddbe966bf3372cd8a1b12689f000eb5b1345c49d2e92be",
+    "locator": "section 53(1), (2), (6); commencement annotations",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/pa53.xml",
+    "extract": {
+      "path": "pa53.txt",
+      "bytes": 2075,
+      "sha256": "4fa65844f80492f72f9f30278ad9e076ba70f8cc075b68a3f738ea2975257f53",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "pa50",
+    "url": "https://www.legislation.gov.uk/ukpga/2023/54/section/50/data.xml",
+    "final_url": "https://www.legislation.gov.uk/ukpga/2023/54/section/50/data.xml",
+    "retrieved_at": "2026-11-13T05:03:58.469160+00:00",
+    "status": 200,
+    "path": "pa50.xml",
+    "bytes": 15080,
+    "sha256": "fa5652397565a70e0ea24b87399edcc20cd1831f74994f9509e521a3f3a7d93c",
+    "locator": "section 50",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/pa50.xml",
+    "extract": {
+      "path": "pa50.txt",
+      "bytes": 1981,
+      "sha256": "7917b1a9779167c7428c328f72ee168ab785eee9e6d07589fca6703798c2cdf9",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "commencement",
+    "url": "https://www.legislation.gov.uk/uksi/2024/716/schedule/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2024/716/schedule/data.xml",
+    "retrieved_at": "2026-11-13T05:03:58.794058+00:00",
+    "status": 200,
+    "path": "commencement.xml",
+    "bytes": 26025,
+    "sha256": "da8e15821886289df707a959ae0c0c32cf5a98cff6c2a3d6ba14a4f3428be238",
+    "locator": "Schedule, entry for section 53",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/commencement.xml",
+    "extract": {
+      "path": "commencement.txt",
+      "bytes": 8325,
+      "sha256": "ba6aa278a9ca5915645e2ec50b8803aa0c60b3982d6c3d922198873c2ad49c10",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "commencement_amendment",
+    "url": "https://www.legislation.gov.uk/uksi/2024/959/regulation/2/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2024/959/regulation/2/made/data.xml",
+    "retrieved_at": "2026-11-13T05:04:00.214890+00:00",
+    "status": 200,
+    "path": "commencement_amendment.xml",
+    "bytes": 12816,
+    "sha256": "7aaa43dd54269a81787e154c93a89a62d982ef7af2fc97244efa3db8eda93628",
+    "locator": "regulation 2(3), (7)",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/commencement_amendment.xml",
+    "extract": {
+      "path": "commencement_amendment.txt",
+      "bytes": 2430,
+      "sha256": "ce7b1f6004765add602609abc807370332f83331744bae12913a412ac0deaff5",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "saving",
+    "url": "https://www.legislation.gov.uk/uksi/2024/716/regulation/6/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2024/716/regulation/6/data.xml",
+    "retrieved_at": "2026-11-13T05:04:00.860041+00:00",
+    "status": 200,
+    "path": "saving.xml",
+    "bytes": 16735,
+    "sha256": "fe8ecd18dbb670faf1a8dfc4187076013626c0983fcc7071420d88a6f661e2b1",
+    "locator": "regulation 6",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/saving.xml",
+    "extract": {
+      "path": "saving.txt",
+      "bytes": 3630,
+      "sha256": "d5b48e4803f885b66f07408b570e45f1f2dfeac005e2338e08cf9f5580def0e9",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "pcr108_historical",
+    "url": "https://www.legislation.gov.uk/uksi/2015/102/regulation/108/2024-12-31/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2015/102/regulation/108/2024-12-31/data.xml",
+    "retrieved_at": "2026-11-13T05:04:01.685926+00:00",
+    "status": 200,
+    "path": "pcr108_historical.xml",
+    "bytes": 50314,
+    "sha256": "4d7a66cc03335932ef03a5e50fa119d86808999835a70e90fd94a9352d1f1f28",
+    "locator": "regulation 108(1)-(9), especially (5); historical version 2024-12-31",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/pcr108_historical.xml",
+    "extract": {
+      "path": "pcr108_historical.txt",
+      "bytes": 6366,
+      "sha256": "dc334e276682d13fa13b84c1ff5c262155ba110cd062b69b2939d1ee4a09ff30",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "pcr50_historical",
+    "url": "https://www.legislation.gov.uk/uksi/2015/102/regulation/50/2024-12-31/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2015/102/regulation/50/2024-12-31/data.xml",
+    "retrieved_at": "2026-11-13T05:04:02.119467+00:00",
+    "status": 200,
+    "path": "pcr50_historical.xml",
+    "bytes": 52318,
+    "sha256": "97f2eeeec53f3a4c42712a5f5395fff1d10290732d5998dbfdb640932da17482",
+    "locator": "regulation 50(1)",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/pcr50_historical.xml",
+    "extract": {
+      "path": "pcr50_historical.txt",
+      "bytes": 6355,
+      "sha256": "12619f43b47c826afe03f5a477d0dcc10f844fe1f928f5678b71bc28233aa3a7",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "saving_reg5",
+    "url": "https://www.legislation.gov.uk/uksi/2024/716/regulation/5/data.xml",
+    "retrieved_at": "2026-11-13T05:04:40.718517+00:00",
+    "path": "saving_reg5.xml",
+    "bytes": 36910,
+    "sha256": "9cf7efc56d19a6fa4a712c4874a96909be98c005f3c56ac1d7d0a420755f3be3",
+    "locator": "regulation 5(1)-(4); procurement commenced / old procurement regimes",
+    "status": 200,
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/saving_reg5.xml",
+    "extract": {
+      "path": "saving_reg5.txt",
+      "bytes": 8826,
+      "sha256": "c6dfe08d04cac6e545cf61da5f3c7f731790f6d8c43626bb44ae0c6cdbae572b",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  },
+  {
+    "id": "pcr_commencement",
+    "url": "https://www.legislation.gov.uk/uksi/2015/102/regulation/1/made/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2015/102/regulation/1/made/data.xml",
+    "retrieved_at": "2026-11-13T05:07:23.393733+00:00",
+    "path": "pcr_commencement.xml",
+    "bytes": 22506,
+    "sha256": "6132875feded22ed89c6f20d81962e4cf8ad3d038917bfbbbb3f6123163a15a3",
+    "locator": "regulation 1(2)-(8)",
+    "status": 200,
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/invariant-core/source-archive/pcr_commencement.xml",
+    "extract": {
+      "path": "pcr_commencement.txt",
+      "bytes": 3183,
+      "sha256": "fca7ca3803368eedb36d4c17fa7088a6377a07aee263f98648798f27b9f4b4f6",
+      "kind": "Derived XML itertext; not byte-identical to the source"
+    }
+  }
+]

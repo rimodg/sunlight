@@ -1,0 +1,109 @@
+[
+  {
+    "id": "036226-2024",
+    "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/036226-2024",
+    "http_status": 200,
+    "bytes": 34569,
+    "sha256": "d1911bf59a53db73bde9e78e00e4520f1a2fe5a5fbf1a9d3992381b4939deb8b",
+    "retrieved_at": "2026-11-13T05:19:23.187039+00:00",
+    "projection": [
+      {
+        "id": "036226-2024",
+        "ocid": "ocds-h6vhtk-04b500",
+        "date": "2024-11-08T11:49:14Z",
+        "tag": [
+          "tender"
+        ],
+        "tender": {
+          "id": "DN750494",
+          "legalBasis": {
+            "id": "32014L0024",
+            "scheme": "CELEX"
+          },
+          "procurementMethod": "open",
+          "procurementMethodDetails": "Open procedure",
+          "techniques": {
+            "hasFrameworkAgreement": true,
+            "frameworkAgreement": {
+              "maximumParticipants": 64
+            }
+          },
+          "tenderPeriod": {
+            "endDate": "2024-12-13T10:00:00Z"
+          }
+        },
+        "awards": []
+      }
+    ]
+  },
+  {
+    "id": "037392-2024",
+    "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/037392-2024",
+    "http_status": 200,
+    "bytes": 18333,
+    "sha256": "f6c3562131186f8d0170ec0f79ea4afcb1c4dbb9bb8fcaaa54045408aa529c1f",
+    "retrieved_at": "2026-11-13T05:19:24.247129+00:00",
+    "projection": [
+      {
+        "id": "037392-2024",
+        "ocid": "ocds-h6vhtk-043b03",
+        "date": "2024-11-19T15:06:21Z",
+        "tag": [
+          "award",
+          "contract"
+        ],
+        "tender": {
+          "id": "RM1557.14",
+          "legalBasis": {
+            "id": "32014L0024",
+            "scheme": "CELEX"
+          },
+          "procurementMethod": "open",
+          "procurementMethodDetails": "Open procedure",
+          "techniques": {
+            "hasFrameworkAgreement": true
+          }
+        },
+        "awards": [
+          {
+            "id": "037392-2024-1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "018833-2021",
+    "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/018833-2021",
+    "http_status": 200,
+    "bytes": 35875,
+    "sha256": "327d850339b9513dd5fe45618b6f4e7d95fd2bb30fce727b95ea3837d0d8ba0a",
+    "retrieved_at": "2026-11-13T05:19:25.125333+00:00",
+    "projection": [
+      {
+        "id": "018833-2021",
+        "ocid": "ocds-h6vhtk-02d0ff",
+        "date": "2021-08-04T22:45:05+01:00",
+        "tag": [
+          "tender"
+        ],
+        "tender": {
+          "id": "RM6124",
+          "legalBasis": {
+            "id": "32014L0024",
+            "scheme": "CELEX"
+          },
+          "procurementMethod": "selective",
+          "procurementMethodDetails": "Restricted procedure",
+          "techniques": {
+            "hasDynamicPurchasingSystem": true
+          },
+          "tenderPeriod": {
+            "endDate": "2025-09-05"
+          }
+        },
+        "awards": []
+      }
+    ]
+  }
+]

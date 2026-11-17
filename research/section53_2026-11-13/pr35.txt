@@ -1,0 +1,41 @@
+Transparency of procurements under the Procurement Act 2023
+Contract details notices: direct award
+35
+1
+This regulation sets out other information which must be included in a contract details notice published under section 53(1) of the PA 2023 where the public contract was awarded directly in accordance with section 41 or 43 of the PA 2023.
+2
+The information is—
+a
+the same information referred to in regulation 32(2), except sub-paragraphs (e), (h) and (n),
+b
+whether the contract was awarded directly to a supplier that is not an excluded supplier because a direct award justification applies in accordance with section 41(1)(a) of the PA 2023,
+c
+if sub-paragraph (b) applies, the direct award justification in Schedule 5 which applies and an explanation of why the contracting authority considers that it applies,
+d
+whether the contract was awarded directly to a supplier that is an excluded supplier because the contracting authority considered that there was an overriding public interest in awarding the contract to that supplier in accordance with section 41(2) to (5) of the PA 2023,
+e
+if sub-paragraph (d) applies—
+i
+the direct award justification in Schedule 5 to the PA 2023 which applies and an explanation of why the contracting authority considers that it applies,
+ii
+the offence or other event mentioned in Schedule 6 to the PA 2023 by virtue of which the supplier is an excluded supplier, and
+iii
+which ground in section 41(5) of the PA 2023 applies and an explanation of why the contracting authority considers that it applies,
+f
+whether the contract was awarded directly to a supplier pursuant to regulations made under section 42 of the PA 2023 (direct award to protect life, etc),
+g
+if sub-paragraph (f) applies, the title and registration number of the statutory instrument containing those regulations,
+h
+whether the contract was awarded directly to a supplier that is not an excluded supplier by virtue of section 43 of the PA 2023 (switching to direct award),
+i
+if sub-paragraph (h) applies, the reason the contracting authority considers there were no suitable tenders or requests to participate by reference to section 43(2) of the PA 2023 and why it considers that an award under section 19 of that Act is not possible in the circumstances,
+j
+whether the contract was awarded to a supplier that is an excluded supplier by virtue of section 41(2) of the PA 2023, and
+k
+if sub-paragraph (j) applies, the offence or other event mentioned in Schedule 6 to the PA 2023 in question.
+3
+Nothing in this regulation prevents a contracting authority from publishing other information that relates to the same procurement in the notice.
+4
+This regulation does not apply to a contract details notice where the public contract is a framework (see instead regulation 33).
+Reg. 35 in force at 24.2.2025, see  reg. 1(2)
+Reg. 35(2)(e)  substituted (24.2.2025) by  The Procurement Act 2023 (Consequential and Other Amendments) Regulations 2025 (S.I. 2025/163) ,  regs. 1(2) ,  8(9)  (with  reg. 2(2) (3) )

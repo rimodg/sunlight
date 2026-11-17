@@ -1,0 +1,124 @@
+Data and API documentation - Find a Tender
+Skip to main content
+Cookies on Find a Tender
+We use some essential cookies to make this service work.
+We’d also like to use analytics cookies so we can understand how you use the service and make improvements.
+Accept analytics cookies
+Reject analytics cookies
+View cookies
+You’ve accepted analytics cookies. You can
+change your cookie settings
+at any time.
+You’ve rejected analytics cookies. You can
+change your cookie settings
+at any time.
+Hide this message
+GOV.UK
+Find a Tender
+Menu
+Search
+Sign in
+English
+Cymraeg
+Menu
+Search
+Sign in
+Beta
+Contact the Find a Tender team (opens in new tab)
+if you have feedback, questions or suggestions.
+Home
+Data and API documentation
+Data and API documentation
+Data outputs
+The UK is committed to
+open contracting
+. Notice data is available under the
+Open Government Licence
+.
+OCDS API
+You can download notices in Open Contracting Data Standard (OCDS) JSON format using our API. Notice fields are mapped to OCDS version 1.1.5 with extensions as
+defined by the Open Contracting Partnership
+.
+OCDS release package API
+OCDS record package API
+XML downloads
+The same notice data is also available to download from the data.gov.uk website or using their API. Daily Zip files contain an XML file for each notice.
+View on data.gov.uk
+data.gov.uk API documentation
+Example API call
+Publication XML schema downloads
+New schema - may be used for notices published from 21 July 2022 (to be confirmed):
+R2.0.8.UK1.E01_002
+for defence forms F16, F17, F18 and F19
+R2.0.9.UK1.E01_002
+for all other forms
+Current schema - may be used for notices published from 2 March 2021 to 20 July 2022 (to be confirmed):
+R2.0.8.S05.E01_002
+for defence forms F16, F17, F18 and F19
+R2.0.9.S04.E01_002
+for all other forms
+Previous schema - may be used for notices published to 3 May 2021:
+R2.0.8.S04.E01_003
+for defence forms F16, F17, F18 and F19
+R2.0.9.S03.E01_009
+for all other forms
+Note that from 2 March to 3 May 2021 notices may use either schema.
+Find a Tender XML formats are based on those used by Tenders Electronic Daily (TED). See details of the
+changes from TED and between versions on Find a Tender
+.
+Data inputs
+Licensed data providers (eSenders) can send us notices using the methods and formats described. To become a data provider
+contact us
+API submission
+Specification
+How-to guide
+Reception XML schema downloads
+UK1.0.0
+for pipeline notices
+XSLT 1
+for pipeline notices
+New schema - may be used for notices published from 21 July 2022 (to be confirmed):
+R2.0.8.UK1
+for defence forms F16, F17, F18 and F19
+R2.0.9.UK1
+for all other non-pipeline forms
+XSLT UK1
+for all non-pipeline forms
+Current schema - may be used for notices published until 20 July 2022 (to be confirmed):
+R2.0.8.S05 update 1
+for defence forms F16, F17, F18 and F19
+R2.0.9.S04 update 1
+for all other non-pipeline forms
+XSLT 037 update 1
+for all non-pipeline forms
+Find a Tender XML formats are based on those used by Tenders Electronic Daily (TED). See details of the
+changes from TED and between versions on Find a Tender
+.
+Pipeline notices use a different XML format. See details of the required
+pipeline notice fields
+.
+1794608104
+Support links
+Contact us
+Accessibility statement
+Terms and conditions
+Privacy
+Cookies
+Data and API
+Notices are based on TED XML schema. © European Union,
+https://ted.europa.eu
+, 1998–2020
+All content is available under the
+Open Government Licence v3.0
+, except where otherwise stated
+© Crown copyright
+Confirm
+Yes
+No
+Session timeout
+Your session will time out soon
+You will be signed out of your account if you do not respond in 5 minutes. We do this to keep your information secure.
+5 minutes remaining until you will be signed out.
+Continue session
+Sign out
+warning you will not be able to undo this action

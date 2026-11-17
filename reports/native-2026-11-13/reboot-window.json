@@ -1,0 +1,9 @@
+{
+  "boot_at": "2026-11-12T19:13:39+00:00",
+  "last_preboot_finish": "2026-11-12T19:09:52.789195+00:00",
+  "first_postboot_start": "2026-11-12T19:16:41.400962+00:00",
+  "first_postboot_finish": "2026-11-12T19:16:56.170517+00:00",
+  "completion_gap_seconds": 423.381322,
+  "boot_to_first_completion_seconds": 197.170517,
+  "limits": "Completion gap brackets the recorded interruption; shutdown time and login time were not recorded. Exact service downtime cannot be measured from these receipts."
+}

@@ -1,0 +1,46 @@
+{
+  "first_completed_at": "2026-11-12T14:38:16.817244+00:00",
+  "last_completed_at": "2026-11-13T17:02:24.705261+00:00",
+  "recorded_elapsed_seconds": 95047.888017,
+  "full_day_elapsed": true,
+  "scheduler_completed": 264,
+  "scheduler_failed": 21,
+  "maximum_scheduler_start_gap_seconds": 416.979095,
+  "recorded_builds": [
+    {
+      "git_commit": "5a224c86a88408b7cb19564a2e6582bb425fb539",
+      "lock_sha256": "2b7343dce9882b86f1da44576cde46863ebaa1114f44e1818e533b406662827b",
+      "python": "3.12.14",
+      "source_sha256": "324cd5431e2e86d5422a0bb3eb19c7c06192b4f0031f3a17f7163ac89ef325de"
+    }
+  ],
+  "sources": {
+    "contracts-finder-20261112-14": {
+      "captures": 48,
+      "admitted_occurrences": 4076,
+      "refusals": {},
+      "outcomes": {
+        "captured": 48,
+        "unavailable": 20
+      },
+      "last_reached": "2026-11-13T17:01:37.840500+00:00",
+      "silence_at_last_completion_seconds": 46.864761,
+      "maximum_observed_reach_gap_seconds": 18791.022092
+    },
+    "dportal-gb-coh-1869600": {
+      "captures": 38,
+      "admitted_occurrences": 342,
+      "refusals": {},
+      "outcomes": {
+        "captured": 38,
+        "unavailable": 21
+      },
+      "last_reached": "2026-11-13T17:01:38.535130+00:00",
+      "silence_at_last_completion_seconds": 46.170131,
+      "maximum_observed_reach_gap_seconds": 18791.273199
+    }
+  },
+  "published_change_proofs": [],
+  "limits": "Elapsed time is not uninterrupted uptime. Counts are repeated admitted occurrences. Silence is measured at the last completed run, not now. An independent native verify receipt is required for current process liveness. Change proofs require completed source cycles, a stable record key, advancing publication time and a recorded examination; new discoveries and page movement are excluded.",
+  "journal_head": "9d9b640a8f9ff970e5e3c644501276627a43681f5653ad0eca97dc385d858e27"
+}

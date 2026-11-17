@@ -1,0 +1,18 @@
+{
+  "attempts": [
+    {
+      "receipt": "native-verify.json",
+      "error": "A recent completed journal run from the installed build is required",
+      "exit_code": 2,
+      "period": "Initial measurement before 24-hour gate; exact attempt timestamp not retained"
+    },
+    {
+      "receipt": "native-verify-final-error.json",
+      "error": "A recent completed journal run from the installed build is required",
+      "exit_code": 2,
+      "period": "2026-11-13 approximately 17:07 UTC"
+    }
+  ],
+  "subsequent_success": "native-verification.json",
+  "qualification": "Both failed attempts remain failures. A later successful check does not erase them. No service intervention occurred."
+}

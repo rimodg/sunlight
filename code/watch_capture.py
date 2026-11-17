@@ -45,7 +45,7 @@ def policy(value):
         if not isinstance(s.get("id"), str) or not s["id"] or s["id"] in seen:
             raise ValueError("duplicate_or_missing_source_id")
         seen.add(s["id"])
-        if s.get("adapter") not in {"contracts_finder", "iati_dportal"}:
+        if s.get("adapter") not in {"contracts_finder", "iati_dportal", "central_platform"}:
             raise ValueError("unsupported_adapter")
         if s.get("organisation_only_reviewed") is not True:
             raise ValueError("organisation_scope_review_required")
@@ -56,6 +56,13 @@ def policy(value):
             from urllib.parse import parse_qs
             if parse_qs(urlparse(s["url"]).query).get("limit") != ["100"]:
                 raise ValueError("contracts_finder_limit_must_be_100")
+        if s["adapter"] == "central_platform":
+            from urllib.parse import parse_qs
+            parsed = urlparse(s["url"])
+            if (parsed.netloc, parsed.path) != ("www.find-tender.service.gov.uk", "/api/1.0/ocdsReleasePackages"):
+                raise ValueError("central_platform_endpoint_refused")
+            if parse_qs(parsed.query).get("limit") != ["100"]:
+                raise ValueError("central_platform_limit_must_be_100")
         if s["adapter"] == "iati_dportal":
             from urllib.parse import parse_qs
             refs = parse_qs(urlparse(s["url"]).query).get("reporting_ref_like", [])
@@ -116,13 +123,13 @@ def project_page(source, body, *, url=None):
     if not isinstance(doc, dict):
         raise ValueError("source_document_must_be_object")
     adapter = source["adapter"]
-    key = "releases" if adapter == "contracts_finder" else "rows"
+    key = "releases" if adapter in {"contracts_finder", "central_platform"} else "rows"
     rows = doc.get(key)
     if not isinstance(rows, list):
         raise ValueError("invalid_source_page")
-    if adapter == "contracts_finder" and len(rows) > 100:
+    if adapter in {"contracts_finder", "central_platform"} and len(rows) > 100:
         raise ValueError("invalid_ocds_page")
-    version = doc.get("version") if adapter == "contracts_finder" else None
+    version = doc.get("version") if adapter in {"contracts_finder", "central_platform"} else None
     if version not in (None, "1.1"):
         raise ValueError("unsupported_source_version")
     records, refusals = [], []
@@ -171,7 +178,12 @@ def records_from_projection(source, projection):
     for item in projection["records"]:
         i, row = item["index"], item["record"]
         parties = []
-        if source["adapter"] == "contracts_finder":
+        if source["adapter"] == "central_platform":
+            record = {"key": row["ocid"], "release_id": row["id"], "category": "procurement",
+                      "published_at": utc(row["date"]) if row.get("date") else None,
+                      "parties": [], "locator": f"/releases/{i}",
+                      "record": {**row, "_watch_projection": projection["adapter_version"]}}
+        elif source["adapter"] == "contracts_finder":
             def projected_party(p, loc):
                 ids = ([{**p["identifier"], "_locator": loc + "/identifier"}]
                        if isinstance(p.get("identifier"), dict) else [])

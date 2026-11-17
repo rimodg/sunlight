@@ -1,0 +1,85 @@
+[
+  {
+    "id": "pa87",
+    "url": "https://www.legislation.gov.uk/ukpga/2023/54/section/87/data.xml",
+    "final_url": "https://www.legislation.gov.uk/ukpga/2023/54/section/87/data.xml",
+    "retrieved_at": "2026-11-13T05:15:11.547007+00:00",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pa87.xml",
+    "sha256": "2d2bdda9d284ca7b63486b12de7c247dfaa571218abe220b46f4a19091502d4f",
+    "bytes": 17458,
+    "locator": "section 87(1)-(6)",
+    "extract_sha256": "2fd44f4531d74f66fb4c31f538d62d34ea853344ab20aad08416a9d1e1322d7b",
+    "extract_path": "pa87.txt"
+  },
+  {
+    "id": "pr5",
+    "url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/5/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/5/data.xml",
+    "retrieved_at": "2026-11-13T05:15:11.785565+00:00",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr5.xml",
+    "sha256": "5f7ecfb0863d8fe006e145a14d907905a70f7ca0fb41ead45a6d025242e3f895",
+    "bytes": 28049,
+    "locator": "regulation 5(1)-(11), including amendment annotations",
+    "extract_sha256": "8cac4b1fb5b3e6b0228a6c05e56324e48852121738578c0ac80c2bd090076a2b",
+    "extract_path": "pr5.txt"
+  },
+  {
+    "id": "pr24",
+    "url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/24/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/24/data.xml",
+    "retrieved_at": "2026-11-13T05:15:12.057047+00:00",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr24.xml",
+    "sha256": "8bed8f9bcd069ef44199caad9d7f3055476274fbe3b0e5232708350104588f2f",
+    "bytes": 20718,
+    "locator": "regulation 24(1)-(3)",
+    "extract_sha256": "b43bdec2114b13d18f71f997e55d6068dec4c5adc52c300b04ff291d4b9bd4ff",
+    "extract_path": "pr24.txt"
+  },
+  {
+    "id": "pr1",
+    "url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/1/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/1/data.xml",
+    "retrieved_at": "2026-11-13T05:15:12.322922+00:00",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr1.xml",
+    "sha256": "f764b03e6d82c67ac7d3e35f64f45588dfbac7b7f218afb3b01c1c03ad3a9417",
+    "bytes": 9026,
+    "locator": "regulation 1(2)",
+    "extract_sha256": "84b3f25ac517b33648f47839ffa3baa51ddb94626c582b5bc584a1a82b21a41d",
+    "extract_path": "pr1.txt"
+  },
+  {
+    "id": "pa84",
+    "url": "https://www.legislation.gov.uk/ukpga/2023/54/section/84/data.xml",
+    "final_url": "https://www.legislation.gov.uk/ukpga/2023/54/section/84/data.xml",
+    "retrieved_at": "2026-11-13T05:15:12.611755+00:00",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pa84.xml",
+    "sha256": "91ec2a18f0862d3a5a52067e228d228a0d8d184fe96e017e52e9aacd3a773715",
+    "bytes": 10699,
+    "locator": "section 84(1)-(3)",
+    "extract_sha256": "71190c7af8f6945ccbbe91476b882d50f637f987bc82fa311cbca127988046a6",
+    "extract_path": "pa84.txt"
+  },
+  {
+    "id": "pr8",
+    "url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/8/data.xml",
+    "final_url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/8/data.xml",
+    "retrieved_at": "2026-11-13T05:15:13.177229+00:00",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr8.xml",
+    "sha256": "6ed837ec76b36b5ce58d261d8afdcce98b88fd3d89cf54e8ca73fe91766fa819",
+    "bytes": 12893,
+    "locator": "regulation 8(1)",
+    "extract_sha256": "d4247fd8bfd5516a25fe863d187e3a2792210aeb894f08cfaa0a0055030eb13b",
+    "extract_path": "pr8.txt"
+  },
+  {
+    "id": "pr32",
+    "url": "https://www.legislation.gov.uk/uksi/2024/692/regulation/32/data.xml",
+    "retrieved_at": "2026-11-13T17:11:08.236642+00:00",
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/notice-measurement-2026-11-13/law/pr32.xml",
+    "sha256": "bd0752fa03b5953639e942386c820bf3c686bb72906299986e6e07470491c2d8",
+    "bytes": 24541,
+    "locator": "regulation 32(1)-(3), especially date of entry",
+    "extract_sha256": "7a37584c8e2f5a6e30dbd1153822cec02721f66d1e6332e8279c4c4c1f8b642e",
+    "extract_path": "pr32.txt"
+  }
+]

@@ -1,0 +1,166 @@
+{
+  "date": "2026-11-13",
+  "recorded_at": "2026-11-13T22:35:26.223537+00:00",
+  "source_commit": "75b02e05c777e9f424c86df1102a2044af5d39ce",
+  "python": "3.12.14",
+  "locked_packages_verified": 35,
+  "qualification": "Constructed reference regression: 9 synthesized positives, 200 presumed negatives, 1 excluded non-price case. Not field accuracy.",
+  "settings": {
+    "seed": 42,
+    "bootstrap": 1000,
+    "clean": 200,
+    "general_profile": "doj_federal"
+  },
+  "evaluation": {
+    "completed_at": "2026-11-13T22:28:09.830822+00:00",
+    "exit_code": 0,
+    "metrics": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1_score": 0.5,
+      "false_positive_rate": 0.09,
+      "specificity": 0.91
+    },
+    "confusion_matrix": {
+      "true_positive": 9,
+      "false_negative": 0,
+      "false_positive": 18,
+      "true_negative": 182
+    },
+    "pr_auc": 0.7456,
+    "flags_per_1000": 129.2,
+    "gates_passed": true
+  },
+  "doj_validation": {
+    "completed_at": "2026-11-13T22:34:25.943647+00:00",
+    "exit_code": 0,
+    "metrics": {
+      "precision": 0.3333,
+      "recall": 1.0,
+      "f1_score": 0.5,
+      "accuracy": 0.9139,
+      "specificity": 0.91
+    },
+    "confusion_matrix": {
+      "true_positive": 9,
+      "false_negative": 0,
+      "false_positive": 18,
+      "true_negative": 182
+    },
+    "false_positive_rate_derived": 0.09
+  },
+  "general_matches_published_current_metrics_and_matrix": true,
+  "attempts": [
+    {
+      "action": "initial admission without explicit path arguments",
+      "ready": false,
+      "reason": "not_configured; corrected by passing the recorded database and cases paths before evaluation"
+    },
+    {
+      "action": "general evaluator",
+      "exit_code": 0
+    },
+    {
+      "action": "first DOJ evaluator",
+      "exit_code": 1,
+      "reason": "FileNotFoundError writing output; caller had not created the parent directory. Original log retained; no saved full report from this attempt."
+    },
+    {
+      "action": "DOJ rerun after output-directory creation and renewed input admission",
+      "exit_code": 0
+    }
+  ],
+  "input_identity_verified_before_and_after": true,
+  "artifacts": [
+    {
+      "name": "reference-before.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/reference-before.json",
+      "bytes": 853,
+      "sha256": "104e16995fced0c02afb400dee770f56c185db6c6114440aa72ade34502c9418"
+    },
+    {
+      "name": "reference-admitted.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/reference-admitted.json",
+      "bytes": 1126,
+      "sha256": "858470e241f617d8e411ca142556b6c12996044dfef7772447c0a15f5b0382d0"
+    },
+    {
+      "name": "reference-doj-before.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/reference-doj-before.json",
+      "bytes": 1126,
+      "sha256": "858470e241f617d8e411ca142556b6c12996044dfef7772447c0a15f5b0382d0"
+    },
+    {
+      "name": "reference-after-first-runs.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/reference-after-first-runs.json",
+      "bytes": 1126,
+      "sha256": "858470e241f617d8e411ca142556b6c12996044dfef7772447c0a15f5b0382d0"
+    },
+    {
+      "name": "reference-after-rerun.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/reference-after-rerun.json",
+      "bytes": 1126,
+      "sha256": "858470e241f617d8e411ca142556b6c12996044dfef7772447c0a15f5b0382d0"
+    },
+    {
+      "name": "runtime.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/runtime.json",
+      "bytes": 4237,
+      "sha256": "cf6423a1e0ad1357c082c8f8c8e240e4d7abc4f0d9ff1b6932ef3e3f73695bc1"
+    },
+    {
+      "name": "evaluation/evaluation_report.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/evaluation/evaluation_report.json",
+      "bytes": 71895,
+      "sha256": "58e450b42ca732f3ed462277d31da2186471c4cc81fbcdde52e102bc0a66ae58"
+    },
+    {
+      "name": "evaluation/evaluation_report.md",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/evaluation/evaluation_report.md",
+      "bytes": 4631,
+      "sha256": "5cbebacdb6784cfe43ca86d52d7784b9d6ec625874555a654fdd9bf0a31f9a33"
+    },
+    {
+      "name": "evaluation.txt",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/evaluation.txt",
+      "bytes": 7758,
+      "sha256": "40d2a2abaf702578c9be15bdebe9394ea2d205faf4591fe0f0574923ae4e12da"
+    },
+    {
+      "name": "doj.txt",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/doj.txt",
+      "bytes": 9357,
+      "sha256": "0424b468bed959d53dac873b61322d319ab1ceb63ec77537a8aa855a48cc6390"
+    },
+    {
+      "name": "doj/validation_report.json",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/doj/validation_report.json",
+      "bytes": 11852,
+      "sha256": "5ab0e9d6beb5b32a5cdf98472256fdb4b3512ef9531db31be6681f89a9a2bb83"
+    },
+    {
+      "name": "doj/validation_report.md",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/doj/validation_report.md",
+      "bytes": 3828,
+      "sha256": "eb4e4c250677d9712f5cc744fc6eb2e8c29f0124caa0d34bba836e5a3c254a3d"
+    },
+    {
+      "name": "doj-rerun.txt",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/doj-rerun.txt",
+      "bytes": 9623,
+      "sha256": "9cf1339e4a640bf6a8593843949d33a876ddd4cfacd33524b59a69158d07f7e4"
+    },
+    {
+      "name": "backend-final.xml",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/backend-final.xml",
+      "bytes": 277667,
+      "sha256": "091ef230c278df1c243d127890fc9568b9f7e2be32416ab5bdc65dd984be098a"
+    },
+    {
+      "name": "backend-final.txt",
+      "path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/verification/backend-final.txt",
+      "bytes": 4341,
+      "sha256": "2096bbeafaf81a524743862c85a39927e6a5b8e229aec9e24c0560b2a233e5bf"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "inspected_at": "2026-11-13T05:04:17.493059+00:00",
+  "journal": "/Users/rimodg/Library/Application Support/SUNLIGHT/watch-live-sources-20261112/journal.sqlite3",
+  "access": "SQLite mode=ro; read transaction; no service/data changes",
+  "snapshot_head": {
+    "seq": 868,
+    "hash": "e00b1082eaab91ef7263ec5a3ff171bd8552b5cf034af37fd0496fd9bce2ed2d"
+  },
+  "population": "Distinct (ocid, release_id) retained in Contracts Finder observations through snapshot head; latest retained occurrence per pair. Not whole portal or month.",
+  "observation_events": 18,
+  "fields": {
+    "releases": 96,
+    "tender.value": 70,
+    "procurementMethod": 76,
+    "tenderPeriod.endDate": 96,
+    "awards": 96,
+    "award.date": 96,
+    "award.datePublished": 96,
+    "award.value": 96,
+    "award.contractPeriod": 96,
+    "tenderPeriod.startDate": 0
+  },
+  "example_sha256": "b348b29052dad74cc1783479ab93e8bcf4aed9dedec590f7383991ee7e65baba",
+  "example_bytes": 5750
+}

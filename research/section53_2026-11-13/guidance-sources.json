@@ -1,0 +1,38 @@
+[
+  {
+    "id": "guidance",
+    "url": "https://www.gov.uk/government/publications/procurement-act-2023-guidance-documents-procure-phase/guidance-contract-details-notices-html",
+    "final_url": "https://www.gov.uk/government/publications/procurement-act-2023-guidance-documents-procure-phase/guidance-contract-details-notices-html",
+    "retrieved_at": "2026-11-13T22:15:04.113124+00:00",
+    "locator": "paragraphs 21-24; 4-10; Annex A",
+    "sha256": "26d8ae0fb34bc09fabaeac722879c87a8fe07d76405776ff8e21f3b2a5bc03d1",
+    "bytes": 130773,
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/law/guidance.html",
+    "extract_path": "guidance.txt",
+    "extract_sha256": "4b37923382cdcb5e2ebb9cd96c053b8e2f00ecee279451c3353a9be68d610184"
+  },
+  {
+    "id": "api-documentation",
+    "url": "https://www.find-tender.service.gov.uk/Developer/Documentation",
+    "final_url": "https://www.find-tender.service.gov.uk/Developer/Documentation",
+    "retrieved_at": "2026-11-13T22:15:04.496190+00:00",
+    "locator": "Data outputs / OCDS API",
+    "sha256": "bb42e21cb2317fb3e9cda97b862f039cff913b92b11733e0c39f03ec91b985d0",
+    "bytes": 28473,
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/law/api-documentation.html",
+    "extract_path": "api-documentation.txt",
+    "extract_sha256": "2f5906c642f8b552efad9eb0c76b650df128d318be9546a87ceb4d60153fcd78"
+  },
+  {
+    "id": "notice-types",
+    "url": "https://www.find-tender.service.gov.uk/Home/NoticeTypes",
+    "final_url": "https://www.find-tender.service.gov.uk/Home/NoticeTypes",
+    "retrieved_at": "2026-11-13T22:15:04.953311+00:00",
+    "locator": "UK7 contract details notice",
+    "sha256": "32d085f3007233a37f6ca9b3acc354dd999c6d185d27403bfec2f4db0f3269d5",
+    "bytes": 47796,
+    "local_path": "/Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/outputs/section53-2026-11-13/law/notice-types.html",
+    "extract_path": "notice-types.txt",
+    "extract_sha256": "1b69f59dd435352c270bf471c55ae61b467538db935a39f7abad3f3bad51eec1"
+  }
+]

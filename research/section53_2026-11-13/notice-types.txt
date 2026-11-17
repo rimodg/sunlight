@@ -1,0 +1,249 @@
+Notice types and sequences - Find a Tender
+Skip to main content
+Cookies on Find a Tender
+We use some essential cookies to make this service work.
+We’d also like to use analytics cookies so we can understand how you use the service and make improvements.
+Accept analytics cookies
+Reject analytics cookies
+View cookies
+You’ve accepted analytics cookies. You can
+change your cookie settings
+at any time.
+You’ve rejected analytics cookies. You can
+change your cookie settings
+at any time.
+Hide this message
+GOV.UK
+Find a Tender
+Menu
+Search
+Sign in
+English
+Cymraeg
+Menu
+Search
+Sign in
+Beta
+Contact the Find a Tender team (opens in new tab)
+if you have feedback, questions or suggestions.
+Home
+Notice types and sequences
+Notice types and sequences
+For procurement processes starting 24 February 2025 or later, the notices specified by the Procurement Act 2023 must be published, except if Scottish rules apply, if Northern Irish rules apply to a below-threshold contract, or if using a framework, dynamic purchasing system or qualification system established under earlier legislation.
+If a notice was published before 24 February 2025 under earlier legislation, on Find a Tender, Contracts Finder, Public Contracts Scotland, Sell2Wales or eTendersNI, then all further notices published about the same procurement process must be of the types specified under the same legislation.
+If a notice was published on Tenders Electronic Daily (TED) before 1 January 2021, all further notices about the same procurement process must be published there. The same notices may also be published on Find a Tender.
+Procurement Act 2023 notice types
+UK1 pipeline notice
+Published about potential future contracts and dynamic markets.
+Must be published between 1 April and 26 May inclusive for contracts over £2 million if a UK4 tender notice or UK5 transparency notice will be published in the 18 months starting 1 April. Can also be used to provide information on contracts that are further in the future, those with lower values, those that will be awarded under frameworks, and dynamic markets.
+Not required for contracting authorities that will spend less than £100 million on relevant contracts in the financial year, for private utilities, or if Northern Irish rules apply.
+UK2 preliminary market engagement notice
+Published to provide information about how the contracting authority will be engaging with suppliers, or how they have already done that.
+Must be published before any UK4 tender notice if preliminary market engagement is carried out for an above-threshold contract, or reasons for not doing so must be included in the tender notice.
+UK3 planned procurement notice
+Published to provide early information about a competitive procurement. Reduces the minimum tendering period to 10 days for an above-threshold contract, if published between 40 days and 1 year before a linked UK4 tender notice.
+UK4 tender notice
+Published to advertise for tenders or requests to participate using a competitive tendering procedure (open procedure or competitive flexible procedure), including when using a dynamic market or establishing a framework, but not for awards under frameworks.
+Above threshold the normal minimum tendering period is 25 days, if electronic submission is allowed and all associated tender documents are provided with the tender notice.
+UK5 transparency notice
+Published to provide transparency before making a direct award. This includes switching an unsuccessful competitive tendering procedure to direct award (which can only be done after the submission deadline specified in the related UK4 tender notice).
+UK6 contract award notice
+Published after making an award decision and before a contract is signed, including when using a framework or if making a direct award. Starts the standstill period of at least 8 working days if one applies - the contract must not be signed until after this has ended. Also published if some lots will not be awarded.
+Not required for awards under a defence and security framework.
+UK7 contract details notice
+Published after a contract has been signed, both above and below threshold.
+Must be published within 30 days of signature if above threshold (or 120 days for light-touch contracts). The contract document (redacted as necessary) must be attached within 90 days (or 180 days for light-touch contracts) for contracts over £5 million.
+Not required for private utilities. Attaching the contract document is not required if Welsh or Northern Irish rules apply.
+UK9 contract performance notice
+Published to report performance against key performance indicators (KPIs). Also published to report breaches of contract (where not fully terminated) and failures to improve unsatisfactory performance.
+Optionally published to notify that suppliers have been removed from frameworks (or other multi-supplier contracts that are continuing).
+Not required for private utilities, light-touch contracts or if KPIs have not been set.
+UK10 contract change notice
+Published before changing a contract’s value or term, or if it is transferred due to corporate restructuring.
+The modified contract document (redacted as necessary) must be attached within 90 days of making the modification for contracts over £5 million (before or after the modification).
+Not required for defence and security contracts, light-touch contracts, for private utilities, or if Northern Irish rules apply. Attaching the modified contract document is not required if Welsh rules apply.
+UK11 contract termination notice
+Published after a contract has ended, including when it has been completed successfully.
+Must be published within 30 days of the contract ending.
+Not required for private utilities.
+UK12 procurement termination notice
+Published if the procurement process for a contract has been cancelled and it will not be signed. Can be used to cancel a whole procurement, or a subset of contracts defined in a UK5 transparency notice or UK6 contract award notice but not yet signed.
+Not required for private utilities.
+UK13 dynamic market intention notice
+Published before a dynamic market is established, to notify suppliers that they can apply to join. Contracting authorities cannot use the market yet.
+UK14 dynamic market establishment notice
+Published after a dynamic market has been established, to notify contracting authorities that they can now use it, and which suppliers are part of it. Further suppliers can apply to join.
+UK15 dynamic market modification notice
+Published after a dynamic market is modified, including when suppliers have been added or removed.
+UK16 dynamic market cessation notice
+Published after a dynamic market has ceased to operate. Contracting authorities can no longer use the market and suppliers cannot apply to join.
+Not required for private utilities.
+UK17 payments compliance notice
+Published to report statistics on how promptly suppliers have been paid. Statistics are for 6 month reporting periods per contracting authority instead of per contract.
+Must be published within 30 days of the end of the reporting period (31 March or 30 September).
+Not required for private utilities, schools or if Northern Irish rules apply.
+Procurement Act 2023 notice sequences
+Contracting authorities link their notices together to provide information on the complete lifecycle of each contract. Linked notices are given the same procurement identifier (OCID). Different notice types are used depending on the procedure type and whether the contract is above or below the relevant threshold. Refer to
+Schedule 1 of the Procurement Act 2023
+for more information on thresholds.
+The following procedure types are allowed:
+Only UK1 pipeline notices, UK2 preliminary engagement notices, UK3 planned procurement notices and UK4 tender notices can currently be edited directly in the Find a Tender service. Other notice types must currently be edited via e-procurement system providers. This includes editing UK7 contract details notices to attach signed contract documents.
+Open procedure (above threshold) - for simple, single-stage procurements
+Competitive flexible procedure (above threshold) - where contracting authorities can design a more complex procedure
+Award under framework (above threshold) - also known as framework call-offs
+Direct award (above threshold)
+Contracts cannot be removed from a notice and related lots cannot be changed. If a UK5 transparency notice or UK6 contract award notice has been published in error, then publish a linked UK12 procurement termination notice to cancel the award. If a UK7 contract details notice has been published in error but the contract has not in fact been signed, then publish a linked UK11 contract termination notice to terminate the contract.
+Using dynamic markets
+Above-threshold use of dynamic markets must be through a competitive flexible procedure. Dynamic markets can also be used below threshold, but conditions for membership are not allowed below threshold, except for works contracts above certain values (see
+Section 85 of the Procurement Act 2023
+), for schools, or if Welsh or Northern Irish rules apply.
+Establishing frameworks
+Frameworks can be established using the open procedure, competitive flexible procedure or direct award, and the same noticing requirements apply as for other contracts. Open frameworks cannot be established by direct award.
+Open procedure or competitive flexible procedure (above threshold)
+If UK1 pipeline notices, UK2 preliminary market engagement notices or UK3 planned procurement notices are published, this can be done in any order, because there are different triggers for publishing them.
+It is required to publish a UK4 tender notice, to invite either tenders or requests to participate. The only exception is if a qualifying utilities dynamic market is being used, in which case the tender notice can optionally be provided only to members of the market, instead of being published.
+For UK6 contract award notices, UK7 contract details notices, UK10 contract change notices, UK11 contract termination notices and UK12 procurement termination notices, if there are multiple contracts in the same procurement, then notices might cover more than one contract, or there might be multiple notices each covering a single contract, depending on when the required information is available for each contract.
+A UK12 procurement termination notice can be published to cancel a contract that has not been signed. Lots can also be cancelled either before the submission deadline in an edited UK4 tender notice, or after the submission deadline in a UK6 contract award notice.
+Award under framework (above threshold)
+If UK1 pipeline notices or UK2 preliminary market engagement notices are published, this can be done in either order, because there are different triggers for publishing them.
+No UK4 tender notice is published. If there is a competitive selection process, then only suppliers on the framework can submit proposals.
+For UK6 contract award notices, UK7 contract details notices, UK10 contract change notices, UK11 contract termination notices and UK12 procurement termination notices, if there are multiple contracts in the same procurement, then notices might cover more than one contract, or there might be multiple notices each covering a single contract, depending on when the required information is available for each contract.
+A UK12 procurement termination notice can be published to cancel a contract that has not been signed.
+Direct award (above threshold)
+If UK1 pipeline notices or UK2 preliminary market engagement notices are published, this can be done in either order, because there are different triggers for publishing them.
+For UK6 contract award notices, UK7 contract details notices, UK10 contract change notices, UK11 contract termination notices and UK12 procurement termination notices, if there are multiple contracts in the same procurement, then notices might cover more than one contract, or there might be multiple notices each covering a single contract, depending on when the required information is available for each contract.
+A UK12 procurement termination notice can be published to cancel a contract that has not been signed.
+A direct award following an unsuccessful competitive tendering procedure will link to that previous procedure, but is considered a separate process, so will have a different OCID.
+Below threshold
+A UK4 tender notice must be published before advertising a below-threshold contract elsewhere.
+A UK7 contract details notice must be published for all below-threshold contracts. All other notice types from UK1 to UK12 can also be published, but are not legally required.
+If a change to a contract’s value moves it above threshold then a UK10 contract change notice must be published, followed later by a UK11 contract termination notice.
+Notices about below-threshold contracts are not required for concession contracts, utilities contracts, schools, or if Northern Irish rules apply.
+Dynamic market
+UK1 pipeline notices and UK2 preliminary market engagement notices can be published about dynamic markets as well as contracts, in either order.
+Multiple UK15 dynamic market modification notices will be published as suppliers are added and removed from the market over time.
+Further guidance on the Procurement Act 2023
+Extensive guidance documents
+aimed at procurement practitioners and commercial policy leads in contracting authorities are available. They are intended to provide technical guidance and help with interpretation and understanding of the new regime.
+Notices types from earlier legislation
+The notice types published depend on the legislation involved:
+Notice type sequences
+Legislation
+Planning
+Tender
+Contract
+Public Contracts Regulations 2015
+F01*
+F02
+F03
+Utilities Contracts Regulations 2016
+F04*
+F05
+F06
+Defence and Security Public Contracts Regulations 2011
+F16
+F17
+F18
+Concession Contracts Regulations 2016
+-
+F24
+F25
+Regulation 1370/2007 on public passenger transport services by rail and by road
+T01
+-
+T02
+Design contest (PCR or UCR)
+-
+F12
+F13
+Legislation:
+Public Contracts Regulations 2015
+Planning:
+F01*
+Tender:
+F02
+Contract:
+F03
+Legislation:
+Utilities Contracts Regulations 2016
+Planning:
+F04*
+Tender:
+F05
+Contract:
+F06
+Legislation:
+Defence and Security Public Contracts Regulations 2011
+Planning:
+F16
+Tender:
+F17
+Contract:
+F18
+Legislation:
+Concession Contracts Regulations 2016
+Planning:
+-
+Tender:
+F24
+Contract:
+F25
+Legislation:
+Regulation 1370/2007 on public passenger transport services by rail and by road
+Planning:
+T01
+Tender:
+-
+Contract:
+T02
+Legislation:
+Design contest (PCR or UCR)
+Planning:
+-
+Tender:
+F12
+Contract:
+F13
+* F01 and F04 are considered in the tender stage if they include a call for competition
+Other notice types:
+Social and other specific services - F21 (PCR), F22 (UCR), F23 (CCR) - used in future opportunity and later stages
+Qualification system - F07 (UCR) - with or without a call for competition
+Notice on a buyer profile - F08 (PCR, UCR or DSPCR) - can be used instead of F01, F04 or F16 future opportunity notices
+Subcontract notice - F19 (DSPCR) - used to advertise subcontract opportunities from an awarded contract
+Voluntary ex ante transparency notice - F15 (PCR, UCR, DSPCR or CCR) - used if awarding a contract without previously advertising it
+Changes to published notices
+Procurement Act 2023 notices can be edited to correct any mistakes, with some limitations.
+Changes are made to notices from earlier legislation by publishing additional notices describing the changes.
+Read
+further guidance on changes to notices
+.
+Procurement Act 2023 notice types
+Procurement Act 2023 notice sequences
+Further guidance on the Procurement Act 2023
+Notices types from earlier legislation
+Changes to published notices
+1794608104
+Support links
+Contact us
+Accessibility statement
+Terms and conditions
+Privacy
+Cookies
+Data and API
+Notices are based on TED XML schema. © European Union,
+https://ted.europa.eu
+, 1998–2020
+All content is available under the
+Open Government Licence v3.0
+, except where otherwise stated
+© Crown copyright
+Confirm
+Yes
+No
+Session timeout
+Your session will time out soon
+You will be signed out of your account if you do not respond in 5 minutes. We do this to keep your information secure.
+5 minutes remaining until you will be signed out.
+Continue session
+Sign out
+warning you will not be able to undo this action

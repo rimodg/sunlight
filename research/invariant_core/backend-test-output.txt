@@ -1,0 +1,56 @@
+........................................................................ [  3%]
+........................................................................ [  6%]
+........................................................................ [ 10%]
+.................................................................... [ 13%]
+........................................................................ [ 16%]
+........................................................................ [ 19%]
+........................................................................ [ 23%]
+........................................................................ [ 26%]
+........................................................................ [ 29%]
+....................sssssssss....................................... [ 33%]
+........................................................................ [ 36%]
+........................................................................ [ 39%]
+........................................................................ [ 43%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 53%]
+........................................................................ [ 56%]
+........................................................................ [ 59%]
+........................................................................ [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 69%]
+........................................................................ [ 73%]
+........................................................................ [ 76%]
+........................................................................ [ 79%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+........................................................................ [ 89%]
+........................................................................ [ 93%]
+............................................................... [ 96%]
+....................................................s................... [ 99%]
+...........                                                              [100%]
+=============================== warnings summary ===============================
+../test-runtime-3.12.14/lib/python3.12/site-packages/anyio/pytest_plugin.py:14
+  /Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/test-runtime-3.12.14/lib/python3.12/site-packages/anyio/pytest_plugin.py:14: PytestRemovedIn10Warning: _pytest.python.CallSpec2 has been renamed to CallSpec.
+  The CallSpec2 alias will be removed in pytest 10.
+  Update imports to use CallSpec instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#callspec2-renamed
+    from _pytest.python import CallSpec2
+
+../test-runtime-3.12.14/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/rimodg/Documents/Codex/2026-11-09/realtime-voice-chat-2/test-runtime-3.12.14/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_docker_live.py:141: Docker not available
+SKIPPED [1] tests/test_docker_live.py:149: Docker not available
+SKIPPED [1] tests/test_docker_live.py:159: Docker not available
+SKIPPED [1] tests/test_docker_live.py:219: Docker not available
+SKIPPED [1] tests/test_docker_live.py:286: Docker not available
+SKIPPED [1] tests/test_docker_live.py:367: Docker not available
+SKIPPED [1] tests/test_docker_live.py:415: Docker not available
+SKIPPED [1] tests/test_docker_live.py:462: Docker not available
+SKIPPED [1] tests/test_docker_live.py:469: Docker not available
+SKIPPED [1] tests/test_watch_service.py:147: Host-specific refusal test is for non-Mac builders
+2144 passed, 10 skipped, 2 warnings, 17 subtests passed in 19.25s

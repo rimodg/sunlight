@@ -86,3 +86,23 @@
   selected random draw or claim a proved original execution.
 - Evidence: [history audit](EVAL001_HISTORY_2026-11-12.md) and the committed
   historical-code audit harness/receipt. No scoring or threshold change.
+
+## WATCH-OPS-001: source reach gaps and recent-run verification rejections
+
+- Recorded November 13, 2026. Status: observed; root cause and remediation open.
+- First full-day window: 241 completed and 21 failed scheduler runs; 41 source
+  attempts unavailable (20 CF, 21 d-portal). Longest observed reach gap about
+  5h 13m for both sources. No HTTP status or underlying exception is retained
+  for those unavailable outcomes, so upstream outage is not established.
+- Retry backoff reached 7,680 seconds. Later successful examinations during
+  backoff must not be represented as fresh source captures or continuous
+  coverage. Both sources subsequently recovered without intervention.
+- Two native checks rejected the recent-completed-run guard. A later check
+  after a scheduled completion passed at 12:09:51 Eastern with PID 1155 and
+  unchanged installed build 5a224c8. Keep all failed checks; do not weaken the
+  guard on the basis of this measurement.
+- Evidence: [first-day report](WATCH_FIRST_DAY_2026-11-13.md), linked journal
+  heads, source receipts, native checks and external artifact hashes.
+- Closure requires separately authorized diagnosis, an evidence-backed cause,
+  and verification of any proposed fix. No service or runtime change was
+  authorized or made in this measurement-only work.

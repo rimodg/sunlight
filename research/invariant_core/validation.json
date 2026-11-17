@@ -1,0 +1,25 @@
+{
+  "measured_at": "2026-11-13T05:07:12.512941+00:00",
+  "date": "2026-11-13",
+  "base_commit": "0617f5c888c841a2293a28bf2e2509c059edaddd",
+  "python": "3.12.14",
+  "command": "SUNLIGHT_DB_PATH=/Users/rimodg/brain/SUNLIGHT/data/sunlight.db PYTHONPATH=code:tests ../test-runtime-3.12.14/bin/python -m pytest tests/ -q -ra --junitxml=../outputs/invariant-core/backend.xml",
+  "passed": 2144,
+  "skipped": 10,
+  "failed": 0,
+  "subtests_passed": 17,
+  "warnings": 2,
+  "elapsed_seconds": "19.25",
+  "skip_reasons": {
+    "Docker not available": 9,
+    "Non-Mac refusal test on Mac": 1
+  },
+  "files": {
+    "code/invariant_core.py": "087e050ef7cc3a64033167fa00b8b15e7408f1dead6a816430c17b1d3b17ce2a",
+    "tests/test_invariant_core.py": "4b2386f479c773788f51ecc88bca2070cb524716f064dc0b1c06825343508e4d",
+    "research/invariant_core/backend-test-output.txt": "708bc2b45d28a65019e32a675d838e0861566ebf1ebd0b135ada56d555a6dc12"
+  },
+  "external_junit_sha256": "09c39cf56af4770a19223cf6ed229c5473b004bb7e149bd53fba081220653ce2",
+  "run_started_at": "2026-11-13T00:05:26.966338-05:00",
+  "log": "research/invariant_core/backend-test-output.txt"
+}
