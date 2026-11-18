@@ -97,3 +97,24 @@ core is proven on constructed test cases only. Three rules in a row have now
 measured zero assessable real records; that is a coverage finding about the
 published data, not evidence of compliance or non-compliance.
 [Full report](SECTION53_2026-11-13.md).
+
+## Events in order, record consistency: first real answers
+
+Measured November 18, 2026, on 193 distinct award and tender-deadline pairs
+from the watch journal. Rule class: record consistency, not legal compliance.
+
+| Measurement | Result |
+|---|---:|
+| CONSISTENT | 119 |
+| INCONSISTENT | 5 |
+| UNASSESSABLE | 60 |
+| NOT_APPLICABLE | 9 |
+| Answered | 124 / 193 |
+| Legal HOLDS or BREAKS on a real record | 0 |
+
+**Finding:** the first rule to answer on real records checks a record against
+its own published dates, not against a law. Five records date the award
+before the closing date for submissions. That is a risk indicator, never an
+allegation, and it does not say why. The legal first-assessable gate stays
+open. [Full report](EVENTS_IN_ORDER_2026-11-18.md).
+
