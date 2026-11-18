@@ -1,0 +1,50 @@
+{
+  "schema": "sunlight.events-in-order-profile.v1",
+  "rule_class": "record_consistency",
+  "legal_status": "Not a legal norm. A published data standard defines both fields; a result here is never a finding of legal compliance or breach.",
+  "instrument": "Open Contracting Data Standard 1.1.5, release schema",
+  "calendar_basis": "Civil dates as published, each in its own stated offset",
+  "definitions": {
+    "tender_end": {
+      "field": "tender.tenderPeriod.endDate",
+      "text": "The period when the tender is open for submissions. The end date is the closing date for tender submissions.",
+      "source": {
+        "source": "https://raw.githubusercontent.com/open-contracting/standard/af0d0d41c64be26d8bbd57dcca8b474937e5851c/schema/release-schema.json",
+        "locator": "definitions.Tender.properties.tenderPeriod.description",
+        "sha256": "fac192e1ccfb061f5164bdb2d64c29e517c0f81661996b97de40cebc55a2c1bc"
+      }
+    },
+    "award_date": {
+      "field": "awards[].date",
+      "text": "The date of the contract award. This is usually the date on which a decision to award was made.",
+      "source": {
+        "source": "https://raw.githubusercontent.com/open-contracting/standard/af0d0d41c64be26d8bbd57dcca8b474937e5851c/schema/release-schema.json",
+        "locator": "definitions.Award.properties.date.description",
+        "sha256": "fac192e1ccfb061f5164bdb2d64c29e517c0f81661996b97de40cebc55a2c1bc"
+      }
+    }
+  },
+  "method_source": {
+    "source": "https://raw.githubusercontent.com/open-contracting/standard/af0d0d41c64be26d8bbd57dcca8b474937e5851c/schema/codelists/method.csv",
+    "locator": "Code and Description columns",
+    "sha256": "8a956d41ead70abe583c6d0121729ec8a0ffb4f1c9aa18017d587ff794d8a589"
+  },
+  "methods": {
+    "open": {
+      "applicability": "APPLIES",
+      "text": "All interested suppliers can submit a tender."
+    },
+    "selective": {
+      "applicability": "APPLIES",
+      "text": "Only qualified suppliers are invited to submit a tender."
+    },
+    "direct": {
+      "applicability": "EXCLUDED",
+      "text": "The contract is awarded to a single supplier without competition."
+    },
+    "limited": {
+      "applicability": "UNKNOWN",
+      "text": "The procuring entity contacts a number of suppliers of its choice."
+    }
+  }
+}
