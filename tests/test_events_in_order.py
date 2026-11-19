@@ -44,6 +44,20 @@ def test_one_day_apart_in_different_offsets_is_unassessable():
     assert run(award='2026-07-31T00:00:00Z', end='2026-08-01T12:00:00Z').state is Consistency.INCONSISTENT
 
 
+def test_extreme_offsets_cannot_flip_the_order_at_any_civil_gap():
+    # Both probes were raised in review of PR #26.
+    a = run(award='2026-03-03T00:00:00+14:00', end='2026-03-01T23:59:00-12:00')
+    b = run(award='2026-03-01T23:00:00-12:00', end='2026-03-03T00:00:00+14:00')
+    assert a.days_award_after_deadline == 2 and b.days_award_after_deadline == -2
+    assert a.state is b.state is Consistency.UNASSESSABLE
+    assert 'different offsets' in a.reason and 'different offsets' in b.reason
+
+
+def test_different_offsets_still_answer_when_the_whole_award_day_is_clear():
+    assert run(award='2026-03-10T00:00:00Z', end='2026-03-01T12:00:00+01:00').state is Consistency.CONSISTENT
+    assert run(award='2026-02-20T00:00:00Z', end='2026-03-01T12:00:00+01:00').state is Consistency.INCONSISTENT
+
+
 @pytest.mark.parametrize('method', [None, '', 'framework', 7])
 def test_missing_or_unknown_method_is_unassessable(method):
     r = run(method=method)

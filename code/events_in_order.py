@@ -6,7 +6,7 @@ whether one record agrees with its own published dates. Every result is a
 risk indicator, never an allegation. Missing is not zero.
 """
 from dataclasses import asdict, dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 import json
 from pathlib import Path
@@ -122,9 +122,17 @@ def assess(*, award_date, tender_end_date, procurement_method,
     if gap == 0:
         return result(Consistency.UNASSESSABLE,
                       'Both dates fall on the same civil day; the order within the day is not established')
-    if abs(gap) == 1 and award.utcoffset() != end.utcoffset():
-        return result(Consistency.UNASSESSABLE,
-                      'Dates are one civil day apart in different offsets; the order is not established')
+    if award.utcoffset() != end.utcoffset():
+        # The award time of day is not published, so the award is a whole
+        # civil day in its own offset. In different offsets the civil order is
+        # trusted only when that whole day lies on the same side of the
+        # deadline instant. This can only add refusals, never answers.
+        day_start = award.replace(hour=0, minute=0, second=0, microsecond=0)
+        day_end = day_start + timedelta(days=1)
+        instants_agree = day_start >= end if gap > 0 else day_end <= end
+        if abs(gap) == 1 or not instants_agree:
+            return result(Consistency.UNASSESSABLE,
+                          'Dates are in different offsets and the order is not established')
     if gap > 0:
         return result(Consistency.CONSISTENT, 'Award is dated after the closing date for submissions')
     return result(Consistency.INCONSISTENT,
