@@ -128,8 +128,13 @@ def assess(*, award_date, tender_end_date, procurement_method,
         # trusted only when that whole day lies on the same side of the
         # deadline instant. This can only add refusals, never answers.
         day_start = award.replace(hour=0, minute=0, second=0, microsecond=0)
-        day_end = day_start + timedelta(days=1)
-        instants_agree = day_start >= end if gap > 0 else day_end <= end
+        try:
+            # The day's end is needed only when the award is the earlier date.
+            instants_agree = day_start >= end if gap > 0 else day_start + timedelta(days=1) <= end
+        except OverflowError:
+            # At the edge of the representable calendar the instants cannot
+            # be compared. Refuse; never raise and never guess.
+            instants_agree = False
         if abs(gap) == 1 or not instants_agree:
             return result(Consistency.UNASSESSABLE,
                           'Dates are in different offsets and the order is not established')
