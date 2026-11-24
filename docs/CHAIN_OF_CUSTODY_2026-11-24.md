@@ -85,6 +85,47 @@ this step.
 - The watch's own examinations already carry their chain (build identity,
   capture SHA-256, projection SHA-256, result SHA-256, packet replay in
   `code/watch_packet.py`). This step does not change them.
-- Section 53 results (`research/section53_2026-11-13/adapter-run/results.json`)
-  carry the original response SHA-256 per row but not yet a rule version.
-  Stamping them with `code/custody.py` is the next part of this step.
+- Section 53 results cite a capture file, not the watch journal, because the
+  measurement of November 13 was an isolated capture (see below). The chain
+  ends at the same place as the journal chain: the SHA-256 of the original
+  response bytes, which are not retained.
+
+## Section 53 results, stamped November 24
+
+Each row of `research/section53_2026-11-13/adapter-run/results.json` (schema
+`sunlight.section53-results.v2`, 150 rows) now carries the same custody block
+with a different source kind:
+
+- `custody.source`: the page of the committed capture file the row was
+  computed from, as `capture_file` (`research/section53_2026-11-13/adapter-run/capture.json`),
+  `page`, the page's `source_sha256` (original response bytes) and
+  `projection_sha256` (the protected projection kept in the capture file).
+  A verifier recomputes the projection hash from the capture file; the
+  original bytes are not retained, so `source_sha256` is reported, not
+  reverified.
+- `custody.rule_id` `section53` and `custody.rule_version_sha256` over
+  `code/section53.py`, `config/section53-profile.json` and the two sources
+  the profile cites (section 53 of the Procurement Act 2023 and the
+  commencement regulations, each with its SHA-256).
+- `result_sha256` over the whole row, custody included.
+
+The file carries the full `rule_version` block. The 150 outcomes are
+identical to the schema v1 file (commit 39d1f48): 150 UNASSESSABLE, same
+findings, same day gaps. `tests/test_section53_custody.py` pins the SHA-256
+of the rows without their custody. `code/section53.py` and the profile are
+untouched by this step.
+
+To verify, reads only:
+
+    PYTHONPATH=code python scripts/verify_section53_custody.py \
+      research/section53_2026-11-13/adapter-run/results.json \
+      research/section53_2026-11-13/adapter-run/capture.json
+
+This recomputes the rule version and every `result_sha256`, and checks every
+row cites a page that exists in the capture file with the same page hash and
+a projection hash that recomputes. Exit 0 means every link holds.
+`scripts/verify_section53_evidence.py` still replays the capture and
+compares it to the committed results, custody included.
+
+A source reference is one kind or the other, with every part present. A
+reference carrying parts of both kinds, or any extra part, is refused.
