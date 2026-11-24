@@ -72,7 +72,12 @@ recorded and it is not a citation inside any result. It is context only.
 | Method `direct`: awarded without competition by definition | NOT_APPLICABLE | 9 |
 
 Also refused, with tests: a date without an explicit offset, an unreadable
-date, and two dates one civil day apart in different offsets.
+date, and any pair in different offsets where the order is not established:
+one civil day apart, or the whole award day does not lie on one side of the
+deadline instant. The second case was found in review of PR #26 and fixed
+November 19, 2026; it did not occur in the measured population. Review of that
+fix found it raised an error on a year-9999 date; fixed November 23, 2026,
+with calendar-edge tests. The rule answers or refuses and never raises.
 
 ## The five INCONSISTENT records
 
@@ -96,7 +101,7 @@ anything else. A person has to read the notice.
 
 ## Verification
 
-`tests/test_events_in_order.py`: 25 tests. The replay test recomputes
+`tests/test_events_in_order.py`: 36 tests. The replay test recomputes
 `research/events_in_order_2026-11-18/results.json` from `pairs.json` and
 requires a byte-identical match.
 
