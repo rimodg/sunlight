@@ -105,8 +105,21 @@ anything else. A person has to read the notice.
 `research/events_in_order_2026-11-18/results.json` from `pairs.json` and
 requires a byte-identical match.
 
+Since November 24, 2026 the results file is schema
+`sunlight.events-in-order-results.v2`: every row carries a `custody` block
+naming the journal capture it cites and the exact rule version that computed
+it, and a `result_sha256` over the whole row. The 193 outcomes did not move;
+`tests/test_custody.py` pins their digest. See
+[CHAIN_OF_CUSTODY_2026-11-24.md](CHAIN_OF_CUSTODY_2026-11-24.md).
+
 Reproduce:
 
     PYTHONPATH=code python scripts/measure_events_in_order.py \
       research/events_in_order_2026-11-18/pairs.json \
       config/events-in-order-profile.json OUT.json
+
+Verify the chain of custody of the committed results:
+
+    PYTHONPATH=code python scripts/verify_custody.py \
+      research/events_in_order_2026-11-18/results.json \
+      research/events_in_order_2026-11-18/pairs.json

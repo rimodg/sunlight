@@ -71,6 +71,10 @@ direct; present in 168 of 193 pairs, absent means not supplied),
 `publication_date` (release `date`), `award_date_published`
 (`awards[].datePublished`), `source_url`, `capture_seq`, `capture_hash`.
 
+In `results.json` (schema v2 since November 24, 2026) `capture_seq` and
+`capture_hash` live inside each row's `custody.source` block, next to the
+rule version that computed the row; see `docs/CHAIN_OF_CUSTODY_2026-11-24.md`.
+
 ## Fields left out, and why
 
 - Requested but never retained by the projection:
