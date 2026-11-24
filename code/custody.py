@@ -89,13 +89,46 @@ def source_reference(capture_seq, capture_hash) -> dict:
     return {'journal': 'watch', 'capture_seq': capture_seq, 'capture_hash': capture_hash}
 
 
+def page_reference(capture_file, page, source_sha256, projection_sha256) -> dict:
+    """A page of a committed capture file a result was computed from. Every part is required.
+
+    `capture_file` is a relative path, recorded as given. `source_sha256` is
+    the hash of the page's original response bytes (not retained; reported,
+    not reverified). `projection_sha256` is the hash of the protected
+    projection kept in the capture file, which a verifier recomputes.
+    """
+    if not isinstance(capture_file, str) or not capture_file or capture_file.startswith('/') \
+            or '..' in capture_file.split('/') or '\\' in capture_file:
+        raise InvariantError('Source capture file required as a relative path')
+    if not isinstance(page, int) or isinstance(page, bool) or page < 0:
+        raise InvariantError('Source capture page required')
+    if not isinstance(source_sha256, str) or not HEX64.fullmatch(source_sha256):
+        raise InvariantError('Source page hash required')
+    if not isinstance(projection_sha256, str) or not HEX64.fullmatch(projection_sha256):
+        raise InvariantError('Source projection hash required')
+    return {'capture': 'file', 'capture_file': capture_file, 'page': page,
+            'source_sha256': source_sha256, 'projection_sha256': projection_sha256}
+
+
+def any_source_reference(source) -> dict:
+    """A journal capture or a capture-file page, by the parts given. Nothing else."""
+    if not isinstance(source, dict):
+        raise InvariantError('Source reference required')
+    if 'capture_seq' in source or 'capture_hash' in source:
+        return source_reference(source.get('capture_seq'), source.get('capture_hash'))
+    if 'capture_file' in source or 'page' in source:
+        return page_reference(source.get('capture_file'), source.get('page'),
+                              source.get('source_sha256'), source.get('projection_sha256'))
+    raise InvariantError('Source reference required')
+
+
 def stamp(row: dict, *, source: dict, rule: dict) -> dict:
     """Return the row with its custody block and a hash over everything in it."""
     if not isinstance(row, dict) or 'custody' in row or 'result_sha256' in row:
         raise InvariantError('Unstamped result row required')
     if not isinstance(rule, dict) or rule.get('schema') != SCHEMA or not HEX64.fullmatch(rule.get('rule_version_sha256', '')):
         raise InvariantError('Rule version required')
-    custody = {'source': source_reference(source['capture_seq'], source['capture_hash']),
+    custody = {'source': any_source_reference(source),
                'rule_id': rule['rule_id'], 'rule_version_sha256': rule['rule_version_sha256']}
     stamped = {**row, 'custody': custody}
     return {**stamped, 'result_sha256': digest(stamped)}
@@ -108,8 +141,9 @@ def check_row(row: dict, *, rule: dict) -> list[str]:
     if not isinstance(custody, dict):
         return ['custody block missing']
     try:
-        source_reference(custody.get('source', {}).get('capture_seq'), custody.get('source', {}).get('capture_hash'))
-    except (InvariantError, AttributeError):
+        if any_source_reference(custody.get('source')) != custody.get('source'):
+            problems.append('source reference carries parts that are not its own')
+    except InvariantError:
         problems.append('source reference missing or malformed')
     if custody.get('rule_id') != rule.get('rule_id'):
         problems.append('rule_id differs')
@@ -180,4 +214,49 @@ def check_journal(results: dict, journal_path) -> list[str]:
                 problems.append(f'capture seq {seq}: capture carries no original response sha256')
     finally:
         db.close()
+    return problems
+
+
+def check_capture_file(results: dict, capture: dict, *, capture_file: str, projection_bytes) -> list[str]:
+    """Problems linking rows that cite capture-file pages to the capture file itself.
+
+    Every row must cite `capture_file`, a page that exists in `capture`, that
+    page's `source_sha256` and `projection_sha256`, and the row's own
+    `source_sha256`, `source_url` and `page` must agree with the citation.
+    The projection hash is recomputed from the page's projection with
+    `projection_bytes` (the same canonical form the capture used). The
+    original response bytes are not retained, so `source_sha256` is the end
+    of the chain: reported, not reverified.
+    """
+    problems = []
+    pages = capture.get('pages') if isinstance(capture, dict) else None
+    if not isinstance(pages, list):
+        return ['capture file carries no pages']
+    recomputed = {}
+    for index, row in enumerate(results.get('results', [])):
+        cited = row.get('custody', {}).get('source', {}) if isinstance(row, dict) else {}
+        if cited.get('capture') != 'file':
+            problems.append(f'row {index}: source is not a capture-file page')
+            continue
+        if cited.get('capture_file') != capture_file:
+            problems.append(f'row {index}: cites another capture file')
+        page = cited.get('page')
+        if not isinstance(page, int) or page < 0 or page >= len(pages) or 'projection' not in pages[page]:
+            problems.append(f'row {index}: cited page is not in the capture file')
+            continue
+        found = pages[page]
+        if found.get('source_sha256') != cited.get('source_sha256'):
+            problems.append(f'row {index}: capture page source_sha256 differs from the cited one')
+        if page not in recomputed:
+            recomputed[page] = hashlib.sha256(projection_bytes(found['projection'])).hexdigest()
+        if found.get('projection_sha256') != cited.get('projection_sha256'):
+            problems.append(f'row {index}: capture page projection_sha256 differs from the cited one')
+        if recomputed[page] != cited.get('projection_sha256'):
+            problems.append(f'row {index}: cited projection_sha256 does not recompute from the capture file')
+        if row.get('source_sha256') != cited.get('source_sha256'):
+            problems.append(f'row {index}: row source_sha256 differs from the cited page')
+        if row.get('source_url') != found.get('url'):
+            problems.append(f'row {index}: row source_url differs from the cited page')
+        if row.get('page') != page:
+            problems.append(f'row {index}: row page differs from the cited page')
     return problems

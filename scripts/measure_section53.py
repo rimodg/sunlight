@@ -18,6 +18,15 @@ from watch_capture import checked_url, fetch, policy, project_page
 from watch_journal import admit
 from invariant_core import Applicability, Citation, Scope
 from section53 import DatedEvidence, Publication, load_profile, packet
+from custody import rule_version, stamp
+
+RULE_MODULE = 'code/section53.py'
+RULE_PROFILE = 'config/section53-profile.json'
+CAPTURE_FILE = 'research/section53_2026-11-13/adapter-run/capture.json'
+
+
+def current_rule_version(root=ROOT):
+    return rule_version(rule_id='section53', root=root, module=RULE_MODULE, profile=RULE_PROFILE)
 
 QUERY = 'https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T00:00:00&limit=100'
 SOURCE = {'id':'fts-section53-measurement','adapter':'central_platform',
@@ -61,9 +70,12 @@ def capture():
     return result
 
 
-def replay(captured):
+def replay(captured, capture_file=CAPTURE_FILE, rule=None):
+    """Every result row is stamped with the capture-file page it cites and the
+    exact rule version that computed it (see code/custody.py)."""
     if captured.get('schema') != 'sunlight.section53-capture.v1': raise ValueError('capture_schema')
     admit(captured)
+    rule=current_rule_version() if rule is None else rule
     profile=load_profile(ROOT/'config/section53-profile.json','ordinary')
     results=[];received=admitted=refused=0;release_keys=set();marked_releases=set()
     for pi,page in enumerate(captured['pages']):
@@ -90,18 +102,20 @@ def replay(captured):
                     # this projection. Do not infer one from signature or scope.
                     scope=Scope(Applicability.UNKNOWN,'Entry date and complete section-53 scope are not admitted')
                     finding=packet(entry=None,publication=pub,scope=scope,profile=profile)
-                    results.append({'ocid':r['ocid'],'release_id':r['id'],'contract_id':c.get('id'),'page':pi,
+                    results.append(stamp({'ocid':r['ocid'],'release_id':r['id'],'contract_id':c.get('id'),'page':pi,
                         'locator':loc,'source_sha256':page['source_sha256'],'source_url':page['url'],
                         'dateSigned':signed,'signature_locator':loc+'/dateSigned','datePublished':published,
                         'publication_locator':loc+f'/documents/{di}/datePublished',
                         'aboveThreshold':c.get('aboveThreshold'),
                         'signature_to_publication_calendar_days':(pub_day-sig_day).days if pub_day and sig_day else None,
                         'measurement_basis':'Signature source calendar date; publication instant converted to Europe/London civil date. Not a legal assessment or entry-date bound.',
-                        'assessment':finding})
+                        'assessment':finding},
+                        source={'capture_file':capture_file,'page':pi,'source_sha256':page['source_sha256'],
+                                'projection_sha256':page['projection_sha256']},rule=rule))
     from collections import Counter
     states=dict(sorted(Counter(r['assessment']['finding']['state'] for r in results).items()))
     days=[r['signature_to_publication_calendar_days'] for r in results if r['signature_to_publication_calendar_days'] is not None]
-    result={'schema':'sunlight.section53-results.v1','capture_complete':captured['complete'],
+    result={'schema':'sunlight.section53-results.v2','capture_complete':captured['complete'],'rule_version':rule,
         'counts':{'received_release_rows':received,'admitted_release_rows':admitted,'refused_release_rows':refused,
                   'distinct_release_keys':len(release_keys),'contract_details_releases':len(marked_releases),
                   'contract_notice_rows':len(results),'both_dates':len(days),
@@ -121,8 +135,15 @@ def main():
     parser.add_argument('--replay',type=Path)
     args=parser.parse_args()
     if args.output.exists(): raise SystemExit('Output must be a new directory; existing evidence is preserved')
-    captured=json.loads(args.replay.read_text()) if args.replay else capture()
-    results=replay(captured)
+    if args.replay:
+        captured=json.loads(args.replay.read_text())
+        # Cite the capture file as a path relative to the repository when it is inside it.
+        resolved=args.replay.resolve()
+        capture_file=str(resolved.relative_to(ROOT)) if resolved.is_relative_to(ROOT) else str(args.replay)
+    else:
+        captured=capture()
+        capture_file=str(args.output/'capture.json')
+    results=replay(captured,capture_file=capture_file)
     args.output.mkdir(parents=True)
     (args.output/'capture.json').write_bytes(canonical(captured))
     (args.output/'results.json').write_bytes(canonical(results))

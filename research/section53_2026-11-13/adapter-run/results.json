@@ -101,6 +101,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T18:50:50Z",
       "dateSigned": "2026-10-23T00:00:00+01:00",
       "locator": "/releases/3/contracts/0",
@@ -109,6 +120,7 @@
       "page": 0,
       "publication_locator": "/releases/3/contracts/0/documents/0/datePublished",
       "release_id": "107785-2026",
+      "result_sha256": "943b28639ff101c1daee27d036b29f26330bb27d857833ec1f5607af36dd5c46",
       "signature_locator": "/releases/3/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 20,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -192,6 +204,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T18:24:13Z",
       "dateSigned": "2026-09-30T00:00:00Z",
       "locator": "/releases/6/contracts/0",
@@ -200,6 +223,7 @@
       "page": 0,
       "publication_locator": "/releases/6/contracts/0/documents/0/datePublished",
       "release_id": "107782-2026",
+      "result_sha256": "3e9aa3f5b1b788b405cc672be77f468100820c75313d14d0f1e89a49f7553a3d",
       "signature_locator": "/releases/6/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 43,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -283,6 +307,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T18:15:10Z",
       "dateSigned": "2026-11-03T00:00:00+00:00",
       "locator": "/releases/7/contracts/0",
@@ -291,6 +326,7 @@
       "page": 0,
       "publication_locator": "/releases/7/contracts/0/documents/0/datePublished",
       "release_id": "107781-2026",
+      "result_sha256": "5bd5e543113433330e7c4a76ff3a58bcfea841225a72c092e0576a96e7d6bfc4",
       "signature_locator": "/releases/7/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 9,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -374,6 +410,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T17:16:35Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/19/contracts/0",
@@ -382,6 +429,7 @@
       "page": 0,
       "publication_locator": "/releases/19/contracts/0/documents/0/datePublished",
       "release_id": "107769-2026",
+      "result_sha256": "8a2947b09bb3cce2969a10b5ef006f2658b5c5464da252c227293542d3f6b840",
       "signature_locator": "/releases/19/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -465,6 +513,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T17:14:36Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/20/contracts/0",
@@ -473,6 +532,7 @@
       "page": 0,
       "publication_locator": "/releases/20/contracts/0/documents/0/datePublished",
       "release_id": "107768-2026",
+      "result_sha256": "73c256d1641d411afbb867cf21f9527bf6b1788fc7b6e42c88d2db832a4e473a",
       "signature_locator": "/releases/20/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -556,6 +616,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T17:02:27Z",
       "dateSigned": "2026-11-05T00:00:00Z",
       "locator": "/releases/25/contracts/0",
@@ -564,6 +635,7 @@
       "page": 0,
       "publication_locator": "/releases/25/contracts/0/documents/0/datePublished",
       "release_id": "107763-2026",
+      "result_sha256": "9004748dc081e55c6bb8c479e1c825d924739019ab3681d11a60e33d1a53a8f0",
       "signature_locator": "/releases/25/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 7,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -647,6 +719,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T17:02:15Z",
       "dateSigned": "2026-07-01T00:00:00+01:00",
       "locator": "/releases/27/contracts/0",
@@ -655,6 +738,7 @@
       "page": 0,
       "publication_locator": "/releases/27/contracts/0/documents/0/datePublished",
       "release_id": "107761-2026",
+      "result_sha256": "78cb99b24bfbe350f0593f9a15a941d8a92aa64cae7d406fb64fca08aaabb202",
       "signature_locator": "/releases/27/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 134,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -738,6 +822,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:50:53Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/34/contracts/0",
@@ -746,6 +841,7 @@
       "page": 0,
       "publication_locator": "/releases/34/contracts/0/documents/0/datePublished",
       "release_id": "107753-2026",
+      "result_sha256": "8732adbe2ad71d7254ac54e8dbc9bd22a35cfa1468c0239b131f4f577e7eb754",
       "signature_locator": "/releases/34/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -829,6 +925,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:45:47Z",
       "dateSigned": "2026-10-08T00:00:00+01:00",
       "locator": "/releases/37/contracts/0",
@@ -837,6 +944,7 @@
       "page": 0,
       "publication_locator": "/releases/37/contracts/0/documents/0/datePublished",
       "release_id": "107750-2026",
+      "result_sha256": "bd4a3090e081dd28b9410849e134ad7b0189cc359ca7242f13c644097d08617f",
       "signature_locator": "/releases/37/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 35,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -920,6 +1028,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:34:52Z",
       "dateSigned": "2026-10-15T00:00:00+01:00",
       "locator": "/releases/47/contracts/0",
@@ -928,6 +1047,7 @@
       "page": 0,
       "publication_locator": "/releases/47/contracts/0/documents/0/datePublished",
       "release_id": "107740-2026",
+      "result_sha256": "f2fa1c34b3cc66fda508a95479adad4436c70fb845156cc064b53a7d55f94483",
       "signature_locator": "/releases/47/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 28,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1011,6 +1131,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:34:28Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/48/contracts/0",
@@ -1019,6 +1150,7 @@
       "page": 0,
       "publication_locator": "/releases/48/contracts/0/documents/0/datePublished",
       "release_id": "107739-2026",
+      "result_sha256": "a9376191a014a1042cb42193abe9927bc9178e08f7caa0cce9e09d7f68a622a9",
       "signature_locator": "/releases/48/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1102,6 +1234,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:33:34Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/50/contracts/0",
@@ -1110,6 +1253,7 @@
       "page": 0,
       "publication_locator": "/releases/50/contracts/0/documents/0/datePublished",
       "release_id": "107737-2026",
+      "result_sha256": "c9061a22d628105ae80057614f2a210ea728c4fb387c978ce5ffe24b30e48270",
       "signature_locator": "/releases/50/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1193,6 +1337,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:33:26Z",
       "dateSigned": "2026-10-16T00:00:00+01:00",
       "locator": "/releases/51/contracts/0",
@@ -1201,6 +1356,7 @@
       "page": 0,
       "publication_locator": "/releases/51/contracts/0/documents/0/datePublished",
       "release_id": "107736-2026",
+      "result_sha256": "f3b0eedc40f33e64b3742121f3a7f3227465ff1af023c912dd96ff51dbe7dede",
       "signature_locator": "/releases/51/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 27,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1284,6 +1440,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:29:15Z",
       "dateSigned": "2026-10-12T00:00:00+01:00",
       "locator": "/releases/57/contracts/0",
@@ -1292,6 +1459,7 @@
       "page": 0,
       "publication_locator": "/releases/57/contracts/0/documents/0/datePublished",
       "release_id": "107730-2026",
+      "result_sha256": "0c37a721075a370c68260ffd89a5f34818385097407b19fd5319bd04942564f9",
       "signature_locator": "/releases/57/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 31,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1375,6 +1543,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:17:16Z",
       "dateSigned": "2026-08-31T00:00:00+01:00",
       "locator": "/releases/63/contracts/0",
@@ -1383,6 +1562,7 @@
       "page": 0,
       "publication_locator": "/releases/63/contracts/0/documents/1/datePublished",
       "release_id": "107724-2026",
+      "result_sha256": "604b3d9f0a56a3484cd73a4a28f789d6705dfc5dba140c0a570403be36733380",
       "signature_locator": "/releases/63/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 73,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1466,6 +1646,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:17:16Z",
       "dateSigned": "2026-08-31T00:00:00+01:00",
       "locator": "/releases/63/contracts/1",
@@ -1474,6 +1665,7 @@
       "page": 0,
       "publication_locator": "/releases/63/contracts/1/documents/1/datePublished",
       "release_id": "107724-2026",
+      "result_sha256": "428b60d11e70756eed72d35b0f135647afff19f672a43a2b24eec49dc081b1bb",
       "signature_locator": "/releases/63/contracts/1/dateSigned",
       "signature_to_publication_calendar_days": 73,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1557,6 +1749,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "3",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:17:16Z",
       "dateSigned": "2026-08-31T00:00:00+01:00",
       "locator": "/releases/63/contracts/2",
@@ -1565,6 +1768,7 @@
       "page": 0,
       "publication_locator": "/releases/63/contracts/2/documents/1/datePublished",
       "release_id": "107724-2026",
+      "result_sha256": "35c78b79ce5c67b09c7fb54b0ec93714eacfdbf9d8e70ea7c6e027636a24f30a",
       "signature_locator": "/releases/63/contracts/2/dateSigned",
       "signature_to_publication_calendar_days": 73,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1648,6 +1852,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "4",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:17:16Z",
       "dateSigned": "2026-08-31T00:00:00+01:00",
       "locator": "/releases/63/contracts/3",
@@ -1656,6 +1871,7 @@
       "page": 0,
       "publication_locator": "/releases/63/contracts/3/documents/1/datePublished",
       "release_id": "107724-2026",
+      "result_sha256": "5efa297838ebd236138563b826d5354c56dce2625c651c4afc4a31a8a04c967c",
       "signature_locator": "/releases/63/contracts/3/dateSigned",
       "signature_to_publication_calendar_days": 73,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1739,6 +1955,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "5",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:17:16Z",
       "dateSigned": "2026-08-31T00:00:00+01:00",
       "locator": "/releases/63/contracts/4",
@@ -1747,6 +1974,7 @@
       "page": 0,
       "publication_locator": "/releases/63/contracts/4/documents/0/datePublished",
       "release_id": "107724-2026",
+      "result_sha256": "965ba6c4dbcb036c9de9b5b7151c75fdea3b7c8913d14df5eb21a5e0956cd29b",
       "signature_locator": "/releases/63/contracts/4/dateSigned",
       "signature_to_publication_calendar_days": 73,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1830,6 +2058,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:13:58Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/66/contracts/0",
@@ -1838,6 +2077,7 @@
       "page": 0,
       "publication_locator": "/releases/66/contracts/0/documents/0/datePublished",
       "release_id": "107721-2026",
+      "result_sha256": "e6e4bab6351333834b4e67aedea3f8885d509ccd57ed08cda31ab2de79b4445d",
       "signature_locator": "/releases/66/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -1921,6 +2161,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:13:37Z",
       "dateSigned": "2026-10-26T00:00:00Z",
       "locator": "/releases/68/contracts/0",
@@ -1929,6 +2180,7 @@
       "page": 0,
       "publication_locator": "/releases/68/contracts/0/documents/0/datePublished",
       "release_id": "107719-2026",
+      "result_sha256": "3ad7a3f617b7654ddee91347097d2e086c666aa4382d9609dc5485be089fd758",
       "signature_locator": "/releases/68/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 17,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -2012,6 +2264,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:12:35Z",
       "dateSigned": "2026-11-12T00:00:00+00:00",
       "locator": "/releases/69/contracts/0",
@@ -2020,6 +2283,7 @@
       "page": 0,
       "publication_locator": "/releases/69/contracts/0/documents/0/datePublished",
       "release_id": "107718-2026",
+      "result_sha256": "c1e1ecf2a2acb124c781f43f84057e5a9803ddeea13433c721d02926a7c6d602",
       "signature_locator": "/releases/69/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -2103,6 +2367,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T16:09:14Z",
       "dateSigned": "2026-10-23T00:00:00+01:00",
       "locator": "/releases/75/contracts/0",
@@ -2111,6 +2386,7 @@
       "page": 0,
       "publication_locator": "/releases/75/contracts/0/documents/0/datePublished",
       "release_id": "107712-2026",
+      "result_sha256": "e9a8db1c36068aba07ac36ea33a778b389b5d2465201899a33d06d6baa48e591",
       "signature_locator": "/releases/75/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 20,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -2194,6 +2470,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T15:58:54Z",
       "dateSigned": "2025-08-22T00:00:00Z",
       "locator": "/releases/86/contracts/0",
@@ -2202,6 +2489,7 @@
       "page": 0,
       "publication_locator": "/releases/86/contracts/0/documents/0/datePublished",
       "release_id": "107701-2026",
+      "result_sha256": "65eb0d9b6ffacf282e756a87c644b7a117ca23205f89efaa15bd99cfc835e01d",
       "signature_locator": "/releases/86/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 447,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -2285,6 +2573,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T15:54:29Z",
       "dateSigned": "2026-09-10T00:00:00+01:00",
       "locator": "/releases/90/contracts/0",
@@ -2293,6 +2592,7 @@
       "page": 0,
       "publication_locator": "/releases/90/contracts/0/documents/0/datePublished",
       "release_id": "107697-2026",
+      "result_sha256": "510538fb37e2faf8fa334a4386542ec504d61089cdae8981492c0fb50e42720d",
       "signature_locator": "/releases/90/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 63,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -2376,6 +2676,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T15:49:37Z",
       "dateSigned": "2026-09-16T00:00:00+01:00",
       "locator": "/releases/96/contracts/0",
@@ -2384,6 +2695,7 @@
       "page": 0,
       "publication_locator": "/releases/96/contracts/0/documents/1/datePublished",
       "release_id": "107691-2026",
+      "result_sha256": "d751bf39d4c21b42e6d0e2f99c2d0031d935e85f522607781aa6c91f6d74b961",
       "signature_locator": "/releases/96/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 57,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -2467,6 +2779,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 0,
+          "projection_sha256": "f595907ca3ce80dff3ff7d4fb5c85c1c0a3172cf2288a9275c8f68827956f679",
+          "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad"
+        }
+      },
       "datePublished": "2026-11-12T15:45:50Z",
       "dateSigned": "2026-11-04T00:00:00Z",
       "locator": "/releases/99/contracts/0",
@@ -2475,6 +2798,7 @@
       "page": 0,
       "publication_locator": "/releases/99/contracts/0/documents/0/datePublished",
       "release_id": "107688-2026",
+      "result_sha256": "216cb42a0fe6cb292c45cc6993b634e0f7fc96ca3983ba840c94a138be8980b5",
       "signature_locator": "/releases/99/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "68269190754bdfa3bc19dd80eeb107e0a48c03240eb0c6bbdfc094d04f4b79ad",
@@ -2558,6 +2882,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:32:43Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/10/contracts/0",
@@ -2566,6 +2901,7 @@
       "page": 1,
       "publication_locator": "/releases/10/contracts/0/documents/0/datePublished",
       "release_id": "107677-2026",
+      "result_sha256": "201533e3b4cfb6e5c407ded799191a2506fc3371470af2f48da41f0320a1ee92",
       "signature_locator": "/releases/10/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -2649,6 +2985,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:31:35Z",
       "dateSigned": "2026-10-27T00:00:00Z",
       "locator": "/releases/11/contracts/0",
@@ -2657,6 +3004,7 @@
       "page": 1,
       "publication_locator": "/releases/11/contracts/0/documents/0/datePublished",
       "release_id": "107676-2026",
+      "result_sha256": "14776b92e4ce98c7350c8e63963118853fda4bdf81fae79877c40f7a538a5047",
       "signature_locator": "/releases/11/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 16,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -2740,6 +3088,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:28:25Z",
       "dateSigned": "2026-11-05T00:00:00Z",
       "locator": "/releases/15/contracts/0",
@@ -2748,6 +3107,7 @@
       "page": 1,
       "publication_locator": "/releases/15/contracts/0/documents/0/datePublished",
       "release_id": "107672-2026",
+      "result_sha256": "77d387ac9de22c35b82458c4209345cb2f5f424ce03f71bd129a9a077d0fe3c8",
       "signature_locator": "/releases/15/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 7,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -2831,6 +3191,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:27:34Z",
       "dateSigned": "2025-11-28T00:00:00+00:00",
       "locator": "/releases/16/contracts/0",
@@ -2839,6 +3210,7 @@
       "page": 1,
       "publication_locator": "/releases/16/contracts/0/documents/5/datePublished",
       "release_id": "107671-2026",
+      "result_sha256": "5cbe6624e1b5b6e89386b062892209d9f3039d6b248cb0140e4e21f4fad924fb",
       "signature_locator": "/releases/16/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 349,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -2922,6 +3294,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:27:34Z",
       "dateSigned": "2025-11-28T00:00:00+00:00",
       "locator": "/releases/16/contracts/1",
@@ -2930,6 +3313,7 @@
       "page": 1,
       "publication_locator": "/releases/16/contracts/1/documents/5/datePublished",
       "release_id": "107671-2026",
+      "result_sha256": "3afa16c175967be59dd33fad6130ffcfd62b61fc1bb6aecce732713bfc1dfa3c",
       "signature_locator": "/releases/16/contracts/1/dateSigned",
       "signature_to_publication_calendar_days": 349,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3013,6 +3397,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "3",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:27:34Z",
       "dateSigned": "2025-11-28T00:00:00+00:00",
       "locator": "/releases/16/contracts/2",
@@ -3021,6 +3416,7 @@
       "page": 1,
       "publication_locator": "/releases/16/contracts/2/documents/2/datePublished",
       "release_id": "107671-2026",
+      "result_sha256": "3c424f4da929132c30f8c4e1381be31223294dc994a1893ed35c8df80cf3399f",
       "signature_locator": "/releases/16/contracts/2/dateSigned",
       "signature_to_publication_calendar_days": 349,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3104,6 +3500,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "4",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:27:34Z",
       "dateSigned": "2025-11-28T00:00:00+00:00",
       "locator": "/releases/16/contracts/3",
@@ -3112,6 +3519,7 @@
       "page": 1,
       "publication_locator": "/releases/16/contracts/3/documents/4/datePublished",
       "release_id": "107671-2026",
+      "result_sha256": "282f9e67bd333bdea249718d0f48fcbd4947e7fa7c16274432815291c8955c6f",
       "signature_locator": "/releases/16/contracts/3/dateSigned",
       "signature_to_publication_calendar_days": 349,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3195,6 +3603,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "5",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:27:34Z",
       "dateSigned": "2025-11-28T00:00:00+00:00",
       "locator": "/releases/16/contracts/4",
@@ -3203,6 +3622,7 @@
       "page": 1,
       "publication_locator": "/releases/16/contracts/4/documents/5/datePublished",
       "release_id": "107671-2026",
+      "result_sha256": "e72a760bfd6c7aa6af824cb41b47f5f51920f2d2672b9d0edc20025ecf20b4ca",
       "signature_locator": "/releases/16/contracts/4/dateSigned",
       "signature_to_publication_calendar_days": 349,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3286,6 +3706,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "6",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:27:34Z",
       "dateSigned": "2025-11-28T00:00:00+00:00",
       "locator": "/releases/16/contracts/5",
@@ -3294,6 +3725,7 @@
       "page": 1,
       "publication_locator": "/releases/16/contracts/5/documents/1/datePublished",
       "release_id": "107671-2026",
+      "result_sha256": "30890946cc1925ef6cd1aba13d339b7dbde94aeab84bc6f4f962b2043362a85c",
       "signature_locator": "/releases/16/contracts/5/dateSigned",
       "signature_to_publication_calendar_days": 349,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3377,6 +3809,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:26:42Z",
       "dateSigned": "2026-10-19T00:00:00+01:00",
       "locator": "/releases/17/contracts/0",
@@ -3385,6 +3828,7 @@
       "page": 1,
       "publication_locator": "/releases/17/contracts/0/documents/0/datePublished",
       "release_id": "107670-2026",
+      "result_sha256": "d5306cd992783f5dcc66e2c50c8eeecd651c4bd75e209d786b5266458e278225",
       "signature_locator": "/releases/17/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 24,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3468,6 +3912,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:19:28Z",
       "dateSigned": "2026-10-19T00:00:00Z",
       "locator": "/releases/25/contracts/0",
@@ -3476,6 +3931,7 @@
       "page": 1,
       "publication_locator": "/releases/25/contracts/0/documents/0/datePublished",
       "release_id": "107662-2026",
+      "result_sha256": "ab6bbf1e6804fd24d58cc4e14ba8b16c7f87b0fb49a650dcecafc2b31200c738",
       "signature_locator": "/releases/25/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 24,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3559,6 +4015,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:18:30Z",
       "dateSigned": "2026-11-12T00:00:00+00:00",
       "locator": "/releases/27/contracts/0",
@@ -3567,6 +4034,7 @@
       "page": 1,
       "publication_locator": "/releases/27/contracts/0/documents/0/datePublished",
       "release_id": "107660-2026",
+      "result_sha256": "db35140050dbc7b3c6c7298a3354938a7e1426fe738241e9435282d73ac01581",
       "signature_locator": "/releases/27/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3650,6 +4118,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:17:23Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/29/contracts/0",
@@ -3658,6 +4137,7 @@
       "page": 1,
       "publication_locator": "/releases/29/contracts/0/documents/0/datePublished",
       "release_id": "107658-2026",
+      "result_sha256": "89a29025fcdd11dabb9b3562d3c5fb255bd0ccc5567272dc146c4c3732a3c2b6",
       "signature_locator": "/releases/29/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3741,6 +4221,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:12:29Z",
       "dateSigned": "2026-11-04T00:00:00Z",
       "locator": "/releases/35/contracts/0",
@@ -3749,6 +4240,7 @@
       "page": 1,
       "publication_locator": "/releases/35/contracts/0/documents/0/datePublished",
       "release_id": "107652-2026",
+      "result_sha256": "955f54465f0ee403a32d67306d36471ba009dfd90956902181f08c19107adbad",
       "signature_locator": "/releases/35/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3832,6 +4324,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:11:44Z",
       "dateSigned": "2026-11-06T00:00:00Z",
       "locator": "/releases/37/contracts/0",
@@ -3840,6 +4343,7 @@
       "page": 1,
       "publication_locator": "/releases/37/contracts/0/documents/0/datePublished",
       "release_id": "107650-2026",
+      "result_sha256": "d2bbf4e5dcc5dadcc2ecba8576ecd2de4e5054de1805ab81c87384861bbdfb22",
       "signature_locator": "/releases/37/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 6,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -3923,6 +4427,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:08:38Z",
       "dateSigned": "2026-11-09T00:00:00Z",
       "locator": "/releases/42/contracts/0",
@@ -3931,6 +4446,7 @@
       "page": 1,
       "publication_locator": "/releases/42/contracts/0/documents/0/datePublished",
       "release_id": "107645-2026",
+      "result_sha256": "974d73b9787b759e7f8101a01353db0e83f044cc303b8d53b08a96961d27b390",
       "signature_locator": "/releases/42/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 3,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4014,6 +4530,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:08:31Z",
       "dateSigned": "2026-11-12T00:00:00+00:00",
       "locator": "/releases/43/contracts/0",
@@ -4022,6 +4549,7 @@
       "page": 1,
       "publication_locator": "/releases/43/contracts/0/documents/0/datePublished",
       "release_id": "107644-2026",
+      "result_sha256": "21d8aecdd9ad7114f209b8198cd8f827a9b5c4713367a48a6eff3c783d527b54",
       "signature_locator": "/releases/43/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4105,6 +4633,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:07:39Z",
       "dateSigned": "2026-10-05T00:00:00Z",
       "locator": "/releases/45/contracts/0",
@@ -4113,6 +4652,7 @@
       "page": 1,
       "publication_locator": "/releases/45/contracts/0/documents/0/datePublished",
       "release_id": "107642-2026",
+      "result_sha256": "f485a4a3f133fdae4e82d28e3158087582158a90aa5cc151acfb46d2f8ae7901",
       "signature_locator": "/releases/45/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 38,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4196,6 +4736,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:03:21Z",
       "dateSigned": "2026-10-20T00:00:00+01:00",
       "locator": "/releases/50/contracts/0",
@@ -4204,6 +4755,7 @@
       "page": 1,
       "publication_locator": "/releases/50/contracts/0/documents/0/datePublished",
       "release_id": "107637-2026",
+      "result_sha256": "936ab4953aec149a7774082909b1a3eab52ad013a76d48e43932a641fddeef64",
       "signature_locator": "/releases/50/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 23,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4287,6 +4839,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:03:21Z",
       "dateSigned": "2026-10-18T00:00:00+01:00",
       "locator": "/releases/50/contracts/1",
@@ -4295,6 +4858,7 @@
       "page": 1,
       "publication_locator": "/releases/50/contracts/1/documents/0/datePublished",
       "release_id": "107637-2026",
+      "result_sha256": "afe759cabda6cc0dcbb210bc19c7fd371655ecfa7874435aca6b56812e5b3498",
       "signature_locator": "/releases/50/contracts/1/dateSigned",
       "signature_to_publication_calendar_days": 25,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4378,6 +4942,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "3",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:03:21Z",
       "dateSigned": "2026-10-20T00:00:00+01:00",
       "locator": "/releases/50/contracts/2",
@@ -4386,6 +4961,7 @@
       "page": 1,
       "publication_locator": "/releases/50/contracts/2/documents/0/datePublished",
       "release_id": "107637-2026",
+      "result_sha256": "b60f45637516db2442eaa7444586074859810985a8c462f8bcff1bf9acb928b8",
       "signature_locator": "/releases/50/contracts/2/dateSigned",
       "signature_to_publication_calendar_days": 23,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4469,6 +5045,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:02:30Z",
       "dateSigned": "2026-10-13T00:00:00Z",
       "locator": "/releases/51/contracts/0",
@@ -4477,6 +5064,7 @@
       "page": 1,
       "publication_locator": "/releases/51/contracts/0/documents/0/datePublished",
       "release_id": "107636-2026",
+      "result_sha256": "eac621e159af99d9e407376f91bce86f73b12786285e1939550f404f1ac0e1e3",
       "signature_locator": "/releases/51/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 30,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4560,6 +5148,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T15:01:59Z",
       "dateSigned": "2026-09-17T00:00:00Z",
       "locator": "/releases/54/contracts/0",
@@ -4568,6 +5167,7 @@
       "page": 1,
       "publication_locator": "/releases/54/contracts/0/documents/0/datePublished",
       "release_id": "107633-2026",
+      "result_sha256": "1dffb5caa2792e0bc725e72433e0bcc9bd3210ab9cf2c31976b887f17a1718ad",
       "signature_locator": "/releases/54/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 56,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4651,6 +5251,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:56:50Z",
       "dateSigned": "2026-11-10T00:00:00Z",
       "locator": "/releases/60/contracts/0",
@@ -4659,6 +5270,7 @@
       "page": 1,
       "publication_locator": "/releases/60/contracts/0/documents/0/datePublished",
       "release_id": "107627-2026",
+      "result_sha256": "37305d69358443a008ce516f1874fe03a5307452bfe32617fb390aaf9fb81c18",
       "signature_locator": "/releases/60/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 2,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4742,6 +5354,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:55:12Z",
       "dateSigned": "2026-11-04T00:00:00+00:00",
       "locator": "/releases/63/contracts/0",
@@ -4750,6 +5373,7 @@
       "page": 1,
       "publication_locator": "/releases/63/contracts/0/documents/0/datePublished",
       "release_id": "107624-2026",
+      "result_sha256": "8aff77e8d7cc73343f96eedc1d6c5ed86b2c995140230999c8625943555d690f",
       "signature_locator": "/releases/63/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4833,6 +5457,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:52:25Z",
       "dateSigned": "2026-10-13T00:00:00Z",
       "locator": "/releases/65/contracts/0",
@@ -4841,6 +5476,7 @@
       "page": 1,
       "publication_locator": "/releases/65/contracts/0/documents/0/datePublished",
       "release_id": "107622-2026",
+      "result_sha256": "9c31d49c83802bbd3c23793ff6c1c4dadf1c0a39e8bab8551a364fefc94f38b9",
       "signature_locator": "/releases/65/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 30,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -4924,6 +5560,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:48:02Z",
       "dateSigned": "2026-10-26T00:00:00+00:00",
       "locator": "/releases/70/contracts/0",
@@ -4932,6 +5579,7 @@
       "page": 1,
       "publication_locator": "/releases/70/contracts/0/documents/0/datePublished",
       "release_id": "107617-2026",
+      "result_sha256": "73a0a90c33cd768c972bcab4543a7e3ae325118cc49f4d03a724c2978d58bd98",
       "signature_locator": "/releases/70/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 17,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5015,6 +5663,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:47:33Z",
       "dateSigned": "2026-11-10T00:00:00Z",
       "locator": "/releases/71/contracts/0",
@@ -5023,6 +5682,7 @@
       "page": 1,
       "publication_locator": "/releases/71/contracts/0/documents/0/datePublished",
       "release_id": "107616-2026",
+      "result_sha256": "d2f593911ec25ea4858e28b763db3aced6c3628967e9286bebd1d33479687103",
       "signature_locator": "/releases/71/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 2,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5106,6 +5766,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:45:12Z",
       "dateSigned": "2026-09-25T00:00:00Z",
       "locator": "/releases/73/contracts/0",
@@ -5114,6 +5785,7 @@
       "page": 1,
       "publication_locator": "/releases/73/contracts/0/documents/0/datePublished",
       "release_id": "107614-2026",
+      "result_sha256": "e65c513d5f58cedb953752ead2f0d906c3a9d10be7d44328d4727ddfbf874d3d",
       "signature_locator": "/releases/73/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 48,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5197,6 +5869,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:38:05Z",
       "dateSigned": "2026-10-17T00:00:00Z",
       "locator": "/releases/82/contracts/0",
@@ -5205,6 +5888,7 @@
       "page": 1,
       "publication_locator": "/releases/82/contracts/0/documents/0/datePublished",
       "release_id": "107605-2026",
+      "result_sha256": "5b233e7b0464f68be535e1906193913753ccea970702fd8b1329c8afb8007d20",
       "signature_locator": "/releases/82/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 26,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5288,6 +5972,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:28:55Z",
       "dateSigned": "2026-11-02T00:00:00Z",
       "locator": "/releases/87/contracts/0",
@@ -5296,6 +5991,7 @@
       "page": 1,
       "publication_locator": "/releases/87/contracts/0/documents/0/datePublished",
       "release_id": "107600-2026",
+      "result_sha256": "34561a5c3b3c72021bf52b3591ffa8e6e967d03630578e71e6c8d92a7dcdfeec",
       "signature_locator": "/releases/87/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 10,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5379,6 +6075,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:24:47Z",
       "dateSigned": "2026-11-02T00:00:00+00:00",
       "locator": "/releases/90/contracts/0",
@@ -5387,6 +6094,7 @@
       "page": 1,
       "publication_locator": "/releases/90/contracts/0/documents/0/datePublished",
       "release_id": "107597-2026",
+      "result_sha256": "cfbe0e750b81fb1c898ee03c796c201f0775a9385e5f2b94929d866bc3227fc6",
       "signature_locator": "/releases/90/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 10,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5470,6 +6178,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:19:57Z",
       "dateSigned": "2026-10-26T00:00:00+00:00",
       "locator": "/releases/95/contracts/0",
@@ -5478,6 +6197,7 @@
       "page": 1,
       "publication_locator": "/releases/95/contracts/0/documents/0/datePublished",
       "release_id": "107592-2026",
+      "result_sha256": "3c0c2dc6406d1425012f022577d85631457cf5bcf6066f367ec9fb544f360c02",
       "signature_locator": "/releases/95/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 17,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5561,6 +6281,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:19:20Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/96/contracts/0",
@@ -5569,6 +6300,7 @@
       "page": 1,
       "publication_locator": "/releases/96/contracts/0/documents/0/datePublished",
       "release_id": "107591-2026",
+      "result_sha256": "c1ab0c8f38b5c5b523c49fab367c71f55fb2f954ce94c1e479e21d07d9e809d9",
       "signature_locator": "/releases/96/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5652,6 +6384,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 1,
+          "projection_sha256": "54052ced2b2a9db8bac498873b69fd1c7091aebd56346f608217a1fa0b42acf1",
+          "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de"
+        }
+      },
       "datePublished": "2026-11-12T14:12:26Z",
       "dateSigned": "2026-11-06T00:00:00Z",
       "locator": "/releases/99/contracts/0",
@@ -5660,6 +6403,7 @@
       "page": 1,
       "publication_locator": "/releases/99/contracts/0/documents/0/datePublished",
       "release_id": "107588-2026",
+      "result_sha256": "beed498a662b8be6fc50c277f06bb028e8429cbcd7d7c1eb3046f10c869e6b50",
       "signature_locator": "/releases/99/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 6,
       "source_sha256": "57c1ab1a8019602bd288786a4b25ef4f9b157c8e74a43236e8b688f009ce81de",
@@ -5743,6 +6487,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:12:10Z",
       "dateSigned": "2026-10-27T00:00:00Z",
       "locator": "/releases/0/contracts/0",
@@ -5751,6 +6506,7 @@
       "page": 2,
       "publication_locator": "/releases/0/contracts/0/documents/0/datePublished",
       "release_id": "107587-2026",
+      "result_sha256": "8a3a0042e1cfb1a81ac0ff22a52ef316d42bfb2d9fba1cebef520ae60c745cae",
       "signature_locator": "/releases/0/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 16,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -5834,6 +6590,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:03:31Z",
       "dateSigned": "2026-10-26T00:00:00Z",
       "locator": "/releases/4/contracts/0",
@@ -5842,6 +6609,7 @@
       "page": 2,
       "publication_locator": "/releases/4/contracts/0/documents/0/datePublished",
       "release_id": "107583-2026",
+      "result_sha256": "6f548c4ddd1d3f7d5e64ba17d259ad06949f264815b143832837685b0b521b18",
       "signature_locator": "/releases/4/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 17,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -5925,6 +6693,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:03:00Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/5/contracts/0",
@@ -5933,6 +6712,7 @@
       "page": 2,
       "publication_locator": "/releases/5/contracts/0/documents/0/datePublished",
       "release_id": "107582-2026",
+      "result_sha256": "a92bac98641dfa9b3fd1bd2054c7ef650a835c71351d7a0a16a4b65ad9d8df62",
       "signature_locator": "/releases/5/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6016,6 +6796,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:00:32Z",
       "dateSigned": "2026-10-30T00:00:00+00:00",
       "locator": "/releases/8/contracts/0",
@@ -6024,6 +6815,7 @@
       "page": 2,
       "publication_locator": "/releases/8/contracts/0/documents/0/datePublished",
       "release_id": "107579-2026",
+      "result_sha256": "51e625573d44453a16592f78f6d4c9194b3e46ba2dc9614270e3af7dfd21928e",
       "signature_locator": "/releases/8/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 13,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6107,6 +6899,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:00:32Z",
       "dateSigned": "2026-10-30T00:00:00+00:00",
       "locator": "/releases/8/contracts/1",
@@ -6115,6 +6918,7 @@
       "page": 2,
       "publication_locator": "/releases/8/contracts/1/documents/0/datePublished",
       "release_id": "107579-2026",
+      "result_sha256": "59af0c066392c9bff111ac61be24b1ab27cc1c771eca1b9db6af3edb237a40cf",
       "signature_locator": "/releases/8/contracts/1/dateSigned",
       "signature_to_publication_calendar_days": 13,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6198,6 +7002,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "3",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:00:32Z",
       "dateSigned": "2026-10-30T00:00:00+00:00",
       "locator": "/releases/8/contracts/2",
@@ -6206,6 +7021,7 @@
       "page": 2,
       "publication_locator": "/releases/8/contracts/2/documents/0/datePublished",
       "release_id": "107579-2026",
+      "result_sha256": "3860e0f9461381a31e17aabbf05f4f4f4a35e12e31ab632004f16ebd5ef7373f",
       "signature_locator": "/releases/8/contracts/2/dateSigned",
       "signature_to_publication_calendar_days": 13,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6289,6 +7105,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "4",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:00:32Z",
       "dateSigned": "2026-10-30T00:00:00+00:00",
       "locator": "/releases/8/contracts/3",
@@ -6297,6 +7124,7 @@
       "page": 2,
       "publication_locator": "/releases/8/contracts/3/documents/0/datePublished",
       "release_id": "107579-2026",
+      "result_sha256": "c5fa5f36237d7d9a6dd8d93a85cd1255f42b1343cd3b9a922339d9fa68d0b42a",
       "signature_locator": "/releases/8/contracts/3/dateSigned",
       "signature_to_publication_calendar_days": 13,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6380,6 +7208,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "5",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:00:32Z",
       "dateSigned": "2026-10-30T00:00:00+00:00",
       "locator": "/releases/8/contracts/4",
@@ -6388,6 +7227,7 @@
       "page": 2,
       "publication_locator": "/releases/8/contracts/4/documents/0/datePublished",
       "release_id": "107579-2026",
+      "result_sha256": "66b12bbacc03e9257947a47c95d8b099f8aa293ac9ac8051e888aacaecc21006",
       "signature_locator": "/releases/8/contracts/4/dateSigned",
       "signature_to_publication_calendar_days": 13,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6471,6 +7311,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "6",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T14:00:32Z",
       "dateSigned": "2026-10-30T00:00:00+00:00",
       "locator": "/releases/8/contracts/5",
@@ -6479,6 +7330,7 @@
       "page": 2,
       "publication_locator": "/releases/8/contracts/5/documents/0/datePublished",
       "release_id": "107579-2026",
+      "result_sha256": "82d47b451b7f917a6d326d0a12d3011beb122558ab2682c416ff5b3e8529ea91",
       "signature_locator": "/releases/8/contracts/5/dateSigned",
       "signature_to_publication_calendar_days": 13,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6562,6 +7414,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:55:44Z",
       "dateSigned": "2026-08-03T00:00:00+01:00",
       "locator": "/releases/10/contracts/0",
@@ -6570,6 +7433,7 @@
       "page": 2,
       "publication_locator": "/releases/10/contracts/0/documents/0/datePublished",
       "release_id": "107577-2026",
+      "result_sha256": "7081a9b7fc1cd1f39411ac364ce87aeeb0b360b078d4e77cc2eae56d5da4960b",
       "signature_locator": "/releases/10/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 101,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6653,6 +7517,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:52:52Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/14/contracts/0",
@@ -6661,6 +7536,7 @@
       "page": 2,
       "publication_locator": "/releases/14/contracts/0/documents/0/datePublished",
       "release_id": "107573-2026",
+      "result_sha256": "f09f543b63d07fa2e884db6764c55170b8e3978697ef3c395120e136cdd56f8d",
       "signature_locator": "/releases/14/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6744,6 +7620,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:50:53Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/17/contracts/0",
@@ -6752,6 +7639,7 @@
       "page": 2,
       "publication_locator": "/releases/17/contracts/0/documents/0/datePublished",
       "release_id": "107570-2026",
+      "result_sha256": "6f8a315a486609dc7ec9fd927db320fa2713ac8a1a2ad8d4f3e1cbc8a8fb664a",
       "signature_locator": "/releases/17/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6835,6 +7723,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:48:41Z",
       "dateSigned": "2026-09-29T00:00:00+01:00",
       "locator": "/releases/19/contracts/0",
@@ -6843,6 +7742,7 @@
       "page": 2,
       "publication_locator": "/releases/19/contracts/0/documents/0/datePublished",
       "release_id": "107568-2026",
+      "result_sha256": "f496902e80bb79fa7e5eca17ae89d9bbbedf963877a3c4b5026a11b0f3403821",
       "signature_locator": "/releases/19/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 44,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -6926,6 +7826,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:48:38Z",
       "dateSigned": "2026-10-20T00:00:00+01:00",
       "locator": "/releases/20/contracts/0",
@@ -6934,6 +7845,7 @@
       "page": 2,
       "publication_locator": "/releases/20/contracts/0/documents/0/datePublished",
       "release_id": "107567-2026",
+      "result_sha256": "53259c55774f45d03f405b447406435da929c7c1cabdcc6ff2298ebedb7f0b14",
       "signature_locator": "/releases/20/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 23,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7017,6 +7929,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:42:42Z",
       "dateSigned": "2026-08-11T00:00:00+01:00",
       "locator": "/releases/22/contracts/0",
@@ -7025,6 +7948,7 @@
       "page": 2,
       "publication_locator": "/releases/22/contracts/0/documents/0/datePublished",
       "release_id": "107564-2026",
+      "result_sha256": "552d3cc275d21e7590ea77a162273a4d62c6d1d1d27c8f3c2791174b921bd8be",
       "signature_locator": "/releases/22/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 93,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7108,6 +8032,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:36:34Z",
       "dateSigned": "2026-09-21T00:00:00+01:00",
       "locator": "/releases/25/contracts/0",
@@ -7116,6 +8051,7 @@
       "page": 2,
       "publication_locator": "/releases/25/contracts/0/documents/1/datePublished",
       "release_id": "107561-2026",
+      "result_sha256": "a0442ad8fb216df6d9df2d50eeeb853f9b7914658439184ec595145a63ccc7e7",
       "signature_locator": "/releases/25/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 52,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7199,6 +8135,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:36:34Z",
       "dateSigned": "2026-09-21T00:00:00+01:00",
       "locator": "/releases/25/contracts/1",
@@ -7207,6 +8154,7 @@
       "page": 2,
       "publication_locator": "/releases/25/contracts/1/documents/1/datePublished",
       "release_id": "107561-2026",
+      "result_sha256": "cb3ba50003ce6da26c55c53da833cc8ffbf284041bce15b7ec15ab6f62c475e1",
       "signature_locator": "/releases/25/contracts/1/dateSigned",
       "signature_to_publication_calendar_days": 52,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7290,6 +8238,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "3",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:36:34Z",
       "dateSigned": "2026-09-21T00:00:00+01:00",
       "locator": "/releases/25/contracts/2",
@@ -7298,6 +8257,7 @@
       "page": 2,
       "publication_locator": "/releases/25/contracts/2/documents/1/datePublished",
       "release_id": "107561-2026",
+      "result_sha256": "acbe3c6ca89abb9b9e0ed90ef5a06595e354a46cea55e9a5c4850c9d355aadbb",
       "signature_locator": "/releases/25/contracts/2/dateSigned",
       "signature_to_publication_calendar_days": 52,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7381,6 +8341,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "4",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:36:34Z",
       "dateSigned": "2026-09-21T00:00:00+01:00",
       "locator": "/releases/25/contracts/3",
@@ -7389,6 +8360,7 @@
       "page": 2,
       "publication_locator": "/releases/25/contracts/3/documents/1/datePublished",
       "release_id": "107561-2026",
+      "result_sha256": "a7401c72e8694455818199f278e6bb4163cdc86d8bb49df72ce88aee9b07d59d",
       "signature_locator": "/releases/25/contracts/3/dateSigned",
       "signature_to_publication_calendar_days": 52,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7472,6 +8444,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "5",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:36:34Z",
       "dateSigned": "2026-09-21T00:00:00+01:00",
       "locator": "/releases/25/contracts/4",
@@ -7480,6 +8463,7 @@
       "page": 2,
       "publication_locator": "/releases/25/contracts/4/documents/1/datePublished",
       "release_id": "107561-2026",
+      "result_sha256": "9c814a4ace3a1685cf93a696ebfeae60589956c10ac982eac5959e18b0d8de90",
       "signature_locator": "/releases/25/contracts/4/dateSigned",
       "signature_to_publication_calendar_days": 52,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7563,6 +8547,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "6",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:36:34Z",
       "dateSigned": "2026-09-21T00:00:00+01:00",
       "locator": "/releases/25/contracts/5",
@@ -7571,6 +8566,7 @@
       "page": 2,
       "publication_locator": "/releases/25/contracts/5/documents/1/datePublished",
       "release_id": "107561-2026",
+      "result_sha256": "cef2b9adc1d7377ce4e04672a8b78a3ab64fdc65d5e3e10aea6d16c6be20a777",
       "signature_locator": "/releases/25/contracts/5/dateSigned",
       "signature_to_publication_calendar_days": 52,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7654,6 +8650,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "7",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:36:34Z",
       "dateSigned": "2026-09-21T00:00:00+01:00",
       "locator": "/releases/25/contracts/6",
@@ -7662,6 +8669,7 @@
       "page": 2,
       "publication_locator": "/releases/25/contracts/6/documents/1/datePublished",
       "release_id": "107561-2026",
+      "result_sha256": "5eec5edaadaa7cb3cd02be44947f1ba1678bf5b2c5e5bd42c2457890b39eb430",
       "signature_locator": "/releases/25/contracts/6/dateSigned",
       "signature_to_publication_calendar_days": 52,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7745,6 +8753,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:34:33Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/27/contracts/0",
@@ -7753,6 +8772,7 @@
       "page": 2,
       "publication_locator": "/releases/27/contracts/0/documents/0/datePublished",
       "release_id": "107559-2026",
+      "result_sha256": "d2f912dbc4379203f5f8c7c36bb6f6047a3564613f57866bc17158a625695219",
       "signature_locator": "/releases/27/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7836,6 +8856,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:31:53Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/28/contracts/0",
@@ -7844,6 +8875,7 @@
       "page": 2,
       "publication_locator": "/releases/28/contracts/0/documents/0/datePublished",
       "release_id": "107558-2026",
+      "result_sha256": "bd572061826e5d1494c27cc7969882d5a6ac22ca6201c0d4cccb45ed5c0dbaee",
       "signature_locator": "/releases/28/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -7927,6 +8959,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:31:53Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/28/contracts/1",
@@ -7935,6 +8978,7 @@
       "page": 2,
       "publication_locator": "/releases/28/contracts/1/documents/0/datePublished",
       "release_id": "107558-2026",
+      "result_sha256": "3812fb2a97234427e28074a0c7b1083f5b402628b23dd52465dba56269c3ab01",
       "signature_locator": "/releases/28/contracts/1/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8018,6 +9062,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "3",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:31:53Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/28/contracts/2",
@@ -8026,6 +9081,7 @@
       "page": 2,
       "publication_locator": "/releases/28/contracts/2/documents/0/datePublished",
       "release_id": "107558-2026",
+      "result_sha256": "b9ad9e5b5c32615c00651824bc325d1786b412cc582d5198a0184e118c71d692",
       "signature_locator": "/releases/28/contracts/2/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8109,6 +9165,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:29:03Z",
       "dateSigned": "2026-11-04T00:00:00Z",
       "locator": "/releases/31/contracts/0",
@@ -8117,6 +9184,7 @@
       "page": 2,
       "publication_locator": "/releases/31/contracts/0/documents/0/datePublished",
       "release_id": "107555-2026",
+      "result_sha256": "944dc3e74ef9a2a4cbb0c73784e70037ff3d89ed9d8ebecd168106e0ac7471b7",
       "signature_locator": "/releases/31/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8200,6 +9268,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:28:31Z",
       "dateSigned": "2026-11-03T00:00:00+00:00",
       "locator": "/releases/34/contracts/0",
@@ -8208,6 +9287,7 @@
       "page": 2,
       "publication_locator": "/releases/34/contracts/0/documents/0/datePublished",
       "release_id": "107552-2026",
+      "result_sha256": "005399635d3e63bd2f79d7d409bcf21d8910f9b31f13b2bdb30ec8bfa6accaac",
       "signature_locator": "/releases/34/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 9,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8291,6 +9371,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:22:34Z",
       "dateSigned": "2026-11-10T00:00:00+00:00",
       "locator": "/releases/38/contracts/0",
@@ -8299,6 +9390,7 @@
       "page": 2,
       "publication_locator": "/releases/38/contracts/0/documents/0/datePublished",
       "release_id": "107548-2026",
+      "result_sha256": "7a1834979acb2156265ff24caf3ebde8d2c83b21d9e2b30c235eb6f12499eb83",
       "signature_locator": "/releases/38/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 2,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8382,6 +9474,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:20:58Z",
       "dateSigned": "2026-10-01T00:00:00+01:00",
       "locator": "/releases/39/contracts/0",
@@ -8390,6 +9493,7 @@
       "page": 2,
       "publication_locator": "/releases/39/contracts/0/documents/0/datePublished",
       "release_id": "107547-2026",
+      "result_sha256": "3161e081c61bf14d195f71cb1d1a84e2618cff5e00afbb5b4ae652d2e4855dc3",
       "signature_locator": "/releases/39/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 42,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8473,6 +9577,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:16:06Z",
       "dateSigned": "2025-12-19T00:00:00+00:00",
       "locator": "/releases/44/contracts/0",
@@ -8481,6 +9596,7 @@
       "page": 2,
       "publication_locator": "/releases/44/contracts/0/documents/0/datePublished",
       "release_id": "107542-2026",
+      "result_sha256": "777465304858a42b239dc2dd6303c2b5a3e5a539a1215bbaf4c91c28d7cd1e14",
       "signature_locator": "/releases/44/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 328,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8564,6 +9680,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:08:03Z",
       "dateSigned": "2026-10-07T00:00:00+01:00",
       "locator": "/releases/46/contracts/0",
@@ -8572,6 +9699,7 @@
       "page": 2,
       "publication_locator": "/releases/46/contracts/0/documents/0/datePublished",
       "release_id": "107540-2026",
+      "result_sha256": "2d3c366fea985cc97418f028ac74d5fe4bb665fb471dab532cb81963a54e70e7",
       "signature_locator": "/releases/46/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 36,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8655,6 +9783,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:06:03Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/47/contracts/0",
@@ -8663,6 +9802,7 @@
       "page": 2,
       "publication_locator": "/releases/47/contracts/0/documents/0/datePublished",
       "release_id": "107539-2026",
+      "result_sha256": "6079d981f23c68a576b54a4e4fcb4321687e096dfb79e8050fcb2fb1659be0ca",
       "signature_locator": "/releases/47/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8746,6 +9886,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:05:09Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/48/contracts/0",
@@ -8754,6 +9905,7 @@
       "page": 2,
       "publication_locator": "/releases/48/contracts/0/documents/0/datePublished",
       "release_id": "107538-2026",
+      "result_sha256": "5076ff36b126c787a443c8380892f12a1c18261d7ef9e4b5a39b19162eb0cb87",
       "signature_locator": "/releases/48/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8837,6 +9989,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:02:56Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/51/contracts/0",
@@ -8845,6 +10008,7 @@
       "page": 2,
       "publication_locator": "/releases/51/contracts/0/documents/0/datePublished",
       "release_id": "107535-2026",
+      "result_sha256": "c6ebe587f6c337e142c03e55d8a95c93a3d9d212c26aea13917a3634c4ef5ecb",
       "signature_locator": "/releases/51/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -8928,6 +10092,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T13:00:21Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/52/contracts/0",
@@ -8936,6 +10111,7 @@
       "page": 2,
       "publication_locator": "/releases/52/contracts/0/documents/0/datePublished",
       "release_id": "107534-2026",
+      "result_sha256": "34f48c881d10f222b60be7bf03aa2bbc3c307aad1f863bb1d25b1f493635005f",
       "signature_locator": "/releases/52/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9019,6 +10195,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:56:30Z",
       "dateSigned": "2026-11-03T00:00:00+00:00",
       "locator": "/releases/55/contracts/0",
@@ -9027,6 +10214,7 @@
       "page": 2,
       "publication_locator": "/releases/55/contracts/0/documents/0/datePublished",
       "release_id": "107531-2026",
+      "result_sha256": "89f5dc2ea8281e03ee442410c3e9594ad08eae14c489a49e0c06d8ffa1906a55",
       "signature_locator": "/releases/55/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 9,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9110,6 +10298,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:54:29Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/56/contracts/0",
@@ -9118,6 +10317,7 @@
       "page": 2,
       "publication_locator": "/releases/56/contracts/0/documents/0/datePublished",
       "release_id": "107530-2026",
+      "result_sha256": "9de89814827883811ac4032348072d876311bbff081698e59bd3b8847b243630",
       "signature_locator": "/releases/56/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9201,6 +10401,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:45:48Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/61/contracts/0",
@@ -9209,6 +10420,7 @@
       "page": 2,
       "publication_locator": "/releases/61/contracts/0/documents/0/datePublished",
       "release_id": "107525-2026",
+      "result_sha256": "516f62c22b32aa02de4ee18dd49fecd4a7008cacc3dbea277f41e8786e037c09",
       "signature_locator": "/releases/61/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9292,6 +10504,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:44:39Z",
       "dateSigned": "2026-10-27T00:00:00+00:00",
       "locator": "/releases/62/contracts/0",
@@ -9300,6 +10523,7 @@
       "page": 2,
       "publication_locator": "/releases/62/contracts/0/documents/0/datePublished",
       "release_id": "107524-2026",
+      "result_sha256": "0eb4837c6b2a241debb70609cde9ff0a3c235c02781d332705a8e1d828f3651a",
       "signature_locator": "/releases/62/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 16,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9383,6 +10607,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:44:11Z",
       "dateSigned": "2026-11-04T00:00:00Z",
       "locator": "/releases/63/contracts/0",
@@ -9391,6 +10626,7 @@
       "page": 2,
       "publication_locator": "/releases/63/contracts/0/documents/1/datePublished",
       "release_id": "107523-2026",
+      "result_sha256": "0d5cb174b24de48baf2529c3114afcb47e14ffa7a2a17507317d31a858223169",
       "signature_locator": "/releases/63/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9474,6 +10710,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:38:45Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/65/contracts/0",
@@ -9482,6 +10729,7 @@
       "page": 2,
       "publication_locator": "/releases/65/contracts/0/documents/0/datePublished",
       "release_id": "107521-2026",
+      "result_sha256": "bb5a411a9effbbd2862a6b47b64969002e1dfddc01d00e2619ddd58ef5f7e01f",
       "signature_locator": "/releases/65/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9565,6 +10813,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:34:02Z",
       "dateSigned": "2026-10-07T00:00:00+01:00",
       "locator": "/releases/67/contracts/0",
@@ -9573,6 +10832,7 @@
       "page": 2,
       "publication_locator": "/releases/67/contracts/0/documents/0/datePublished",
       "release_id": "107519-2026",
+      "result_sha256": "502c19ec5b69b0d584ee7dd28fcbcd426fe4faf0f19cd19a66f1c201ead1c5f3",
       "signature_locator": "/releases/67/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 36,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9656,6 +10916,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:32:34Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/68/contracts/0",
@@ -9664,6 +10935,7 @@
       "page": 2,
       "publication_locator": "/releases/68/contracts/0/documents/0/datePublished",
       "release_id": "107518-2026",
+      "result_sha256": "e348c95566bf7c56ad3994f46553a4e36621beec92c009d70e22204c39f6c06e",
       "signature_locator": "/releases/68/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9747,6 +11019,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:31:03Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/70/contracts/0",
@@ -9755,6 +11038,7 @@
       "page": 2,
       "publication_locator": "/releases/70/contracts/0/documents/0/datePublished",
       "release_id": "107516-2026",
+      "result_sha256": "9dd028e8628c4e6437600f29dfd1504ae4b42c4b815a68b5787857c9a439ad85",
       "signature_locator": "/releases/70/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9838,6 +11122,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:28:58Z",
       "dateSigned": "2026-10-28T00:00:00+00:00",
       "locator": "/releases/71/contracts/0",
@@ -9846,6 +11141,7 @@
       "page": 2,
       "publication_locator": "/releases/71/contracts/0/documents/0/datePublished",
       "release_id": "107515-2026",
+      "result_sha256": "c793ae0e49c72a6c257378e42849f117a75a795157c88a52bacf96cfdc631e13",
       "signature_locator": "/releases/71/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 15,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -9929,6 +11225,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:27:11Z",
       "dateSigned": "2026-10-28T00:00:00+00:00",
       "locator": "/releases/72/contracts/0",
@@ -9937,6 +11244,7 @@
       "page": 2,
       "publication_locator": "/releases/72/contracts/0/documents/0/datePublished",
       "release_id": "107514-2026",
+      "result_sha256": "926736d70db51cd2bbe8fb4504796911628e4a82854db088c0a1d45bd6804a32",
       "signature_locator": "/releases/72/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 15,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10020,6 +11328,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:17:56Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/75/contracts/0",
@@ -10028,6 +11347,7 @@
       "page": 2,
       "publication_locator": "/releases/75/contracts/0/documents/0/datePublished",
       "release_id": "107511-2026",
+      "result_sha256": "296ba1edacebf2ed3419391e736d850971e4093141723c908a7e242674182ec5",
       "signature_locator": "/releases/75/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10111,6 +11431,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:10:57Z",
       "dateSigned": "2026-03-31T00:00:00+01:00",
       "locator": "/releases/80/contracts/0",
@@ -10119,6 +11450,7 @@
       "page": 2,
       "publication_locator": "/releases/80/contracts/0/documents/0/datePublished",
       "release_id": "107506-2026",
+      "result_sha256": "f48a3d448bc8bccab62d91b326020710b0b5ec736f5e9d8888387b092cd72a3b",
       "signature_locator": "/releases/80/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 226,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10202,6 +11534,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:06:57Z",
       "dateSigned": "2026-10-07T00:00:00+01:00",
       "locator": "/releases/84/contracts/0",
@@ -10210,6 +11553,7 @@
       "page": 2,
       "publication_locator": "/releases/84/contracts/0/documents/0/datePublished",
       "release_id": "107502-2026",
+      "result_sha256": "ebf328da24ddd740962a919a2d7bfd6515f368ad54607418db61550595c11d38",
       "signature_locator": "/releases/84/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 36,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10293,6 +11637,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T12:00:49Z",
       "dateSigned": "2026-06-30T00:00:00+01:00",
       "locator": "/releases/86/contracts/0",
@@ -10301,6 +11656,7 @@
       "page": 2,
       "publication_locator": "/releases/86/contracts/0/documents/0/datePublished",
       "release_id": "107500-2026",
+      "result_sha256": "3896a529deccf359a73010f646f0652d5771cab2727b574ee0efdc8d7c3edbec",
       "signature_locator": "/releases/86/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 135,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10384,6 +11740,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T11:57:23Z",
       "dateSigned": "2026-10-28T00:00:00Z",
       "locator": "/releases/88/contracts/0",
@@ -10392,6 +11759,7 @@
       "page": 2,
       "publication_locator": "/releases/88/contracts/0/documents/1/datePublished",
       "release_id": "107498-2026",
+      "result_sha256": "f76ec84296b96a9d3c213caf6ad3cf06800f891efa8548d8f6b860939c006c31",
       "signature_locator": "/releases/88/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 15,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10475,6 +11843,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T11:56:44Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/89/contracts/0",
@@ -10483,6 +11862,7 @@
       "page": 2,
       "publication_locator": "/releases/89/contracts/0/documents/0/datePublished",
       "release_id": "107497-2026",
+      "result_sha256": "a6f6023ccbaab7981d568b3ca93268e79580796a939e797785582f5477e8c0ca",
       "signature_locator": "/releases/89/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10566,6 +11946,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T11:56:29Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/90/contracts/0",
@@ -10574,6 +11965,7 @@
       "page": 2,
       "publication_locator": "/releases/90/contracts/0/documents/0/datePublished",
       "release_id": "107496-2026",
+      "result_sha256": "518a93456d5ad8eb12fcd421f14d5f892e4d226271ba392f7ba2600ee8140fde",
       "signature_locator": "/releases/90/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10657,6 +12049,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T11:51:48Z",
       "dateSigned": "2026-09-04T00:00:00+01:00",
       "locator": "/releases/93/contracts/0",
@@ -10665,6 +12068,7 @@
       "page": 2,
       "publication_locator": "/releases/93/contracts/0/documents/0/datePublished",
       "release_id": "107493-2026",
+      "result_sha256": "00f7bd0e0acb1b5f24fbe2ae3c16175426fb3d38786945554535a04e3fbf7bf4",
       "signature_locator": "/releases/93/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 69,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10748,6 +12152,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 2,
+          "projection_sha256": "becefbf36803a7fd2317201f889ad3b41191e38a66d585f85893a4128a819106",
+          "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede"
+        }
+      },
       "datePublished": "2026-11-12T11:48:58Z",
       "dateSigned": "2026-10-27T00:00:00Z",
       "locator": "/releases/95/contracts/0",
@@ -10756,6 +12171,7 @@
       "page": 2,
       "publication_locator": "/releases/95/contracts/0/documents/0/datePublished",
       "release_id": "107491-2026",
+      "result_sha256": "a3a0d9327dcb0d7b44fdcd7d5095cf05c3eed55485e19bd4a2cd9cdf4d69a065",
       "signature_locator": "/releases/95/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 16,
       "source_sha256": "550bdafa56c20d59b2140e1199c26650a0b20f9e7f3e3199b9e2dcc37ba04ede",
@@ -10839,6 +12255,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:44:44Z",
       "dateSigned": "2026-11-10T00:00:00+00:00",
       "locator": "/releases/1/contracts/0",
@@ -10847,6 +12274,7 @@
       "page": 3,
       "publication_locator": "/releases/1/contracts/0/documents/0/datePublished",
       "release_id": "107485-2026",
+      "result_sha256": "41e1b577917023aed6e1a6af485d1eab2d4848dd42c7503b20b521d1f8b1ff79",
       "signature_locator": "/releases/1/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 2,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -10930,6 +12358,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:41:37Z",
       "dateSigned": "2026-10-28T00:00:00+00:00",
       "locator": "/releases/3/contracts/0",
@@ -10938,6 +12377,7 @@
       "page": 3,
       "publication_locator": "/releases/3/contracts/0/documents/0/datePublished",
       "release_id": "107483-2026",
+      "result_sha256": "113ca70082dd319873eadbfa5944d83456a139d35979200f25336f0d64cd5c27",
       "signature_locator": "/releases/3/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 15,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11021,6 +12461,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:32:29Z",
       "dateSigned": "2026-10-31T00:00:00Z",
       "locator": "/releases/9/contracts/0",
@@ -11029,6 +12480,7 @@
       "page": 3,
       "publication_locator": "/releases/9/contracts/0/documents/0/datePublished",
       "release_id": "107477-2026",
+      "result_sha256": "74d0ab7add25456fa7bce29c55ea7d988b4349d2ad2e3592e4b221ce0d9f473d",
       "signature_locator": "/releases/9/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 12,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11112,6 +12564,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:30:52Z",
       "dateSigned": "2026-11-02T00:00:00Z",
       "locator": "/releases/12/contracts/0",
@@ -11120,6 +12583,7 @@
       "page": 3,
       "publication_locator": "/releases/12/contracts/0/documents/0/datePublished",
       "release_id": "107474-2026",
+      "result_sha256": "d541a0336b6097d8f02c16b1a43d2398f6ac8f27b3b75f52da25bd8799663230",
       "signature_locator": "/releases/12/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 10,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11203,6 +12667,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:27:29Z",
       "dateSigned": "2026-11-10T00:00:00Z",
       "locator": "/releases/14/contracts/0",
@@ -11211,6 +12686,7 @@
       "page": 3,
       "publication_locator": "/releases/14/contracts/0/documents/0/datePublished",
       "release_id": "107472-2026",
+      "result_sha256": "51d42e4ea4b2e8db8cc36f5a4df4c99d273d9c1eeffd816f1eac1a8a4a93280d",
       "signature_locator": "/releases/14/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 2,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11294,6 +12770,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:23:44Z",
       "dateSigned": "2026-11-04T00:00:00Z",
       "locator": "/releases/17/contracts/0",
@@ -11302,6 +12789,7 @@
       "page": 3,
       "publication_locator": "/releases/17/contracts/0/documents/0/datePublished",
       "release_id": "107469-2026",
+      "result_sha256": "bd5ce716802c49630bd22b9cafda2771e4d797a0323bb97bc61c0c519c1a746f",
       "signature_locator": "/releases/17/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11385,6 +12873,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:21:20Z",
       "dateSigned": "2026-11-12T00:00:00+00:00",
       "locator": "/releases/19/contracts/0",
@@ -11393,6 +12892,7 @@
       "page": 3,
       "publication_locator": "/releases/19/contracts/0/documents/0/datePublished",
       "release_id": "107467-2026",
+      "result_sha256": "1b6fd62ab204d4a0ba7c6008a5eba3ee316a79b1406e9c79fb1d971da971ce51",
       "signature_locator": "/releases/19/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11476,6 +12976,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:18:38Z",
       "dateSigned": "2026-10-20T00:00:00+01:00",
       "locator": "/releases/20/contracts/0",
@@ -11484,6 +12995,7 @@
       "page": 3,
       "publication_locator": "/releases/20/contracts/0/documents/0/datePublished",
       "release_id": "107466-2026",
+      "result_sha256": "5a4c0f725495455d86f5bb39d6af4346ab9f98475e0fdfe472671ffa65db91da",
       "signature_locator": "/releases/20/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 23,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11567,6 +13079,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:16:59Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/22/contracts/0",
@@ -11575,6 +13098,7 @@
       "page": 3,
       "publication_locator": "/releases/22/contracts/0/documents/0/datePublished",
       "release_id": "107464-2026",
+      "result_sha256": "b11345b25874cbd7c1586510dda30c0de96212cb63bfbbd4c4b01d4836a0d3ac",
       "signature_locator": "/releases/22/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11658,6 +13182,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:09:54Z",
       "dateSigned": "2026-11-11T00:00:00+00:00",
       "locator": "/releases/27/contracts/0",
@@ -11666,6 +13201,7 @@
       "page": 3,
       "publication_locator": "/releases/27/contracts/0/documents/0/datePublished",
       "release_id": "107459-2026",
+      "result_sha256": "b3fcf57e50a660e3d126ab122fdee2f4aafb792829492f48a4edbd15f10f3309",
       "signature_locator": "/releases/27/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11749,6 +13285,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:04:25Z",
       "dateSigned": "2026-11-02T00:00:00+00:00",
       "locator": "/releases/32/contracts/0",
@@ -11757,6 +13304,7 @@
       "page": 3,
       "publication_locator": "/releases/32/contracts/0/documents/0/datePublished",
       "release_id": "107454-2026",
+      "result_sha256": "7c8ec82eb24609d64df9641216d3c87961ec947b590f281de0c96a5b06ce8f5f",
       "signature_locator": "/releases/32/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 10,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11840,6 +13388,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T11:01:25Z",
       "dateSigned": "2026-11-04T00:00:00Z",
       "locator": "/releases/34/contracts/0",
@@ -11848,6 +13407,7 @@
       "page": 3,
       "publication_locator": "/releases/34/contracts/0/documents/0/datePublished",
       "release_id": "107452-2026",
+      "result_sha256": "270925f6202a4314ecf53fc403e18b079d1774628379274af88fce4d7882add9",
       "signature_locator": "/releases/34/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -11931,6 +13491,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:59:47Z",
       "dateSigned": "2026-10-22T00:00:00+01:00",
       "locator": "/releases/35/contracts/0",
@@ -11939,6 +13510,7 @@
       "page": 3,
       "publication_locator": "/releases/35/contracts/0/documents/0/datePublished",
       "release_id": "107451-2026",
+      "result_sha256": "f9c068f65831a7679b0738dda2769990cf9ecb1b506950213be0809667ec991b",
       "signature_locator": "/releases/35/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 21,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12022,6 +13594,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:59:01Z",
       "dateSigned": "2026-11-02T00:00:00+00:00",
       "locator": "/releases/36/contracts/0",
@@ -12030,6 +13613,7 @@
       "page": 3,
       "publication_locator": "/releases/36/contracts/0/documents/0/datePublished",
       "release_id": "107450-2026",
+      "result_sha256": "636975be0b4983934710404339fa71a0f9d8773e921e829aac1db1166fe9b29e",
       "signature_locator": "/releases/36/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 10,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12113,6 +13697,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:55:56Z",
       "dateSigned": "2026-11-04T00:00:00Z",
       "locator": "/releases/38/contracts/0",
@@ -12121,6 +13716,7 @@
       "page": 3,
       "publication_locator": "/releases/38/contracts/0/documents/0/datePublished",
       "release_id": "107447-2026",
+      "result_sha256": "87e75837479a21a93dbaf72ec844b1046608ad20506d9fe1287bbc092f8c9b77",
       "signature_locator": "/releases/38/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12204,6 +13800,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:14:53Z",
       "dateSigned": "2026-06-30T00:00:00+01:00",
       "locator": "/releases/60/contracts/0",
@@ -12212,6 +13819,7 @@
       "page": 3,
       "publication_locator": "/releases/60/contracts/0/documents/0/datePublished",
       "release_id": "107424-2026",
+      "result_sha256": "509a899b0f03d68848a7f62bace7d0065f6c4486ed963e6d48282b4f33067c03",
       "signature_locator": "/releases/60/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 135,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12295,6 +13903,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "2",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:14:02Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/61/contracts/0",
@@ -12303,6 +13922,7 @@
       "page": 3,
       "publication_locator": "/releases/61/contracts/0/documents/0/datePublished",
       "release_id": "107423-2026",
+      "result_sha256": "b50e6a0c14b71caf7620f515604de3cb28704b2b2c0a01a79fb249077696d49a",
       "signature_locator": "/releases/61/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12386,6 +14006,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:06:30Z",
       "dateSigned": "2026-11-04T00:00:00+00:00",
       "locator": "/releases/64/contracts/0",
@@ -12394,6 +14025,7 @@
       "page": 3,
       "publication_locator": "/releases/64/contracts/0/documents/0/datePublished",
       "release_id": "107420-2026",
+      "result_sha256": "62848d09eb3c81f823af7bd5308402fab68bc0e7894676bfeb7875878629d783",
       "signature_locator": "/releases/64/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 8,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12477,6 +14109,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:02:45Z",
       "dateSigned": "2026-10-31T00:00:00Z",
       "locator": "/releases/65/contracts/0",
@@ -12485,6 +14128,7 @@
       "page": 3,
       "publication_locator": "/releases/65/contracts/0/documents/0/datePublished",
       "release_id": "107419-2026",
+      "result_sha256": "600af20863d1064d7d0468407636ca634ed5ed9985134446c57d0705ed032fff",
       "signature_locator": "/releases/65/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 12,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12568,6 +14212,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T10:01:20Z",
       "dateSigned": "2026-11-10T00:00:00+00:00",
       "locator": "/releases/66/contracts/0",
@@ -12576,6 +14231,7 @@
       "page": 3,
       "publication_locator": "/releases/66/contracts/0/documents/0/datePublished",
       "release_id": "107418-2026",
+      "result_sha256": "afc006312dacc825379ea549e0a5ac138808f64e15fb10aca0550b30c191f2aa",
       "signature_locator": "/releases/66/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 2,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12659,6 +14315,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T09:51:35Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/76/contracts/0",
@@ -12667,6 +14334,7 @@
       "page": 3,
       "publication_locator": "/releases/76/contracts/0/documents/0/datePublished",
       "release_id": "107408-2026",
+      "result_sha256": "7a54ccbc00a736b61985ec3232c1f68239e495e6e88e9fe754bca4f3c228dbb8",
       "signature_locator": "/releases/76/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12750,6 +14418,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T09:47:18Z",
       "dateSigned": "2026-11-12T00:00:00+00:00",
       "locator": "/releases/81/contracts/0",
@@ -12758,6 +14437,7 @@
       "page": 3,
       "publication_locator": "/releases/81/contracts/0/documents/0/datePublished",
       "release_id": "107403-2026",
+      "result_sha256": "2a14f78756818e5f0f9e969870f07e44e3a57ec2b643c7ef2b98b54bfd6db656",
       "signature_locator": "/releases/81/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12841,6 +14521,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T09:45:23Z",
       "dateSigned": "2026-10-23T00:00:00+01:00",
       "locator": "/releases/85/contracts/0",
@@ -12849,6 +14540,7 @@
       "page": 3,
       "publication_locator": "/releases/85/contracts/0/documents/0/datePublished",
       "release_id": "107399-2026",
+      "result_sha256": "793cbd1619aa41df6d8aacd478840c82a0a2a63535e35c3df954044b5b7775e5",
       "signature_locator": "/releases/85/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 20,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -12932,6 +14624,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T09:42:38Z",
       "dateSigned": "2026-11-01T00:00:00Z",
       "locator": "/releases/89/contracts/0",
@@ -12940,6 +14643,7 @@
       "page": 3,
       "publication_locator": "/releases/89/contracts/0/documents/0/datePublished",
       "release_id": "107395-2026",
+      "result_sha256": "d976103ad16bf0c69e00191030b989e5e4920bdab948d75ae46dc5f5c797f74e",
       "signature_locator": "/releases/89/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 11,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -13023,6 +14727,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 3,
+          "projection_sha256": "2e0aed37a41ef2bbdd774969512e5eb6d894c30b49b1acb5ffd9b0126fd02649",
+          "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9"
+        }
+      },
       "datePublished": "2026-11-12T09:27:57Z",
       "dateSigned": "2026-11-03T00:00:00+00:00",
       "locator": "/releases/95/contracts/0",
@@ -13031,6 +14746,7 @@
       "page": 3,
       "publication_locator": "/releases/95/contracts/0/documents/0/datePublished",
       "release_id": "107389-2026",
+      "result_sha256": "e71601de7cee7ba472db2eef797aaed8716f050dbc222d603c186443f5f7a0c1",
       "signature_locator": "/releases/95/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 9,
       "source_sha256": "5d8fbcc08ebffadb9edb362e795cb67d91c5b1e948043899e50bcbb1bae60ab9",
@@ -13114,6 +14830,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 4,
+          "projection_sha256": "5e661863ffd3aba3ce59eb9e079ca1d66c9b572a0f9999ccce2023f0e7ff647a",
+          "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c"
+        }
+      },
       "datePublished": "2026-11-12T08:59:50Z",
       "dateSigned": "2026-11-11T00:00:00+00:00",
       "locator": "/releases/5/contracts/0",
@@ -13122,6 +14849,7 @@
       "page": 4,
       "publication_locator": "/releases/5/contracts/0/documents/0/datePublished",
       "release_id": "107378-2026",
+      "result_sha256": "75915dda9057dbcf46ffacfdddd54f3fbbbf0eb9d8485cd5420e5e5789bd4e0c",
       "signature_locator": "/releases/5/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c",
@@ -13205,6 +14933,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 4,
+          "projection_sha256": "5e661863ffd3aba3ce59eb9e079ca1d66c9b572a0f9999ccce2023f0e7ff647a",
+          "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c"
+        }
+      },
       "datePublished": "2026-11-12T08:14:49Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/18/contracts/0",
@@ -13213,6 +14952,7 @@
       "page": 4,
       "publication_locator": "/releases/18/contracts/0/documents/0/datePublished",
       "release_id": "107364-2026",
+      "result_sha256": "b0bb4655fc2dbdb3f6780629ed7d98f2e9509a0db9c57e0949b41655706dacd9",
       "signature_locator": "/releases/18/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c",
@@ -13296,6 +15036,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 4,
+          "projection_sha256": "5e661863ffd3aba3ce59eb9e079ca1d66c9b572a0f9999ccce2023f0e7ff647a",
+          "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c"
+        }
+      },
       "datePublished": "2026-11-12T08:11:01Z",
       "dateSigned": "2026-11-02T00:00:00Z",
       "locator": "/releases/19/contracts/0",
@@ -13304,6 +15055,7 @@
       "page": 4,
       "publication_locator": "/releases/19/contracts/0/documents/0/datePublished",
       "release_id": "107363-2026",
+      "result_sha256": "a963c36db44fb7857ac934f87b459c6e052d277f4ddc784ed06124fcea90ecc7",
       "signature_locator": "/releases/19/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 10,
       "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c",
@@ -13387,6 +15139,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 4,
+          "projection_sha256": "5e661863ffd3aba3ce59eb9e079ca1d66c9b572a0f9999ccce2023f0e7ff647a",
+          "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c"
+        }
+      },
       "datePublished": "2026-11-12T08:07:45Z",
       "dateSigned": "2026-11-11T00:00:00Z",
       "locator": "/releases/20/contracts/0",
@@ -13395,6 +15158,7 @@
       "page": 4,
       "publication_locator": "/releases/20/contracts/0/documents/0/datePublished",
       "release_id": "107362-2026",
+      "result_sha256": "721bb47085304e0b365290308607f3ca5fbf1d72e38f1ed0888856a2182dbfe1",
       "signature_locator": "/releases/20/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 1,
       "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c",
@@ -13478,6 +15242,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 4,
+          "projection_sha256": "5e661863ffd3aba3ce59eb9e079ca1d66c9b572a0f9999ccce2023f0e7ff647a",
+          "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c"
+        }
+      },
       "datePublished": "2026-11-12T07:51:51Z",
       "dateSigned": "2026-10-21T00:00:00+01:00",
       "locator": "/releases/23/contracts/0",
@@ -13486,6 +15261,7 @@
       "page": 4,
       "publication_locator": "/releases/23/contracts/0/documents/0/datePublished",
       "release_id": "107359-2026",
+      "result_sha256": "1be79b09c4224cfdd269b7f0ac60222bb4a5e96db0369ac9cf30de42e8a0da46",
       "signature_locator": "/releases/23/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 22,
       "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c",
@@ -13569,6 +15345,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 4,
+          "projection_sha256": "5e661863ffd3aba3ce59eb9e079ca1d66c9b572a0f9999ccce2023f0e7ff647a",
+          "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c"
+        }
+      },
       "datePublished": "2026-11-12T07:34:18Z",
       "dateSigned": "2026-11-12T00:00:00Z",
       "locator": "/releases/27/contracts/0",
@@ -13577,6 +15364,7 @@
       "page": 4,
       "publication_locator": "/releases/27/contracts/0/documents/0/datePublished",
       "release_id": "107355-2026",
+      "result_sha256": "3905bc1d9c65b4e029931043823282a758356d0bb86e2667f0c8846f2ff5748e",
       "signature_locator": "/releases/27/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 0,
       "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c",
@@ -13660,6 +15448,17 @@
         "schema": "sunlight.section53-indicator.v1"
       },
       "contract_id": "1",
+      "custody": {
+        "rule_id": "section53",
+        "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+        "source": {
+          "capture": "file",
+          "capture_file": "research/section53_2026-11-13/adapter-run/capture.json",
+          "page": 4,
+          "projection_sha256": "5e661863ffd3aba3ce59eb9e079ca1d66c9b572a0f9999ccce2023f0e7ff647a",
+          "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c"
+        }
+      },
       "datePublished": "2026-11-12T00:05:46Z",
       "dateSigned": "2026-10-13T00:00:00+01:00",
       "locator": "/releases/29/contracts/0",
@@ -13668,11 +15467,44 @@
       "page": 4,
       "publication_locator": "/releases/29/contracts/0/documents/0/datePublished",
       "release_id": "107353-2026",
+      "result_sha256": "ea11f628045598036f722d72a4ac14f3c20f487e5ee53bff51ae8e36ebff476c",
       "signature_locator": "/releases/29/contracts/0/dateSigned",
       "signature_to_publication_calendar_days": 30,
       "source_sha256": "11fa4d5a38e0e64ff9716209cee73a3ba21bc0bb660ad98c878cefa46d08954c",
       "source_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T00:00:00&limit=100&cursor=dXBkYXRlZEZyb209MjAyNi0xMS0xMlQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMS0xM1QwMDowMDowMHxuZXh0Q3Vyc29yPTc1OTM4Ng=="
     }
   ],
-  "schema": "sunlight.section53-results.v1"
+  "rule_version": {
+    "cited_sources": [
+      {
+        "locator": "section 53(1)(a)",
+        "sha256": "11b80c792bc3736eeaddbe966bf3372cd8a1b12689f000eb5b1345c49d2e92be",
+        "source": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml"
+      },
+      {
+        "locator": "section 53(1)(b)",
+        "sha256": "11b80c792bc3736eeaddbe966bf3372cd8a1b12689f000eb5b1345c49d2e92be",
+        "source": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml"
+      },
+      {
+        "locator": "section 53(1): beginning with the day on which the contract is entered into",
+        "sha256": "11b80c792bc3736eeaddbe966bf3372cd8a1b12689f000eb5b1345c49d2e92be",
+        "source": "https://www.legislation.gov.uk/ukpga/2023/54/section/53/data.xml"
+      },
+      {
+        "locator": "Schedule, section 53 and heading",
+        "sha256": "da8e15821886289df707a959ae0c0c32cf5a98cff6c2a3d6ba14a4f3428be238",
+        "source": "https://www.legislation.gov.uk/uksi/2024/716/schedule/data.xml"
+      }
+    ],
+    "profile": "config/section53-profile.json",
+    "profile_schema": "sunlight.section53-profile.v1",
+    "profile_sha256": "c90e4dac51af91ca798167f1097c8ec98d81d9a9b68be36af6ea51670565caab",
+    "rule_id": "section53",
+    "rule_module": "code/section53.py",
+    "rule_module_sha256": "12b9031f68f7bc126979aaac423f1ef98797b2be38671316510ec9a54a57297f",
+    "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+    "schema": "sunlight.custody.v1"
+  },
+  "schema": "sunlight.section53-results.v2"
 }
