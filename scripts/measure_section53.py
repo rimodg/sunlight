@@ -19,14 +19,21 @@ from watch_journal import admit
 from invariant_core import Applicability, Citation, Scope
 from section53 import DatedEvidence, Publication, load_profile, packet
 from custody import rule_version, stamp
+from watcher import lens, load_watcher, seal
 
 RULE_MODULE = 'code/section53.py'
 RULE_PROFILE = 'config/section53-profile.json'
 CAPTURE_FILE = 'research/section53_2026-11-13/adapter-run/capture.json'
+WATCHER_FILE = 'config/watchers/section53.json'
 
 
 def current_rule_version(root=ROOT):
     return rule_version(rule_id='section53', root=root, module=RULE_MODULE, profile=RULE_PROFILE)
+
+
+def current_watcher(root=ROOT):
+    """The watcher as loaded from the checkout and its seal."""
+    return load_watcher(root, WATCHER_FILE), seal(root, WATCHER_FILE)
 
 QUERY = 'https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T00:00:00&limit=100'
 SOURCE = {'id':'fts-section53-measurement','adapter':'central_platform',
@@ -70,12 +77,15 @@ def capture():
     return result
 
 
-def replay(captured, capture_file=CAPTURE_FILE, rule=None):
-    """Every result row is stamped with the capture-file page it cites and the
-    exact rule version that computed it (see code/custody.py)."""
+def replay(captured, capture_file=CAPTURE_FILE, rule=None, watcher=None):
+    """Every result row carries the sealed watcher's lens read from its release
+    (see code/watcher.py) and is stamped with the capture-file page it cites and
+    the exact rule version that computed it (see code/custody.py). A release the
+    watcher does not select gets rows without an assessment: the rule did not run."""
     if captured.get('schema') != 'sunlight.section53-capture.v1': raise ValueError('capture_schema')
     admit(captured)
     rule=current_rule_version() if rule is None else rule
+    watcher,sealed=current_watcher() if watcher is None else watcher
     profile=load_profile(ROOT/'config/section53-profile.json','ordinary')
     results=[];received=admitted=refused=0;release_keys=set();marked_releases=set()
     for pi,page in enumerate(captured['pages']):
@@ -86,6 +96,7 @@ def replay(captured, capture_file=CAPTURE_FILE, rule=None):
         received+=projection['received_count'];admitted+=len(projection['records']);refused+=len(projection['refusals'])
         for item in projection['records']:
             r=item['record'];ri=item['index'];key=(r['ocid'],r['id']);release_keys.add(key)
+            block=lens(watcher,sealed,r)
             for ci,c in enumerate(r.get('contracts',[])):
                 for di,d in enumerate(c.get('documents',[])):
                     # Related/previous documents cannot stand in for this notice.
@@ -101,7 +112,7 @@ def replay(captured, capture_file=CAPTURE_FILE, rule=None):
                     # Explicit owner-approved gate: no entry date is present in
                     # this projection. Do not infer one from signature or scope.
                     scope=Scope(Applicability.UNKNOWN,'Entry date and complete section-53 scope are not admitted')
-                    finding=packet(entry=None,publication=pub,scope=scope,profile=profile)
+                    finding=packet(entry=None,publication=pub,scope=scope,profile=profile) if block['selection']['outcome']=='SELECTED' else None
                     results.append(stamp({'ocid':r['ocid'],'release_id':r['id'],'contract_id':c.get('id'),'page':pi,
                         'locator':loc,'source_sha256':page['source_sha256'],'source_url':page['url'],
                         'dateSigned':signed,'signature_locator':loc+'/dateSigned','datePublished':published,
@@ -109,19 +120,21 @@ def replay(captured, capture_file=CAPTURE_FILE, rule=None):
                         'aboveThreshold':c.get('aboveThreshold'),
                         'signature_to_publication_calendar_days':(pub_day-sig_day).days if pub_day and sig_day else None,
                         'measurement_basis':'Signature source calendar date; publication instant converted to Europe/London civil date. Not a legal assessment or entry-date bound.',
-                        'assessment':finding},
+                        'assessment':finding,'watcher':block},
                         source={'capture_file':capture_file,'page':pi,'source_sha256':page['source_sha256'],
                                 'projection_sha256':page['projection_sha256']},rule=rule))
     from collections import Counter
-    states=dict(sorted(Counter(r['assessment']['finding']['state'] for r in results).items()))
+    states=dict(sorted(Counter(r['assessment']['finding']['state'] for r in results if r['assessment'] is not None).items()))
     days=[r['signature_to_publication_calendar_days'] for r in results if r['signature_to_publication_calendar_days'] is not None]
-    result={'schema':'sunlight.section53-results.v2','capture_complete':captured['complete'],'rule_version':rule,
+    result={'schema':'sunlight.section53-results.v3','capture_complete':captured['complete'],'rule_version':rule,
+        'watcher_seal':sealed,
         'counts':{'received_release_rows':received,'admitted_release_rows':admitted,'refused_release_rows':refused,
                   'distinct_release_keys':len(release_keys),'contract_details_releases':len(marked_releases),
                   'contract_notice_rows':len(results),'both_dates':len(days),
                   'above_threshold_true':sum(r['aboveThreshold'] is True for r in results),
                   'above_threshold_false':sum(r['aboveThreshold'] is False for r in results),
-                  'entry_date_confirmed':sum(r['assessment']['contract_entry'] is not None for r in results),
+                  'not_selected_rows':sum(r['assessment'] is None for r in results),
+                  'entry_date_confirmed':sum(r['assessment'] is not None and r['assessment']['contract_entry'] is not None for r in results),
                   'assessable':sum(states.get(s,0) for s in ('HOLDS','BREAKS')),'states':states},
         'plain_measurement':{'minimum_days':min(days) if days else None,'maximum_days':max(days) if days else None,
                              'negative_gaps':sum(d<0 for d in days),'legal_assessment':False},'results':results}
