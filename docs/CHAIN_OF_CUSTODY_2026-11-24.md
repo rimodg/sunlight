@@ -64,7 +64,10 @@ file-level `roster` block naming the hashed list of watchers the file was
 produced under; no row changed. See [ROSTER_2026-11-24.md](ROSTER_2026-11-24.md).
 The decision inbox built from each file carries the waiting rows verbatim,
 stamp included, so every custody check above applies to an inbox item too;
-see [DECISION_INBOX_2026-11-24.md](DECISION_INBOX_2026-11-24.md).
+see [DECISION_INBOX_2026-11-24.md](DECISION_INBOX_2026-11-24.md). A decision
+recorded on an item names the item's result hash and is chained to the
+inbox hash, so the custody chain runs on into the action log; see
+[ACTION_LOG_2026-11-24.md](ACTION_LOG_2026-11-24.md).
 
 ## What did not change
 
