@@ -1,0 +1,388 @@
+{
+  "inbox_sha256": "dd1032bcc576e585efd90ef2f9f50c639e3b02e1de9f9e690c7410b4efd88d82",
+  "items": [
+    {
+      "item_sha256": "677cb7f2c3fc0c29da95c8c08b4975e400d62812795c4dcbc5dcd915c4f60801",
+      "position": 19,
+      "question": "The record dates the award before the closing date for submissions. What, if anything, follows: a correction to seek from the publisher, a note on the record, or no action?",
+      "read": {
+        "context": {
+          "facts": {
+            "procurement_method": "selective"
+          },
+          "missing": [],
+          "unreadable": []
+        },
+        "selection": {
+          "apply": [
+            "events_in_order"
+          ],
+          "outcome": "SELECTED",
+          "row": 0
+        },
+        "watcher_id": "events_in_order",
+        "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+      },
+      "record": {
+        "award_id": "ocds-b5fd17-1b344073-c961-43ee-a678-d76388effbcc-1",
+        "ocid": "ocds-b5fd17-1b344073-c961-43ee-a678-d76388effbcc"
+      },
+      "result_sha256": "f85f8ed0b573c9531918d2cf2f94ba490bd9b05df8fad3fcc35f40aaf0b17772",
+      "row": {
+        "award_date": "2026-10-20T00:00:00+01:00",
+        "award_id": "ocds-b5fd17-1b344073-c961-43ee-a678-d76388effbcc-1",
+        "custody": {
+          "rule_id": "events_in_order",
+          "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+          "source": {
+            "capture_hash": "4d7d541afa401b32953e88ad3919a49373591fd64f6602cf349a422654ea97cb",
+            "capture_seq": 1549,
+            "journal": "watch"
+          }
+        },
+        "days_award_after_deadline": -12,
+        "deadline_after_notice_publication": false,
+        "ocid": "ocds-b5fd17-1b344073-c961-43ee-a678-d76388effbcc",
+        "procurement_method": "selective",
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "result_sha256": "f85f8ed0b573c9531918d2cf2f94ba490bd9b05df8fad3fcc35f40aaf0b17772",
+        "state": "INCONSISTENT",
+        "tender_end_date": "2026-11-01T12:00:00Z",
+        "watcher": {
+          "context": {
+            "facts": {
+              "procurement_method": "selective"
+            },
+            "missing": [],
+            "unreadable": []
+          },
+          "selection": {
+            "apply": [
+              "events_in_order"
+            ],
+            "outcome": "SELECTED",
+            "row": 0
+          },
+          "watcher_id": "events_in_order",
+          "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+        }
+      },
+      "said": {
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "state": "INCONSISTENT"
+      }
+    },
+    {
+      "item_sha256": "eb82e55b972430c8e7a8c6133a5d9a58bd0765b4ae4c569d39c62b7a6d26b592",
+      "position": 20,
+      "question": "The record dates the award before the closing date for submissions. What, if anything, follows: a correction to seek from the publisher, a note on the record, or no action?",
+      "read": {
+        "context": {
+          "facts": {
+            "procurement_method": "selective"
+          },
+          "missing": [],
+          "unreadable": []
+        },
+        "selection": {
+          "apply": [
+            "events_in_order"
+          ],
+          "outcome": "SELECTED",
+          "row": 0
+        },
+        "watcher_id": "events_in_order",
+        "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+      },
+      "record": {
+        "award_id": "ocds-b5fd17-1ba4630e-fc99-48de-8895-c038c9685919-1",
+        "ocid": "ocds-b5fd17-1ba4630e-fc99-48de-8895-c038c9685919"
+      },
+      "result_sha256": "ff392339f4b1db9e05f04490ebea1c9e95d071840c7c3fd079c4fac281e1d083",
+      "row": {
+        "award_date": "2026-10-28T00:00:00Z",
+        "award_id": "ocds-b5fd17-1ba4630e-fc99-48de-8895-c038c9685919-1",
+        "custody": {
+          "rule_id": "events_in_order",
+          "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+          "source": {
+            "capture_hash": "3bc450237d6dd35829bf8c2a621614b3dfddb107f39f21f00277c896358a8bef",
+            "capture_seq": 1585,
+            "journal": "watch"
+          }
+        },
+        "days_award_after_deadline": -23,
+        "deadline_after_notice_publication": true,
+        "ocid": "ocds-b5fd17-1ba4630e-fc99-48de-8895-c038c9685919",
+        "procurement_method": "selective",
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "result_sha256": "ff392339f4b1db9e05f04490ebea1c9e95d071840c7c3fd079c4fac281e1d083",
+        "state": "INCONSISTENT",
+        "tender_end_date": "2026-11-20T12:00:00Z",
+        "watcher": {
+          "context": {
+            "facts": {
+              "procurement_method": "selective"
+            },
+            "missing": [],
+            "unreadable": []
+          },
+          "selection": {
+            "apply": [
+              "events_in_order"
+            ],
+            "outcome": "SELECTED",
+            "row": 0
+          },
+          "watcher_id": "events_in_order",
+          "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+        }
+      },
+      "said": {
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "state": "INCONSISTENT"
+      }
+    },
+    {
+      "item_sha256": "c25193b43200122a45abd01c376e2ca66eb405d1df06789f7c3d43f5a565c2cf",
+      "position": 23,
+      "question": "The record dates the award before the closing date for submissions. What, if anything, follows: a correction to seek from the publisher, a note on the record, or no action?",
+      "read": {
+        "context": {
+          "facts": {
+            "procurement_method": "selective"
+          },
+          "missing": [],
+          "unreadable": []
+        },
+        "selection": {
+          "apply": [
+            "events_in_order"
+          ],
+          "outcome": "SELECTED",
+          "row": 0
+        },
+        "watcher_id": "events_in_order",
+        "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+      },
+      "record": {
+        "award_id": "ocds-b5fd17-2117b587-7c69-43ac-bddf-e71344c4a2a0-1",
+        "ocid": "ocds-b5fd17-2117b587-7c69-43ac-bddf-e71344c4a2a0"
+      },
+      "result_sha256": "07999238844581f78617b8233620727128c4531696c6b3f611c00f3e726fea16",
+      "row": {
+        "award_date": "2026-11-05T00:00:00Z",
+        "award_id": "ocds-b5fd17-2117b587-7c69-43ac-bddf-e71344c4a2a0-1",
+        "custody": {
+          "rule_id": "events_in_order",
+          "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+          "source": {
+            "capture_hash": "4dee7af946eb60c8de969f89405e460d264598cb402a3b484040b7b09dd6fc76",
+            "capture_seq": 1157,
+            "journal": "watch"
+          }
+        },
+        "days_award_after_deadline": -11,
+        "deadline_after_notice_publication": true,
+        "ocid": "ocds-b5fd17-2117b587-7c69-43ac-bddf-e71344c4a2a0",
+        "procurement_method": "selective",
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "result_sha256": "07999238844581f78617b8233620727128c4531696c6b3f611c00f3e726fea16",
+        "state": "INCONSISTENT",
+        "tender_end_date": "2026-11-16T12:00:00Z",
+        "watcher": {
+          "context": {
+            "facts": {
+              "procurement_method": "selective"
+            },
+            "missing": [],
+            "unreadable": []
+          },
+          "selection": {
+            "apply": [
+              "events_in_order"
+            ],
+            "outcome": "SELECTED",
+            "row": 0
+          },
+          "watcher_id": "events_in_order",
+          "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+        }
+      },
+      "said": {
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "state": "INCONSISTENT"
+      }
+    },
+    {
+      "item_sha256": "cdd2e42b9a5897456cdd52e9e0776ce516e56c44504e3f830d84fda5bd6fe412",
+      "position": 135,
+      "question": "The record dates the award before the closing date for submissions. What, if anything, follows: a correction to seek from the publisher, a note on the record, or no action?",
+      "read": {
+        "context": {
+          "facts": {
+            "procurement_method": "selective"
+          },
+          "missing": [],
+          "unreadable": []
+        },
+        "selection": {
+          "apply": [
+            "events_in_order"
+          ],
+          "outcome": "SELECTED",
+          "row": 0
+        },
+        "watcher_id": "events_in_order",
+        "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+      },
+      "record": {
+        "award_id": "ocds-b5fd17-bc72021c-559b-49da-be03-44816d2ae7e9-1",
+        "ocid": "ocds-b5fd17-bc72021c-559b-49da-be03-44816d2ae7e9"
+      },
+      "result_sha256": "dcd485242f7ef5a72212936ee0afe9a5e5840e4c77c066dd63a7bc37f67efde1",
+      "row": {
+        "award_date": "2026-06-16T00:00:00+01:00",
+        "award_id": "ocds-b5fd17-bc72021c-559b-49da-be03-44816d2ae7e9-1",
+        "custody": {
+          "rule_id": "events_in_order",
+          "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+          "source": {
+            "capture_hash": "381129e6b0d9f6b73af24b47f4b17f1bdc1b16f8deff379f09b8322752920437",
+            "capture_seq": 131,
+            "journal": "watch"
+          }
+        },
+        "days_award_after_deadline": -6,
+        "deadline_after_notice_publication": false,
+        "ocid": "ocds-b5fd17-bc72021c-559b-49da-be03-44816d2ae7e9",
+        "procurement_method": "selective",
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "result_sha256": "dcd485242f7ef5a72212936ee0afe9a5e5840e4c77c066dd63a7bc37f67efde1",
+        "state": "INCONSISTENT",
+        "tender_end_date": "2026-06-22T17:00:00+01:00",
+        "watcher": {
+          "context": {
+            "facts": {
+              "procurement_method": "selective"
+            },
+            "missing": [],
+            "unreadable": []
+          },
+          "selection": {
+            "apply": [
+              "events_in_order"
+            ],
+            "outcome": "SELECTED",
+            "row": 0
+          },
+          "watcher_id": "events_in_order",
+          "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+        }
+      },
+      "said": {
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "state": "INCONSISTENT"
+      }
+    },
+    {
+      "item_sha256": "c17806094dfcb1e1d745ca141bb2a018d0366234a24b6f528173f5b88718b7cb",
+      "position": 173,
+      "question": "The record dates the award before the closing date for submissions. What, if anything, follows: a correction to seek from the publisher, a note on the record, or no action?",
+      "read": {
+        "context": {
+          "facts": {
+            "procurement_method": "selective"
+          },
+          "missing": [],
+          "unreadable": []
+        },
+        "selection": {
+          "apply": [
+            "events_in_order"
+          ],
+          "outcome": "SELECTED",
+          "row": 0
+        },
+        "watcher_id": "events_in_order",
+        "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+      },
+      "record": {
+        "award_id": "ocds-b5fd17-e87a8e28-1a3b-420b-93fc-feaf5c48f325-1",
+        "ocid": "ocds-b5fd17-e87a8e28-1a3b-420b-93fc-feaf5c48f325"
+      },
+      "result_sha256": "afbe3267e0233c108accb541b233456158fa08bd439f738f1fd8277e0c366a87",
+      "row": {
+        "award_date": "2026-11-11T00:00:00Z",
+        "award_id": "ocds-b5fd17-e87a8e28-1a3b-420b-93fc-feaf5c48f325-1",
+        "custody": {
+          "rule_id": "events_in_order",
+          "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+          "source": {
+            "capture_hash": "7a761722b6ddaddc39fdbc947f494c222a5d3cd4a18f71b68c8f3d405820373b",
+            "capture_seq": 1477,
+            "journal": "watch"
+          }
+        },
+        "days_award_after_deadline": -4,
+        "deadline_after_notice_publication": true,
+        "ocid": "ocds-b5fd17-e87a8e28-1a3b-420b-93fc-feaf5c48f325",
+        "procurement_method": "selective",
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "result_sha256": "afbe3267e0233c108accb541b233456158fa08bd439f738f1fd8277e0c366a87",
+        "state": "INCONSISTENT",
+        "tender_end_date": "2026-11-15T12:00:00Z",
+        "watcher": {
+          "context": {
+            "facts": {
+              "procurement_method": "selective"
+            },
+            "missing": [],
+            "unreadable": []
+          },
+          "selection": {
+            "apply": [
+              "events_in_order"
+            ],
+            "outcome": "SELECTED",
+            "row": 0
+          },
+          "watcher_id": "events_in_order",
+          "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+        }
+      },
+      "said": {
+        "reason": "Award is dated before the closing date for submissions in the same record",
+        "state": "INCONSISTENT"
+      }
+    }
+  ],
+  "not_waiting": {
+    "CONSISTENT": 119,
+    "NOT_APPLICABLE": 9,
+    "UNASSESSABLE": 60
+  },
+  "policy": {
+    "policy_file": "config/inbox-policy.json",
+    "policy_file_sha256": "cb4c5907260d75206a81487b8273289205d97671e966a83be7d73d1bb86bfb9c",
+    "policy_sha256": "0a4b923f60ee7a616f213f4c87131d15db7a4ffe4b8f56149776b2479f41bbeb"
+  },
+  "purpose": "Results that wait for a person. Each item is one result row whose state the inbox policy names, with the record it concerns, what the watcher read, what the rule said and the row itself. The system never decides; a person does. A row not listed is counted under its state, never dropped.",
+  "results_file": "research/events_in_order_2026-11-18/results.json",
+  "results_file_sha256": "521c449a9da2d1250e9b679d375e91ebba5370e20a9f51eaa63968e9fd97e4bf",
+  "results_schema": "sunlight.events-in-order-results.v4",
+  "roster": {
+    "roster_file": "config/roster.json",
+    "roster_file_sha256": "4377dfe399c0bb3fe4a7f5243d599b20c2be827b8e2f37b4b0c587136b3487f5",
+    "roster_sha256": "417d26981b979020cac081704ceed2da0ea5f22bb154ba73c3ed4525ac1478c7",
+    "watchers": 2
+  },
+  "rows": 193,
+  "rule_did_not_run": 0,
+  "rule_id": "events_in_order",
+  "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+  "schema": "sunlight.inbox.v1",
+  "waiting": 5,
+  "watcher_id": "events_in_order",
+  "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+}

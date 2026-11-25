@@ -1,0 +1,23 @@
+{
+  "schema": "sunlight.action-policy.v1",
+  "purpose": "What a person may record on a decision inbox item, and as whom. The decisions are the answers to the question the inbox policy puts: a correction to seek from the publisher, a note on the record, or no action. The roles are the capacities in which a person decides; a decision is recorded under a role, never under a name. The system never decides: a person does, and this table only names the words the record uses.",
+  "decisions": [
+    {
+      "code": "NOTE_ON_RECORD",
+      "meaning": "A note is kept beside the record, in the reason given with this decision. Nothing is sent to the publisher."
+    },
+    {
+      "code": "NO_ACTION",
+      "meaning": "Nothing follows from this result. The record stands as published and the result stays in the results file as what the rule found."
+    },
+    {
+      "code": "SEEK_CORRECTION",
+      "meaning": "A correction is sought from the publisher of the record. The reason given with this decision says what is asked and why."
+    }
+  ],
+  "roles": [
+    "owner",
+    "reviewer"
+  ],
+  "policy_sha256": "5c3f1437d5aa36d3a9cd3a7b39fa4986f4534cf71462591c53bd3c1c3c585ff3"
+}

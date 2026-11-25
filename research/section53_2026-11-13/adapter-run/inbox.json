@@ -1,0 +1,30 @@
+{
+  "inbox_sha256": "b30b33df13c2821d2c18c1eb78d83628d842af8e3786f1ef6fff02c44d125b94",
+  "items": [],
+  "not_waiting": {
+    "UNASSESSABLE": 150
+  },
+  "policy": {
+    "policy_file": "config/inbox-policy.json",
+    "policy_file_sha256": "cb4c5907260d75206a81487b8273289205d97671e966a83be7d73d1bb86bfb9c",
+    "policy_sha256": "0a4b923f60ee7a616f213f4c87131d15db7a4ffe4b8f56149776b2479f41bbeb"
+  },
+  "purpose": "Results that wait for a person. Each item is one result row whose state the inbox policy names, with the record it concerns, what the watcher read, what the rule said and the row itself. The system never decides; a person does. A row not listed is counted under its state, never dropped.",
+  "results_file": "research/section53_2026-11-13/adapter-run/results.json",
+  "results_file_sha256": "6b4afb62bab86b990f8139415fdda044bb7cd833232d4fe70703bbb4d350bf29",
+  "results_schema": "sunlight.section53-results.v4",
+  "roster": {
+    "roster_file": "config/roster.json",
+    "roster_file_sha256": "4377dfe399c0bb3fe4a7f5243d599b20c2be827b8e2f37b4b0c587136b3487f5",
+    "roster_sha256": "417d26981b979020cac081704ceed2da0ea5f22bb154ba73c3ed4525ac1478c7",
+    "watchers": 2
+  },
+  "rows": 150,
+  "rule_did_not_run": 0,
+  "rule_id": "section53",
+  "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+  "schema": "sunlight.inbox.v1",
+  "waiting": 0,
+  "watcher_id": "section53",
+  "watcher_seal_sha256": "649ebeb92b75578932fced4d02b07df2727de7a4b8a7e70f55accb82916ded47"
+}

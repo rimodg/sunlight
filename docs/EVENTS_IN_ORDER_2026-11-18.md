@@ -115,7 +115,12 @@ Schema v3, later the same day: every row also carries the sealed watcher's
 lens (the procurement method read from the pair and the selection row that
 held); see [SEALED_WATCHERS_2026-11-24.md](SEALED_WATCHERS_2026-11-24.md).
 Schema v4: the file names the roster its watcher is on; no row changed; see
-[ROSTER_2026-11-24.md](ROSTER_2026-11-24.md).
+[ROSTER_2026-11-24.md](ROSTER_2026-11-24.md). The decision inbox built from
+the file (`inbox.json` in the same folder) lists the five INCONSISTENT rows
+as waiting for a person; see [DECISION_INBOX_2026-11-24.md](DECISION_INBOX_2026-11-24.md).
+The action log opened on that inbox (`action-log.json` in the same folder)
+records no decision yet: all five are open; see
+[ACTION_LOG_2026-11-24.md](ACTION_LOG_2026-11-24.md).
 
 Reproduce:
 

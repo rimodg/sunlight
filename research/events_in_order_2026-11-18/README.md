@@ -78,7 +78,12 @@ Schema v3 (same day) adds a `watcher` block to each row: the procurement
 method as read from the pair and the sealed selection row that held; see
 `docs/SEALED_WATCHERS_2026-11-24.md`. Schema v4 adds a file-level `roster`
 block naming the hashed list of watchers the file was produced under; no row
-changed; see `docs/ROSTER_2026-11-24.md`.
+changed; see `docs/ROSTER_2026-11-24.md`. `inbox.json` beside this file is the
+decision inbox built from `results.json`: the five INCONSISTENT rows, each with
+what was read and what the rule said, waiting for a person; see
+`docs/DECISION_INBOX_2026-11-24.md`. `action-log.json` beside it is the action
+log opened on that inbox: no decision recorded yet, all five open; a decision
+is recorded with `scripts/record_decision.py`; see `docs/ACTION_LOG_2026-11-24.md`.
 
 ## Fields left out, and why
 
