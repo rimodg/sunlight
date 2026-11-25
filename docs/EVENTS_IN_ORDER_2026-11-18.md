@@ -114,6 +114,8 @@ it, and a `result_sha256` over the whole row. The 193 outcomes did not move;
 Schema v3, later the same day: every row also carries the sealed watcher's
 lens (the procurement method read from the pair and the selection row that
 held); see [SEALED_WATCHERS_2026-11-24.md](SEALED_WATCHERS_2026-11-24.md).
+Schema v4: the file names the roster its watcher is on; no row changed; see
+[ROSTER_2026-11-24.md](ROSTER_2026-11-24.md).
 
 Reproduce:
 

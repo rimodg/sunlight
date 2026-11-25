@@ -7585,6 +7585,12 @@
       }
     }
   ],
+  "roster": {
+    "roster_file": "config/roster.json",
+    "roster_file_sha256": "4377dfe399c0bb3fe4a7f5243d599b20c2be827b8e2f37b4b0c587136b3487f5",
+    "roster_sha256": "417d26981b979020cac081704ceed2da0ea5f22bb154ba73c3ed4525ac1478c7",
+    "watchers": 2
+  },
   "rule_class": "record_consistency",
   "rule_version": {
     "cited_sources": [
@@ -7613,7 +7619,7 @@
     "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
     "schema": "sunlight.custody.v1"
   },
-  "schema": "sunlight.events-in-order-results.v3",
+  "schema": "sunlight.events-in-order-results.v4",
   "states": {
     "CONSISTENT": 119,
     "INCONSISTENT": 5,

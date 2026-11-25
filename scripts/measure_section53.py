@@ -19,6 +19,7 @@ from watch_journal import admit
 from invariant_core import Applicability, Citation, Scope
 from section53 import DatedEvidence, Publication, load_profile, packet
 from custody import rule_version, stamp
+from roster import ROSTER_FILE, enrol, load_roster, reference
 from watcher import lens, load_watcher, seal
 
 RULE_MODULE = 'code/section53.py'
@@ -34,6 +35,10 @@ def current_rule_version(root=ROOT):
 def current_watcher(root=ROOT):
     """The watcher as loaded from the checkout and its seal."""
     return load_watcher(root, WATCHER_FILE), seal(root, WATCHER_FILE)
+
+
+def current_roster(root=ROOT):
+    return load_roster(root, ROSTER_FILE)
 
 QUERY = 'https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2026-11-12T00:00:00&updatedTo=2026-11-13T00:00:00&limit=100'
 SOURCE = {'id':'fts-section53-measurement','adapter':'central_platform',
@@ -77,15 +82,19 @@ def capture():
     return result
 
 
-def replay(captured, capture_file=CAPTURE_FILE, rule=None, watcher=None):
+def replay(captured, capture_file=CAPTURE_FILE, rule=None, watcher=None, roster=None, root=ROOT):
     """Every result row carries the sealed watcher's lens read from its release
     (see code/watcher.py) and is stamped with the capture-file page it cites and
     the exact rule version that computed it (see code/custody.py). A release the
-    watcher does not select gets rows without an assessment: the rule did not run."""
+    watcher does not select gets rows without an assessment: the rule did not run.
+    The watcher runs only if it is on the roster with the seal the roster pins
+    (see code/roster.py); the results file names that roster."""
     if captured.get('schema') != 'sunlight.section53-capture.v1': raise ValueError('capture_schema')
     admit(captured)
     rule=current_rule_version() if rule is None else rule
     watcher,sealed=current_watcher() if watcher is None else watcher
+    roster=current_roster(root) if roster is None else roster
+    enrol(roster,sealed,WATCHER_FILE)  # A watcher not on the roster does not run.
     profile=load_profile(ROOT/'config/section53-profile.json','ordinary')
     results=[];received=admitted=refused=0;release_keys=set();marked_releases=set()
     for pi,page in enumerate(captured['pages']):
@@ -126,8 +135,8 @@ def replay(captured, capture_file=CAPTURE_FILE, rule=None, watcher=None):
     from collections import Counter
     states=dict(sorted(Counter(r['assessment']['finding']['state'] for r in results if r['assessment'] is not None).items()))
     days=[r['signature_to_publication_calendar_days'] for r in results if r['signature_to_publication_calendar_days'] is not None]
-    result={'schema':'sunlight.section53-results.v3','capture_complete':captured['complete'],'rule_version':rule,
-        'watcher_seal':sealed,
+    result={'schema':'sunlight.section53-results.v4','capture_complete':captured['complete'],'rule_version':rule,
+        'watcher_seal':sealed,'roster':reference(root,roster,ROSTER_FILE),
         'counts':{'received_release_rows':received,'admitted_release_rows':admitted,'refused_release_rows':refused,
                   'distinct_release_keys':len(release_keys),'contract_details_releases':len(marked_releases),
                   'contract_notice_rows':len(results),'both_dates':len(days),

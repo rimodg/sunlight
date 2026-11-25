@@ -18625,6 +18625,12 @@
       }
     }
   ],
+  "roster": {
+    "roster_file": "config/roster.json",
+    "roster_file_sha256": "4377dfe399c0bb3fe4a7f5243d599b20c2be827b8e2f37b4b0c587136b3487f5",
+    "roster_sha256": "417d26981b979020cac081704ceed2da0ea5f22bb154ba73c3ed4525ac1478c7",
+    "watchers": 2
+  },
   "rule_version": {
     "cited_sources": [
       {
@@ -18657,7 +18663,7 @@
     "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
     "schema": "sunlight.custody.v1"
   },
-  "schema": "sunlight.section53-results.v3",
+  "schema": "sunlight.section53-results.v4",
   "watcher_seal": {
     "fact_sources": [
       {

@@ -76,7 +76,9 @@ In `results.json` (schema v2 since November 24, 2026) `capture_seq` and
 rule version that computed the row; see `docs/CHAIN_OF_CUSTODY_2026-11-24.md`.
 Schema v3 (same day) adds a `watcher` block to each row: the procurement
 method as read from the pair and the sealed selection row that held; see
-`docs/SEALED_WATCHERS_2026-11-24.md`.
+`docs/SEALED_WATCHERS_2026-11-24.md`. Schema v4 adds a file-level `roster`
+block naming the hashed list of watchers the file was produced under; no row
+changed; see `docs/ROSTER_2026-11-24.md`.
 
 ## Fields left out, and why
 

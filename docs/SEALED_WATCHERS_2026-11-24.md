@@ -118,5 +118,5 @@ The measure scripts gained the lens and the schema version; nothing else.
 
 ## Still to build in step 5
 
-The roster (which watchers exist, with their seals, as one signed list), the
-decision inbox and the action log. One per session.
+The roster is built: [ROSTER_2026-11-24.md](ROSTER_2026-11-24.md). The
+decision inbox and the action log remain. One per session.
