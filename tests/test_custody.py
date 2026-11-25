@@ -164,24 +164,56 @@ def journal_with(tmp_path, rows):
     return path
 
 
+def journal_event(seq, kind, at, payload: dict, previous='0' * 64):
+    """One journal row with the id and chain hash code/watch_journal.py would write for it."""
+    event_id = digest({'kind': kind, 'at': at, 'payload': payload})
+    return (seq, event_id, kind, at, canonical(payload), previous, digest({'id': event_id, 'previous': previous}))
+
+
+PAYLOAD = {'sha256': 'ab' * 32, 'projection': {}}
+EVENT = journal_event(1549, 'capture', 't', PAYLOAD)
+CAPTURE_HASH = EVENT[6]
+RECOMPUTE_FAILED = 'capture seq 1549: journal hash does not recompute from the event (payload, time or kind changed)'
+
+
 def test_check_journal_links_cited_captures_read_only(tmp_path):
     rule = current_rule_version()
-    row = stamp(ROW, source=SOURCE, rule=rule)
+    row = stamp(ROW, source={**SOURCE, 'capture_hash': CAPTURE_HASH}, rule=rule)
     results = {'results': [row]}
-    payload = json.dumps({'sha256': 'ab' * 32, 'projection': {}})
-    path = journal_with(tmp_path, [(1549, 'id', 'capture', 't', payload, '0' * 64, '4d' * 32)])
+    path = journal_with(tmp_path, [EVENT])
     assert check_journal(results, path) == []
-    assert check_journal(results, journal_with(tmp_path / 'b', [(1549, 'id', 'capture', 't', payload, '0' * 64, '4e' * 32)])) == [
+    other_hash = journal_event(1549, 'capture', 'u', PAYLOAD)
+    assert check_journal(results, journal_with(tmp_path / 'b', [other_hash])) == [
         'capture seq 1549: journal hash differs from the cited capture hash']
-    assert check_journal(results, journal_with(tmp_path / 'c', [(1549, 'id', 'observations', 't', payload, '0' * 64, '4d' * 32)])) == [
-        'capture seq 1549: journal event is observations, not capture']
+    assert check_journal(results, journal_with(tmp_path / 'c', [(1549, EVENT[1], 'observations', 't', EVENT[4], EVENT[5], EVENT[6])])) == [
+        'capture seq 1549: journal event is observations, not capture', RECOMPUTE_FAILED]
     assert check_journal(results, journal_with(tmp_path / 'd', [])) == ['capture seq 1549: not in journal']
-    assert check_journal(results, journal_with(tmp_path / 'e', [(1549, 'id', 'capture', 't', '{}', '0' * 64, '4d' * 32)])) == [
+    no_sha = journal_event(1549, 'capture', 't', {})
+    results_no_sha = {'results': [stamp(ROW, source={**SOURCE, 'capture_hash': no_sha[6]}, rule=rule)]}
+    assert check_journal(results_no_sha, journal_with(tmp_path / 'e', [no_sha])) == [
         'capture seq 1549: capture carries no original response sha256']
     # Read-only: the journal bytes are untouched by a check.
     before = path.read_bytes()
     check_journal(results, path)
     assert path.read_bytes() == before
+
+
+def test_check_journal_refuses_a_payload_changed_under_its_stored_hash(tmp_path):
+    """A capture whose payload was rewritten while its stored id and hash were kept
+    is refused: the hash must recompute from the event, as the journal's own
+    verify would demand."""
+    rule = current_rule_version()
+    results = {'results': [stamp(ROW, source={**SOURCE, 'capture_hash': CAPTURE_HASH}, rule=rule)]}
+    swapped = {**PAYLOAD, 'sha256': 'cd' * 32}
+    tampered = (1549, EVENT[1], 'capture', 't', canonical(swapped), EVENT[5], EVENT[6])
+    assert check_journal(results, journal_with(tmp_path / 'a', [tampered])) == [RECOMPUTE_FAILED]
+    moved_time = (1549, EVENT[1], 'capture', 'later', EVENT[4], EVENT[5], EVENT[6])
+    assert check_journal(results, journal_with(tmp_path / 'b', [moved_time])) == [RECOMPUTE_FAILED]
+    broken_link = (1549, EVENT[1], 'capture', 't', EVENT[4], '1' * 64, EVENT[6])
+    assert check_journal(results, journal_with(tmp_path / 'c', [broken_link])) == [RECOMPUTE_FAILED]
+    not_json = (1549, EVENT[1], 'capture', 't', 'not json', EVENT[5], EVENT[6])
+    assert check_journal(results, journal_with(tmp_path / 'd', [not_json])) == [
+        'capture seq 1549: capture payload is not a JSON object']
 
 
 def test_committed_results_carry_custody_that_recomputes_from_this_repository():
@@ -208,6 +240,82 @@ def test_replay_with_another_rule_version_is_detected():
     problems = check_results(out, rule=rule, pairs=pairs)
     assert 'file-level rule_version differs from the rule in this repository' in problems
     assert sum(p.endswith('rule_version_sha256 differs from the rule in this repository') for p in problems) == 193
+
+
+def test_check_results_requires_every_pair_exactly_once():
+    """A duplicated row standing in for a dropped one keeps the count and
+    every surviving row still matches an exported pair; it is refused anyway."""
+    raw = (RESEARCH / 'pairs.json').read_bytes()
+    pairs = json.loads(raw)
+    results = json.loads((RESEARCH / 'results.json').read_text())
+    rule = current_rule_version()
+    assert check_results(results, rule=rule, pairs=pairs, pairs_bytes=raw) == []
+    rows = list(results['results'])
+    dropped = rows[1]
+    rows[1] = rows[0]
+    problems = check_results({**results, 'results': rows}, rule=rule, pairs=pairs, pairs_bytes=raw)
+    key = [dropped['ocid'], dropped['award_id'], dropped['award_date'], dropped['tender_end_date']]
+    assert problems == ['row 1: duplicates row 0 (same pair)', f'pair {key}: no row']
+    # Without the pair export the duplicate is not detectable and is not claimed to be.
+    assert check_results({**results, 'results': rows}, rule=rule) == []
+
+
+def test_replay_refuses_another_profile_without_its_rule_version(tmp_path):
+    """replay() with no rule version uses the default one, which names the
+    default profile; any other profile must bring the rule version that hashes it."""
+    pairs = json.loads((RESEARCH / 'pairs.json').read_text())
+    data = json.loads((ROOT / RULE_PROFILE).read_text())
+    data['methods']['open']['applicability'] = 'EXCLUDED'
+    other_path = tmp_path / 'profile.json'
+    other_path.write_text(json.dumps(data))
+    other = load_profile(other_path)
+    with pytest.raises(InvariantError, match='Rule version required'):
+        replay(pairs, other)
+    # The same bytes as the default profile are the default profile.
+    same_path = tmp_path / 'same.json'
+    same_path.write_bytes((ROOT / RULE_PROFILE).read_bytes())
+    assert replay(pairs, load_profile(same_path)) == replay(pairs, PROFILE)
+
+
+def test_replay_script_names_the_profile_it_was_given(tmp_path):
+    """The rule version written by the script hashes the profile actually
+    used. Another profile changes outcomes and its version, so a results
+    file from it cannot pass as the committed rule's."""
+    import subprocess
+    other_dir = ROOT / 'config' / f'scratch-custody-{tmp_path.name}'
+    other_dir.mkdir()
+    try:
+        profile = json.loads((ROOT / RULE_PROFILE).read_text())
+        profile['methods']['open']['applicability'] = 'EXCLUDED'
+        other = other_dir / 'profile.json'
+        other.write_text(json.dumps(profile, indent=2) + '\n')
+        out = tmp_path / 'out.json'
+        subprocess.run([sys.executable, str(ROOT / 'scripts' / 'measure_events_in_order.py'),
+                        str(RESEARCH / 'pairs.json'), str(other), str(out)],
+                       check=True, capture_output=True, env={'PYTHONPATH': str(ROOT / 'code'), 'PATH': ''})
+        written = json.loads(out.read_text())
+        expected = current_rule_version(profile=other.relative_to(ROOT).as_posix())
+        assert written['rule_version'] == expected
+        assert written['rule_version']['profile'] == other.relative_to(ROOT).as_posix()
+        assert written['rule_version']['profile_sha256'] == hashlib.sha256(other.read_bytes()).hexdigest()
+        assert written['rule_version']['rule_version_sha256'] != current_rule_version()['rule_version_sha256']
+        assert written['states'] != json.loads((RESEARCH / 'results.json').read_text())['states']
+        pairs = json.loads((RESEARCH / 'pairs.json').read_text())
+        problems = check_results(written, rule=current_rule_version(), pairs=pairs)
+        assert 'file-level rule_version differs from the rule in this repository' in problems
+        assert sum(p.endswith('rule_version_sha256 differs from the rule in this repository') for p in problems) == 193
+        # A profile outside the repository is refused before anything is written.
+        outside = tmp_path / 'outside.json'
+        outside.write_bytes(other.read_bytes())
+        refused = subprocess.run([sys.executable, str(ROOT / 'scripts' / 'measure_events_in_order.py'),
+                                  str(RESEARCH / 'pairs.json'), str(outside), str(tmp_path / 'never.json')],
+                                 capture_output=True, text=True, env={'PYTHONPATH': str(ROOT / 'code'), 'PATH': ''})
+        assert refused.returncode != 0 and 'inside the repository' in refused.stderr
+        assert not (tmp_path / 'never.json').exists()
+    finally:
+        for child in other_dir.iterdir():
+            child.unlink()
+        other_dir.rmdir()
 
 
 def test_no_em_dash_and_no_personal_shaped_content():

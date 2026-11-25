@@ -124,8 +124,11 @@ def check_row(row: dict, *, rule: dict) -> list[str]:
 def check_results(results: dict, *, rule: dict, pairs: dict | None = None, pairs_bytes: bytes | None = None) -> list[str]:
     """Problems with a results file as a whole. Empty means every link holds.
 
-    With `pairs`, every row's cited capture must equal the capture the pair
-    export cites for the same (ocid, award_id, award_date, tender_end_date).
+    With `pairs`, every distinct exported pair (ocid, award_id, award_date,
+    tender_end_date) must appear as exactly one row, and that row's cited
+    capture must equal the capture the pair export cites for it. A pair
+    with no row, or a pair with two rows, is a problem: a duplicated row
+    standing in for a dropped one keeps the count and is still refused.
     With `pairs_bytes`, the file-level input_sha256 must match those bytes.
     """
     problems = []
@@ -139,6 +142,7 @@ def check_results(results: dict, *, rule: dict, pairs: dict | None = None, pairs
                     (p.get('capture_seq'), p.get('capture_hash')) for p in pairs['pairs']}
         if len(expected) != len(results.get('results', [])):
             problems.append('row count differs from the number of distinct pairs')
+    seen = {}
     for index, row in enumerate(results.get('results', [])):
         for problem in check_row(row, rule=rule):
             problems.append(f'row {index}: {problem}')
@@ -147,6 +151,14 @@ def check_results(results: dict, *, rule: dict, pairs: dict | None = None, pairs
             cited = row.get('custody', {}).get('source', {})
             if expected.get(key) != (cited.get('capture_seq'), cited.get('capture_hash')):
                 problems.append(f'row {index}: cited capture differs from the pair export')
+            if key in seen:
+                problems.append(f'row {index}: duplicates row {seen[key]} (same pair)')
+            else:
+                seen[key] = index
+    if expected is not None:
+        for key in expected:
+            if key not in seen:
+                problems.append(f'pair {list(key)}: no row')
     return problems
 
 
@@ -154,9 +166,14 @@ def check_journal(results: dict, journal_path) -> list[str]:
     """Problems linking cited captures to a watch journal, opened read-only.
 
     For each distinct cited capture, the journal row at that sequence must
-    carry the same chain hash and be a capture. The capture's original
-    response sha256 is the end of the chain; the original bytes are not
-    retained, so that hash is reported, not reverified.
+    be a capture, must carry the same chain hash, and that hash must
+    recompute from the row's own parts the way code/watch_journal.py writes
+    them: event id = digest({kind, at, payload}) and chain hash =
+    digest({id, previous}). So a payload changed under an unchanged stored
+    hash is refused here, not only by the journal's own full verify. The
+    capture's original response sha256 is the end of the chain; the
+    original bytes are not retained, so that hash is reported, not
+    reverified.
     """
     import sqlite3
     problems = []
@@ -166,16 +183,27 @@ def check_journal(results: dict, journal_path) -> list[str]:
         cited = sorted({(r['custody']['source']['capture_seq'], r['custody']['source']['capture_hash'])
                         for r in results.get('results', []) if isinstance(r.get('custody'), dict)})
         for seq, chain_hash in cited:
-            row = db.execute('SELECT kind, hash, payload FROM watch_events WHERE seq=?', (seq,)).fetchone()
+            row = db.execute('SELECT id, kind, at, payload, previous, hash FROM watch_events WHERE seq=?',
+                             (seq,)).fetchone()
             if row is None:
                 problems.append(f'capture seq {seq}: not in journal')
                 continue
-            kind, found_hash, payload = row
+            event_id, kind, at, payload, previous, found_hash = row
             if kind != 'capture':
                 problems.append(f'capture seq {seq}: journal event is {kind}, not capture')
             if found_hash != chain_hash:
                 problems.append(f'capture seq {seq}: journal hash differs from the cited capture hash')
-            source_sha256 = json.loads(payload).get('sha256')
+            try:
+                loaded = json.loads(payload)
+            except (TypeError, ValueError):
+                loaded = None
+            if not isinstance(loaded, dict):
+                problems.append(f'capture seq {seq}: capture payload is not a JSON object')
+                continue
+            expected_id = digest({'kind': kind, 'at': at, 'payload': loaded})
+            if event_id != expected_id or found_hash != digest({'id': expected_id, 'previous': previous}):
+                problems.append(f'capture seq {seq}: journal hash does not recompute from the event (payload, time or kind changed)')
+            source_sha256 = loaded.get('sha256')
             if not isinstance(source_sha256, str) or not HEX64.fullmatch(source_sha256):
                 problems.append(f'capture seq {seq}: capture carries no original response sha256')
     finally:

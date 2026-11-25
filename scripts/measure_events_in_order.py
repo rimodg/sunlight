@@ -12,6 +12,7 @@ from pathlib import Path
 import sys
 
 from custody import rule_version, stamp
+from invariant_core import InvariantError
 from events_in_order import assess, load_profile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,12 +20,35 @@ RULE_MODULE = 'code/events_in_order.py'
 RULE_PROFILE = 'config/events-in-order-profile.json'
 
 
-def current_rule_version(root=ROOT) -> dict:
-    return rule_version(rule_id='events_in_order', root=root, module=RULE_MODULE, profile=RULE_PROFILE)
+def current_rule_version(root=ROOT, profile: str = RULE_PROFILE) -> dict:
+    return rule_version(rule_id='events_in_order', root=root, module=RULE_MODULE, profile=profile)
+
+
+def profile_in_repository(profile_path, root=ROOT) -> str:
+    """The profile's path relative to the repository, or a refusal.
+
+    The rule version hashes the profile the replay actually uses, so that
+    profile must be a file inside the repository the version names.
+    """
+    try:
+        relative = Path(profile_path).resolve().relative_to(Path(root).resolve())
+    except ValueError:
+        raise SystemExit('Profile must be inside the repository') from None
+    return relative.as_posix()
 
 
 def replay(pairs: dict, profile, rule: dict | None = None) -> dict:
-    rule = current_rule_version() if rule is None else rule
+    """Assess every exported pair with `profile` under `rule`.
+
+    Without `rule`, the default rule version (RULE_PROFILE) is used, and only
+    for the profile that version names: a different profile must come with
+    the rule version that hashes it, or the results would claim a rule that
+    did not compute them.
+    """
+    if rule is None:
+        if profile != load_profile(ROOT / RULE_PROFILE):
+            raise InvariantError('Rule version required for a profile other than the default')
+        rule = current_rule_version()
     rows = []
     for pair in sorted(pairs['pairs'], key=lambda p: (p['ocid'], p['award_id'], p['award_date'], p['tender_end_date'])):
         r = assess(award_date=pair.get('award_date'), tender_end_date=pair.get('tender_end_date'),
@@ -59,7 +83,9 @@ if __name__ == '__main__':
     if out_path.exists():
         raise SystemExit('Refusing to overwrite an existing output')
     raw = pairs_path.read_bytes()
-    out = replay(json.loads(raw), load_profile(profile_path))
+    # The rule version names the profile the replay uses, never the default one.
+    rule = current_rule_version(profile=profile_in_repository(profile_path))
+    out = replay(json.loads(raw), load_profile(profile_path), rule)
     out['input_sha256'] = hashlib.sha256(raw).hexdigest()
     out_path.write_text(canonical(out))
     print(json.dumps({k: out[k] for k in ('population', 'states', 'answered', 'inconsistent_with_deadline_after_notice_publication')}))

@@ -37,9 +37,12 @@ From a checkout of the repository, reads only:
       research/events_in_order_2026-11-18/pairs.json
 
 This recomputes the rule version from the files in the checkout, recomputes
-every `result_sha256`, and checks every row cites the same capture as the
-pair export cites for the same (ocid, award id, award date, deadline).
-Exit 0 means every link holds; the output lists any problem by row.
+every `result_sha256`, and checks that every distinct exported pair
+(ocid, award id, award date, deadline) appears as exactly one row citing
+the same capture as the pair export cites for it. A pair with no row, or
+a duplicated row standing in for a dropped one, is a problem even though
+the count still matches. Exit 0 means every link holds; the output lists
+any problem by row.
 
 With the watch journal, opened read-only (`sqlite3` URI `mode=ro`), the
 check continues into the journal:
@@ -47,11 +50,20 @@ check continues into the journal:
     PYTHONPATH=code python scripts/verify_custody.py RESULTS PAIRS --journal JOURNAL.sqlite3
 
 For each of the 25 distinct cited captures the journal row at that sequence
-must be a capture with the same chain hash and must carry an original
-response SHA-256. Work on a copy of the journal if in doubt; the check never
-writes.
+must be a capture with the same chain hash, that hash must recompute
+from the row's own parts the way the journal writes them (event id over
+kind, time and payload; chain hash over id and previous), and the payload
+must carry an original response SHA-256. A payload rewritten under an
+unchanged stored hash is therefore refused. Work on a copy of the journal
+if in doubt; the check never writes.
 
-`tests/test_custody.py` (15 tests) covers the module and checks the
+The rule version a results file carries names the profile the replay used.
+`scripts/measure_events_in_order.py` builds it from the profile path given
+on the command line, which must be inside the repository, so a run with
+another profile cannot claim the committed rule's version; `replay()`
+called without a rule version refuses any profile but the default one.
+
+`tests/test_custody.py` (19 tests) covers the module and checks the
 committed results against the rule in the checkout on every test run, so a
 change to `code/events_in_order.py` or the profile without a regenerated
 results file fails the suite.
