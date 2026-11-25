@@ -140,7 +140,7 @@ def test_committed_results_carry_custody_that_recomputes_from_this_repository():
     results = json.loads((RESEARCH / 'results.json').read_text())
     capture = json.loads((RESEARCH / 'capture.json').read_text())
     rule = current_rule_version()
-    assert results['schema'] == 'sunlight.section53-results.v3'
+    assert results['schema'] == 'sunlight.section53-results.v4'
     assert results['rule_version'] == rule
     assert len(results['results']) == 150
     assert check_results(results, rule=rule) == []

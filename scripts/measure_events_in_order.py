@@ -4,6 +4,8 @@ Reads only; refuses to overwrite an existing output. Every result row carries
 the sealed watcher's lens (the facts read from the pair and the selection row
 that matched, see code/watcher.py) and is stamped with the journal capture it
 cites and the exact rule version that computed it (see code/custody.py).
+The watcher runs only if it is on the roster with the seal the roster pins
+(see code/roster.py); the results file names that roster.
 Usage: PYTHONPATH=code python scripts/measure_events_in_order.py PAIRS PROFILE OUT
 """
 from collections import Counter
@@ -14,6 +16,7 @@ import sys
 
 from custody import rule_version, stamp
 from events_in_order import assess, load_profile
+from roster import ROSTER_FILE, enrol, load_roster, reference
 from watcher import lens, load_watcher, seal
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,9 +34,16 @@ def current_watcher(root=ROOT) -> tuple[dict, dict]:
     return load_watcher(root, WATCHER_FILE), seal(root, WATCHER_FILE)
 
 
-def replay(pairs: dict, profile, rule: dict | None = None, watcher: tuple[dict, dict] | None = None) -> dict:
+def current_roster(root=ROOT) -> dict:
+    return load_roster(root, ROSTER_FILE)
+
+
+def replay(pairs: dict, profile, rule: dict | None = None, watcher: tuple[dict, dict] | None = None,
+           roster: dict | None = None, root=ROOT) -> dict:
     rule = current_rule_version() if rule is None else rule
     watcher, sealed = current_watcher() if watcher is None else watcher
+    roster = current_roster(root) if roster is None else roster
+    enrol(roster, sealed, WATCHER_FILE)  # A watcher not on the roster does not run.
     rows = []
     for pair in sorted(pairs['pairs'], key=lambda p: (p['ocid'], p['award_id'], p['award_date'], p['tender_end_date'])):
         block = lens(watcher, sealed, pair)
@@ -59,9 +69,9 @@ def replay(pairs: dict, profile, rule: dict | None = None, watcher: tuple[dict, 
                                        'capture_hash': pair.get('capture_hash')}, rule=rule))
     states = Counter(row['state'] for row in rows)
     flagged = [row for row in rows if row['state'] == 'INCONSISTENT']
-    return {'schema': 'sunlight.events-in-order-results.v3', 'rule_class': 'record_consistency',
+    return {'schema': 'sunlight.events-in-order-results.v4', 'rule_class': 'record_consistency',
             'indicator_only': True, 'legal_status': profile.legal_status, 'rule_version': rule,
-            'watcher_seal': sealed,
+            'watcher_seal': sealed, 'roster': reference(root, roster, ROSTER_FILE),
             'population': len(rows),
             'not_selected': sum(1 for row in rows if row['watcher']['selection']['outcome'] == 'NOT_SELECTED'),
             'states': {k: states.get(k, 0) for k in ('CONSISTENT', 'INCONSISTENT', 'UNASSESSABLE', 'NOT_APPLICABLE')},
