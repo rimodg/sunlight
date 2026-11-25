@@ -1,0 +1,23 @@
+{
+  "schema": "sunlight.roster.v1",
+  "purpose": "The watchers that may run, each with the hash of its file, its rule version and its seal. A watcher not on this list, or whose seal recomputed from the checkout differs, does not run. Every results file names this roster.",
+  "watchers": [
+    {
+      "watcher_id": "events_in_order",
+      "file": "config/watchers/events-in-order.json",
+      "rule_id": "events_in_order",
+      "watcher_sha256": "a86857822d5f3efce8e48393ef1579df72f2c71ad699afd558297e83fc73de12",
+      "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+      "watcher_seal_sha256": "bda1356bda08d6b4edef017563e222411b241182dae76e92633805c1f50dcd9b"
+    },
+    {
+      "watcher_id": "section53",
+      "file": "config/watchers/section53.json",
+      "rule_id": "section53",
+      "watcher_sha256": "f1fc7aed27c7a767411574cf944405a9536dd28d9d97de4262c5c816f384271b",
+      "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+      "watcher_seal_sha256": "649ebeb92b75578932fced4d02b07df2727de7a4b8a7e70f55accb82916ded47"
+    }
+  ],
+  "roster_sha256": "417d26981b979020cac081704ceed2da0ea5f22bb154ba73c3ed4525ac1478c7"
+}

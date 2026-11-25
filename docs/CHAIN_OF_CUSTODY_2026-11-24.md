@@ -68,6 +68,13 @@ committed results against the rule in the checkout on every test run, so a
 change to `code/events_in_order.py` or the profile without a regenerated
 results file fails the suite.
 
+Schema v3 of both files, later the same day, adds a `watcher` block to
+every row before the custody stamp; see
+[SEALED_WATCHERS_2026-11-24.md](SEALED_WATCHERS_2026-11-24.md). The custody
+block and `result_sha256` rules above are unchanged. Schema v4 adds a
+file-level `roster` block naming the hashed list of watchers the file was
+produced under; no row changed. See [ROSTER_2026-11-24.md](ROSTER_2026-11-24.md).
+
 ## What did not change
 
 The 193 outcomes are identical to the schema v1 file (commit 8cb4d46):

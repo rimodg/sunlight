@@ -1,0 +1,52 @@
+{
+  "schema": "sunlight.watcher.v1",
+  "watcher_id": "events_in_order",
+  "purpose": "Reads the procurement method of each exported award and deadline pair, then applies the events-in-order record consistency rule. The rule's own cited profile settles what each method means; this watcher records which method was read and that it was read from the pair, so the lens used on every row is visible and sealed.",
+  "record": {
+    "schema": "sunlight.events-in-order-export.v1",
+    "unit": "one distinct (ocid, award id, award date, tender end date) pair exported from the watch journal"
+  },
+  "rule": {
+    "rule_id": "events_in_order",
+    "module": "code/events_in_order.py",
+    "profile": "config/events-in-order-profile.json"
+  },
+  "facts": [
+    {
+      "fact": "procurement_method",
+      "path": ["procurement_method"],
+      "kind": "code",
+      "codes": ["open", "selective", "limited", "direct"],
+      "publisher": "contracting authority",
+      "definition": {
+        "text": "The procurement method, from the closed method codelist.",
+        "source": {
+          "source": "https://raw.githubusercontent.com/open-contracting/standard/af0d0d41c64be26d8bbd57dcca8b474937e5851c/schema/release-schema.json",
+          "locator": "definitions.Tender.properties.procurementMethod.description",
+          "sha256": "fac192e1ccfb061f5164bdb2d64c29e517c0f81661996b97de40cebc55a2c1bc"
+        }
+      },
+      "codes_source": {
+        "source": "https://raw.githubusercontent.com/open-contracting/standard/af0d0d41c64be26d8bbd57dcca8b474937e5851c/schema/codelists/method.csv",
+        "locator": "Code column",
+        "sha256": "8a956d41ead70abe583c6d0121729ec8a0ffb4f1c9aa18017d587ff794d8a589"
+      }
+    }
+  ],
+  "selection": [
+    {
+      "when": {"procurement_method": {"in": ["open", "selective", "limited", "direct"]}},
+      "apply": ["events_in_order"],
+      "note": "The rule's profile cites each method's definition and decides whether a submission period exists."
+    },
+    {
+      "when": {"procurement_method": "missing"},
+      "apply": ["events_in_order"],
+      "note": "The rule refuses on its own cited terms when the method is missing; the watcher records that the fact was missing. Missing is not zero."
+    }
+  ],
+  "otherwise": {
+    "outcome": "NOT_SELECTED",
+    "reason": "Procurement method is published but is not a code of the cited closed codelist; expected publisher: contracting authority"
+  }
+}
