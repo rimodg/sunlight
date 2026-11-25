@@ -19,7 +19,7 @@ from measure_section53 import CAPTURE_FILE, RULE_MODULE, RULE_PROFILE, canonical
 RESEARCH = ROOT / 'research' / 'section53_2026-11-13' / 'adapter-run'
 # sha256 (custody.digest) of the list of 150 result rows of results.json schema
 # v1 as committed at PR #28 head 39d1f48 (every field of every row, file order).
-# Adding custody must not move one outcome.
+# Adding custody, then the sealed watcher's lens, must not move one outcome.
 V1_ROWS_SHA256 = 'eea5124b4ba8d0a15f69929bca34abde5d69afb05dd991b99b2bbbdc243786d9'
 PAGE = {'capture_file': 'research/x/capture.json', 'page': 0, 'source_sha256': 'ab' * 32, 'projection_sha256': 'cd' * 32}
 ROW = {'ocid': 'ocds-x', 'release_id': 'r-1', 'page': 0, 'source_sha256': 'ab' * 32, 'source_url': 'https://example.invalid/p'}
@@ -140,7 +140,7 @@ def test_committed_results_carry_custody_that_recomputes_from_this_repository():
     results = json.loads((RESEARCH / 'results.json').read_text())
     capture = json.loads((RESEARCH / 'capture.json').read_text())
     rule = current_rule_version()
-    assert results['schema'] == 'sunlight.section53-results.v2'
+    assert results['schema'] == 'sunlight.section53-results.v3'
     assert results['rule_version'] == rule
     assert len(results['results']) == 150
     assert check_results(results, rule=rule) == []
@@ -150,7 +150,7 @@ def test_committed_results_carry_custody_that_recomputes_from_this_repository():
 
 def test_custody_moved_no_measured_outcome():
     results = json.loads((RESEARCH / 'results.json').read_text())
-    rows = [{k: v for k, v in r.items() if k not in ('custody', 'result_sha256')} for r in results['results']]
+    rows = [{k: v for k, v in r.items() if k not in ('custody', 'result_sha256', 'watcher')} for r in results['results']]
     assert digest(rows) == V1_ROWS_SHA256
     assert results['counts']['states'] == {'UNASSESSABLE': 150} and results['counts']['assessable'] == 0
 

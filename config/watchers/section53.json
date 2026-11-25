@@ -1,0 +1,47 @@
+{
+  "schema": "sunlight.watcher.v1",
+  "watcher_id": "section53",
+  "purpose": "Reads the published legal basis of each release captured from the central digital platform, and applies the section 53 deadline rule only to releases whose published legal basis is the Procurement Act 2023. A release that publishes another legal basis, or none, is not selected: this watcher does not decide which law governs a procedure, it reads what the record says and refuses the rest.",
+  "record": {
+    "schema": "sunlight.organisation-projection.v1",
+    "adapter_version": "central-platform-contract-details.v1",
+    "unit": "one admitted release of a captured page's projection"
+  },
+  "rule": {
+    "rule_id": "section53",
+    "module": "code/section53.py",
+    "profile": "config/section53-profile.json"
+  },
+  "facts": [
+    {
+      "fact": "legal_basis",
+      "path": ["tender", "legalBasis"],
+      "kind": "classification",
+      "publisher": "contracting authority",
+      "definition": {
+        "text": "The legal basis of the procedure.",
+        "source": {
+          "source": "https://raw.githubusercontent.com/open-contracting-extensions/ocds_legalBasis_extension/5d412856fe8b8fa6c155343336c5ff82b76740b3/release-schema.json",
+          "locator": "definitions.Tender.properties.legalBasis.description",
+          "sha256": "cf02d2582249df2eea9c44a1e903548f4e4917a755ff5b38f3425aeb6a2b7cec"
+        }
+      },
+      "classification_source": {
+        "source": "https://raw.githubusercontent.com/open-contracting/standard/af0d0d41c64be26d8bbd57dcca8b474937e5851c/schema/release-schema.json",
+        "locator": "definitions.Classification.properties.scheme and definitions.Classification.properties.id",
+        "sha256": "fac192e1ccfb061f5164bdb2d64c29e517c0f81661996b97de40cebc55a2c1bc"
+      }
+    }
+  ],
+  "selection": [
+    {
+      "when": {"legal_basis": {"equals": {"scheme": "UKPGA", "id": "2023/54"}}},
+      "apply": ["section53"],
+      "note": "UKPGA 2023/54 is the Procurement Act 2023, the instrument the rule's profile cites."
+    }
+  ],
+  "otherwise": {
+    "outcome": "NOT_SELECTED",
+    "reason": "Published legal basis is missing or is not UKPGA 2023/54, the instrument this watcher's rule cites; expected publisher: contracting authority"
+  }
+}

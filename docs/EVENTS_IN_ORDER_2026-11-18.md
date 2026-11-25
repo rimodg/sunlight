@@ -111,6 +111,9 @@ naming the journal capture it cites and the exact rule version that computed
 it, and a `result_sha256` over the whole row. The 193 outcomes did not move;
 `tests/test_custody.py` pins their digest. See
 [CHAIN_OF_CUSTODY_2026-11-24.md](CHAIN_OF_CUSTODY_2026-11-24.md).
+Schema v3, later the same day: every row also carries the sealed watcher's
+lens (the procurement method read from the pair and the selection row that
+held); see [SEALED_WATCHERS_2026-11-24.md](SEALED_WATCHERS_2026-11-24.md).
 
 Reproduce:
 

@@ -187,7 +187,7 @@ def test_check_journal_links_cited_captures_read_only(tmp_path):
 def test_committed_results_carry_custody_that_recomputes_from_this_repository():
     raw = (RESEARCH / 'pairs.json').read_bytes()
     results = json.loads((RESEARCH / 'results.json').read_text())
-    assert results['schema'] == 'sunlight.events-in-order-results.v2'
+    assert results['schema'] == 'sunlight.events-in-order-results.v3'
     assert check_results(results, rule=current_rule_version(), pairs=json.loads(raw), pairs_bytes=raw) == []
     assert len(results['results']) == 193
     assert all('custody' in r and 'result_sha256' in r for r in results['results'])
