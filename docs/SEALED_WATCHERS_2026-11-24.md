@@ -120,4 +120,5 @@ The measure scripts gained the lens and the schema version; nothing else.
 
 The roster is built: [ROSTER_2026-11-24.md](ROSTER_2026-11-24.md). The
 decision inbox is built: [DECISION_INBOX_2026-11-24.md](DECISION_INBOX_2026-11-24.md).
-The action log remains.
+The action log is built: [ACTION_LOG_2026-11-24.md](ACTION_LOG_2026-11-24.md).
+Step 5 is complete.

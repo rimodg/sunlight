@@ -1,0 +1,55 @@
+{
+  "decided": 0,
+  "entries": [],
+  "head_sha256": "dd1032bcc576e585efd90ef2f9f50c639e3b02e1de9f9e690c7410b4efd88d82",
+  "inbox_file": "research/events_in_order_2026-11-18/inbox.json",
+  "inbox_file_sha256": "e8368310d0e9e0e504c2c057acddd4077f56d382240466a26a706e733fa79fba",
+  "inbox_sha256": "dd1032bcc576e585efd90ef2f9f50c639e3b02e1de9f9e690c7410b4efd88d82",
+  "items": [
+    {
+      "item_sha256": "677cb7f2c3fc0c29da95c8c08b4975e400d62812795c4dcbc5dcd915c4f60801",
+      "position": 19,
+      "result_sha256": "f85f8ed0b573c9531918d2cf2f94ba490bd9b05df8fad3fcc35f40aaf0b17772",
+      "standing": null
+    },
+    {
+      "item_sha256": "eb82e55b972430c8e7a8c6133a5d9a58bd0765b4ae4c569d39c62b7a6d26b592",
+      "position": 20,
+      "result_sha256": "ff392339f4b1db9e05f04490ebea1c9e95d071840c7c3fd079c4fac281e1d083",
+      "standing": null
+    },
+    {
+      "item_sha256": "c25193b43200122a45abd01c376e2ca66eb405d1df06789f7c3d43f5a565c2cf",
+      "position": 23,
+      "result_sha256": "07999238844581f78617b8233620727128c4531696c6b3f611c00f3e726fea16",
+      "standing": null
+    },
+    {
+      "item_sha256": "cdd2e42b9a5897456cdd52e9e0776ce516e56c44504e3f830d84fda5bd6fe412",
+      "position": 135,
+      "result_sha256": "dcd485242f7ef5a72212936ee0afe9a5e5840e4c77c066dd63a7bc37f67efde1",
+      "standing": null
+    },
+    {
+      "item_sha256": "c17806094dfcb1e1d745ca141bb2a018d0366234a24b6f528173f5b88718b7cb",
+      "position": 173,
+      "result_sha256": "afbe3267e0233c108accb541b233456158fa08bd439f738f1fd8277e0c366a87",
+      "standing": null
+    }
+  ],
+  "log_sha256": "7f6df87156fac5c8a97e108025159e3f057674980b145983ff02c2bad6970195",
+  "open": 5,
+  "policy": {
+    "policy_file": "config/action-policy.json",
+    "policy_file_sha256": "bea75de44637f92a8f1b5294a3fa6d2afa7691a32b87c1d2e6a4d603db94dd07",
+    "policy_sha256": "5c3f1437d5aa36d3a9cd3a7b39fa4986f4534cf71462591c53bd3c1c3c585ff3"
+  },
+  "purpose": "Decisions people recorded on the items of one decision inbox. Each entry is one decision on one item: the decision from the action policy, the reason given, the role that decided and the time, chained by hash to the entry before it and anchored to the inbox. The system never decides; a person does. An item without an entry is open, never settled.",
+  "recorded": 0,
+  "results_file": "research/events_in_order_2026-11-18/results.json",
+  "results_file_sha256": "521c449a9da2d1250e9b679d375e91ebba5370e20a9f51eaa63968e9fd97e4bf",
+  "rule_id": "events_in_order",
+  "rule_version_sha256": "0f6609e4273e24875f62701186b1311a92a780af0e2d3cc09e500560b5f9938e",
+  "schema": "sunlight.action-log.v1",
+  "waiting": 5
+}

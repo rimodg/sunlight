@@ -1,0 +1,24 @@
+{
+  "decided": 0,
+  "entries": [],
+  "head_sha256": "b30b33df13c2821d2c18c1eb78d83628d842af8e3786f1ef6fff02c44d125b94",
+  "inbox_file": "research/section53_2026-11-13/adapter-run/inbox.json",
+  "inbox_file_sha256": "8c03ead233a878d46fde16bc186f0c66ea8d954b0695aba563a3aed4e4c50859",
+  "inbox_sha256": "b30b33df13c2821d2c18c1eb78d83628d842af8e3786f1ef6fff02c44d125b94",
+  "items": [],
+  "log_sha256": "6332ba67328c39333dda546e24cf5c085089a3bd05b7f82ff12d5c5d2776ae79",
+  "open": 0,
+  "policy": {
+    "policy_file": "config/action-policy.json",
+    "policy_file_sha256": "bea75de44637f92a8f1b5294a3fa6d2afa7691a32b87c1d2e6a4d603db94dd07",
+    "policy_sha256": "5c3f1437d5aa36d3a9cd3a7b39fa4986f4534cf71462591c53bd3c1c3c585ff3"
+  },
+  "purpose": "Decisions people recorded on the items of one decision inbox. Each entry is one decision on one item: the decision from the action policy, the reason given, the role that decided and the time, chained by hash to the entry before it and anchored to the inbox. The system never decides; a person does. An item without an entry is open, never settled.",
+  "recorded": 0,
+  "results_file": "research/section53_2026-11-13/adapter-run/results.json",
+  "results_file_sha256": "6b4afb62bab86b990f8139415fdda044bb7cd833232d4fe70703bbb4d350bf29",
+  "rule_id": "section53",
+  "rule_version_sha256": "5b70e9e7b4206760474c2dc3a8c356d50a6044faec89b99ff7381e2fb72612c6",
+  "schema": "sunlight.action-log.v1",
+  "waiting": 0
+}

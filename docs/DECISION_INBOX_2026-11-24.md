@@ -68,7 +68,8 @@ the rule did not run on and how many are in each state that does not wait,
 and an empty inbox says so with those counts beside it rather than silence.
 A result is a risk indicator, never an allegation; whether a procurement
 should have happened stays with people, and the inbox holds no decision
-field at all. Recording decisions is the action log, the next step.
+field at all. Recording decisions is the action log; see
+[ACTION_LOG_2026-11-24.md](ACTION_LOG_2026-11-24.md).
 
 ## The two inboxes as committed
 
@@ -140,8 +141,9 @@ scripts, both results files, `capture.json`, `pairs.json`, and every
 verifier and test already in the repository. No rule, threshold or scoring
 code changed.
 
-## Still to build in step 5
+## Built after this in step 5
 
 The action log: where a person's decision on an inbox item is recorded
-with its reason and its time, so that every decision is traceable and none
-is the system's.
+with its reason and its time, chained by hash to the inbox, so that every
+decision is traceable and none is the system's. See
+[ACTION_LOG_2026-11-24.md](ACTION_LOG_2026-11-24.md).
