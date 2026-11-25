@@ -74,6 +74,9 @@ every row before the custody stamp; see
 block and `result_sha256` rules above are unchanged. Schema v4 adds a
 file-level `roster` block naming the hashed list of watchers the file was
 produced under; no row changed. See [ROSTER_2026-11-24.md](ROSTER_2026-11-24.md).
+The decision inbox built from each file carries the waiting rows verbatim,
+stamp included, so every custody check above applies to an inbox item too;
+see [DECISION_INBOX_2026-11-24.md](DECISION_INBOX_2026-11-24.md).
 
 ## What did not change
 

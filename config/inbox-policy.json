@@ -1,0 +1,50 @@
+{
+  "schema": "sunlight.inbox-policy.v1",
+  "purpose": "Which results wait for a person. For each rule: the fields that name the record, where the rule's state and reason are read from a result row, and the states that wait with the question put to the person. A state not listed here does not wait; it is counted, never dropped. The system never decides: a person does.",
+  "rules": [
+    {
+      "rule_id": "events_in_order",
+      "record": [
+        "ocid",
+        "award_id"
+      ],
+      "state_path": [
+        "state"
+      ],
+      "reason_path": [
+        "reason"
+      ],
+      "waits": [
+        {
+          "state": "INCONSISTENT",
+          "question": "The record dates the award before the closing date for submissions. What, if anything, follows: a correction to seek from the publisher, a note on the record, or no action?"
+        }
+      ]
+    },
+    {
+      "rule_id": "section53",
+      "record": [
+        "ocid",
+        "release_id",
+        "contract_id"
+      ],
+      "state_path": [
+        "assessment",
+        "finding",
+        "state"
+      ],
+      "reason_path": [
+        "assessment",
+        "finding",
+        "reason"
+      ],
+      "waits": [
+        {
+          "state": "BREAKS",
+          "question": "The publication date falls outside the period section 53(1) names, counted from an admitted entry date. What, if anything, follows: a correction to seek from the publisher, a note on the record, or no action?"
+        }
+      ]
+    }
+  ],
+  "policy_sha256": "0a4b923f60ee7a616f213f4c87131d15db7a4ffe4b8f56149776b2479f41bbeb"
+}
